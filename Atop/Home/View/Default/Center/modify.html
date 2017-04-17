@@ -1,0 +1,116 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/center-modify.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/jquery.validate.min.js"></script>
+    <script src="__JS__/jquery.form.js"></script>
+    <script src="__JS__/center.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>修改资料</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">修改资料</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+    <div class="col-lg-6 col-lg-offset-3 modify-container">
+        <div class="page-header">
+            <h2>基本信息</h2>
+        </div>
+        <form role="form" id="basicForm">
+            <div class="form-group">
+                <label>账号</label>
+                <input type="text" class="form-control" name="account" value="{$userinfo.account}" readonly>
+            </div>
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" class="form-control" name="nickname" value="{$userinfo.nickname}" placeholder="请输入用户名">
+                <span class="help-block"></span>
+            </div>
+            <div class="form-group">
+                <label>邮箱</label>
+                <input type="text" class="form-control" name="email" value="{$userinfo.email}" placeholder="请输入邮箱">
+                <span class="help-block"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-lg btn-lg-edit" value="保存">
+            </div>
+        </form>
+        <div class="page-header">
+            <h2>修改密码</h2>
+        </div>
+        <form role="form" id="passwordForm">
+            <div class="form-group">
+                <label>原密码</label>
+                <input type="password" class="form-control" name="oldpassword" value="" placeholder="请输入原密码">
+                <span class="help-block"></span>
+            </div>
+            <div class="form-group">
+                <label>新密码</label>
+                <input type="password" class="form-control" name="newpassword" id="newpassword" value="" placeholder="请输入新密码">
+                <span class="help-block"></span>
+            </div>
+            <div class="form-group">
+                <label>重复密码</label>
+                <input type="password" class="form-control" name="repassword" value="" placeholder="再次输入密码">
+                <span class="help-block"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-lg btn-lg-edit" value="保存">
+            </div>
+        </form>
+    </div>
+
+    <!-- 修改资料模态框 -->
+    <div class="modal fade bs-example-modal-sm" id="modify-modal" tabindex="-1" role="modal" aria-labelledby="addUserModal" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p class="modal-message modal-message-success"><i class="icon-ok-sign icon-2x modal-icon-success"></i><span class="message-text">成功后的信息</span></p>
+                    <p class="modal-message modal-message-error"><i class="icon-remove-sign icon-2x modal-icon-error"></i><span class="message-text">失败后的信息</span></p>
+                    <p class="modal-message modal-message-info"><i class="icon-info-sign icon-2x modal-icon-info"></i><span class="message-text">错误的信息</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

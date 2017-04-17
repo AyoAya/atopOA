@@ -1,0 +1,139 @@
+/*为避免影响布局，禁止uploadify显示进度条*/
+.uploadify-queue {
+    display: none;
+}
+
+.col-lg-6 {
+    padding: 0 0 !important;
+}
+
+.expense-box {
+    width: 900px;
+    margin: 10px auto 0;
+    padding-bottom: 150px;
+    position: relative;
+}
+.expense-box .step-progress {
+    margin-bottom: 15px;
+}
+.expense-box .page-header {
+    margin: 10px 0;
+    padding: 5px 0;
+}
+.expense-box .page-header .expense-number {
+    margin: 0 3px;
+}
+.expense-box .expense-form .col-lg-6 {
+    padding: 0 15px !important;
+}
+.expense-box .expense-form-container .col-lg-6:nth-child(odd) {
+    padding-right: 20px !important;
+}
+.expense-box .expense-form-container .col-lg-6:nth-child(even) {
+    padding-left: 20px !important;
+}
+.expense-box .expense-form-container .expense-form .remove-detail {
+    color: #ccc;
+    position: relative;
+    top: 1px;
+    cursor: pointer;
+    display: none;
+}
+.expense-box .expense-form-container .expense-form .remove-detail:hover {
+    color: #d9534f;
+}
+.expense-box .rewrite-textarea {
+    max-width: 100%;
+    min-width: 100%;
+    min-height: 86px;
+}
+.uploadify-button {
+    width: 120px;
+    height: 40px;
+    margin: 0;
+    text-align: center;
+    line-height: 40px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: none;
+    background: #ec971f;
+    font-size: 14px;
+    font-weight: normal;
+}
+.uploadify-button:hover,.uploadify-button:focus {
+    background: #d58512;
+    color: #fff;
+    text-decoration: none;
+}
+.expense-box .submit-btn,.expense-box .reset-btn {
+    width: 100px;
+    height: 40px;
+}
+.expense-box .reset-btn {
+    margin-right: 15px;
+}
+.expense-box .total-money {
+    margin-top: 15px;
+    padding-top: 17px;
+    padding-bottom: 17px;
+    border-bottom: solid 1px #ddd;
+    margin-bottom: 20px;
+}
+.expense-box .total-money .lead {
+    color: #d9534f;
+    font-weight: bold;
+}
+.expense-box .total-money .add-detail-btn {
+    position: relative;
+    top: 2px;
+}
+.footer {
+
+}
+#file-list {
+    margin-top: 20px;
+}
+#file-list li {
+    padding: 5px 10px;
+    background: #5bc0de;
+    color: #fff;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 0 15px 15px 0;
+}
+#file-list li i.remove-file {
+    margin-left: 10px;
+    cursor: pointer;
+}
+#file-list li i.remove-file:hover {
+    color: #d9534f;
+}
+
+/*loading加载层(默认隐藏)*/
+#loading {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 99999;
+}
+#loading .loading-icon {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    left: 50%;
+    margin-left: -30px;
+    top: 50%;
+    margin-top: -30px;
+    font-size: 60px;
+    color: #fff;
+    text-align: center;
+    line-height: 60px;
+}

@@ -1,0 +1,308 @@
+
+hr {
+    margin: 2px 0;
+    padding: 0;
+}
+.row {
+    margin: 0;
+    padding: 0 15px;
+}
+.col-lg-2 {
+    height: 60px;
+    width: 180px;
+    display: inline-block;
+}
+.department-btn a.active {
+    background: url("../img/sanjiao-selected.png") right bottom no-repeat;
+    background-size: 15%;
+}
+.col-box {
+    display: block;
+    border: solid 1px #ddd;
+    height: 60px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #fff;
+}
+.col-box .department-icon {
+    float: left;
+    width: 60px;
+    height: 60px;
+}
+.col-box .sales-icon {
+    background: #428bca url("../img/sales.png") center center no-repeat;
+    background-size: 60%;
+}
+.col-box .production-icon {
+    background: #f0ad4e url("../img/production.png") center center no-repeat;
+    background-size: 60%;
+}
+.col-box .development-icon {
+    background: #d9534f url("../img/Development.png") center center no-repeat;
+    background-size: 60%;
+}
+.col-box .personnel-icon {
+    background: #5cb85c url("../img/quality-ability.png") center center no-repeat;
+    background-size: 60%;
+}
+.col-box .plan-icon {
+    background: #c84bc4 url("../img/plan.png") center center no-repeat;
+    background-size: 60%;
+}
+.col-box .administration-icon {
+    background: #38bbd7 url("../img/administration.png") center center no-repeat;
+    background-size: 60%;
+}
+.col-box .department-name {
+    float: left;
+    font-size: 18px;
+    margin: 16px 0 0 15px;
+}
+.col-box .department-name small {
+    display: block;
+    font-size: 60%;
+}
+
+.row-change-top {
+    margin-top: 20px;
+}
+.tabs-edit {
+    margin-bottom: 10px;
+    position: relative;
+}
+.uploadify-button {
+    position: absolute;
+    right: -12px;
+    top: -16px;
+    width: 140px;
+    height: 38px;
+    padding: 0;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 15px;
+    background: #428bca;
+    border: none;
+    text-decoration: none;
+}
+.uploadify-button:hover,.uploadify-button:focus {
+    background: #337ab7;
+    text-decoration: none;
+    color: #fff;
+}
+.file-management {
+
+}
+.content-body {
+
+}
+.content-body .operation-bar {
+    min-height: 30px;
+    line-height: 30px;
+    border-bottom: solid 1px #eee;
+}
+.content-body .operation-bar a {
+    text-decoration: none;
+}
+.content-body .operation-bar a.add-folder {
+    margin-right: 20px;
+}
+.input-group-edit {
+    height: 38px;
+    display: inline-block;
+    margin-right: 20px;
+    position: relative;
+    top: -56px;
+}
+.btn-primary-edit {
+    height: 38px;
+    width: 50px;
+}
+.input-group-btn-edit {
+    height: 38px;
+    display: inline-block;
+}
+.form-control-edit {
+    height: 38px;
+    display: inline-block !important;
+    width: 220px !important;
+}
+
+.department-btn a {
+    min-width: 166px;
+    display: inline-block;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+.department-btn a:last-child {
+    margin-right: 0;
+}
+
+
+.content-body .file-box .folders-list li.file-icon {
+    width: 33%;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    padding-right: 20px;
+}
+.content-body .file-box .folders-list li.notPower {
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    padding-top: 50px;
+    color: #aaa;
+}
+.content-body .file-box .folders-list li.notPower i {
+    font-size: 140px;
+    color: #ccc;
+    display: block;
+}
+.content-body .file-box .folders-list .folder-icon {
+    margin: 10px 0;
+    text-indent: 4px;
+    clear: both;
+    font-size: 15px;
+    font-weight: bold;
+    border-left: solid 4px #428bca;
+}
+.content-body .file-box .folders-list .file-icon {
+    padding-left: 10px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+.content-body .file-box .folders-list .file-icon a {
+    color: #333;
+}
+
+.content-body .file-box .folders-list li i.z-icon-logo {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+}
+.content-body .file-box .folders-list li i.z-icon-doc {
+    position: relative;
+    top: 2px;
+    background: url("../img/icon-doc.png") no-repeat;
+}
+.content-body .file-box .folders-list li i.z-icon-pdf {
+    position: relative;
+    top: 1px;
+    background: url("../img/icon-pdf.png") no-repeat;
+}
+.content-body .file-box .folders-list li i.z-icon-file {
+    position: relative;
+    top: 2px;
+    background: url("../img/icon-file.png") no-repeat;
+}
+.content-body .file-box .folders-list li i.z-icon-xls {
+    position: relative;
+    top: 2px;
+    background: url("../img/icon-xls.png") no-repeat;
+}
+.content-body .file-box .folders-list li i.z-icon-zip {
+    position: relative;
+    top: 2px;
+    background: url("../img/icon-zip.png") no-repeat;
+}
+.content-body .file-box .folders-list li i.z-icon-img {
+    position: relative;
+    top: 2px;
+    background: url("../img/icon-image.png") no-repeat;
+}
+
+
+.tabs-edit li,.tabs-edit a {
+    cursor: pointer;
+    outline: none;
+}
+
+
+
+
+
+
+/*
+
+.folders-list li {
+    display: inline-block;
+    width: 111.5px;
+    min-height: 115px;
+    padding: 5px;
+    margin: 5px;
+    background: #fff;
+    border: solid 1px #fff;
+    position: relative;
+}
+.folders-list li.file-icon .file-ext {
+    position: absolute;
+    width: 50px;
+    top: 52px;
+    left: 30px;
+    text-indent: 5px;
+    font-weight: bold;
+    color: #888;
+    border-top: solid 5.5px #888;
+}
+.folders-list li.active {
+    background: #efefef;
+}
+.folders-list li:hover {
+    background: #efefef;
+}
+.folders-list li.folder-icon div i {
+    width: 111.5px;
+    height: 90px;
+    display: block;
+    font-size: 75px;
+    test-align: center;
+    line-height: 90px;
+    margin-left: 10px;
+    padding-top: 5px;
+    color: #f0ad4e;
+}
+.folders-list li.file-icon div i {
+    width: 111.5px;
+    height: 90px;
+    display: block;
+    font-size: 80px;
+    test-align: center;
+    line-height: 90px;
+    margin-left: 22px;
+    color: #888;
+}
+.folders-list li div p {
+    text-align: center;
+    width: 100px;
+    font-size: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+#right-click-menu {
+    position: fixed;
+    width: 120px;
+    border: solid 1px #888;
+    background: #fff;
+    z-index: 99999;
+    top: 0;
+    left: 0;
+}
+#right-click-menu ul li {
+    height: 30px;
+    line-height: 30px;
+    text-indent: 10px;
+    cursor: default;
+}
+#right-click-menu ul li:hover {
+    background: #428bca;
+    color: #fff;
+}*/

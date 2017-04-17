@@ -1,0 +1,110 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="__CSS__/person.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/jquery.validate.min.js"></script>
+    <script src="__JS__/jquery.form.js"></script>
+    <script src="__JS__/person.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>用户管理</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Manage">用户管理</a></li>
+        <li class="active">离职人员</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+    <notempty name="personList">
+        <table class="layui-table" id="table">
+            <thead>
+                <th>序号</th>
+                <th>账号</th>
+                <th>姓名</th>
+                <th>部门</th>
+                <th>级别</th>
+                <th>职位</th>
+                <th>汇报关系</th>
+                <th>状态</th>
+                <th>操作</th>
+            </thead>
+            <tbody>
+            <volist name="personList" id="value">
+                <neq name="value.account" value="admin">
+                    <tr class="<eq name='value.id' value='$Think.session.user.id'>warning</eq>">
+                        <td>
+                            <if condition="$Think.get.p AND $Think.get.p neq 1">
+                                {$pagenumber*$limitsize+$i}
+                                <else/>
+                                {$i}
+                            </if>
+                        </td>
+                        <td>{$value.account}</td>
+                        <td>{$value.nickname}</td>
+                        <td>{$value.department_name}</td>
+                        <td>{$value.level_name}</td>
+                        <td>{$value.position_name}</td>
+                        <td>{$value.report_name}</td>
+                        <td><span class="label {$value.state_class}">{$value.state_text}</span></td>
+                        <td>
+                            <neq name="value.id" value="$Think.session.user.id">
+                                <div class="btn-group">
+                                    <a href="__ROOT__/editManage/{$value.id}" class="btn btn-default btn-sm" personid="{$value.id}"><i class="icon-pencil"></i> 编辑</a>
+                                    <button class="btn btn-default btn-sm delete-user" personid="{$value.id}"><i class="icon-remove"></i> 删除</button>
+                                </div>
+                            </neq>
+                        </td>
+                    </tr>
+                </neq>
+            </volist>
+            </tbody>
+        </table>
+    <else/>
+        <center style="color: #888;padding-top: 60px;font-size: 20px;"><span class="empty_data"><i class="icon-info-sign"></i> 没有数据</span></center>
+    </notempty>
+
+    <!-- 分页 -->
+    <ul class="pagination pagination-edit">{$pageShow}</ul>
+
+    <!-- 删除用户提示模态框 -->
+    <div class="modal fade bs-example-modal-sm" id="deluser-modal" tabindex="-1" role="modal" aria-labelledby="addUserModal" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">警告</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="delete-user-tip"><i class="icon-info-sign icon-3x modal-icon-info"></i><span class="message-text">你真的要删除该用户吗？</span></p>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="hiddenID" value="" id="hiddenID">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="done-delete">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+

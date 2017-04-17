@@ -1,0 +1,48 @@
+@CHARSET "UTF-8";
+
+.message-container {
+	width: 1000px;
+	margin: 0 auto;
+}
+.panel-title a {
+	display: block;
+	outline: none;
+	text-decoration: none;
+}
+.panel-title a:hover {
+	text-decoration: none;
+}
+.panel-body {
+	min-height: 250px;
+}
+.noticeList li {
+	padding: 7px 5px;
+	border-bottom: solid 1px #ccc;
+}
+.noticeList li a:hover {
+	text-decoration: none;
+}
+.noticeList li small {
+	position: relative;
+	top: 4px;
+}
+.empty-box {
+	width: 130px;
+	height: 225px;
+	color: #bbb;
+	margin: 0 auto;
+	text-align: center;
+}
+.empty-box i {
+	font-size: 150px;
+}
+.empty-box p.first {
+	font-size: 28px;
+}
+.noticeListTextColor a {
+	color: #555;
+}
+.noticeListTextColor a:hover {
+	color: #333;
+}
+

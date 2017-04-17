@@ -1,0 +1,9 @@
+.thumb-container {
+    width: 600px;
+    margin: 0 auto;
+}
+#introduction {
+    min-width: 600px;
+    max-width: 600px;
+    min-height: 140px;
+}

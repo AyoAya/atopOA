@@ -1,0 +1,212 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="__CSS__/project/add.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/bootstrap-datetimepicker.js"></script>
+    <script src="__JS__/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="__JS__/jquery.validate.min.js"></script>
+    <script src="__JS__/jquery.form.js"></script>
+    <script src="__PUBLIC__/layer/layer.js"></script>
+    <script src="__JS__/project-add.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>添加项目</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Project">项目管理</a></li>
+        <li class="active">添加项目</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+    <!--<div class="commingSoon">
+        <p><i class="icon-info-sign icon-5x"></i></p>
+        <h1>功能研发中</h1>
+        <p>Function is developing</p>
+        <p>Comming Soon.</p>
+    </div>-->
+
+    <div class="project-container">
+        <h2 class="page-header">{$param.title}</h2>
+        <form role="form" id="projectForm">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td class="column-name">项目编号</td>
+                        <td class="td_padding"><input type="text" name="pj_num" class="form-control input-sm" placeholder="请输入项目编号，例：Plan-Test-001"><div class="help-block">&nbsp;</div></td>
+                        <td class="column-name">项目名称</td>
+                        <td><input type="text" name="pj_name" class="form-control input-sm" placeholder="请输入项目名称，例：CSFP+ 项目开发"><div class="help-block">&nbsp;</div></td>
+                    </tr>
+                    <tr>
+                        <td class="column-name">项目负责人</td>
+                        <td><input type="text" name="pj_responsible" dpmt="1" readonly class="form-control input-sm open-modal" placeholder="请选择项目负责人"><div class="help-block">&nbsp;</div></td>
+                        <td class="column-name">立项时间</td>
+                        <td><input type="text" name="pj_add_pro_time" readonly class="form-control input-sm pj_add_pro_time" placeholder="请选择立项时间"><div class="help-block">&nbsp;</div></td>
+                        <input type="hidden" name="pj_management" dpmt="1" readonly class="form-control input-sm project-manager-input" value="{$Think.session.user.nickname}">
+                    </tr>
+                    <tr>
+                        <td class="column-name">硬件设计</td>
+                        <td><input type="text" name="pj_design" dpmt="1" readonly class="form-control input-sm open-modal" placeholder="请选择项目设计人员"><div class="help-block">&nbsp;</div></td>
+                        <td class="column-name">产品类型</td>
+                        <td><input type="text" name="pj_family" class="form-control input-sm" placeholder="例：CSFP+(SFP 、XFP、AOC、DAC， etc)"><div class="help-block">&nbsp;</div></td>
+                    </tr>
+                    <tr>
+                        <td class="column-name">FW开发</td>
+                        <td><input type="text" name="pj_fw_development" dpmt="1" readonly class="form-control input-sm open-modal" placeholder="请选择FW开发人员"><div class="help-block">&nbsp;</div></td>
+                        <td class="column-name">项目类型</td>
+                        <td><input type="text" name="pj_type" class="form-control input-sm" placeholder="例：新设计(新设计？新功能？降低成本？etc)"><div class="help-block">&nbsp;</div></td>
+                    </tr>
+                    <tr>
+                        <td class="column-name">结构件设计</td>
+                        <td><input type="text" name="pj_structure_design" dpmt="1" readonly class="form-control input-sm open-modal" placeholder="请选择结构件设计人员"><div class="help-block">&nbsp;</div></td>
+                        <td class="column-name">标准品名</td>
+                        <td><input type="text" name="pj_standard_name" class="form-control input-sm" placeholder="请输入标准品名，如有多个用/分割"><div class="help-block">&nbsp;</div></td>
+                    </tr>
+                    <tr>
+                        <td class="column-name">光器件设计</td>
+                        <td><input type="text" name="pj_light_design" dpmt="1" readonly class="form-control input-sm open-modal" placeholder="请选择光器件设计人员"><div class="help-block">&nbsp;</div></td>
+                        <td class="column-name">平台</td>
+                        <td><input type="text" name="pj_platform" class="form-control input-sm" placeholder="例：DS4834+Max24016"><div class="help-block">&nbsp;</div></td>
+                    </tr>
+                    <tr>
+                        <td class="column-name">ATE设计</td>
+                        <td><input type="text" name="pj_ate_design" dpmt="1" readonly class="form-control input-sm open-modal" placeholder="请选择ATE设计人员"><div class="help-block">&nbsp;</div></td>
+                        <td class="column-name">潜在市场需求</td>
+                        <td><input type="text" name="pj_market_demand" class="form-control input-sm" placeholder="请输入市场潜在需求(2年)，由市场部提供"><div class="help-block">&nbsp;</div></td>
+                    </tr>
+                    <tr>
+                        <td class="column-name">DVT测试</td>
+                        <td><input type="text" name="pj_dvt_test" dpmt="1" readonly class="form-control input-sm open-modal" placeholder="请选择DVT测试人员"><div class="help-block">&nbsp;</div></td>
+                        <td class="column-name">目标客户</td>
+                        <td><input type="text" name="pj_target_customer" class="form-control input-sm" placeholder="例：华为（市场部提供）"><div class="help-block">&nbsp;</div></td>
+                        </tr>
+                    <tr>
+                        <td class="column-name">市场部</td>
+                        <td><input type="text" name="pj_market" dpmt="9" readonly class="form-control input-sm open-modal" placeholder="请选择市场部人员"><div class="help-block">&nbsp;</div></td>
+                        <td class="column-name">目标成本</td>
+                        <td><input type="text" name="pj_target_cost" class="form-control input-sm" placeholder="请输入目标成本"><div class="help-block">&nbsp;</div></td>
+                    </tr>
+                    <tr>
+                        <td class="column-name">项目描述</td>
+                        <td colspan="3">
+                            <textarea name="pj_describe" class="form-control" placeholder="请输入项目描述"></textarea>
+                            <div class="help-block">&nbsp;</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2 class="page-header project-plan">项目计划</h2>
+            <div class="plan-box">
+                <table class="table" id="plan-table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default gate-num">Gate1</button>
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li gate="1"><a href="#">Gate1</a></li>
+                                    </ul>
+                                </div>
+                                <input type="hidden" name="gate" value="1">
+                            </td>
+                            <td class="special"><input type="text" name="mile_stone" class="form-control" placeholder="里程碑"></td>
+                            <td><input type="text" name="items" class="form-control" placeholder="节点"></td>
+                            <td><input type="text" name="plan_start_time" class="form-control plan_start_time" readonly placeholder="计划开始时间"></td>
+                            <td><input type="text" name="plan_stop_time" class="form-control plan_stop_time" readonly placeholder="计划结束时间"></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-default add-row-btn"><i class="icon-plus"></i>&nbsp;添加一行</button>
+            </div>
+            <div class="form-group">
+                <input type="hidden" name="pj_child" value="{$param.pj_child}">
+                <input type="hidden" name="pj_belong" value="{$param.pj_belong}">
+                <button type="submit" class="btn btn-primary" id="submit">提交</button>
+                <button type="reset" class="btn btn-default">重置</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- push email -->
+    <form id="pushEmailPersonList">
+        <input type="hidden" name="pj_responsible">
+        <input type="hidden" name="pj_management">
+        <input type="hidden" name="pj_fw_development">
+        <input type="hidden" name="pj_design">
+        <input type="hidden" name="pj_structure_design">
+        <input type="hidden" name="pj_dvt_test">
+        <input type="hidden" name="pj_light_design">
+        <input type="hidden" name="pj_ate_design">
+        <input type="hidden" name="pj_market">
+    </form>
+
+    <!-- Modal -->
+    <div class="modal fade bs-example-modal-lg" id="choosePerson" tabindex="-1" role="dialog" aria-labelledby="choosePersonModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="choosePersonTitle">Modal title</h4>
+                </div>
+                <div class="modal-body" id="choosePersonBody">
+                    <ul>
+                        <volist name="users" id="value">
+                            <li dpmtid="{$value.department}" userid="{$value.id}">{$value.nickname}</li>
+                        </volist>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-modal sr-only" id="loading">
+        <div class="loading-icon">
+            <p><i class="icon-spinner icon-spin icon-2x"></i></p>
+        </div>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

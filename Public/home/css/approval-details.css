@@ -1,0 +1,110 @@
+.approval-container {
+    width: 900px;
+    margin: 0 auto;
+}
+.table tr,.table td,.table th {
+    text-align: center;
+}
+.panel {
+    margin-top: 15px;
+}
+.panel .panel-footer {
+    font-size: 12px;
+}
+.file-list li {
+    padding: 4px 15px;
+    display: inline-block;
+    background: #5bc0de;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+.file-list li a {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+}
+
+.approval-btn-box {
+    position: fixed;
+    right: 50px;
+    bottom: 40px;
+    width: 100px;
+    height: 100px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background: rgba(66,139,202,.5);
+    cursor: pointer;
+}
+.approval-btn-box .approval-icon-box {
+    width: 90px;
+    height: 90px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background: #428bca;
+    margin: 5px 0 0 5px;
+    text-align: center;
+    padding-top: 5px;
+}
+.approval-btn-box .approval-icon-box .approval-icon {
+    font-size: 38px;
+    color: #fff;
+}
+.approval-btn-box .approval-icon-box .approval-text {
+    color: #fff;
+}
+
+.textarea-edit {
+    max-width: 100%;
+    min-width: 100%;
+    min-height: 100px;
+    max-height: 200px;
+}
+.panel-body-edit p {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: solid 1px #ddd;
+}
+.panel-body-edit p:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.approval-time-offest {
+    position: relative;
+    top: 5px;
+}
+.total-money-td {
+    text-align: right !important;
+    padding-right: 50px !important;
+}
+
+
+/*loading加载层(默认隐藏)*/
+#loading {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 99999;
+}
+#loading .loading-icon {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    left: 50%;
+    margin-left: -30px;
+    top: 50%;
+    margin-top: -30px;
+    font-size: 60px;
+    color: #fff;
+    text-align: center;
+    line-height: 60px;
+}

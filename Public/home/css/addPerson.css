@@ -1,0 +1,141 @@
+@CHARSET "UTF-8";
+
+.wrap {
+	padding-bottom: 300px;
+}
+.page-header-edit h3 {
+	display: inline-block;
+}
+.btn-group-edit {
+	position: relative;
+	top: -38px;
+}
+
+
+.help-block-color {
+	color: red;
+}
+.last-blockquote p {
+	display: inline-block;
+}
+.btn-group-edit {
+	margin-bottom: 5px !important;
+}
+.form-group-edit {
+	display: inline-block;
+	margin-right: 20px;
+	margin-bottom: 0;
+}
+.form-group-edit-last {
+	margin: 0;
+}
+.checkbox-edit {
+	margin: 0;
+}
+.checkbox-edit label {
+	padding: 10px 30px 10px 10px;
+	margin: 5px;
+}
+.form-group-submit {
+	padding-top: 25px;
+}
+.input-reset,.input-submit {
+	padding: 10px 30px;
+}
+#report .page-header-department {
+	border: none;
+	margin-top: 10px;
+	padding: 0;
+	margin-bottom: 10px;
+}
+.page-header .small-font-size {
+	font-size: 50%;
+}
+#report kbd {
+	background: #555;
+}
+#report span.active {
+	border: solid 1px #428bca;
+	color: #428bca;
+	background: url(../img/report_selected.png) right bottom no-repeat;
+}
+#report .name-box {
+	border-radius: 4px;
+	padding: 6px 20px;
+	border: solid 1px #ccc;
+	display: inline-block;
+	margin: 5px 10px 5px 0;
+	cursor: pointer;
+}
+.adduser-message {
+	text-align: center;
+	font-size: 20px;
+	display: none;
+}
+.adduser-message .message-text {
+	position: relative;
+	top: -5px;
+	margin-left: 10px;
+}
+.adduser-message .modal-icon-success {
+	color: #5cb85c;
+}
+.adduser-message .modal-icon-error {
+	color: #d9534f;
+}
+.adduser-message .modal-icon-info {
+	color: #428bca;
+}
+
+#addUserModal {
+	width: 400px;
+}
+.addUserSuccess-message {
+	text-align: center;
+	font-size: 20px;
+	display: block;
+}
+.addUserSuccess-message .message-text {
+	position: relative;
+	top: -5px;
+	margin-left: 10px;
+}
+.addUserSuccess-message .modal-icon-success {
+	color: #5cb85c;
+}
+.loading-modal {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background: rgba(255,255,255,.5);
+}
+.loading-modal .loading-icon {
+	color: #555;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 200px;
+	height: 200px;
+	margin-left: -100px;
+	margin-top: -100px;
+	text-align: center;
+	padding-top: 36px;
+	font-size: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

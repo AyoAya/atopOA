@@ -1,0 +1,221 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/jquery.toastmessage.css">
+    <link rel="stylesheet" href="__CSS__/compatible-add.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/jquery.toastmessage.js"></script>
+    <script src="__JS__/compatible.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>添加兼容记录</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Compatibility">兼容表</a></li>
+        <li class="active">添加兼容记录</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="compatible-container">
+        <form role="form" class="compatible-form">
+            <div class="form-group">
+                <label>产品:</label>
+                <input type="text" class="form-control" readonly name="pn" id="pn_value" data-toggle="modal" data-target="#product-modal">
+                <input type="hidden" id="pn">
+            </div>
+            <div class="form-group">
+                <label>设备厂商:</label>
+                <input type="text" class="form-control" readonly name="vendor" id="vendor_value" data-toggle="modal" data-target="#vendorModal">
+                <input type="hidden" id="vendor">
+            </div>
+            <div class="form-group">
+                <label>型号:</label>
+                <input type="text" class="form-control" name="model" id="model">
+            </div>
+            <div class="form-group">
+                <label>状态:</label>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default stateText" id="stateText">完全兼容</button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu state" role="menu" id="state">
+                        <li state="1"><a href="javascript:void(0);">完全兼容</a></li>
+                        <li state="2"><a href="javascript:void(0);">能够使用</a></li>
+                        <li state="3"><a href="javascript:void(0);">不能兼容</a></li>
+                    </ul>
+                </div>
+                <input type="hidden" name="state" id="state_flag" value="1">
+            </div>
+            <div class="form-group">
+                <label>版本:</label>
+                <input type="text" class="form-control" id="version" name="version">
+            </div>
+            <div class="form-group">
+                <label>原厂型号:</label>
+                <input type="text" class="form-control" id="original" name="original">
+            </div>
+            <div class="form-group">
+                <label>备注:</label>
+                <textarea name="comment" class="form-control" id="comment"></textarea>
+            </div>
+            <div class="form-group pull-right">
+                <input type="reset" class="btn btn-default btn-reset" value="重置">
+                <button type="button" class="btn btn-primary btn-submit">添加</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 产品型号选择模态框 -->
+    <div class="modal fade bs-example-modal-lg" id="product-modal" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-editsize">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <span class="modal-title">选择产品型号</span>
+                </div>
+                <div class="modal-body filter-body">
+                    <ul id="conditon-list"></ul>
+                    <div class="filter-col">
+                        <span class="label-type">类型</span>
+                        <ul class="condition-type">
+                            <li onclick="filter('type','SFP')">SFP</li><li onclick="filter('type','SFP BIDI')">SFP BIDI</li><li onclick="filter('type','SFP Copper')">SFP Copper</li><li onclick="filter('type','SFP CWDM')">SFP CWDM</li><li onclick="filter('type','SFP DWDM')">SFP DWDM</li><li onclick="filter('type','CSFP')">CSFP</li>
+                            <p></p>
+                            <li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+')">SFP+</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ AOC')">SFP+ AOC</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ BIDI')">SFP+ BIDI</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ CWDM')">SFP+ CWDM</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ DAC Active')">SFP+ DAC Active</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ DAC Passive')">SFP+ DAC Passive</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ DWDM')">SFP+ DWDM</li>
+                            <p></p>
+                            <li style="display: none;" class="default-hide-li" onclick="filter('type','XFP')">XFP</li><li style="display: none;" class="default-hide-li" onclick="filter('type','XFP BIDI')">XFP BIDI</li><li style="display: none;" class="default-hide-li" onclick="filter('type','XFP CWDM')">XFP CWDM</li><li style="display: none;" class="default-hide-li" onclick="filter('type','XFP DWDM')">XFP DWDM</li>
+                            <p></p>
+                            <li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+')">QSFP+</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ AOC')">QSFP+ AOC</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ DAC Active')">QSFP+ DAC Active</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ DAC Passive')">QSFP+ DAC Passive</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ to 4xSFP+')">QSFP+ to 4xSFP+</li>
+                            <p></p>
+                            <li style="display: none;" class="default-hide-li" onclick="filter('type','CFP2')">CFP2</li>
+                        </ul>
+                        <span flag="true" class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>
+                    </div>
+                    <div class="filter-col">
+                        <span class="label-type">波长</span>
+                        <ul class="condition-wavelength">
+                            <volist name="filter.filterWavelength" id="value">
+                                <if condition="strlen($value['wavelength']) lt 12 AND !strpos($value['wavelength'],'.')"><elt name="i" value="9"><li onclick="filter('wavelength','{$value.wavelength}',this);">{$value.wavelength}</li><else/><li style="display:none;" class="default-hide-li" onclick="filter('wavelength','{$value.wavelength}',this);">{$value.wavelength}</li></elt></if>
+                            </volist>
+                        </ul>
+                        <span flag="true" class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>
+                    </div>
+                    <div class="filter-col">
+                        <span class="label-type">距离</span>
+                        <ul class="condition-reach">
+                            <volist name="filter.filterReach" id="value">
+                                <elt name="i" value="7"><li onclick="filter('reach','{$value.reach}');">{$value.reach}</li><else/><li style="display:none;" class="default-hide-li" onclick="filter('reach','{$value.reach}');">{$value.reach}</li></elt>
+                            </volist>
+                        </ul>
+                        <span flag="true" class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>
+                    </div>
+                    <div class="filter-col">
+                        <span class="label-type">接口</span>
+                        <ul class="condition-connector">
+                            <volist name="filter.filterConnector" id="value">
+                                <li onclick="filter('connector','{$value.connector}');">{$value.connector}</li>
+                            </volist>
+                        </ul>
+                        <!--<span class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>-->
+                    </div>
+                    <div class="filter-col">
+                        <span class="label-type">环境</span>
+                        <ul class="condition-casetemp">
+                            <volist name="filter.filterCasetemp" id="value">
+                                <eq name="value.casetemp" value="C"><li value="{$value.casetemp}" onclick="filter('casetemp','{$value.casetemp}');">C档（0-70°）</li><else/><li value="{$value.casetemp}" onclick="filter('casetemp','{$value.casetemp}');">I档（-40°-85°）</li></eq>
+                            </volist>
+                        </ul>
+                        <!--<span class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>-->
+                    </div>
+                    <hr>
+                    <ul id="product-list">
+                        <volist name="filterdata" id="value">
+                            <lt name="i" value="18">
+                                <li p_id="{$value.pid}" nickname="{$value.nickname}" manager="{$value.manager}" pn="{$value.pn}" type="{$value.type}">{$value.pn}</li>
+                                <else/>
+                                <li class="sr-only" p_id="{$value.pid}" nickname="{$value.nickname}" manager="{$value.manager}" pn="{$value.pn}" type="{$value.type}">{$value.pn}</li>
+                            </lt>
+                        </volist>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form class="sr-only" id="filterForm">
+        <input type="hidden" name="type">
+        <input type="hidden" name="wavelength">
+        <input type="hidden" name="reach">
+        <input type="hidden" name="connector">
+        <input type="hidden" name="casetemp">
+    </form>
+
+    <!-- 设备厂商选择模态框 -->
+    <div class="modal fade bs-example-modal-lg" id="vendorModal" tabindex="-1" role="dialog" aria-labelledby="vendorModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" class="vendorModalLabel">选择设备厂商</h4>
+                </div>
+                <div class="modal-body">
+                    <ul id="brandList">
+                        <volist name="vendor" id="value">
+                            <li belong="{$value.id}">{$value.brand}</li>
+                        </volist>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" id="prompt" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content" id="prompt-content">
+                <i class="icon-ok-sign"></i>
+                <span>添加成功</span>
+            </div>
+        </div>
+    </div>
+
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

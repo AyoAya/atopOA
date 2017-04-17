@@ -1,0 +1,660 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/bs-is-fun.css">
+    <link rel="stylesheet" href="__CSS__/overview.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/jquery.Huploadify.js"></script>
+    <script src="__JS__/bootstrap-datetimepicker.js"></script>
+    <script src="__JS__/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="__JS__/jquery.toastmessage.js"></script>
+    <script src="__JS__/jquery.validate.min.js"></script>
+    <script src="__JS__/jquery.form.js"></script>
+    <script src="__JS__/sample.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>样品总览</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/sample">样品管理</a></li>
+        <li class="active">样品总览</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+    <div class="page-header">
+        <h1 class="totalorder"><i class="icon-list-alt">&nbsp;&nbsp;</i>{$totalorder}<small class="">共计：{:count($overview)}个产品，{:count($attachment)}个附件</small><i class="createtime pull-right"><i class="icon-time">&nbsp;</i>订单创建时间：{$overview.0.createtime|date="Y-m-d H:i:s",###}</i><i class="sale-person"><i class="icon-user">&nbsp;</i>销售：{$overview.0.nickname}</i></h1>
+    </div>
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>产品类型</th>
+                <th>产品型号</th>
+                <th>产品经理</th>
+                <th>模块数量</th>
+                <th>客户名称</th>
+                <th>设备品牌</th>
+                <th>设备型号</th>
+                <th>进度</th>
+            </tr>
+            </thead>
+            <tbody>
+                <volist name="overview" id="value">
+                    <tr>
+                        <td>{$value.type}</td>
+                        <td><a href="__ROOT__/sampleDetails/{$value.order}">{$value.product}</a></td>
+                        <td>{$value.manager}</td>
+                        <td>{$value.number}</td>
+                        <td>{$value.customer}</td>
+                        <td>{$value.brand}</td>
+                        <td>{$value.model}</td>
+                        <td>
+                            <present name="value.color">
+                                <eq name="value.color" value="0">
+                                    <span style="padding: 2px 5px;background: #f0ad4e;border-radius: 2px;color: #fff;">{$value.state}</span>
+                                </eq>
+                                <eq name="value.color" value="2">
+                                    <span style="padding: 2px 5px;background: #d9534f;border-radius: 2px;color: #fff;">{$value.state}</span>
+                                </eq>
+                                <eq name="value.color" value="3">
+                                    <span style="padding: 2px 5px;background: #5cb85c;border-radius: 2px;color: #fff;">{$value.state}</span>
+                                </eq>
+                            </present>
+                        </td>
+                    </tr>
+                </volist>
+            </tbody>
+        </table>
+    <volist name="sample" id="value">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">产品：<a style="color: #428bca;" href="__ROOT__/sampleDetails/{$value.order}">{$value.product}</a></h4>
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-pills nav-justified step step-progress">
+                    <!--<li class="active">
+                        <a>下单<span class="caret"></span></a>
+                        <div class="round">
+                            <span class="active">
+                                <div class="instructions">
+                                    <span class="caret"></span>
+                                    <p>下单人：{$value.nickname}<br><small>{$value.createtime|date="Y-m-d H:i:s",###}</small></p>
+                                </div>
+                            </span>
+                        </div>
+                    </li>
+                    <li class="<eq name='value.s_status' value='1'>active</eq><eq name='value.s_status' value='2'>error</eq>">
+                        <a>审核<span class="caret"></span></a>
+                        <in name="value.s_status" value="1,2">
+                            <div class="round">
+                                <span class="<eq name='value.s_status' value='1'>active</eq><eq name='value.s_status' value='2'>error</eq>">
+                                    <div class="instructions">
+                                        <span class="caret"></span>
+                                        <p>审核人：{$value.a_name}<br><small>{$value.s_time|date="Y-m-d H:i:s",###}</small></p>
+                                    </div>
+                                </span>
+                            </div>
+                        </in>
+                    </li>
+                    <li class="<eq name='value.w_status' value='1'>active</eq><eq name='value.w_status' value='2'>error</eq>">
+                        <a>物料准备<span class="caret"></span></a>
+                        <in name="value.w_status" value="1,2">
+                            <div class="round">
+                                <span class="<eq name='value.s_status' value='1'>active</eq><eq name='value.s_status' value='2'>error</eq>">
+                                    <div class="instructions">
+                                        <span class="caret"></span>
+                                        <p>处理人：{$value.w_name}<br><small>{$value.w_time|date="Y-m-d H:i:s",###}</small></p>
+                                    </div>
+                                </span>
+                            </div>
+                        </in>
+                    </li>
+                    <li class="<eq name='value.c_status' value='1'>active</eq><eq name='value.c_status' value='2'>error</eq>">
+                        <a>样品制作<span class="caret"></span></a>
+                        <in name="value.c_status" value="1,2">
+                            <div class="round">
+                                <span class="<eq name='value.c_status' value='1'>active</eq><eq name='value.c_status' value='2'>error</eq>">
+                                    <div class="instructions">
+                                        <span class="caret"></span>
+                                        <p>审核人：{$value.c_name}<br><small>{$value.c_time|date="Y-m-d H:i:s",###}</small></p>
+                                    </div>
+                                </span>
+                            </div>
+                        </in>
+                    </li>
+                    <li class="<eq name='value.y_status' value='1'>active</eq><eq name='value.y_status' value='2'>error</eq>">
+                        <a>样品测试<span class="caret"></span></a>
+                        <in name="value.y_status" value="1,2">
+                            <div class="round">
+                                <span class="<eq name='value.y_status' value='1'>active</eq><eq name='value.y_status' value='2'>error</eq>">
+                                    <div class="instructions">
+                                        <span class="caret"></span>
+                                        <p>测试人：{$value.y_name}<br><small>{$value.y_time|date="Y-m-d H:i:s",###}</small></p>
+                                    </div>
+                                </span>
+                            </div>
+                        </in>
+                    </li>
+                    <li class="<eq name='value.f_status' value='1'>active</eq><eq name='value.f_status' value='2'>error</eq>">
+                        <a>发货<span class="caret"></span></a>
+                        <in name="value.f_status" value="1,2">
+                            <div class="round">
+                                <span class="<eq name='value.f_status' value='1'>active</eq><eq name='value.f_status' value='2'>error</eq>">
+                                    <div class="instructions">
+                                        <span class="caret"></span>
+                                        <p>测试人：{$value.f_name}<br><small>{$value.f_time|date="Y-m-d H:i:s",###}</small></p>
+                                    </div>
+                                </span>
+                            </div>
+                        </in>
+                    </li>
+                    <li class="<in name='value.k_status' value='1,2'>active</in>">
+                        <a>反馈<span class="caret"></span></a>
+                        <in name="value.k_status" value="1,2">
+                            <div class="round">
+                                <span class="<in name='value.k_status' value='1,2'>active</in>">
+                                    <div class="instructions">
+                                        <span class="caret"></span>
+                                        <p>反馈人：{$value.k_name}<br><small>{$value.k_time|date="Y-m-d H:i:s",###}</small></p>
+                                    </div>
+                                </span>
+                            </div>
+                        </in>
+                    </li>-->
+                    <li class="active">
+                        <a>下单<span class="caret"></span></a>
+                        <div class="round">
+						<span class="active">
+							<div class="instructions">
+								<span class="caret"></span>
+								<p>下单人：{$value.nickname}<br><small>{$value.createtime|date="Y-m-d H:i:s",###}</small></p>
+							</div>
+						</span>
+                        </div>
+                    </li>
+                    <li class="<eq name='value.s_status' value='1'>active</eq><eq name='value.s_status' value='2'>error</eq>">
+                        <a>审核
+                            <notempty name="value.s_comment">
+                                <!-- 成功后消息存在并且不为空时显示 -->
+                                <present name="value.s_comment.success">
+                                    <notpresent name="value.s_comment.save">
+                                        <notempty name="value.s_comment.success">
+										<span class="log-save-icon-audit operation-log-color">
+											<i class="icon-info-sign"></i>
+										</span>
+                                        </notempty>
+                                    </notpresent>
+                                </present>
+                                <!-- 失败后消息存在并且不为空时显示 -->
+                                <present name="value.s_comment.error">
+                                    <notpresent name="value.s_comment.save">
+                                        <notempty name="value.s_comment.error">
+										<span class="log-save-icon-audit operation-log-color">
+											<i class="icon-info-sign"></i>
+										</span>
+                                        </notempty>
+                                    </notpresent>
+                                </present>
+                                <!-- 更新日志后消息存在并且不为空时显示 -->
+                                <present name="value.s_comment.save">
+                                    <notempty name="value.s_comment.save">
+									<span class="log-save-icon-audit operation-log-color">
+										<i class="icon-info-sign"></i>
+									</span>
+                                    </notempty>
+                                </present>
+                                <div class="sr-only audit-operation-log">
+                                    <ul>
+                                        <eq name="value.s_status" value="2">
+                                            <notempty name="value.s_comment.error.0.message">
+                                                <li><strong class="text-danger"><p><i class="icon-remove-sign">&nbsp;</i>[{$value.s_comment.error.0.time|date="Y-m-d H:i:s",###}] {$value.s_comment.error.0.message}</p></strong></li>
+                                            </notempty>
+                                        </eq>
+                                        <eq name="value.s_status" value="1">
+                                            <notempty name="value.s_comment.success.0.message">
+                                                <li><strong class="text-success"><p><i class="icon-ok-sign">&nbsp;</i>[{$value.s_comment.success.0.time|date="Y-m-d H:i:s",###}] {$value.s_comment.success.0.message}</p></strong></li>
+                                            </notempty>
+                                        </eq>
+                                        <volist name="value.s_comment.save" id="vo">
+                                            <li>
+                                                <p><i class="icon-minus-sign">&nbsp;</i>[{$vo.time|date="Y-m-d H:i:s",###}] {$vo.message}</p>
+                                            </li>
+                                        </volist>
+                                    </ul>
+                                </div>
+                            </notempty>
+                            <span class="caret"></span>
+                        </a>
+                        <in name='value.s_status' value='1,2'>
+                            <div class="round">
+							<span class="<eq name='value.s_status' value='1'>active</eq><eq name='value.s_status' value='2'>error</eq>">
+								<div class="instructions">
+									<span class="caret"></span>
+									<p>审核人：{$value.a_name}<br><small>{$value.s_time|date="Y-m-d H:i:s",###}</small></p>
+								</div>
+							</span>
+                            </div>
+                        </in>
+                    </li>
+                    <li class="<eq name='value.w_status' value='1'>active</eq><eq name='value.w_status' value='2'>error</eq>">
+                        <a>物料准备
+                            <notempty name="value.w_comment">
+                                <!-- 成功后消息存在并且不为空时显示 -->
+                                <present name="value.w_comment.success">
+                                    <notpresent name="value.w_comment.save">
+                                        <notempty name="value.w_comment.success">
+										<span class="log-save-icon-metarial operation-log-color">
+											<i class="icon-info-sign"></i>
+										</span>
+                                        </notempty>
+                                    </notpresent>
+                                </present>
+                                <!-- 失败后消息存在并且不为空时显示 -->
+                                <present name="value.w_comment.error">
+                                    <notpresent name="value.w_comment.save">
+                                        <notempty name="value.w_comment.error">
+										<span class="log-save-icon-metarial operation-log-color">
+											<i class="icon-info-sign"></i>
+										</span>
+                                        </notempty>
+                                    </notpresent>
+                                </present>
+                                <!-- 更新日志后消息存在并且不为空时显示 -->
+                                <present name="value.w_comment.save">
+                                    <notempty name="value.w_comment.save">
+									<span class="log-save-icon-metarial operation-log-color">
+										<i class="icon-info-sign"></i>
+									</span>
+                                    </notempty>
+                                </present>
+                                <div class="sr-only metarial-operation-log">
+                                    <ul>
+                                        <eq name="value.w_status" value="2">
+                                            <notempty name="value.w_comment.error.0.message">
+                                                <li><strong class="text-danger"><p><i class="icon-remove-sign">&nbsp;</i>[{$value.w_comment.error.0.time|date="Y-m-d H:i:s",###}] {$value.w_comment.error.0.message}</p></strong></li>
+                                            </notempty>
+                                        </eq>
+                                        <eq name="value.w_status" value="1">
+                                            <notempty name="value.w_comment.success.0.message">
+                                                <li><strong class="text-success"><p><i class="icon-ok-sign">&nbsp;</i>[{$value.w_comment.success.0.time|date="Y-m-d H:i:s",###}] {$value.w_comment.success.0.message}</p></strong></li>
+                                            </notempty>
+                                        </eq>
+                                        <volist name="value.w_comment.save" id="vo">
+                                            <li>
+                                                <p><i class="icon-minus-sign">&nbsp;</i>[{$vo.time|date="Y-m-d H:i:s",###}] {$vo.message}</p>
+                                            </li>
+                                        </volist>
+                                    </ul>
+                                </div>
+                            </notempty>
+                            <span class="caret"></span></a>
+                        <in name='value.w_status' value='1,2'>
+                            <div class="round">
+							<span class="<eq name='value.w_status' value='1'>active</eq><eq name='value.w_status' value='2'>error</eq>">
+								<div class="instructions">
+									<span class="caret"></span>
+									<p>处理人：{$value.w_name}<br><small>{$value.w_time|date="Y-m-d H:i:s",###}</small></p>
+								</div>
+							</span>
+                            </div>
+                        </in>
+                    </li>
+                    <li class="<eq name='value.c_status' value='1'>active</eq><eq name='value.c_status' value='2'>error</eq>">
+                        <a>样品制作
+                            <notempty name="value.c_comment">
+                                <!-- 成功后消息存在并且不为空时显示 -->
+                                <present name="value.c_comment.success">
+                                    <notpresent name="value.c_comment.save">
+                                        <notempty name="value.c_comment.success">
+										<span class="log-save-icon-productEngineer operation-log-color">
+											<i class="icon-info-sign"></i>
+										</span>
+                                        </notempty>
+                                    </notpresent>
+                                </present>
+                                <!-- 失败后消息存在并且不为空时显示 -->
+                                <present name="value.c_comment.error">
+                                    <notpresent name="value.c_comment.save">
+                                        <notempty name="value.c_comment.error">
+										<span class="log-save-icon-productEngineer operation-log-color">
+											<i class="icon-info-sign"></i>
+										</span>
+                                        </notempty>
+                                    </notpresent>
+                                </present>
+                                <!-- 更新日志后消息存在并且不为空时显示 -->
+                                <present name="value.c_comment.save">
+                                    <notempty name="value.c_comment.save">
+									<span class="log-save-icon-productEngineer operation-log-color">
+										<i class="icon-info-sign"></i>
+									</span>
+                                    </notempty>
+                                </present>
+                                <div class="sr-only productEngineer-operation-log">
+                                    <ul>
+                                        <eq name="value.c_status" value="2">
+                                            <notempty name="value.c_comment.error.0.message">
+                                                <li><strong class="text-danger"><p><i class="icon-remove-sign">&nbsp;</i>[{$value.c_comment.error.0.time|date="Y-m-d H:i:s",###}] {$value.c_comment.error.0.message}</p></strong></li>
+                                            </notempty>
+                                        </eq>
+                                        <eq name="value.c_status" value="1">
+                                            <notempty name="value.c_comment.success.0.message">
+                                                <li><strong class="text-success"><p><i class="icon-ok-sign">&nbsp;</i>[{$value.c_comment.success.0.time|date="Y-m-d H:i:s",###}] {$value.c_comment.success.0.message}</p></strong></li>
+                                            </notempty>
+                                        </eq>
+                                        <volist name="value.c_comment.save" id="vo">
+                                            <li>
+                                                <p><i class="icon-minus-sign">&nbsp;</i>[{$vo.time|date="Y-m-d H:i:s",###}] {$vo.message}</p>
+                                            </li>
+                                        </volist>
+                                    </ul>
+                                </div>
+                            </notempty>
+                            <span class="caret"></span></a>
+                        <in name='value.c_status' value='1,2'>
+                            <div class="round">
+							<span class="<eq name='value.c_status' value='1'>active</eq><eq name='value.c_status' value='2'>error</eq>">
+								<div class="instructions">
+									<span class="caret"></span>
+									<p>制作人：{$value.c_name}<br><small>{$value.c_time|date="Y-m-d H:i:s",###}</small></p>
+								</div>
+							</span>
+                            </div>
+                        </in>
+                    </li>
+                    <li class="<eq name='value.y_status' value='1'>active</eq><eq name='value.y_status' value='2'>error</eq>">
+                        <a>样品测试
+                            <present name="value.y_comment">
+                                <notempty name="value.y_comment">
+                                    <!-- 成功后消息存在并且不为空时显示 -->
+                                    <present name="value.y_comment.success">
+                                        <notpresent name="value.y_comment.save">
+                                            <notempty name="value.y_comment.success">
+										<span class="log-save-icon-testEngineer operation-log-color">
+											<i class="icon-info-sign"></i>
+										</span>
+                                            </notempty>
+                                        </notpresent>
+                                    </present>
+                                    <!-- 失败后消息存在并且不为空时显示 -->
+                                    <present name="value.y_comment.error">
+                                        <notpresent name="value.y_comment.save">
+                                            <notempty name="value.y_comment.error">
+										<span class="log-save-icon-testEngineer operation-log-color">
+											<i class="icon-info-sign"></i>
+										</span>
+                                            </notempty>
+                                        </notpresent>
+                                    </present>
+                                    <!-- 更新日志后消息存在并且不为空时显示 -->
+                                    <present name="value.y_comment.save">
+                                        <notempty name="value.y_comment.save">
+									<span class="log-save-icon-testEngineer operation-log-color">
+										<i class="icon-info-sign"></i>
+									</span>
+                                        </notempty>
+                                    </present>
+                                    <div class="sr-only testEngineer-operation-log">
+                                        <ul>
+                                            <eq name="value.y_status" value="2">
+                                                <notempty name="value.y_comment.error.0.message">
+                                                    <li><strong class="text-danger"><p><i class="icon-remove-sign">&nbsp;</i>[{$value.y_comment.error.0.time|date="Y-m-d H:i:s",###}] {$value.y_comment.error.0.message}</p></strong></li>
+                                                </notempty>
+                                            </eq>
+                                            <eq name="value.y_status" value="1">
+                                                <notempty name="value.y_comment.success.0.message">
+                                                    <li><strong class="text-success"><p><i class="icon-ok-sign">&nbsp;</i>[{$value.y_comment.success.0.time|date="Y-m-d H:i:s",###}] {$value.y_comment.success.0.message}</p></strong></li>
+                                                </notempty>
+                                            </eq>
+                                            <volist name="value.y_comment.save" id="vo">
+                                                <li>
+                                                    <p><i class="icon-minus-sign">&nbsp;</i>[{$vo.time|date="Y-m-d H:i:s",###}] {$vo.message}</p>
+                                                </li>
+                                            </volist>
+                                        </ul>
+                                    </div>
+                                </notempty>
+                            </present>
+                            <span class="caret"></span></a>
+                        <in name='value.y_status' value='1,2'>
+                            <div class="round">
+							<span class="<eq name='value.y_status' value='1'>active</eq><eq name='value.y_status' value='2'>error</eq>">
+								<div class="instructions">
+									<span class="caret"></span>
+									<p>测试人：{$value.y_name}<br><small>{$value.y_time|date="Y-m-d H:i:s",###}</small></p>
+								</div>
+							</span>
+                            </div>
+                        </in>
+                    </li>
+                    <li class="<eq name='value.f_status' value='1'>active</eq><eq name='value.f_status' value='2'>error</eq>">
+                        <a>发货
+                            <present name="value.f_comment">
+                                <notempty name="value.f_comment">
+                                    <!-- 成功后消息存在并且不为空时显示 -->
+                                    <present name="value.f_comment.success">
+                                        <notpresent name="value.f_comment.save">
+                                            <notempty name="value.f_comment.success">
+										<span class="log-save-icon-delivery operation-log-color">
+											<i class="icon-info-sign"></i>
+										</span>
+                                            </notempty>
+                                        </notpresent>
+                                    </present>
+                                    <!-- 失败后消息存在并且不为空时显示 -->
+                                    <present name="value.f_comment.error">
+                                        <notpresent name="value.f_comment.save">
+                                            <notempty name="value.f_comment.error">
+										<span class="log-save-icon-delivery operation-log-color">
+											<i class="icon-info-sign"></i>
+										</span>
+                                            </notempty>
+                                        </notpresent>
+                                    </present>
+                                    <!-- 更新日志后消息存在并且不为空时显示 -->
+                                    <present name="value.f_comment.save">
+                                        <notempty name="value.f_comment.save">
+									<span class="log-save-icon-delivery operation-log-color">
+										<i class="icon-info-sign"></i>
+									</span>
+                                        </notempty>
+                                    </present>
+                                    <div class="sr-only delivery-operation-log">
+                                        <ul>
+                                            <eq name="value.f_status" value="2">
+                                                <notempty name="value.f_comment.error.0.message">
+                                                    <li><strong class="text-danger"><p><i class="icon-remove-sign">&nbsp;</i>[{$value.f_comment.error.0.time|date="Y-m-d H:i:s",###}] {$value.f_comment.error.0.message}</p></strong></li>
+                                                </notempty>
+                                            </eq>
+                                            <eq name="value.f_status" value="1">
+                                                <notempty name="value.f_comment.success.0.message">
+                                                    <li><strong class="text-success"><p><i class="icon-ok-sign">&nbsp;</i>[{$value.f_comment.success.0.time|date="Y-m-d H:i:s",###}] {$value.f_comment.success.0.message}</p></strong></li>
+                                                </notempty>
+                                            </eq>
+                                            <volist name="value.f_comment.save" id="vo">
+                                                <li>
+                                                    <p><i class="icon-minus-sign">&nbsp;</i>[{$vo.time|date="Y-m-d H:i:s",###}] {$vo.message}</p>
+                                                </li>
+                                            </volist>
+                                        </ul>
+                                    </div>
+                                </notempty>
+                            </present>
+                            <span class="caret"></span></a>
+                        <in name='value.f_status' value='1,2'>
+                            <div class="round">
+							<span class="<eq name='value.f_status' value='1'>active</eq><eq name='value.f_status' value='2'>error</eq>">
+								<div class="instructions">
+									<span class="caret"></span>
+									<p>发货人：{$value.f_name}<br><small>{$value.f_time|date="Y-m-d H:i:s",###}</small></p>
+								</div>
+							</span>
+                            </div>
+                        </in>
+                    </li>
+                    <li class="<eq name='value.k_status' value='1'>active</eq><eq name='value.k_status' value='2'>error</eq>">
+                        <a>反馈
+                            <present name="value.k_comment">
+                                <notempty name="value.k_comment">
+                                    <!-- 成功后消息存在并且不为空时显示 -->
+                                    <present name="value.k_comment.success">
+                                        <notpresent name="value.k_comment.save">
+                                            <notempty name="value.k_comment.success">
+										<span class="log-save-icon-feedback operation-log-color">
+											<i class="icon-info-sign"></i>
+										</span>
+                                            </notempty>
+                                        </notpresent>
+                                    </present>
+                                    <!-- 失败后消息存在并且不为空时显示 -->
+                                    <present name="value.k_comment.error">
+                                        <notpresent name="value.k_comment.save">
+                                            <notempty name="value.k_comment.error">
+										<span class="log-save-icon-feedback operation-log-color">
+											<i class="icon-info-sign"></i>
+										</span>
+                                            </notempty>
+                                        </notpresent>
+                                    </present>
+                                    <!-- 更新日志后消息存在并且不为空时显示 -->
+                                    <present name="value.k_comment.save">
+                                        <notempty name="value.k_comment.save">
+									<span class="log-save-icon-feedback operation-log-color">
+										<i class="icon-info-sign"></i>
+									</span>
+                                        </notempty>
+                                    </present>
+                                    <div class="sr-only feedback-operation-log">
+                                        <ul>
+                                            <eq name="value.k_status" value="2">
+                                                <notempty name="value.k_comment.error.0.message">
+                                                    <li><strong class="text-danger"><p><i class="icon-remove-sign">&nbsp;</i>[{$value.k_comment.error.0.time|date="Y-m-d H:i:s",###}] {$value.k_comment.error.0.message}</p></strong></li>
+                                                </notempty>
+                                            </eq>
+                                            <eq name="value.k_status" value="1">
+                                                <notempty name="value.k_comment.success.0.message">
+                                                    <li><strong class="text-success"><p><i class="icon-ok-sign">&nbsp;</i>[{$value.k_comment.success.0.time|date="Y-m-d H:i:s",###}] {$value.k_comment.success.0.message}</p></strong></li>
+                                                </notempty>
+                                            </eq>
+                                            <volist name="value.k_comment.save" id="vo">
+                                                <li>
+                                                    <p><i class="icon-minus-sign">&nbsp;</i>[{$vo.time|date="Y-m-d H:i:s",###}] {$vo.message}</p>
+                                                </li>
+                                            </volist>
+                                        </ul>
+                                    </div>
+                                </notempty>
+                            </present>
+                            <span class="caret"></span></a>
+                        <in name='value.k_status' value='1,2'>
+                            <div class="round">
+							<span class="<eq name='value.k_status' value='1'>active</eq><eq name='value.k_status' value='2'>error</eq>">
+								<div class="instructions">
+									<span class="caret"></span>
+									<p>反馈人：{$value.k_name}<br><small>{$value.k_time|date="Y-m-d H:i:s",###}</small></p>
+								</div>
+							</span>
+                            </div>
+                        </in>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </volist>
+    <!-- 附件 -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">订单附件</h4>
+        </div>
+        <div class="panel-body">
+            <ul id="attachmentList">
+                <volist name="attachment" id="value" empty="$noAttachment">
+                    <li class="attachment">
+                        <div class="attachmentIconBox">
+                            <img src="__IMG__/file.png" alt="...">
+                            <span class="text-uppercase">{$value.type}</span>
+                        </div>
+                        <p>{$value.filename}</p>
+                        <form action="__URL__/downloadAttachment" method="post">
+                            <input type="hidden" name="filepath" value="{$value.filepath}">
+                            <input type="submit" class="btn btn-success icon-download" value="下载">
+                        </form>
+                    </li>
+                </volist>
+            </ul>
+        </div>
+    </div>
+
+</block>
+
+<!--
+<ul class="nav nav-pills nav-justified step step-progress">
+    <li class="active">
+        <a>下单<span class="caret"></span></a>
+        <div class="round">
+						<span class="active">
+							<div class="instructions">
+								<span class="caret"></span>
+								<p>下单人：{$sample.nickname}<br><small>{$sample.createtime|date="Y-m-d H:i:s",###}</small></p>
+							</div>
+						</span>
+        </div>
+    </li>
+    <li class="<eq name='sample.s_status' value='1'>active</eq>">
+        <a>审核<span class="caret"></span></a>
+        <div class="round">
+						<span class="<eq name='sample.s_status' value='1'>active</eq><eq name='sample.s_status' value='2'>error</eq>">
+							<div class="instructions">
+								<span class="caret"></span>
+								<p>审核人：{$sample.a_name}<br><small>{$sample.s_time|date="Y-m-d H:i:s",###}</small></p>
+							</div>
+						</span>
+        </div>
+    </li>
+    <li class="<eq name='sample.c_status' value='1'>active</eq>">
+        <a>样品制作<span class="caret"></span></a>
+    </li>
+    <li class="<eq name='sample.y_status' value='1'>active</eq>">
+        <a>样品测试<span class="caret"></span></a>
+    </li>
+    <li class="<eq name='sample.x_status' value='1'>active</eq>">
+        <a>发货<span class="caret"></span></a>
+    </li>
+    <li class="<eq name='sample.t_status' value='1'>active</eq>">
+        <a>反馈<span class="caret"></span></a>
+    </li>
+</ul>
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,109 @@
+
+/*** 步骤 ***/
+.procedure {
+    margin: 50px 0 60px 0;
+}
+.procedure .procedure-table {
+    width: 100%;
+}
+.procedure .procedure-table .procedure-wrap td {
+    text-align: center;
+    height: 40px;
+    position: relative;
+}
+.procedure .procedure-table .procedure-wrap td .procedure-title {
+    position: absolute;
+    top: -30px;
+    width: 60px;
+    left: 50%;
+    margin-left: -30px;
+}
+.procedure .procedure-table .procedure-wrap td .procedure-info {
+    font-size: 12px;
+    position: absolute;
+    left: 50%;
+    margin-left: -60px;
+    top: 50px;
+    width: 120px;
+    overflow: hidden;
+    color: #888;
+}
+.procedure .procedure-table .procedure-wrap td.active .procedure-title {
+    color: #428bca;
+}
+.procedure .procedure-table .procedure-wrap td .procedure-hollow {
+    position: absolute;
+    width: 100%;
+    height: 9px;
+    top: 50%;
+    left: 0;
+    margin-top: -5px;
+    background: #eaeaea;
+    z-index: 20;
+}
+.procedure .procedure-table .procedure-wrap td:first-child .procedure-hollow {
+    width: 50%;
+    left: 50%;
+}
+.procedure .procedure-table .procedure-wrap td:last-child .procedure-hollow {
+    width: 50%;
+}
+.procedure .procedure-table .procedure-wrap td.active .procedure-hollow:before {
+    content: '';
+    width: 100%;
+    height: 3px;
+    background: #428bca;
+    display: block;
+    margin-top: 3px;
+    position: absolute;
+    z-index: 2;
+}
+.procedure .procedure-table .procedure-wrap td .procedure-step {
+    display: inline-block;
+    position: relative;
+    width: 24px;
+    height: 24px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 22px;
+    z-index: 100;
+    color: #fff;
+    cursor: default;
+}
+.procedure .procedure-table .procedure-wrap td .procedure-step:after {
+    position: absolute;
+    content: '';
+    width: 34px;
+    height: 34px;
+    left: 50%;
+    top: 50%;
+    margin-left: -17px;
+    margin-top: -17px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background: #eaeaea;
+    z-index: -2;
+    cursor: default;
+}
+.procedure .procedure-table .procedure-wrap td .procedure-step:before {
+    position: absolute;
+    content: '';
+    width: 26px;
+    height: 26px;
+    left: 50%;
+    top: 50%;
+    margin-left: -13px;
+    margin-top: -13px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background: #ccc;
+    z-index: -1;
+    cursor: default;
+}
+.procedure .procedure-table .procedure-wrap td.active .procedure-step:before {
+    background: #428bca;
+}

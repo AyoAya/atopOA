@@ -1,0 +1,134 @@
+.table {
+
+}
+.table tr,.table th {
+    text-align: center;
+}
+/*.table thead {
+    border-bottom: solid 3px #bbb !important;
+}*/
+.panel-body {
+    padding-bottom: 30px;
+}
+.page-header {
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: none;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+/*.panel-footer {
+    border-top: solid 1px #428bca;
+}*/
+.totalorder small {
+    font-size: 55%;
+    margin-left: 15px;
+}
+.totalorder .createtime {
+    font-size: 14px;
+    position: relative;
+    font-style: normal;
+    top: 24px;
+}
+.totalorder .sale-person {
+    font-size: 14px;
+    position: absolute;
+    font-style: normal;
+    top: 24px;
+    right: 15px;
+    top: 5px;
+}
+
+
+#attachmentList {
+
+}
+#attachmentList li {
+    float: left;
+    width: 125px;
+    margin: 0 10px 0px 10px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+#attachmentList li:hover form {
+    display: block;
+}
+#attachmentList li form {
+    display: none;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    right: 15px;
+}
+#attachmentList li form input[type=submit] {
+    text-align: center;
+}
+#attachmentList li .attachmentIconBox {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    position: relative;
+}
+#attachmentList li .attachmentIconBox span {
+    position: absolute;
+    padding: 0 5px;
+    border: solid 3px #888;
+    bottom: 15px;
+    left: 2px;
+    background: #fff;
+    color: #888;
+    font-weight: bold;
+}
+#attachmentList li p {
+    word-break: break-all;
+    word-wrap:break-word;
+    font-size: 13px;
+    text-align: center;
+}
+.noAttachment {
+    text-align: center;
+    color: #aaa !important;
+}
+.noAttachment .icon-no-attachment {
+    font-size: 80px;
+}
+.noAttachment .attachment-first-text {
+    font-size: 16px;
+}
+.round {
+    font-size: 12px !important;
+}
+.round span {
+    padding: 0px 0px !important;
+}
+.round .instructions p {
+    padding: 5px !important;
+}
+.operation-log-color {
+    position: absolute;
+    color: #f0ad4e !important;
+}
+.popover {
+    min-width: 450px;
+    color: #555 !important;
+}
+.popover .popover-content ul li {
+    border-bottom: solid 1px #ccc;
+    padding: 5px 0;
+}
+.popover .popover-content ul li:last-child {
+    border: none;
+    padding-bottom: 0;
+}
+.popover .popover-content ul li p:last-child {
+    font-size: 12px;
+}
+.step-progress>li>.round {
+    margin-top: 5px;
+}

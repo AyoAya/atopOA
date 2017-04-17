@@ -1,0 +1,136 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css">
+    <link rel="stylesheet" href="__CSS__/project/index.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <style>
+        .table {
+            border: solid 1px #ddd !important;
+        }
+        .table thead {
+            background: #eee;
+        }
+        .empty-tip-info {
+            margin-top: 100px;
+            color: #888;
+            text-align: center;
+        }
+        .empty-tip-info p:first-child {
+            font-size: 90px;
+        }
+    </style>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>项目管理</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">项目管理</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+    <!--<div class="commingSoon">
+        <p><i class="icon-info-sign icon-5x"></i></p>
+        <h1>功能研发中</h1>
+        <p>Function is developing</p>
+        <p>Comming Soon.</p>
+    </div>-->
+
+
+
+    <eq name="userInfo.position" value="1780">{//只有项目管理员角色才能添加项目}
+        <a href="__ROOT__/Project/add" class="layui-btn layui-btn-primary">
+            <span class="glyphicon glyphicon-plus"></span> 添加项目
+        </a>
+        <div class="clearfix" style="margin-bottom: 25px;"></div>
+    </eq>
+
+
+
+
+    <notempty name="projects">
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>项目号</th>
+                    <th>项目名</th>
+                    <th>最近更新时间</th>
+                    <th>负责人</th>
+                    <th>进度</th>
+                    <eq name="face.position" value="1780">
+                        <th>操作</th>
+                    </eq>
+                </tr>
+            </thead>
+            <tbody>
+                <volist name="projects" id="value">
+                    <tr>
+                        <td>
+                            <if condition="$Think.get.p AND $Think.get.p neq 1">
+                                {$pagenumber*$limitsize+$i}
+                            <else/>
+                                {$i}
+                            </if>
+                        </td>
+                        <td><a href="__ROOT__/Project/details/id/{$value.id}" style="color: #428bca;">{$value.pj_num}</a></td>
+                        <td>{$value.pj_name}</td>
+                        <td><notempty name="value.pj_update_time">{$value.pj_update_time|date='Y-m-d H:i:s',###}</notempty></td>
+                        <td>{$value.pj_responsible}</td>
+                        <td><span class="label {$value.node.class}">{$value.node.progress}</span></td>
+                        <eq name="face.position" value="1780">
+                            <td><a href="__ROOT__/Project/edit/id/{$value.id}" class="btn btn-default btn-sm"><i class="icon-edit"></i> 编辑</a></td>
+                        </eq>
+                    </tr>
+                </volist>
+            </tbody>
+        </table>
+    <else/>
+        <div class="empty-tip-info">
+            <p><i class="icon-info-sign"></i></p>
+            <p>没有创建任何项目</p>
+        </div>
+    </notempty>
+
+    <!-- 分页 -->
+    <ul class="pagination pagination-edit">{$pageShow}</ul>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

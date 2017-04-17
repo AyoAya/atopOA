@@ -1,0 +1,174 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+	<link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css">
+	<link rel="stylesheet" href="__CSS__/product/index.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+	<script src="__PUBLIC__/layui/layui.js"></script>
+	<script src="__JS__/product.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+	<title>产品管理</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+	<ol class="breadcrumb breadcrumb-edit">
+		<li class="active">产品管理</li>
+	</ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+	<!-- 筛选数据 -->
+	<!--<form class="layui-form filter-box">
+		<div class="layui-inline">
+			<label class="layui-form-label">封装类型</label>
+			<div class="layui-input-inline">
+				<select name="type" lay-verify="required">
+					<volist name="filter.type" id="value">
+						<option value="{$value.type}">{$value.type}</option>
+					</volist>
+				</select>
+			</div>
+		</div>
+		<div class="layui-inline">
+			<label class="layui-form-label">波长</label>
+			<div class="layui-input-inline">
+				<select name="type" lay-verify="required">
+					<volist name="filter.wavelength" id="value">
+						<option value="{$value.wavelength}">{$value.wavelength}</option>
+					</volist>
+				</select>
+			</div>
+		</div>
+		<div class="layui-inline">
+			<label class="layui-form-label">波长</label>
+			<div class="layui-input-inline">
+				<select name="type" lay-verify="required">
+					<volist name="filter.wavelength" id="value">
+						<option value="{$value.wavelength}">{$value.wavelength}</option>
+					</volist>
+				</select>
+			</div>
+		</div>
+	</form>-->
+
+
+	<eq name="position" value="产品经理">
+		<div class="pull-left">
+			<a href="__ROOT__/Product/add" class="layui-btn layui-btn-primary">
+				<i class="icon-plus"></i> 添加产品
+			</a>
+		</div>
+	</eq>
+
+
+	<!-- 搜索 -->
+	<form class="layui-form filter-box">
+		<div class="layui-inline pull-right">
+			<div class="layui-input-inline layui-input-inline-search">
+				<input type="text" name="search" placeholder="输入产品型号" value="{$search}" class="layui-input input-search">
+				<button type="submit" class="layui-btn"><i class="icon-search"></i></button>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</form>
+
+	<table class="layui-table layui-table-rewrite">
+		<colgroup>
+			<col width="54">
+		</colgroup>
+		<thead>
+			<tr>
+				<th class="th_number">序号</th>
+				<th class="th_type">封装类型</th>
+				<th class="th_pn">产品型号</th>
+				<th class="th_rate">速率</th>
+				<th class="th_wavelength">波长</th>
+				<th class="th_component">光组件</th>
+				<th class="th_txpwr">发端功率</th>
+				<th class="th_rxsens">接收灵敏度</th>
+				<th class="th_connector">接口</th>
+				<th class="th_casetemp">温度范围</th>
+				<th class="th_reach">距离</th>
+				<th class="th_multirate">多速率支持</th>
+				<th class="th_manager">产品经理</th>
+				<!--<eq name="position" value="产品经理">
+					<th class="th_operation">操作</th>
+				</eq>-->
+			</tr>
+		</thead>
+		<tbody>
+			<volist name="products" id="value">
+				<tr>
+					<td>
+						<if condition="$Think.get.p AND $Think.get.p neq 1">
+							{$pagenumber*$limitsize+$i}
+							<else/>
+							{$i}
+						</if>
+					</td>
+					<td>{$value.type}</td>
+					<td>{$value.pn}</td>
+					<td>{$value.rate}</td>
+					<td>{$value.wavelength}</td>
+					<td>{$value.component}</td>
+					<td>{$value.txpwr}</td>
+					<td>{$value.rxsens}</td>
+					<td>{$value.connector}</td>
+					<td>{$value.casetemp}</td>
+					<td>{$value.reach}</td>
+					<td>{$value.multirate}</td>
+					<td>{$value.nickname}</td>
+					<!--<eq name="position" value="产品经理">
+						<td>
+							<div class="layui-btn-group">
+								<a href="__ROOT__/Product/update/id/{$value.id}" class="layui-btn layui-btn-small layui-btn-primary" title="编辑"><i class="icon-pencil"></i></a>
+								<a href="__ROOT__/Product/delete/id/{$value.id}" class="layui-btn layui-btn-small layui-btn-primary" title="删除"><i class="icon-trash"></i></a>
+							</div>
+						</td>
+					</eq>-->
+				</tr>
+			</volist>
+		</tbody>
+	</table>
+
+	<!-- 分页 -->
+	<ul class="pagination pagination-edit">{$pageShow}</ul>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

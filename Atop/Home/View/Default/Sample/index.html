@@ -1,0 +1,101 @@
+
+<extend name="layout/default"/>
+
+<block name="linkcss">
+	<link rel="stylesheet" href="__CSS__/sample-index.css">
+</block>
+
+<block name="linkjs">
+	<script src="__JS__/sample-index.js"></script>
+</block>
+
+<block name="webtitle">
+	<title>ATOP</title>
+</block>
+
+<block name="breadcrumb">
+	<ol class="breadcrumb breadcrumb-edit">
+		<li class="active">样品管理</li>
+	</ol>
+	<div id="search" class="input-group pull-right">
+		<form id="SearchHiddenForm" action="__ROOT__/Sample" method="get">
+			<input type="text" name="search" id="SearchText" class="form-control search-input" value="<present name='search'>{$search}</present>" placeholder="搜索订单号或销售">
+			<span class="input-group-btn">
+				<button class="btn btn-primary" id="submitSearch" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+			</span>
+			<present name="search">
+				<a href="__ROOT__/Sample" class="btn btn-danger clear-condition" data-toggle="tooltip" data-placement="left" title="清除筛选条件" onMouseOver="$(this).tooltip('show')"><i class="icon-remove"></i></a>
+			</present>
+		</form>
+	</div>
+	<div class="btn-group pull-right btn-group-edit" role="group">
+		<a href="__ROOT__/sampleChart" class="btn btn-primary">
+			<span class="glyphicon glyphicon-th"></span> 样品统计
+		</a>
+		<eq name="department.department" value="4">
+			<a href="__ROOT__/addSample" class="btn btn-primary">
+				<span class="glyphicon glyphicon-plus"></span> 我要下单
+			</a>
+		</eq>
+	</div>
+</block>
+
+<block name="content">
+
+	<volist name="newResult" id="value" empty="$empty">
+		<div class="col-lg-4">
+			<div class="order-box">
+				<present name="value.color">
+					<div class="order-heading" style="background: {$value.color};">
+				<else/>
+					<div class="order-heading" style="background: {$value.label};">
+				</present>
+					<span>
+						<a href="__ROOT__/Sample?search={$value.nickname}"><img src="{$value.face}" alt="..." class="saleorder-face"></a>
+						<p>{$value.nickname}</p>
+						<p>{$value.createtime|date="Y-m-d",###}</p>
+					</span>
+					<div>
+						<h4><a href="__ROOT__/sampleOverview/{$value.totalorder}">{$value.totalorder}</a></h4>
+					</div>
+				</div>
+				<div class="order-body">
+					<if condition="$value.total lt 2">
+						<p>{$value.child.0.type} | {$value.child.0.product}</p>
+					<elseif condition="$value.total elt 2"/>
+						<p>{$value.child.0.type} | {$value.child.0.product}</p>
+						<p>{$value.child.1.type} | {$value.child.1.product}</p>
+					<else/>
+						<p>{$value.child.0.type} | {$value.child.0.product}</p>
+						<p>{$value.child.1.type} | {$value.child.1.product}</p>
+						<p>等{$value.total}个产品</p>
+					</if>
+				</div>
+				<!--<div class="order-footer">
+					<p><i class="icon-user">&nbsp;</i>销售：{$value.nickname}　　　<i class="icon-time">&nbsp;</i>订单创建时间：{$value.createtime|date="Y-m-d H:i:s",###}</p>
+				</div>-->
+			</div>
+		</div>
+	</volist>
+
+	<div class="clearfix"></div>
+	<!-- 分页 -->
+	<ul class="pagination pagination-edit">{$page}</ul>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

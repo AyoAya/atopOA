@@ -1,0 +1,274 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css">
+    <link rel="stylesheet" href="__CSS__/compatible-add.css">
+    <link rel="stylesheet" href="__CSS__/compatible.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__PUBLIC__/layui/layui.js"></script>
+    <script src="__JS__/compatible.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>兼容表</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">兼容表</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+
+    <div class="pull-left" role="group">
+        <if condition="$Think.get.pn neq '' OR $Think.get.vendor neq '' OR $Think.get.model neq '' OR $Think.get.search neq '' OR $Think.get.state neq '' OR isset($condition)">
+            <a href="__ROOT__/Compatibility" class="layui-btn layui-btn-danger">
+                <span class="glyphicon glyphicon-remove"></span> 清除筛选
+            </a>
+        </if>
+        <!--<button class="btn btn-primary" data-toggle="modal" data-target="#filter">
+            <span class="glyphicon glyphicon-filter"></span> 筛选
+        </button>-->
+        <a href="__ROOT__/Compatibility/add" class="layui-btn layui-btn-primary">
+            <span class="glyphicon glyphicon-plus"></span> 添加兼容记录
+        </a>
+    </div>
+
+    <div class="pull-right">
+        <form class="layui-form" method="get" action="__ROOT__/Compatibility">
+            <div class="layui-inline layui-inline-rewrite">
+                <div class="layui-input-inline">
+                    <input type="text" name="search" placeholder="搜索" class="layui-input" value="<neq name='Think.get.search' value=''>{$Think.get.search}</neq>">
+                    <button class="search-btn"><i class="layui-icon">&#xe615;</i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="clearfix" style="margin-bottom: 25px;"></div>
+
+
+
+    <notempty name="compatiblematrix">
+        <!--<div class="well">
+            <form role="form" class="form-inline" id="form-filter">
+                <div class="form-group">
+                    <label>状态：</label>
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-default btn-sm <eq name='condition.state' value='1'>active</eq>">
+                            <input type="radio" name="Full" id="option1" autocomplete="off"> 完全兼容
+                        </label>
+                        <label class="btn btn-default btn-sm <eq name='condition.state' value='2'>active</eq>">
+                            <input type="radio" name="General" id="option2" autocomplete="off"> 能够使用
+                        </label>
+                        <label class="btn btn-default btn-sm <eq name='condition.state' value='3'>active</eq>">
+                            <input type="radio" name="Cannot" id="option3" autocomplete="off"> 不能兼容
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="产品型号" name="pn_name" id="pn_value" class="form-control input-sm" readonly data-target="#product-modal" data-toggle="modal" value="<present name='condition.pn_name'>{$condition.pn_name}</present>">
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="设备品牌" name="vendor_name" id="vendor_value" class="form-control input-sm" readonly data-target="#vendorModal" data-toggle="modal" value="<present name='condition.vendor_name'>{$condition.vendor_name}</present>">
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="设备型号" name="model" class="form-control input-sm" value="<present name='condition.model'>{$condition.model}</present>">
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="原厂型号" name="original" class="form-control input-sm" value="<present name='condition.original'>{$condition.original}</present>">
+                </div>
+                <div class="form-group">
+                    <button type="reset" class="btn btn-default btn-sm">重置</button>
+                    <button type="submit" class="btn btn-primary btn-sm">筛选</button>
+                </div>
+            </form>
+        </div>-->
+        <table class="layui-table table-compatibility">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>产品型号</th>
+                    <th>设备品牌</th>
+                    <th>设备型号</th>
+                    <th>状态</th>
+                    <th>版本</th>
+                    <th>原厂型号</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+                <volist name="compatiblematrix" id="value">
+                    <tr>
+                        <td class="td_num">
+                            <if condition="$Think.get.p AND $Think.get.p neq 1">
+                                {$pagenumber*$limitsize+$i}
+                            <else/>
+                                {$i}
+                            </if>
+                        </td>
+                        <td class="td_pn"><a href="__ROOT__/Compatibility/details/id/{$value.id}" style="color: #428bca;">{$value.Productrelationships.pn}</a></td>
+                        <td class="td_brand">{$value.VendorBrand.brand}</td>
+                        <td class="td_model">{$value.model}</td>
+                        <if condition="$value.state eq 1">
+                            <td class="state"><a href="__ROOT__/Compatibility?state={$value.state}"><span class="pass">{$value.state_text}</span></a></td>
+                        <elseif condition="$value.state eq 2"/>
+                            <td class="state"><a href="__ROOT__/Compatibility?state={$value.state}"><span class="comm">{$value.state_text}</span></a></td>
+                        <else/>
+                            <td class="state"><a href="__ROOT__/Compatibility?state={$value.state}"><span class="fail">{$value.state_text}</span></a></td>
+                        </if>
+                        <td class="td_version">{$value.version}</td>
+                        <td class="td_original">{$value.original}</td>
+                        <td class="td_comment">{$value.comment}</td>
+                    </tr>
+                </volist>
+            </tbody>
+        </table>
+        <ul class="pagination">{$pageShow}</ul>
+    <else/>
+        <div id="empty-data">
+            <p><i class="icon-info-sign"></i></p>
+            <p>没有数据</p>
+        </div>
+    </notempty>
+
+    <!-- 产品型号选择模态框 -->
+    <div class="modal fade bs-example-modal-lg" id="product-modal" role="dialog" tabindex="0" aria-labelledby="productLabel">
+        <div class="modal-dialog modal-lg modal-dialog-editsize">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <span class="modal-title">选择产品型号</span>
+                </div>
+                <div class="modal-body filter-body">
+                    <ul id="conditon-list"></ul>
+                    <div class="filter-col">
+                        <span class="label-type">类型</span>
+                        <ul class="condition-type">
+                            <li onclick="filter('type','SFP')">SFP</li><li onclick="filter('type','SFP BIDI')">SFP BIDI</li><li onclick="filter('type','SFP Copper')">SFP Copper</li><li onclick="filter('type','SFP CWDM')">SFP CWDM</li><li onclick="filter('type','SFP DWDM')">SFP DWDM</li><li onclick="filter('type','CSFP')">CSFP</li>
+                            <p></p>
+                            <li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+')">SFP+</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ AOC')">SFP+ AOC</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ BIDI')">SFP+ BIDI</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ CWDM')">SFP+ CWDM</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ DAC Active')">SFP+ DAC Active</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ DAC Passive')">SFP+ DAC Passive</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ DWDM')">SFP+ DWDM</li>
+                            <p></p>
+                            <li style="display: none;" class="default-hide-li" onclick="filter('type','XFP')">XFP</li><li style="display: none;" class="default-hide-li" onclick="filter('type','XFP BIDI')">XFP BIDI</li><li style="display: none;" class="default-hide-li" onclick="filter('type','XFP CWDM')">XFP CWDM</li><li style="display: none;" class="default-hide-li" onclick="filter('type','XFP DWDM')">XFP DWDM</li>
+                            <p></p>
+                            <li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+')">QSFP+</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ AOC')">QSFP+ AOC</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ DAC Active')">QSFP+ DAC Active</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ DAC Passive')">QSFP+ DAC Passive</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ to 4xSFP+')">QSFP+ to 4xSFP+</li>
+                            <p></p>
+                            <li style="display: none;" class="default-hide-li" onclick="filter('type','CFP2')">CFP2</li>
+                        </ul>
+                        <span flag="true" class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>
+                    </div>
+                    <div class="filter-col">
+                        <span class="label-type">波长</span>
+                        <ul class="condition-wavelength">
+                            <volist name="filter.filterWavelength" id="value">
+                                <if condition="strlen($value['wavelength']) lt 12 AND !strpos($value['wavelength'],'.')"><elt name="i" value="9"><li onclick="filter('wavelength','{$value.wavelength}',this);">{$value.wavelength}</li><else/><li style="display:none;" class="default-hide-li" onclick="filter('wavelength','{$value.wavelength}',this);">{$value.wavelength}</li></elt></if>
+                            </volist>
+                        </ul>
+                        <span flag="true" class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>
+                    </div>
+                    <div class="filter-col">
+                        <span class="label-type">距离</span>
+                        <ul class="condition-reach">
+                            <volist name="filter.filterReach" id="value">
+                                <elt name="i" value="7"><li onclick="filter('reach','{$value.reach}');">{$value.reach}</li><else/><li style="display:none;" class="default-hide-li" onclick="filter('reach','{$value.reach}');">{$value.reach}</li></elt>
+                            </volist>
+                        </ul>
+                        <span flag="true" class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>
+                    </div>
+                    <div class="filter-col">
+                        <span class="label-type">接口</span>
+                        <ul class="condition-connector">
+                            <volist name="filter.filterConnector" id="value">
+                                <li onclick="filter('connector','{$value.connector}');">{$value.connector}</li>
+                            </volist>
+                        </ul>
+                        <!--<span class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>-->
+                    </div>
+                    <div class="filter-col">
+                        <span class="label-type">环境</span>
+                        <ul class="condition-casetemp">
+                            <volist name="filter.filterCasetemp" id="value">
+                                <eq name="value.casetemp" value="C"><li value="{$value.casetemp}" onclick="filter('casetemp','{$value.casetemp}');">C档（0-70°）</li><else/><li value="{$value.casetemp}" onclick="filter('casetemp','{$value.casetemp}');">I档（-40°-85°）</li></eq>
+                            </volist>
+                        </ul>
+                        <!--<span class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>-->
+                    </div>
+                    <hr>
+                    <ul id="product-list">
+                        <volist name="filterdata" id="value">
+                            <lt name="i" value="18">
+                                <li p_id="{$value.pid}" nickname="{$value.nickname}" manager="{$value.manager}" pn="{$value.pn}" type="{$value.type}">{$value.pn}</li>
+                                <else/>
+                                <li class="sr-only" p_id="{$value.pid}" nickname="{$value.nickname}" manager="{$value.manager}" pn="{$value.pn}" type="{$value.type}">{$value.pn}</li>
+                            </lt>
+                        </volist>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form class="sr-only" id="filterForm">
+        <input type="hidden" name="type">
+        <input type="hidden" name="wavelength">
+        <input type="hidden" name="reach">
+        <input type="hidden" name="connector">
+        <input type="hidden" name="casetemp">
+    </form>
+
+    <!-- 设备厂商选择模态框 -->
+    <div class="modal fade bs-example-modal-lg" id="vendorModal" tabindex="-1" role="dialog" aria-labelledby="vendorModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <span class="modal-title">选择设备品牌</span>
+                </div>
+                <div class="modal-body">
+                    <ul id="brandList">
+                        <volist name="vendor" id="value">
+                            <li belong="{$value.id}">{$value.brand}</li>
+                        </volist>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

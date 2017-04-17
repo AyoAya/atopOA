@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<title>home</title>
+	<css file="__CSS__/bootstrap.min.css"/>
+	<css file="__CSS__/iframe-basic.css"/>
+	<css file="__CSS__/home.css"/>
+	<js file="__JS__/jquery.js"/><!-- jquery -->
+	<js file="__JS__/clock.js"/><!-- 时钟插件 -->
+	<js file="__JS__/home.js"/>
+</head>
+<body>
+	<h2>当前位置 : 首页</h2>
+	
+	<!-- <div id="animate">
+		<div id="clock"></div>
+		<div class="time">
+			<p>{$day}　<span>{$week}</span></p>
+			<div class="info"><br/>
+				<span>版本信息 : {$version}</span>
+				<span>当前浏览器 : {$browser}</span>
+				<span>上次登录时间：{$lasttime}</span>
+				<span>上次登录IP：{$lastip}</span>
+			</div>
+		</div>
+	</div> -->
+	<div class="container-fluid">
+		<div class="jumbotron">
+			<h1>Hello,{$Think.session.user.nickname}!</h1>
+			<p>版本信息 : {$version}</p>
+			<p>当前浏览器 : {$browser}</p>
+			<p>上次登录时间 : {$lasttime}</p>
+			<p>上次登录IP : {$lastip}</p>
+		</div>
+	</div>
+	
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/Huploadify.css">
+    <link rel="stylesheet" href="__CSS__/center-face.css">
+    <link rel="stylesheet" href="__CSS__/jquery.Jcrop.min.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/jquery.Huploadify.js"></script>
+    <script src="__JS__/jquery.Jcrop.min.js"></script>
+    <script src="__JS__/jquery.validate.min.js"></script>
+    <script src="__JS__/jquery.form.js"></script>
+    <script src="__JS__/center.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>修改头像</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">修改头像</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="page-header">
+            <h2>修改头像<small id="uploadFaceBTN" class="pull-right"><div id="file"></div></small></h2>
+        </div>
+        <input type="hidden" name="NewFileName" value="" id="NewFileName">
+        <div id="face-preview">
+            <img id="target" src="" alt="">
+            <div id="preview-pane">
+                <div class="preview-container">
+                    <img src="" id="FacePreviewBox" class="jcrop-preview" alt="Preview" />
+                </div>
+                <button class="btn btn-success" id="faceDone">保存</button>
+                <span class="clearfix"></span>
+                <button class="btn btn-default" id="faceCancel">取消</button>
+            </div>
+        </div>
+
+        <ul id="faceList">
+            <li face="/Public/home/img/face/default_face.png" class="<eq name='userinfo.face' value='/Public/home/img/face/default_face.png'>active</eq>"><img src="__IMG__/face/default_face.png" alt="" /></li>
+            <li face="/Public/home/img/face/face_01.png" class="<eq name='userinfo.face' value='/Public/home/img/face/face_01.png'>active</eq>"><img src="__IMG__/face/face_01.png" alt="" /></li>
+        </ul>
+    </div>
+
+
+    <!-- 消息提示模态框 -->
+    <div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body" id="message-modal-text">
+                    <p class="modal-message modal-message-success"><i class="icon-ok-sign icon-2x modal-icon-success"></i><span class="message-text">成功后的信息</span></p>
+                    <p class="modal-message modal-message-error"><i class="icon-remove-sign icon-2x modal-icon-error"></i><span class="message-text">失败后的信息</span></p>
+                    <p class="modal-message modal-message-info"><i class="icon-info-sign icon-2x modal-icon-info"></i><span class="message-text">错误的信息</span></p>
+                    <p class="modal-message modal-message-flash-info"><span class="message-text">系统检测到你当前的浏览器尚未安装<a href="https://get2.adobe.com/cn/flashplayer/" target="_blank">Flash插件</a>导致上传头像功能无法使用</span></p>
+                </div>
+                <div class="modal-footer" id="flashFooter">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

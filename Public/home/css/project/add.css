@@ -1,0 +1,122 @@
+.project-container {
+    width: 900px;
+    margin: 0 auto 300px;
+}
+.project-container .page-header {
+    border: none;
+    padding: 0;
+    padding-left: 15px;
+    border-left: 7px solid #428bca;
+}
+.project-container .table td {
+    border: none;
+    vertical-align: top;
+    padding: 5px 5px;
+}
+.help-block {
+    margin-bottom: 0;
+    font-size: 12px;
+    color: #d9534f;
+}
+.project-container .table tr td.td_padding {
+    padding-right: 120px;
+}
+/*.project-container .table tr:last-child td:last-child {
+    padding-right: 20px;
+}*/
+.project-container .table tr:last-child td:first-child {
+    vertical-align: top;
+}
+.project-container .table tr:last-child td:last-child textarea {
+    min-width: 792px;
+    max-width: 792px;
+    min-height: 120px;
+}
+.project-container .table .input-sm {
+    width: 270px;
+}
+.project-container .table td.column-name {
+    text-align: left;
+    font-weight: bold;
+}
+.project-container .form-group {
+    padding-top: 30px;
+    border-top: dashed 1px #ccc;
+}
+#choosePersonBody ul li {
+    display: inline-block;
+    width: 86px;
+    padding: 5px;
+    margin: 5px;
+    border: solid 1px #ccc;
+    text-align: center;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+#choosePersonBody ul li:hover {
+    background: #428bca;
+    border: solid 1px #428bca;
+    color: #fff;
+}
+#pj_describe {
+    min-width: 600px;
+    max-width: 600px;
+    min-height: 120px;
+}
+
+.plan-box {
+    margin-bottom: 50px;
+}
+.plan-box tr td:last-child {
+    width: 47px;
+}
+.project-plan {
+    margin-top: 0;
+}
+.add-row-btn {
+    margin-left: 5px;
+}
+.plan-box table tr td:first-child {
+    width: 110px;
+}
+#plan-table tbody .special input[readonly="readonly"] {     /*里程碑同上一步骤相同时，鼠标为禁止状态*/
+    cursor: not-allowed !important;
+}
+
+
+/* loading */
+.loading-modal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(255,255,255,.4);
+}
+.loading-modal .loading-icon {
+    color: #555;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 200px;
+    height: 200px;
+    margin-left: -100px;
+    margin-top: -100px;
+    text-align: center;
+    padding-top: 36px;
+    font-size: 20px;
+}
+
+/*
+!* 数据提交前的loading层 *!
+#MessageText {
+    text-align: center;
+    min-height: 60px;
+    vertical-align: middle;
+    line-height: 60px;
+}
+#MessageText p {
+    font-size: 24px;
+}*/

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="UTF-8">
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+	<link href="__IMG__/favicon.ico" rel="shortcut icon">
+
+	<block name="webtitle"></block><!-- 网站标题 -->
+	<link rel="stylesheet" href="__CSS__/bootstrap.min.css">
+	<link rel="stylesheet" href="__PUBLIC__/jscrollpane/jquery.jscrollpane.css">
+	<link rel="stylesheet" href="__CSS__/font-awesome.min.css">
+	<link rel="stylesheet" href="__CSS__/jquery.mCustomScrollbar.css">
+	<link rel="stylesheet" href="__CSS__/iconfont.css">
+	<link rel="stylesheet" href="__CSS__/basic.css">
+	<link rel="stylesheet" href="__CSS__/Default/index.css">
+	<link rel="stylesheet" href="__CSS__/promotion_index.css">
+
+	<block name="linkcss"></block><!-- 引入css文件 -->
+	<script src="__JS__/jquery.min.js"></script>
+	<script src="__JS__/bootstrap.min.js"></script>
+	<script src="__PUBLIC__/jscrollpane/jquery.jscrollpane.min.js"></script>
+	<script src="__PUBLIC__/jscrollpane/jquery.mousewheel.js"></script>
+	<script src="__JS__/jquery.mCustomScrollbar.concat.min.js"></script>
+	<script src="__JS__/index.js"></script>
+
+	<block name="linkjs"></block><!-- 引入js文件 -->
+	<script src="__JS__/jquery.rotate.min.js"></script>
+	
+</head>
+<body>
+	<script type="text/javascript">
+		var ThinkPHP = {
+				'AJAX' : '__MODULE__',
+				'ROOT' : '__ROOT__',
+				'IMG' : '__IMG__',
+				'UPLOAD' : '__UPLOAD__',
+				'HTTP_HOST' : '{$Think.server.http_host}',
+				'UPLOADIFY' : '__PUBLIC__/home/uploadify',
+				'UPLOADIFY_CONFIG_FILESIZELIMIT' : '{$Think.config.UPLOAD_FILESIZELIMIT}',
+				'UPLOADIFY_CONFIG_UPLOADLIMIT' : '{$Think.config.UPLOAD_UPLOADLIMIT}',
+				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '{$Think.config.UPLOAD_FILETYPEEXTS}',
+		}
+	</script>
+	<div id="bodyContainer">
+		<block name="sidebar">
+			<div id="sidebar">
+				<div class="logo-space">
+
+				</div>
+				<!--<div id="face">
+					<div class="face-box">
+						<div class="face">
+							<a href="__MODULE__/Center">
+								<img id="face-picture" src="{$face.face}" alt="" width="70" height="70">
+							</a>
+						</div>
+						<p id="userName">Hello
+							<empty name="Think.session.user.nickname">
+								<span id="user_info">{$Think.session.user.account} <span class="caret" id="rotate-caret"></span></span>
+							<else/>
+								<span id="user_info">{$Think.session.user.nickname} <span class="caret" id="rotate-caret"></span></span>
+							</empty>
+						</p>
+						<a href="__ROOT__/notice" style="display: block;"><span class="sidebar-message"><span class="badge sidebar-message-badge"></span></span></a>
+						<a href="javascript:void(0);" style="display: block;"><span class="sidebar-notice"></span></a>
+						<div id="face_dropdown">
+							<ul>
+								<li><a href="__ROOT__/Center/modify"><i class="icon-list-alt"></i> 修改资料</a></li>
+								<li><a href="__ROOT__/Center/face"><i class="icon-github-alt"></i> 修改头像</a></li>
+								<li><a href="__ROOT__/Logout"><i class="icon-signout"></i> 退出登录</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>-->
+				<!-- <ul id="nav"> -->
+				<div class="nav-wrap">
+					<ul id="nav">
+						<li><div class="level-one-menu"><a href="__ROOT__/Index"><i class="icon-home"></i><span>首页</span></a></div></li>
+						<li>
+							<div class="level-one-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;<span class="icon-caret-right"></span></span></div>
+							<div class="level-two-menu sr-only">
+								<span><a href="__ROOT__/Project"><i class="icon-globe"></i>&nbsp;&nbsp;项目管理</a></span>
+								<span><a href="__ROOT__/Sample"><i class="icon-beaker"></i>&nbsp;&nbsp;样品管理</a></span>
+								<span><a href="__ROOT__/Compatibility"><i class="icon-bar-chart"></i>&nbsp;&nbsp;兼容表</a></span>
+							</div>
+						</li>
+						<!--<li id="Audit">
+							<div class="auditBTN">
+								<i class="icon-legal"></i><span>审批　　&nbsp;&nbsp;<span class="icon-caret-right"></span></span>
+							</div>
+							<div id="AuditChildMenu">
+								<span><a href="__ROOT__/Expense"><i class="icon-credit-card"></i>&nbsp;&nbsp;报销</a></span>
+							</div>
+						</li>-->
+						<li>
+							<div class="level-one-menu"><a href="__ROOT__/Approval"><i class="icon-legal"></i><span>审批</span></a></div>
+						</li>
+						<li>
+							<div class="level-one-menu"><a href="__ROOT__/DCC"><i class="icon-print"></i><span>文档中心</span></a></div>
+						</li>
+						<li>
+							<div class="level-one-menu"><a href="__ROOT__/Acronym"><i class="icon-book"></i><span>缩略词</span></a></div>
+						</li>
+						<li>
+							<div class="level-one-menu"><a href="__ROOT__/Customer"><i class="icon-comments-alt"></i><span>客诉处理</span></a></div>
+						</li>
+						<li>
+							<div class="level-one-menu"><a href="__ROOT__/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a></div>
+						</li>
+						<eq name="Think.session.user.account" value="admin">
+							<li>
+								<div class="level-one-menu"><a href="__ROOT__/System"><i class="icon-cog"></i><span>系统</span></a></div>
+							</li>
+						</eq>
+					</ul>
+				</div>
+			</div>
+		</block>
+
+
+
+		<div id="info">
+			<ul class="pull-right info-list">
+				<li class="offset-padding">
+					<a class="link-icon" href="__ROOT__/notice" style="display: block;"><span class="sidebar-message"><span class="badge sidebar-message-badge"></span><i class="icon-bell"></i></span></a>
+				</li>
+				<li class="offset-padding">
+					<a class="link-icon" href="__ROOT__/notice" style="display: block;"><span class="sidebar-message"><span class="badge sidebar-message-badge"></span><i class="icon-envelope-alt"></i></span></a>
+				</li>
+				<li>
+					<div class="user-info-box">
+						<div class="user-face-box pull-left">
+							<a href="__MODULE__/Center"><img id="face-picture" src="{$face.face}" alt="" width="30" height="30"></a>
+						</div>
+						<div class="user-name-box pull-right">
+							<empty name="Think.session.user.nickname">
+								<div>{$Think.session.user.account} <span class="caret" class="rotate-caret"></span></div>
+							<else/>
+								<div>{$Think.session.user.nickname} <span class="caret" class="rotate-caret"></span></div>
+							</empty>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</li>
+				<li class="offset-padding">
+					<a class="link-icon" href="__ROOT__/Logout"><i class="icon-signout"></i></a>
+				</li>
+			</ul>
+			<block name="breadcrumb">
+
+			</block>
+		</div>
+
+
+		<!--<div id="header">
+			<block name="breadcrumb">
+
+			</block>
+		</div>-->
+
+		<div id="content">
+			<div class="container-fluid">
+				<block name="content">
+
+				</block>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(function()
+			{
+				var bars = '.jspHorizontalBar, .jspVerticalBar';
+				$('#content').bind('jsp-initialised', function (event, isScrollable) {
+					//hide the scroll bar on first load
+					$(this).find(bars).hide();
+				}).jScrollPane().hover(
+					//hide show scrollbar
+					function () {
+						$(this).find(bars).stop().fadeTo('fast', 0.9);
+					},
+					function () {
+						$(this).find(bars).stop().fadeTo('fast', 0);
+					}
+				);
+			});
+		</script>
+
+		<!-- 消息提示模态框 -->
+		<block name="modalBlock">
+			<div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<div class="modal-body" id="message-modal-text">
+							<p class="modal-message modal-message-success"><i class="icon-ok-sign icon-2x modal-icon-success"></i><span class="message-text">成功后的信息</span></p>
+							<p class="modal-message modal-message-error"><i class="icon-remove-sign icon-2x modal-icon-error"></i><span class="message-text">失败后的信息</span></p>
+							<p class="modal-message modal-message-info"><i class="icon-info-sign icon-2x modal-icon-info"></i><span class="message-text">错误的信息</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</block>
+	</div>
+
+	<div style="display: none" id=browser_ie>
+		<div class=brower_info>
+			<div class="browser_box">
+				<div class=notice_info><h3>你的浏览器版本过低，可能导致网站不能正常访问<br>为了你能正常使用网站功能，请使用以下浏览器。</h3></div>
+				<div class=browser_list>
+					<span><a href="javascript:void(0);" target=_blank><img src="__IMG__/Chrome.png" title="谷歌浏览器" data-toggle="tooltip" data-placement="bottom"></a></span>
+					<span><a href="javascript:void(0);" target=_blank><img src="__IMG__/Firefox.png" title="火狐浏览器" data-toggle="tooltip" data-placement="bottom"></a></span>
+					<span><a href="javascript:void(0);" target=_blank><img src="__IMG__/Safari.png" title="safari浏览器" data-toggle="tooltip" data-placement="bottom"></a></span>
+					<span><a href="javascript:void(0);" target=_blank><img src="__IMG__/Opera.jpg" title="Opera浏览器" data-toggle="tooltip" data-placement="bottom"></a></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Before Loading -->
+	<div class="modal fade bs-example-modal-sm" id="MessageModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content" id="MessageText">
+				<!-- 消息内容 -->
+				<!--<p><i class="icon-ok-sign text-success"></i>&nbsp;添加成功</p>-->
+			</div>
+		</div>
+	</div>
+
+	<script>
+
+		//如果检测到用户浏览器为IE则禁用
+		var str = navigator.userAgent;
+
+		if(str.indexOf('MSIE')>0){
+			alert(str);
+			checkIE();
+		}
+
+		/*if (document.all && document.addEventListener && !window.atob) {
+			checkIE();
+		}
+
+		if (document.all && document.querySelector && !document.addEventListener) {
+			checkIE();
+		}
+
+		if (document.all && window.XMLHttpRequest && !document.querySelector) {
+			checkIE();
+		}
+
+		if (document.all && document.compatMode && !window.XMLHttpRequest) {
+			checkIE();
+		}*/
+
+		function checkIE(){
+			var body = document.getElementsByName('body');
+			var bodyContainer = document.getElementById('bodyContainer');
+			var browser_ie = document.getElementById('browser_ie');
+			bodyContainer.parentNode.removeChild(bodyContainer);
+			browser_ie.style.display = 'block';
+		}
+	</script>
+
+</body>
+</html>

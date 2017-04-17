@@ -1,0 +1,154 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+	<link rel="stylesheet" href="__CSS__/system.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+	<script src="__JS__/jquery.validate.min.js"></script>
+	<script src="__JS__/jquery.form.js"></script>
+	<script src="__JS__/system.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+	<title>系统</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+	<ol class="breadcrumb breadcrumb-edit">
+		<li class="active">系统</li>
+	</ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+	<!--<div class="commingSoon">
+		<p><i class="icon-info-sign icon-5x"></i></p>
+		<h1>功能研发中</h1>
+		<p>Function is developing</p>
+		<p>Comming Soon.</p>
+	</div>-->
+
+	<div class="col-lg-6 col-lg-offset-3 system-container">
+		<div class="page-header">
+			<h2>验证码</h2>
+		</div>
+		<div class="config-verify-box">
+			<h4>登录验证码<span class="verify-switch <eq name='Think.config.LOGIN_VERIFY' value='1'>active</eq>" value="0" key="LOGIN_VERIFY" flag="verify"></span></h4>
+			<div class="config-verify-info <eq name='Think.config.LOGIN_VERIFY' value='0'>sr-only</eq>">
+				<p>是否使用随机背景<span class="verify-switch verify-config-switch <eq name='Think.config.VERIFY_USEIMGBG' value='1'>active</eq>" value="0" key="VERIFY_USEIMGBG"></span></p>
+				<p>是否使用混淆曲线<span class="verify-switch verify-config-switch <eq name='Think.config.VERIFY_USECURVE' value='1'>active</eq>" value="0" key="VERIFY_USECURVE"></span></p>
+				<p>是否添加混淆杂点<span class="verify-switch verify-config-switch <eq name='Think.config.VERIFY_USENOISE' value='1'>active</eq>" value="0" key="VERIFY_USENOISE"></span></p>
+			</div>
+		</div>
+		<div class="page-header">
+			<h2>上传文件</h2>
+		</div>
+		<div class="config-upload-box">
+			<div class="config-upload-info">
+				<form role="form" class="upload-form-config-box" id="uploadConfigForm">
+					<div class="form-group upload-config-input">
+						<label>文件上传大小限制</label>
+						<div class="input-group">
+							<input type="text" class="form-control" value="{$Think.config.UPLOAD_FILESIZELIMIT}" name="FileSizeLimit">
+							<div class="input-group-addon">M</div>
+						</div>
+						<div class="help-block"></div>
+					</div>
+					<div class="form-group">
+						<label>文件上传最大数量</label>
+						<div class="input-group upload-config-input">
+							<input type="text" class="form-control" value="{$Think.config.UPLOAD_UPLOADLIMIT}" name="UploadLimit">
+							<div class="input-group-addon">个</div>
+						</div>
+						<div class="help-block"></div>
+					</div>
+					<div class="form-group">
+						<label>文件上传格式限制</label>
+						<input type="text" class="form-control upload-config-input-exts" value="{$Think.config.UPLOAD_FILETYPEEXTS}" name="FileTypeExts">
+						<div class="help-block"></div>
+					</div>
+					<div class="form-group">
+						<input type="submit" class="btn btn-primary btn-lg btn-submit" value="保存">
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="page-header">
+			<h2>分页配置</h2>
+		</div>
+		<div class="config-page-box">
+			<h4>分页状态信息<span class="verify-switch <eq name='Think.config.PAGE_STATUS_INFO' value='1'>active</eq>" value="0" key="PAGE_STATUS_INFO" flag="page"></span></h4>
+			<form role="form" id="pageConfigForm">
+				<div class="input-group">
+					<span class="input-group-addon">每页显示</span>
+					<input type="text" class="form-control" name="pageLimitSize" value="{$Think.config.LIMIT_SIZE}">
+					<span class="input-group-addon">条</span>
+					<span class="input-group-btn">
+						<button type="submit" class="btn btn-default">确定</button>
+					</span>
+				</div>
+				<div class="help-block"></div>
+			</form>
+		</div>
+		<div class="page-header">
+			<h2>Cookie密钥</h2>
+		</div>
+		<div class="config-page-box">
+			<form role="form" id="cookieConfigForm">
+				<div class="input-group input-group-cookie">
+					<input type="text" class="form-control" name="cookieKey" value="{$Think.config.MD5_KEY}" data-toggle="tooltip" data-placement="left" title="cookie加密唯一标识" onMouseOver="$(this).tooltip('show')">
+					<span class="input-group-btn">
+						<button type="submit" class="btn btn-default">确定</button>
+					</span>
+				</div>
+				<div class="help-block"></div>
+			</form>
+		</div>
+	</div>
+
+	<!-- 消息提示模态框 -->
+	<div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-body" id="message-modal-text">
+					<p class="modal-message modal-message-success"><i class="icon-ok-sign icon-2x modal-icon-success"></i><span class="message-text">成功后的信息</span></p>
+					<p class="modal-message modal-message-error"><i class="icon-remove-sign icon-2x modal-icon-error"></i><span class="message-text">失败后的信息</span></p>
+					<p class="modal-message modal-message-info"><i class="icon-info-sign icon-2x modal-icon-info"></i><span class="message-text">错误的信息</span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

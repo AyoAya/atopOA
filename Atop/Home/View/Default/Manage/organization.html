@@ -1,0 +1,82 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/jquery.orgchart.css">
+    <link rel="stylesheet" href="__CSS__/orgchart.style.css">
+    <link rel="stylesheet" href="__CSS__/organization.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script type="text/javascript" src="__JS__/jquery.orgchart.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>组织架构图</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Manage">用户管理</a></li>
+        <li class="active">组织架构图</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div id="chart-container" style="min-height: 1600px;"></div>
+
+    <script>
+        'use strict';
+        (function($){
+            $(function() {
+                var datascource = {$orgchart};
+                $('#chart-container').orgchart({
+                    'data' : datascource,
+                    'nodeContent': 'title',
+                    'direction': 'l2r'
+                });
+            });
+        })(jQuery);
+
+    </script>
+
+    <script>
+        window.onload = function(){
+            var orgchart_height = $('table').height();
+            $('#chart-container').css('height',(orgchart_height+100)+'px');
+        }
+    </script>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

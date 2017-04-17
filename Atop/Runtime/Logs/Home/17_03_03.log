@@ -1,0 +1,926 @@
+[ 2017-03-03T18:05:12+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:05:42+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0230s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:06:04+08:00 ] 127.0.0.1 /Project/details/tab/plan/id/18
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project` [ RunTime:0.0010s ]
+SQL: SELECT `pj_create_person_id`,`pj_participate` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `id`,`pj_num`,`pj_name`,`pj_create_time`,`pj_create_person`,`pj_child`,`pj_belong` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project_plan` [ RunTime:0.0000s ]
+SQL: SELECT `id`,`gate`,`mile_stone`,`items`,`plan_start_time`,`plan_stop_time` FROM `atop_project_plan` WHERE ( plan_project=18 ) GROUP BY items ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=2 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=3 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=4 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=5 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=6 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=7 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=8 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=9 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=10 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=11 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=12 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=13 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=14 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=15 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.001000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.001000s ]
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.057003s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.057003s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001000s ]
+NOTIC: [2] Cannot modify header information - headers already sent by (output started at E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php:483) E:\work\atopOA\ThinkPHP\Library\Think\View.class.php 第 91 行.
+NOTIC: [2] Cannot modify header information - headers already sent by (output started at E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php:483) E:\work\atopOA\ThinkPHP\Library\Think\View.class.php 第 92 行.
+NOTIC: [2] Cannot modify header information - headers already sent by (output started at E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php:483) E:\work\atopOA\ThinkPHP\Library\Think\View.class.php 第 93 行.
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:06:04+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:06:06+08:00 ] 127.0.0.1 /Project/details/tab/plan/id/18
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project` [ RunTime:0.0010s ]
+SQL: SELECT `pj_create_person_id`,`pj_participate` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `id`,`pj_num`,`pj_name`,`pj_create_time`,`pj_create_person`,`pj_child`,`pj_belong` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project_plan` [ RunTime:0.0000s ]
+SQL: SELECT `id`,`gate`,`mile_stone`,`items`,`plan_start_time`,`plan_stop_time` FROM `atop_project_plan` WHERE ( plan_project=18 ) GROUP BY items ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=2 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=3 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=4 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=5 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=6 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=7 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=8 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=9 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=10 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=11 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=12 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=13 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=14 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=15 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.001000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.001000s ]
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.050003s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.050003s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000000s ]
+NOTIC: [2] Cannot modify header information - headers already sent by (output started at E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php:483) E:\work\atopOA\ThinkPHP\Library\Think\View.class.php 第 91 行.
+NOTIC: [2] Cannot modify header information - headers already sent by (output started at E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php:483) E:\work\atopOA\ThinkPHP\Library\Think\View.class.php 第 92 行.
+NOTIC: [2] Cannot modify header information - headers already sent by (output started at E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php:483) E:\work\atopOA\ThinkPHP\Library\Think\View.class.php 第 93 行.
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:06:07+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0010s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:06:08+08:00 ] 127.0.0.1 /Project/details/tab/plan/id/18
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project` [ RunTime:0.0010s ]
+SQL: SELECT `pj_create_person_id`,`pj_participate` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `id`,`pj_num`,`pj_name`,`pj_create_time`,`pj_create_person`,`pj_child`,`pj_belong` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_project_plan` [ RunTime:0.0330s ]
+SQL: SELECT `id`,`gate`,`mile_stone`,`items`,`plan_start_time`,`plan_stop_time` FROM `atop_project_plan` WHERE ( plan_project=18 ) GROUP BY items ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=2 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=3 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=4 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=5 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=6 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=7 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=8 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=9 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=10 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=11 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=12 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=13 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=14 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=15 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.001000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.001000s ]
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.045003s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.045003s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001000s ]
+NOTIC: [2] Cannot modify header information - headers already sent by (output started at E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php:483) E:\work\atopOA\ThinkPHP\Library\Think\View.class.php 第 91 行.
+NOTIC: [2] Cannot modify header information - headers already sent by (output started at E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php:483) E:\work\atopOA\ThinkPHP\Library\Think\View.class.php 第 92 行.
+NOTIC: [2] Cannot modify header information - headers already sent by (output started at E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php:483) E:\work\atopOA\ThinkPHP\Library\Think\View.class.php 第 93 行.
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:06:08+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:06:13+08:00 ] 127.0.0.1 /Project/details/tab/plan/id/18
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project` [ RunTime:0.0000s ]
+SQL: SELECT `pj_create_person_id`,`pj_participate` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `id`,`pj_num`,`pj_name`,`pj_create_time`,`pj_create_person`,`pj_child`,`pj_belong` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project_plan` [ RunTime:0.0010s ]
+SQL: SELECT `id`,`gate`,`mile_stone`,`items`,`plan_start_time`,`plan_stop_time` FROM `atop_project_plan` WHERE ( plan_project=18 ) GROUP BY items ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=2 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=3 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=4 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=5 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=6 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=7 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=8 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=9 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=10 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=11 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=12 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=13 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=14 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=15 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.001000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.001000s ]
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.042003s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.043003s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:06:13+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:06:43+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001001s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001001s ]
+
+[ 2017-03-03T18:07:13+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:07:13+08:00 ] 127.0.0.1 /Project/details/tab/plan/id/18
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project` [ RunTime:0.0000s ]
+SQL: SELECT `pj_create_person_id`,`pj_participate` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `id`,`pj_num`,`pj_name`,`pj_create_time`,`pj_create_person`,`pj_child`,`pj_belong` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project_plan` [ RunTime:0.0010s ]
+SQL: SELECT `id`,`gate`,`mile_stone`,`items`,`plan_start_time`,`plan_stop_time` FROM `atop_project_plan` WHERE ( plan_project=18 ) GROUP BY items ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=2 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=3 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=4 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=5 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=6 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=7 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=8 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=9 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=10 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=11 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=12 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=13 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=14 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=15 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.001000s ]
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.053003s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.053003s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:07:14+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-03-03T18:07:17+08:00 ] 127.0.0.1 /Project/details/tab/plan/id/18
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.001000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_project` [ RunTime:0.0000s ]
+SQL: SELECT `pj_create_person_id`,`pj_participate` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `id`,`pj_num`,`pj_name`,`pj_create_time`,`pj_create_person`,`pj_child`,`pj_belong` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project_plan` [ RunTime:0.0010s ]
+SQL: SELECT `id`,`gate`,`mile_stone`,`items`,`plan_start_time`,`plan_stop_time` FROM `atop_project_plan` WHERE ( plan_project=18 ) GROUP BY items ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=2 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=3 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=4 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=5 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=6 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=7 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=8 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=9 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=10 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=11 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=12 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=13 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=14 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=15 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 479 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.001000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.001000s ]
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.044002s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.044002s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:07:17+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0010s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-03-03T18:07:47+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:07:59+08:00 ] 127.0.0.1 /Project/details/tab/plan/id/18
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project` [ RunTime:0.0010s ]
+SQL: SELECT `pj_create_person_id`,`pj_participate` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `id`,`pj_num`,`pj_name`,`pj_create_time`,`pj_create_person`,`pj_child`,`pj_belong` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_project_plan` [ RunTime:0.0000s ]
+SQL: SELECT `id`,`gate`,`mile_stone`,`items`,`plan_start_time`,`plan_stop_time` FROM `atop_project_plan` WHERE ( plan_project=18 ) GROUP BY items ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=2 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=3 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=4 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=5 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=6 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=7 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=8 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=9 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=10 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=11 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=12 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=13 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=14 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=15 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 456 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.001000s ]
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.043003s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.043003s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:07:59+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:08:29+08:00 ] 127.0.0.1 /Project/details/tab/plan/id/18
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project` [ RunTime:0.0010s ]
+SQL: SELECT `pj_create_person_id`,`pj_participate` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `id`,`pj_num`,`pj_name`,`pj_create_time`,`pj_create_person`,`pj_child`,`pj_belong` FROM `atop_project` WHERE `id` = 18 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_project_plan` [ RunTime:0.0000s ]
+SQL: SELECT `id`,`gate`,`mile_stone`,`items`,`plan_start_time`,`plan_stop_time` FROM `atop_project_plan` WHERE ( plan_project=18 ) GROUP BY items ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=2 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=3 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=4 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=5 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=6 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=7 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=8 ) ORDER BY id ASC  [ RunTime:0.0010s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=9 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=10 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=11 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=12 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=13 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=14 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `start_time`,`complete_time`,`comments` FROM `atop_project_plan` WHERE ( plan_project=18 AND id=15 ) ORDER BY id ASC  [ RunTime:0.0000s ]
+NOTIC: [2] max(): Array must contain at least one element E:\work\atopOA\Atop\Home\Controller\ProjectController.class.php 第 463 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.001000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.001000s ]
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 283 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+NOTIC: [8] Undefined index: comments_entity E:\work\atopOA\Atop\Runtime\Cache\Home\4d53bc13ec909218e1ff426c42253837.php 第 281 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.044002s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.044002s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-03-03T18:08:29+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `face`,`theme` FROM `atop_user` WHERE `id` = 70 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='70' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','13') AND `type` = 1 AND `status` = 1  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 70 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+

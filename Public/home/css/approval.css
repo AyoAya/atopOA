@@ -1,0 +1,133 @@
+.app-list {
+
+}
+.app-list ul li {
+    width: 80px;
+    height: 80px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background: #555;
+    color: #fff;
+    text-align: center;
+    margin: 10px;
+    display: inline-block;
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    -ms-transition: all .2s;
+    -o-transition: all .2s;
+    transition: all .2s;
+    position: relative;
+    padding-top: 10px;
+}
+.app-list ul li:hover {
+    transform: translate(0,-10px);
+}
+.app-list ul li i {
+    font-size: 40px;
+}
+.app-list ul li a {
+    color: #fff;
+    display: block;
+    text-decoration: none;
+    outline: none;
+}
+.app-list ul li a span {
+    display: block;
+}
+.app-list ul li.app-expense {
+    background: #428bca;
+}
+.app-list ul li.app-leave {
+    background: #d9534f;
+}
+.app-list ul li.app-evection {
+    background: #5cb85c;
+}
+.app-list ul li.app-out {
+    background: #f0ad4e;
+}
+.app-list ul li.app-item {
+    background: #5bc0de;
+}
+.app-list ul li.app-procurement {
+    background: #36cfa6;
+}
+.app-list ul li.app-dimission {
+    background: #ca2bbd;
+}
+.app-list ul li.app-placeorder {
+    background: #e06019;
+}
+
+.approval-box {
+    margin-top: 15px;
+}
+.approval-box .panel-body {
+    min-height: 360px;
+}
+.approval-box .panel-body .expense-row {
+    height: 60px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    border-bottom: solid 1px #eee;
+}
+.approval-box .panel-body .expense-row .expense-face {
+    width: 50px;
+    height: 50px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+    text-align: center;
+    font-size: 30px;
+    color: #fff;
+    line-height: 50px;
+}
+.approval-box .panel-body .expense-row .expense-context {
+
+}
+.approval-box .panel-body .expense-row .expense-context .expense-context-title {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+.approval-box .panel-body .expense-row .expense-context .expense-context-title a {
+    color: #555;
+    text-decoration: none;
+}
+.approval-box .panel-body .expense-row .expense-context .expense-context-title a:hover {
+    color: #428bca;
+}
+.approval-box .panel-body .expense-row .expense-context .expense-context-time {
+    margin-left: 15px;
+}
+
+#approval .expense-context-time {
+    margin-left: 15px;
+}
+.empty-info {
+    width: 60px;
+    margin: 110px auto 0;
+    text-align: center;
+    color: #ccc;
+}
+.empty-info i {
+    font-size: 60px;
+}
+
+.pagination a {
+    outline: none;
+    cursor: pointer;
+}
+
+#initiate div.flag-active {
+    background: url("../img/audition_success.png") right center no-repeat;
+}
+#initiate div.flag-error {
+    background: url("../img/audition_error.png") right center no-repeat;
+}
+#initiate div.flag-wait {
+    background: url("../img/audition_wait.png") right center no-repeat;
+}

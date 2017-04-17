@@ -1,0 +1,146 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/thumbword.css">
+    <style>
+        .acronym-table {
+            width: 900px;
+            margin: 0 auto;
+        }
+        .acronym-table tbody tr td:first-child {
+            text-align: right;
+            padding: 20px 20px;
+            width: 130px;
+            font-weight: bold;
+            background: #fbfbfb;
+            border-bottom: solid 1px #eee;
+        }
+        .acronym-table tbody tr td:last-child {
+            padding: 20px 20px;
+            border-bottom: solid 1px #eee;
+        }
+        .acronym-table tbody tr:last-child td {
+            border: none;
+        }
+        .other-meaning {
+            width: 900px;
+            margin: 20px auto 0;
+            padding: 0 15px;
+        }
+        .other-meaning p {
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .other-meaning p i {
+            color: #f0ad4e;
+        }
+        .other-meaning li {
+            display: inline-block;
+            padding: 5px 10px;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            border-radius: 2px;
+            margin: 10px;
+        }
+    </style>
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>缩略词详情</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Acronym">缩略词</a></li>
+        <li class="active">缩略词详情</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+    <!--<div class="commingSoon">
+        <p><i class="icon-info-sign icon-5x"></i></p>
+        <h1>功能研发中</h1>
+        <p>Function is developing</p>
+        <p>Comming Soon.</p>
+    </div>-->
+
+    <table class="acronym-table">
+        <tbody>
+            <tr>
+                <td>英文简称：</td>
+                <td>{$acronym.acronym}</td>
+            </tr>
+            <tr>
+                <td>英文全称：</td>
+                <td>{$acronym.full_name}</td>
+            </tr>
+            <tr>
+                <td>中文全称：</td>
+                <td>{$acronym.meaning}</td>
+            </tr>
+            <tr>
+                <td>参考链接：</td>
+                <td><a href="{$acronym.ref_url}" target="_blank">{$acronym.ref_url}</a></td>
+            </tr>
+            <tr>
+                <td>详细介绍：</td>
+                <td>{$acronym.introduction}</td>
+            </tr>
+            <tr>
+                <td>添加时间：</td>
+                <td>{$acronym.add_time}</td>
+            </tr>
+            <tr>
+                <td>添加人：</td>
+                <td>{$acronym.User.nickname}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <present name="duplication">
+        <div class="other-meaning">
+            <p><i class="icon-exclamation-sign"></i>&nbsp;此简称包含其他含义：</p>
+            <ul>
+                <volist name="duplication" id="value">
+                    <li><a href="__ROOT__/Acronym/details/id/{$value.id}">{$value.acronym}({$value.meaning})</a></li>
+                </volist>
+            </ul>
+        </div>
+    </present>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

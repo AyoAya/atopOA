@@ -1,0 +1,102 @@
+
+.product-filter-box {
+    padding: 15px 15px 0 15px;
+    padding-bottom: 80px;
+    position: relative;
+}
+.product-filter-box .filter-search {
+    margin-bottom: 15px;
+}
+.product-filter-box .filter-search .filter-search-block {
+    position: relative;
+}
+.product-filter-box .filter-search .product-search-btn {
+    position: absolute;
+    right: 3px;
+    top: 0;
+    width: 38px;
+    height: 38px;
+    border: none;
+    background: none;
+}
+.product-filter-box .filter-search .product-search-btn .layui-icon {
+    font-size: 20px;
+}
+.product-filter-box .filter-category {
+    margin-bottom: 10px;
+}
+.product-filter-box .filter-category .filter-name {
+    width: 6%;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    cursor: default;
+}
+.product-filter-box .filter-category .filter-items {
+    width: 90%;
+}
+.product-filter-box .filter-category .filter-more {
+    width: 4%;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.product-filter-box .filter-category .filter-more:hover {
+    color: #f60;
+}
+.product-filter-box .filter-category ul li {
+    display: inline-block;
+    width: 16.3%;
+    padding: 0 15px;
+    height: 30px;
+    line-height: 30px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.product-filter-box .filter-category ul li.overflow {
+    display: none;
+}
+.product-filter-box .filter-category ul li.active {
+    background: #428bca;
+    color: #fff;
+}
+.product-filter-box .filter-category ul li:hover {
+    background: #428bca;
+    color: #fff;
+}
+.product-list-box {
+    padding: 0 15px 0 15px;
+}
+.product-list-box ul li {
+    display: inline-block;
+    width: 16.3%;
+    padding: 0 15px;
+    height: 30px;
+    line-height: 30px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.product-list-box ul li:hover {
+    background: #428bca;
+    color: #fff;
+}
+.reset-filter-box {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    margin-top: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    box-shadow: 0 0 5px #555;
+}
+.reset-filter-box .reset-filter-btn {
+    margin-right: 15px;
+}

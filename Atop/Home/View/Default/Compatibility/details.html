@@ -1,0 +1,143 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/compatible-details.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/compatible.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>兼容详情</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Compatibility">兼容表</a></li>
+        <li class="active">兼容详情</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="details-container">
+        <div class="title-bar" style="margin: 0 0 20px 0;">
+            <h4>产品信息</h4>
+        </div>
+
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th>封装类型</th>
+                    <th>产品型号</th>
+                    <th>速率</th>
+                    <th>波长</th>
+                    <th>光组件</th>
+                    <th>发端功率</th>
+                    <th>接受灵敏度</th>
+                    <th>接口</th>
+                    <th>温度范围</th>
+                    <th>距离</th>
+                    <th>多速率支持</th>
+                    <th>产品经理</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{$compatibility.Productrelationships.type}</td>
+                    <td>{$compatibility.Productrelationships.pn}</td>
+                    <td>{$compatibility.Productrelationships.rate}</td>
+                    <td>{$compatibility.Productrelationships.wavelength}</td>
+                    <td>{$compatibility.Productrelationships.component}</td>
+                    <td>{$compatibility.Productrelationships.txpwr}</td>
+                    <td>{$compatibility.Productrelationships.rxsens}</td>
+                    <td>{$compatibility.Productrelationships.connector}</td>
+                    <td>{$compatibility.Productrelationships.casetemp}</td>
+                    <td>{$compatibility.Productrelationships.reach}</td>
+                    <td>{$compatibility.Productrelationships.multirate}</td>
+                    <td>{$compatibility.Productrelationships.managername}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="title-bar" style="margin: 50px 0 20px 0;">
+            <h4>兼容情况</h4>
+        </div>
+
+        <notempty name="comResult">
+            <table class="layui-table table-com">
+                <thead>
+                <tr>
+                    <th class="th_num">序号</th>
+                    <th class="th_brand">设备品牌</th>
+                    <th class="th_model">设备型号</th>
+                    <th class="th_state">状态</th>
+                    <th class="th_version">版本</th>
+                    <th class="th_original">原厂型号</th>
+                    <th class="th_comment">备注</th>
+                    <th class="th_person">添加人</th>
+                    <th class="th_time">添加时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                <volist name="comResult" id="value">
+                    <tr>
+                        <td>{$i}</td>
+                        <td>{$value.VendorBrand.brand}</td>
+                        <td>{$value.model}</td>
+                        <if condition="$value.state eq 1">
+                            <td class="state"><span class="pass">{$value.state_text}</span></td>
+                        <elseif condition="$value.state eq 2"/>
+                            <td class="state"><span class="comm">{$value.state_text}</span></td>
+                        <else/>
+                            <td class="state"><span class="fail">{$value.state_text}</span></td>
+                        </if>
+                        <td>{$value.version}</td>
+                        <td>{$value.original}</td>
+                        <td class="comment">{$value.comment}</td>
+                        <td>{$value.person}</td>
+                        <td>{$value.createtime}</td>
+                    </tr>
+                </volist>
+                </tbody>
+            </table>
+        <else/>
+            无
+        </notempty>
+    </div>
+
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

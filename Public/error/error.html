@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>错误</title>
+    <link rel="stylesheet" type="text/css" href="/Public/home/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/Public/home/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: "microsoft yahei";
+            color: #666;
+        }
+        .container > .container-box {
+            text-align: center;
+            margin-top: 80px;
+        }
+        .container > .container-box > .error-404-img {
+            display: block;
+            width: 860px;
+            height: 360px;
+            background: url("/Public/home/img/404.png") no-repeat;
+            margin: 0 auto;
+        }
+        .container > .container-box > .error-message > .block > .font-zh {
+            font-size: 60px;
+            font-weight: bold;
+            color: #1597af;
+        }
+        .container > .container-box > .error-message > .block > .font-en {
+            display: inline-block;
+            width: 100px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .container > .container-box > .error-message > .block > .back-btn {
+            width: 120px;
+            padding: 10px 30px;
+            border: solid 2.5px #1597af;
+            margin-left: 20px;
+            position: relative;
+            top: -8px;
+            cursor: pointer;
+        }
+        .container > .container-box > .error-message > .block > .back-btn:hover {
+            background: #1597af;
+        }
+        .container > .container-box > .error-message > .block > .back-btn:hover .backLink {
+            color: #fff;
+        }
+        .container > .container-box > .error-message > .block > .back-btn > .backLink {
+            color: #1597af;
+            text-decoration: none;
+            font-size: 16px;
+            -webkit-transition: all .3s;
+            -moz-transition: all .3s;
+            -ms-transition: all .3s;
+            -o-transition: all .3s;
+            transition: all .3s;
+        }
+        .container > .container-box > .error-message > .block > .back-btn > .backLink > .icon-2x {
+            position: relative;
+            top: 4.5px;
+        }
+        .container > .container-box > .error-message > .historyMessage {
+            font-size: 36px;
+        }
+        .container > .container-box > .error-message > .errorLine {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="container-box">
+            <?php
+                $errorMessage = strip_tags($e['message']);
+                $illegalOperation = '非法操作';
+                $UnableToLoadController = '无法加载控制器';
+            ?>
+            <?php if(stripos($errorMessage,$illegalOperation)!==false || stripos($errorMessage,$UnableToLoadController)!==false){?>
+            <i class="error-404-img"></i>
+            <div class="error-message">
+                <?php
+                    if(stripos($errorMessage,$illegalOperation)!==false || stripos($errorMessage,$UnableToLoadController)!==false){
+                        echo '<p class="block"><span class="font-zh">Error</span><span class="font-en">非常抱歉，你访问的页面不存在</span><span class="back-btn"><a href="javascript:history.back();" class="backLink">返回刚才的页面&nbsp;<i class="icon-angle-right icon-2x"></i></a></span></p><p class="historyMessage">'.$errorMessage.'</p><p class="errorLine">错误位置：'.$e['file'].$e['line'].'</p>';
+                    }
+                ?>
+            </div>
+            <?php }?>
+        </div>
+    </div>
+
+</body>
+</html>

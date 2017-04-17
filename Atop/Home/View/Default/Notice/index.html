@@ -1,0 +1,94 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+	<link rel="stylesheet" href="__CSS__/notice.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+	<title>通知中心</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+	<ol class="breadcrumb breadcrumb-edit">
+		<li class="active">首页</li>
+	</ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+	<div class="message-container">
+		<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+			<div class="panel panel-default">
+				<div class="panel-heading" role="tab" id="newMessage">
+					<h4 class="panel-title">
+						<a href="#newMessageCollapse" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapseNewMessage">
+							未查阅
+						</a>
+					</h4>
+				</div>
+				<div id="newMessageCollapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="newMessage">
+					<div class="panel-body">
+						<ul class="noticeList">
+							<volist name="newMessage" id="value" empty="$empty">
+								<li><i class="icon-angle-right"></i>&nbsp;&nbsp;<a href="http://{$_SERVER.HTTP_HOST}{$value.link}">{$value.message}</a><small class="pull-right">{$value.time}发布</small></li>
+							</volist>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading" role="tab" id="historyMessage">
+					<h4 class="panel-title">
+						<a href="#historyMessageCollapse" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapseNewMessage">
+							已查阅
+						</a>
+					</h4>
+				</div>
+				<div id="historyMessageCollapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="historyMessage">
+					<div class="panel-body">
+						<ul class="noticeList noticeListTextColor">
+							<volist name="oldMessage" id="value" empty="$empty">
+								<li><i class="icon-angle-right"></i>&nbsp;&nbsp;<a href="http://{$_SERVER.HTTP_HOST}{$value.link}">{$value.message}</a><small class="pull-right">{$value.view}查阅</small></li>
+							</volist>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

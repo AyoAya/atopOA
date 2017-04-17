@@ -1,0 +1,121 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <style>
+        .wrap-container {
+            padding-bottom: 50px;
+        }
+        .table tr,.table th {
+            text-align: center;
+        }
+        #logistics-list li {
+            padding: 5px 0;
+        }
+        small {
+            font-size: 14px !important;
+            position: relative;
+            top: 18px;
+        }
+    </style>
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>ATOP</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Sample">样品管理</a></li>
+        <li class="active"><a href="__ROOT__/sampleDetails/{$order}">样品详情</a></li>
+        <li class="active">物流状态</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="col-lg-10 col-lg-offset-1 wrap-container">
+        <div class="page-header">
+            <h2>基本信息</h2>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>订单号</th>
+                    <th>物流公司</th>
+                    <th>运单号</th>
+                    <th>订单创建时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{$sample.totalorder}</td>
+                    <td>
+                        <switch name="sample.logistics">
+                            <case value="shunfeng">顺丰物流</case>
+                            <case value="dhl">DHL</case>
+                            <case value="fedex">FedEx</case>
+                            <case value="ups">UPS</case>
+                            <case value="shentong">申通快递</case>
+                            <case value="yuantong">圆通速递</case>
+                            <case value="zhongtong">中通速递</case>
+                        </switch>
+                    </td>
+                    <td>{$sample.awb}</td>
+                    <td>{$sample.createtime|date="Y-m-d H:i:s",###}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="page-header">
+            <h2>物流状态<small class="pull-right"><a href="https://www.kuaidi100.com/" target="_blank">无法查询？转到快递100查询</a></small></h2>
+        </div>
+        <eq name="logistics.status" value="200">
+            <ul id="logistics-list">
+                <volist name="logistics.data" id="value">
+                    <eq name="i" value="1">
+                        <li><mark><b><i class="icon-time"></i>&nbsp;{$value.time}&nbsp;&nbsp;&nbsp;&nbsp;{$value.context}</b></mark></li>
+                    <else/>
+                        <li><i class="icon-time"></i>&nbsp;{$value.time}&nbsp;&nbsp;&nbsp;&nbsp;{$value.context}</li>
+                    </eq>
+                </volist>
+            </ul>
+        <else/>
+            {$logistics.message}
+        </eq>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

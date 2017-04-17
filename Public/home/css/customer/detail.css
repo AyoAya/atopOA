@@ -1,0 +1,70 @@
+#accordion {
+
+}
+#accordion .panel-body {
+    padding-top: 35px;
+    padding-bottom: 35px;
+}
+#accordion a[data-toggle=collapse] {
+    display: block !important;
+    text-decoration: none;
+}
+#accordion .cl-bx {
+    margin-bottom: 25px;
+}
+#accordion .cl-bx:last-child {
+    margin-bottom: 0;
+}
+#accordion .cl-bx .lf-tx {
+    min-height: 80px;
+    width: 80px;
+    text-align: center;
+}
+#accordion .cl-bx .lf-tx .tx-bx {
+    width: 50px;
+    height: 50px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto;
+}
+#accordion .cl-bx .lf-tx .yh-mz {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+#accordion .cl-bx .rg-if {
+    border: solid 1px #ccc;
+    min-width: 200px;
+    max-width: 90%;
+    margin-left: 5px;
+    padding: 15px 15px 45px 15px;
+    position: relative;
+    -webkit-box-shadow: 0 0 5px #ccc;
+    -moz-box-shadow: 0 0 5px #ccc;
+    box-shadow: 0 0 5px #ccc;
+}
+#accordion .cl-bx .sjx-fh {
+    position: absolute;
+    left: -15px;
+    top: 20px;
+    width: 15px;
+    height: 15px;
+    background: url("../../img/arrow_left_border.png") center center no-repeat;
+}
+#accordion .cl-bx .rg-if .hfsj-bx {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 35px;
+    border-top: dashed 1px #ccc;
+    line-height: 35px;
+    color: #bbb;
+    font-size: 12px;
+    padding-left: 15px;
+}
+#accordion .cl-bx .rg-if .hf-nr {
+    word-break: break-all;
+}

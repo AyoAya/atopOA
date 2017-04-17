@@ -1,0 +1,174 @@
+@CHARSET "UTF-8";
+
+div.panel {
+	width: 400px;
+	float: left;
+}
+div.panel span.title {
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+}
+div.panel div.info {
+	width: 100%;
+	height: 200px;
+	margin: 0 0 0 20px;
+}
+div.panel p {
+	text-indent: 20px;
+	padding: 10px 0;
+}
+div.panel p button.edit {
+	width: 50px;
+	height: 24px;
+	margin: 0 0 0 10px;
+}
+div.panel div.editpassword input,div.panel div.editnickname input {
+	border-radius: 3px;
+	width: 200px;
+	height: 24px;
+	border: solid 1px #ccc;
+}
+div.panel div.hiddenpassword input,div.panel div.hiddennickname input {
+	width: 200px;
+	height:24px;
+	border: solid 1px #ccc;
+	border-radius: 2px;
+	text-indent: 5px;
+	transition: all .3s;
+}
+div.panel div.hiddenpassword input:focus,div.panel div.hiddennickname input:focus {
+	border: solid 1px #555;
+}
+div.panel div.hiddenpassword,div.panel div.hiddennickname {
+	display: none;
+}
+div.face-box {
+	width: 240px;
+	height: 285px;
+	float: left;
+	margin: 0 0 0 15px;
+}
+div.face-box .face-img {
+	width: 110px;
+	height: 110px;
+	border: solid 1px #ddd;
+	margin: 35px auto 0;
+	border-radius: 4px;
+	background: #fff;
+	box-shadow: 0 0 5px #ddd;
+}
+div.face-box .face-img span {
+	display: block;
+	width: 100px;
+	height: 100px;
+	overflow: hidden;
+	margin: 5px auto;
+}
+div.face-box .face-img p {
+	text-align: cenetr;
+	text-indent: 0;
+	margin: 40px 0 0 0;
+	padding: 0;
+}
+div.face-box .face-img p button {
+	width: 110px;
+	height: 34px;
+	border: none;
+	background: #17AB43;
+	font-family: microsoft yahei;
+	font-size: 16px;
+	color: #fff;
+	border-radius: 3px;
+	cursor: pointer;
+	transition: all .3s;
+}
+div.face-box .face-img p button:hover {
+	background: #158526;
+}
+div.face-change {
+	display: none;
+	width: 880px;
+	margin: 0 0 0 15px;
+}
+div.face-change hr {
+	color: #ddd;
+	margin: 15px 0 22px 0;
+}
+div.face-change .face-img span {
+	display: block;
+	width: 100px;
+	height: 100px;
+	overflow: hidden;
+	margin: 20px auto;	
+}
+div.face-change .face-img p {
+	text-align: center;
+	text-indent: 0;
+	display: block;
+	margin: 0 auto;
+	padding: 0;
+}
+div.face-change ul {
+	padding: 0 15px;
+}
+div.face-change ul li {
+	width: 100px;
+	height: 100px;
+	border: solid 1px #ccc;
+	padding: 3px;
+	float: left;
+	margin: 0 15px 15px 0;
+	cursor: pointer;
+}
+div.face-change ul li:hover {
+	border: solid 1px #f50;
+}
+div.face-change ul li:nth-child(7n+0) {
+	margin: 0 0 15px 0;
+}
+div.face-change p.last-p {
+	width: 100%;
+	display: block;
+}
+div.face-change p.last-p button {
+	width: 110px;
+	height: 34px;
+	border: none;
+	background: #17AB43;
+	font-family: microsoft yahei;
+	font-size: 16px;
+	color: #fff;
+	border-radius: 3px;
+	cursor: pointer;
+	transition: all .3s;
+}
+div.face-change p.last-p button:hover {
+	background: #158526;
+}
+div.face-change p.last-p button#cancel-save {
+	background: #888;	
+	margin: 0 0 0 15px;
+}
+div.face-change p.last-p button#cancel-save:hover {
+	background: #666;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

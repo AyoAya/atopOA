@@ -1,0 +1,216 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+	<link rel="stylesheet" href="__CSS__/Huploadify.css">
+	<link rel="stylesheet" type="text/css" href="__CSS__/word.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+	<script src="__JS__/jquery.Huploadify.js"></script>
+	<script src="__JS__/word.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+	<title>文档中心</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+	<ol class="breadcrumb breadcrumb-edit">
+		<li class="active">文档中心</li>
+	</ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+	<!--<div class="commingSoon">
+		<p><i class="icon-info-sign icon-5x"></i></p>
+		<h1>功能研发中</h1>
+		<p>Function is developing</p>
+		<p>Comming Soon.</p>
+	</div>-->
+
+	<div class="department-btn">
+		<a href="__ROOT__/DCC?department=6" class="col-box plan-box <eq name='userDepartment' value='6'>active</eq>" departmentid="6">
+			<div class="department-icon administration-icon"></div>
+			<div class="department-name">行政部</div>
+		</a>
+		<a href="__ROOT__/DCC?department=1" class="col-box sales-box <eq name='userDepartment' value='1'>active</eq>" departmentid="1">
+			<div class="department-icon  development-icon"></div>
+			<div class="department-name">研发部</div>
+		</a>
+		<a href="__ROOT__/DCC?department=2" class="col-box administration-box <eq name='userDepartment' value='2'>active</eq>" departmentid="2">
+			<div class="department-icon production-icon"></div>
+			<div class="department-name">生产部</div>
+		</a>
+		<a href="__ROOT__/DCC?department=3" class="col-box development-box <eq name='userDepartment' value='3'>active</eq>" departmentid="3">
+			<div class="department-icon personnel-icon"></div>
+			<div class="department-name">品质部</div>
+		</a>
+		<a href="__ROOT__/DCC?department=4" class="col-box personnel-box <eq name='userDepartment' value='4'>active</eq>" departmentid="4">
+			<div class="department-icon sales-icon"></div>
+			<div class="department-name">销售部</div>
+		</a>
+		<a href="__ROOT__/DCC?department=5" class="col-box plan-box <eq name='userDepartment' value='5'>active</eq>" departmentid="5">
+			<div class="department-icon plan-icon"></div>
+			<div class="department-name">计划部</div>
+		</a>
+	</div>
+
+	<!--<ul class="nav nav-tabs tabs-edit" role="tablist">
+		<li role="presentation" folder="public" class="active"><a href="__ROOT__/Dcc?department={$userDepartment}&type=public" role="tab" data-toggle="tab"><i class="icon-eye-open"></i>&nbsp;公开的</a></li>
+		<li role="presentation" folder="private"><a href="__ROOT__/Dcc?department={$userDepartment}&type=private" role="tab" data-toggle="tab"><i class="icon-lock"></i>&nbsp;内部的</a></li>
+		&lt;!&ndash;<div class="file-upload" id="file-upload"></div>&ndash;&gt;
+	</ul>-->
+	<div class="content-body">
+		<!--<div class="operation-bar">
+			<a href="#"><i class="icon-reply"></i>&nbsp;返回上一级</a>
+			<a href="#" class="pull-right"><i class="icon-list-ol"></i>&nbsp;排序</a>
+			<a href="#" class="pull-right add-folder"><i class="icon-plus"></i>&nbsp;新建文件夹</a>
+			<div class="input-group input-group-edit pull-right">
+				<input type="text" class="form-control form-control-edit" name="" placeholder="输入搜索内容...">
+				<span class="input-group-btn input-group-btn-edit">
+					<button class="btn btn-primary btn-primary-edit"><i class="icon-search"></i></button>
+				</span>
+			</div>
+		</div>-->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2 class="panel-title">公开文档</h2>
+			</div>
+			<div class="panel-body">
+				<div class="file-box">
+					<ul class="folders-list">
+						<present name="folders.public.file">
+							<volist name="folders.public.file" id="value">
+								<li class="file-icon" file-path="{$value}" title="{:getBasename($value)}"><a href="{$value}" target="_blank"><i class="icon-file-alt"></i>&nbsp;{:getBasename($value)}</a></li>
+							</volist>
+						</present>
+						<notempty name="folders.public">
+							<present name="folders.public.dir">
+								{:traverse_document($folders['public']['dir'])}
+							</present>
+						<else/>
+							没有数据
+						</notempty>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<if condition="is_array($folders['private'])">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h2 class="panel-title">内部文档</h2>
+				</div>
+				<div class="panel-body">
+					<div class="file-box">
+						<ul class="folders-list">
+							<present name="folders.private.file">
+								<volist name="folders.private.file" id="value">
+									<li class="file-icon" file-path="{$value}"><a href="{$value}" target="_blank"><i class="icon-file-alt"></i>&nbsp;{:getBasename($value)}</a></li>
+								</volist>
+							</present>
+							<notempty name="folders.private">
+								<present name="folders.private.dir">
+									{:traverse_document($folders['private']['dir'])}
+								</present>
+							<else/>
+								没有数据
+							</notempty>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</if>
+
+	</div>
+
+	<!-- 自定义右键菜单 -->
+	<!--<div id="right-click-menu" style="display: none;">
+		<ul>
+			<li operation="rename" id="file-rename"><i class="icon-pencil"></i>&nbsp;重命名</li>
+			<li class="file-operation" operation="delete" id="file-delete"><i class="icon-remove-sign"></i>&nbsp;删除</li>
+			<li operation="details" id="file-details"><i class="icon-info-sign"></i>&nbsp;详细信息</li>
+			<hr>
+			<li class="file-operation" operation="download" id="file-download"><i class="icon-circle-arrow-down"></i>&nbsp;下载文件</li>
+		</ul>
+	</div>-->
+
+	<!-- 文件重命名模态框 -->
+	<!--<div class="modal fade bs-example-modal-sm" id="rename-modal" tabindex="-1" role="dialog" aria-labelledby="rename-modal" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">重命名</h4>
+				</div>
+				<div class="modal-body">
+					<div class="input-group">
+						<input type="text" class="form-control rename-input" name="new-filename">
+						<span class="input-group-addon file-ext"></span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-primary">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>-->
+	<!-- 文件详情模态框 -->
+	<!--<div class="modal fade bs-example-modal-sm" id="details-modal" tabindex="-1" role="dialog" aria-labelledby="rename-modal" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">详细信息</h4>
+				</div>
+				<div class="modal-body">
+					<p>文件名称：<span class="details-file-name"></span></p>
+					<p>文件类型：<span class="details-file-type"></span></p>
+					<p>文件大小：<span class="details-file-size"></span></p>
+					<p>创建日期：<span class="details-file-create"></span></p>
+					<p>修改日期：<span class="details-file-update"></span></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>-->
+
+	<!-- 记录用户当前所在目录 -->
+	<input type="hidden" name="" value="{$path}" class="path" id="now-path">
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

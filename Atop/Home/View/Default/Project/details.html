@@ -1,0 +1,548 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/jquery.toastmessage.css">
+    <link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css">
+    <link rel="stylesheet" href="__PUBLIC__/Huploadify/Huploadify.css">
+    <link rel="stylesheet" href="__CSS__/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="__CSS__/project/details.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/jquery.toastmessage.js"></script>
+    <script src="__PUBLIC__/layui/layui.js"></script>
+    <!--<script src="__PUBLIC__/layer/layer.js"></script>-->
+    <script src="__PUBLIC__/Huploadify/jquery.Huploadify.js"></script>
+    <script src="__JS__/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script src="__JS__/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <script src="__JS__/project.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>项目详情</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Project">项目管理</a></li>
+        <li class="active">项目详情</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+    <!--<div class="commingSoon">
+        <p><i class="icon-comment icon-5x"></i></p>
+        <h1>功能研发中</h1>
+        <p>Function is developing</p>
+        <p>Comming Soon.</p>
+    </div>-->
+
+    <div class="page-header">
+        <h1>
+            <i class="icon-list-alt"></i>&nbsp;{$basicInfo.pj_num}
+            <small>{$basicInfo.pj_name}
+                <present name="basicInfo.label_info">
+                    <span class="{$basicInfo.label_class}">{$basicInfo.label_text}</span>
+                    <span class="label label-info">{$basicInfo.label_info}</span>
+                </present>
+            </small>
+            <p class="pull-right">创建人：{$basicInfo.pj_create_person}<br>创建时间：{$basicInfo.pj_create_time|date="Y-m-d",###}</p>
+        </h1>
+    </div>
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="<eq name='tab' value='overview'>active</eq>">
+            <a href="__ROOT__/Project/details/tab/overview/id/{$getID}" aria-controls="overview" role="tab">项目概览</a>
+        </li>
+        <li role="presentation" class="<eq name='tab' value='plan'>active</eq>">
+            <a href="__ROOT__/Project/details/tab/plan/id/{$getID}" aria-controls="plan" role="tab">项目计划</a>
+        </li>
+        <neq name="basicInfo.pj_child" value="1">
+            <li role="presentation" class="<eq name='tab' value='subprojects'>active</eq>">
+                <a href="__ROOT__/Project/details/tab/subprojects/id/{$getID}" aria-controls="subprojects" role="tab">子项目开发</a>
+            </li>
+        </neq>
+        <li role="presentation" class="<eq name='tab' value='sample'>active</eq>">
+            <a href="__ROOT__/Project/details/tab/sample/id/{$getID}" aria-controls="sample" role="tab">样品状况</a>
+        </li>
+        <li role="presentation" class="<eq name='tab' value='document'>active</eq>">
+            <a href="__ROOT__/Project/details/tab/document/id/{$getID}" aria-controls="profile" role="tab">归档文件</a>
+        </li>
+        <li role="presentation" class="<eq name='tab' value='discuss'>active</eq>">
+            <a href="__ROOT__/Project/details/tab/discuss/id/{$getID}" aria-controls="messages" role="tab">讨论区</a>
+        </li>
+    </ul>
+
+
+    <eq name="tab" value="overview">
+        <div class="well">
+            <b>项目描述：</b>
+            <p id="describe">{$projects.pj_describe}</p>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <table class="table table-bordered overview-table">
+                    <tbody>
+                    <tr>
+                        <td>项目负责人</td>
+                        <td>{$projects.pj_responsible}</td>
+                    </tr>
+                    <tr>
+                        <td>硬件设计</td>
+                        <td>{$projects.pj_design}</td>
+                    </tr>
+                    <tr>
+                        <td>FW开发</td>
+                        <td>{$projects.pj_fw_development}</td>
+                    </tr>
+                    <tr>
+                        <td>结构件设计</td>
+                        <td>{$projects.pj_structure_design}</td>
+                    </tr>
+                    <tr>
+                        <td>光器件设计</td>
+                        <td>{$projects.pj_light_design}</td>
+                    </tr>
+                    <tr>
+                        <td>ATE设计</td>
+                        <td>{$projects.pj_ate_design}</td>
+                    </tr>
+                    <tr>
+                        <td>DVT测试</td>
+                        <td>{$projects.pj_dvt_test}</td>
+                    </tr>
+                    <tr>
+                        <td>市场部</td>
+                        <td>{$projects.pj_market}</td>
+                    </tr>
+                    <tr>
+                        <td>项目管理员</td>
+                        <td>{$projects.pj_management}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-6">
+                <table class="table table-bordered overview-table">
+                    <tbody>
+                    <tr>
+                        <td>产品状态</td>
+                        <td><span class="label {$progress.class} label-primary-size">{$progress.progress}</span></td>
+                    </tr>
+                    <tr>
+                        <td>产品类型</td>
+                        <td>{$projects.pj_family}</td>
+                    </tr>
+                    <tr>
+                        <td>项目类型</td>
+                        <td>{$projects.pj_type}</td>
+                    </tr>
+                    <tr>
+                        <td>标准品名</td>
+                        <td>{$projects.pj_standard_name}</td>
+                    </tr>
+                    <tr>
+                        <td>潜在市场需求</td>
+                        <td>{$projects.pj_market_demand}</td>
+                    </tr>
+                    <tr>
+                        <td>目标客户</td>
+                        <td>{$projects.pj_target_customer}</td>
+                    </tr>
+                    <tr>
+                        <td>平台</td>
+                        <td>{$projects.pj_platform}</td>
+                    </tr>
+                    <tr>
+                        <td>目标成本</td>
+                        <td>{$projects.pj_target_cost}</td>
+                    </tr>
+                    <tr>
+                        <td>立项时间</td>
+                        <td>{$projects.pj_add_pro_time}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </eq>
+
+    <eq name="tab" value="plan">
+        <table class="table table-bordered plan-table" id="planTable">
+            <thead>
+                <tr>
+                    <th class="th_gate">步骤</th>
+                    <th class="th_mile_stone">里程碑</th>
+                    <th class="th_items">节点</th>
+                    <th class="th_plan_start_time">计划开始时间</th>
+                    <th class="th_plan_complate_time">计划结束时间</th>
+                    <th class="th_start_time">实际开始时间</th>
+                    <th class="th_complate_time">实际结束时间</th>
+                    <th class="th_comments">备注</th>
+                    <th class="th_state">状态</th>
+                    <eq name="Think.session.user.id" value="$auth">
+                        <th class="th_editor">操作</th>
+                    </eq>
+                </tr>
+            </thead>
+            <tbody>
+                <volist name="gateResult" id="value">
+                    <tr>
+                        <if condition="isset($value['rowspan'])">
+                            <td rowspan="{$value['rowspan']}" class="{$value.plan.class} td_center">Gate{$value.gate}</td>
+                        </if>
+                        <if condition="isset($value['rowspan'])">
+                            <td rowspan="{$value['rowspan']}" class="{$value.plan.class}">{$value.mile_stone}</td>
+                        </if>
+                        <td class="{$value.plan.class}">{$value.items}</td>
+                        <td class="plan_start_time change_input td_center {$value.plan.class}" originally="{$value.plan_start_time}">{$value.plan_start_time}</td>
+                        <td class="plan_complete_time change_input td_center {$value.plan.class}" originally="{$value.plan_stop_time}">{$value.plan_stop_time}</td>
+                        <td class="start_time change_input td_center {$value.plan.class}" originally="{$value.plan.start_time}">{$value.plan.start_time}</td>
+                        <td class="complete_time change_input td_center {$value.plan.class}" originally="{$value.plan.complete_time}">{$value.plan.complete_time}</td>
+                        <td class="comments change_input {$value.plan.class}" originally="{$value.plan.comments_entity}">{$value.plan.comments}</td>
+                        <td class="td_center"><span class="label {$value.plan.state_class}">{$value.plan.state_text}</span></td>
+                        <eq name="Think.session.user.id" value="$auth">
+                            <td class="operation_td {$value.plan.class}">
+                                <if condition="isset($value['show']) AND $value['show'] eq 'true'">
+                                    <button class="editor-btn btn btn-default btn-sm" plan_project="{$getID}" step="{$value.gate}" plan_node="{$value.id}"><i class="icon-edit"></i></button>
+                                </if>
+                            </td>
+                        </eq>
+                    </tr>
+                </volist>
+            </tbody>
+        </table>
+    </eq>
+
+    <eq name="tab" value="subprojects">
+        <eq name="Think.session.user.id" value="$auth">
+            <div class="add-subprojects">
+                <a href="__ROOT__/Project/add/child/true/belong/{$getID}" class="btn btn-warning">添加子项目</a>
+            </div>
+        </eq>
+        <notempty name="projects">{//查看子项目是否为空，如果为空则不显示表格}
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>项目号</th>
+                    <th>项目名</th>
+                    <th>最近更新时间</th>
+                    <th>负责人</th>
+                    <th>进度</th>
+                    <eq name="Think.session.user.id" value="$auth">
+                        <th class="th_editor">编辑</th>
+                    </eq>
+                </tr>
+                </thead>
+                <tbody>
+                <volist name="projects" id="value">
+                    <tr>
+                        <td>{$i}</td>
+                        <td><a href="__ROOT__/Project/details/id/{$value.id}">{$value.pj_num}</a></td>
+                        <td>{$value.pj_name}</td>
+                        <td><notempty name="value.pj_update_time">{$value.pj_update_time|date='Y-m-d H:i:s',###}</notempty></td>
+                        <td>{$value.pj_responsible}</td>
+                        <td><span class="label {$value.node.class}">{$value.node.progress}</span></td>
+                        <eq name="Think.session.user.id" value="$auth">
+                            <td><a href="__ROOT__/Project/edit/id/{$value.id}" class="btn btn-default btn-xs"><i class="icon-edit"></i> 编辑</a></td>
+                        </eq>
+                    </tr>
+                </volist>
+                </tbody>
+            </table>
+        <else/>
+            <span class="empty_data"><i class="icon-info-sign"></i> 该项目未添加子项目</span>
+        </notempty>
+    </eq>
+
+    <eq name="tab" value="sample">
+        <notempty name="samples">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>单号</th>
+                        <th>品号</th>
+                        <th>销售</th>
+                        <th>客户</th>
+                        <th>品牌</th>
+                        <th>型号</th>
+                        <th>数量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <volist name="samples" id="value">
+                        <tr>
+                            <td>{$i}</td>
+                            <td><a href="http://{:$_SERVER['HTTP_HOST']}/sampleDetails/{$value.order}">{$value.totalorder}</a></td>
+                            <td>{$value.product}</td>
+                            <td>{$value.saleperson}</td>
+                            <td>{$value.customer}</td>
+                            <td>{$value.brand}</td>
+                            <td>{$value.model}</td>
+                            <td>{$value.number}</td>
+                        </tr>
+                    </volist>
+                </tbody>
+            </table>
+        <else/>
+            <span class="empty_data"><i class="icon-info-sign"></i> 该项目没有相关型号的样品订单</span>
+        </notempty>
+    </eq>
+
+    <eq name="tab" value="document">
+        <div class="document-container">
+            <input type="hidden" value="{$getID}" id="documentUploadProjectId">
+            <!--<input type="hidden" id="documentProjectGate">-->
+            <eq name="Think.session.user.id" value="$auth">
+                <div id="file">
+                    <div class="btn-group pull-left" id="gateSelect">
+                        <button type="button" class="btn btn-default" id="gateNum">Gate{$gates.0.gate} - {$gates.0.mile_stone}</button>
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" id="gateList">
+                            <volist name="gates" id="value">
+                                <li gate="{$value.gate}"><a href="#">Gate{$value.gate} - {$value.mile_stone}</a></li>
+                            </volist>
+                        </ul>
+                    </div>
+                    <div class="pull-left" id="fileUpload"></div>
+                    <div class="clearfix"></div>
+                </div>
+            </eq>
+            <!--<volist name="documents" id="value" empty="$empty">
+                <li class="document-file-list">
+                    <div class="document-file-icon">
+                        <span class="document-ext">{$value.document_ext}</span>
+                    </div>
+                    <p class="document-file-name">{$value.document_name}</p>
+                    <p class="document-upload-time">{$value.upload_time|date='Y-m-d H:i:s',###}</p>
+                    <div class="document-download-box">
+                        <p class="document-file-name-hidden">{$value.document_name}</p>
+                        <p class="download-node">
+                            <a href="{$value.document_path}" class="btn btn-success btn-sm document-download-btn">下载</a>
+                            <input type="hidden" name="document_path" value="{$value.document_path}">
+                            <eq name="Think.session.user.id" value="$auth">
+                                <button href="#" class="btn btn-danger btn-sm document-unlink-btn">删除</button>
+                            </eq>
+                            <input type="hidden" value="{$value.id}">
+                        </p>
+                    </div>
+                </li>
+            </volist>-->
+            <notempty name="gates">
+                <present name="empty">
+                    <span class="empty_data"><i class="icon-info-sign"></i> 该项目没有归档文件</span>
+                <else/>
+                    <volist name="gates" id="value">
+                    <notempty name="value.document">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Gate{$value.gate} - {$value.mile_stone}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul class="documents">
+                                    <notempty name="value.document">
+                                        <volist name="value.document" id="val">
+                                            <li class="document-file-list-2">
+                                                <span class="file-name-box">
+                                                    <if condition="strtolower($val['document_ext']) eq 'xls' OR strtolower($val['document_ext']) eq 'xlsx'">
+                                                        <a href="{$val.document_path}" class="hover-remove" title="{$val.document_name}"><i class="file-icon" style="background: url('__IMG__/icon-xls.png') center center no-repeat;"></i>&nbsp;{$val.document_name}</a>
+                                                    <elseif condition="strtolower($val['document_ext']) eq 'doc' OR strtolower($val['document_ext']) eq 'docx'"/>
+                                                        <a href="{$val.document_path}" class="hover-remove" title="{$val.document_name}"><i class="file-icon" style="background: url('__IMG__/icon-doc.png') center center no-repeat;"></i>&nbsp;{$val.document_name}</a>
+                                                    <elseif condition="strtolower($val['document_ext']) eq 'pdf' OR strtolower($val['document_ext']) eq 'PDF'"/>
+                                                        <a href="{$val.document_path}" class="hover-remove" title="{$val.document_name}"><i class="file-icon" style="background: url('__IMG__/icon-pdf.png') center center no-repeat;"></i>&nbsp;{$val.document_name}</a>
+                                                    <elseif condition="strtolower($val['document_ext']) eq 'zip' OR strtolower($val['document_ext']) eq 'rar'"/>
+                                                        <a href="{$val.document_path}" class="hover-remove" title="{$val.document_name}"><i class="file-icon" style="background: url('__IMG__/icon-zip.png') center center no-repeat;"></i>&nbsp;{$val.document_name}</a>
+                                                    <else/>
+                                                       <a href="{$val.document_path}" class="hover-remove" title="{$val.document_name}"><i class="file-icon" style="background: url('__IMG__/icon-file.png') center center no-repeat;"></i>&nbsp;{$val.document_name}</a>
+                                                    </if>
+                                                </span>
+                                                <eq name="Think.session.user.id" value="$auth">
+                                                    <input type="hidden" name="document_path" value="{$val.document_path}">
+                                                    <button href="#" class="btn btn-danger btn-xs document-unlink-btn" title="删除该文件"><i class="icon-remove"></i></button>
+                                                    <input type="hidden" value="{$val.id}">
+                                                </eq>
+                                            </li>
+                                        </volist>
+                                        <else/>
+                                        <span class="empty_data"><i class="icon-info-sign"></i> 该节点没有归档文件</span>
+                                    </notempty>
+                                </ul>
+                            </div>
+                        </div>
+                    </notempty>
+                    </volist>
+                </present>
+            <else/>
+                <span class="empty_data"><i class="icon-info-sign"></i> 该项目没有归档文件</span>
+            </notempty>
+        </div>
+    </eq>
+
+    <eq name="tab" value="discuss">
+        <present name="Think.get.floor"><input type="hidden" id="floorNum" value="{$Think.get.floor}"></present>
+        <div class="message-container">
+            <div class="message-board">
+                <div class="jump-floor sr-only" id="jumpFloor">
+                    <div class="jump-info">
+                        <span>共计<b></b>楼，跳转到 <input type="text" class="form-control input-sm"> <button id="jump" type="button" class="btn btn-primary btn-sm">跳转</button></span>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <notempty name="discuss">
+                    <volist name="discuss" id="value">
+                        <div class="media" name="floor{$i}">
+                            <div class="media-left">
+                                <img class="media-object" src="{$value.face}" width="50" alt="...">
+                                <p style="margin-top: 5px;"><center><small style="color: #888;">{$value.nickname}</small></center></p>
+                            </div>
+                            <div class="media-body">
+                                <div class="well well-sm other-info-box">
+                                    <p class="other-info">
+                                        <span class=" pull-right floor">{$value.reply_time|date='Y-m-d H:i:s',###}　|　{$i} #</span>
+                                    </p>
+                                    <p class="other-info">收件人：{$namelist}　<present name="value.cc_person_list_info">｜　抄送人：{$value.cc_person_list_info}</present></p>
+                                </div>
+                                <div class="context">{$value.discuss_context}</div>
+                            </div>
+                        </div>
+                    </volist>
+                <else/>
+                    <span class="empty_data"><i class="icon-info-sign"></i> 还没有任何发表记录</span>
+                </notempty>
+            </div>
+            <div class="form-group">
+                <div class="well">
+                    <p class="prompt-info">内容发表后将会以邮件通知到以下人员：</p>
+                    <div class="recipient-list well well-sm">
+                        <span>收件人：</span>
+                        <ul>
+                            <volist name="recipientUserinfo" id="value">
+                                <li email="{$value.email}">{$value.nickname}</li>
+                            </volist>
+                        </ul>
+                    </div>
+                    <div class="cc-people well well-sm">
+                        <span>抄送人：</span>
+                        <ul id="ccPersonList">
+                            <volist name="defaultCClist" id="value">
+                                <li email="{$value.email}" user-id="{$value.id}">{$value.nickname}</li>
+                            </volist>
+                            <i class="not-default"></i>
+                        </ul>
+                        <b id="add-cc-people">添加</b>
+                        <b id="reset-cc-people">重置</b>
+                    </div>
+                    <script id="container" name="content" type="text/plain"></script>
+                </div>
+                <!-- 配置文件 -->
+                <script type="text/javascript" src="__PUBLIC__/UEditor/ueditor.config.js"></script>
+                <!-- 编辑器源码文件 -->
+                <script type="text/javascript" src="__PUBLIC__/UEditor/ueditor.all.js"></script>
+                <!-- 实例化编辑器 -->
+                <script type="text/javascript">
+                    var ue = UE.getEditor('container',{
+                        initialFrameHeight : 200,
+                        /*initialFrameWidth : 1000,*/
+                        wordCount : false,
+                        toolbars : [
+                            ['fullscreen', 'undo', '|', 'fontfamily', 'fontsize', 'forecolor', 'backcolor', 'emotion', 'insertimage','attachment', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', '|', 'insertorderedlist', 'insertunorderedlist', '|', 'selectall', 'cleardoc']
+                        ]
+                    });
+                </script>
+            </div>
+            <div class="form-group discuss-submit-box">
+                <input type="hidden" id="cc_list">
+                <button type="button" id="submit-discuss-content" class="btn btn-primary" discuss_id="{$getID}">发表</button>
+            </div>
+            <!-- 添加抄送人模态框 -->
+            <div class="modal fade" id="CCpeopleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <p class="modal-title" id="myModalLabel">添加抄送人</p>
+                        </div>
+                        <div class="modal-body">
+                            <form class="layui-form layui-form-pane">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">部门</label>
+                                    <div class="layui-input-block">
+                                        <select name="select" id="dpmtSelect" lay-filter="change">
+                                            <volist name="departments" id="value">
+                                                <option value="{$value.id}">{$value.name}</option>
+                                            </volist>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                            <ul id="cc-person-list">
+                                <volist name="users" id="value">
+                                    <li email="{$value.email}" user-id="{$value.id}" title="{$value.nickname}">{$value.nickname}</li>
+                                </volist>
+                            </ul>
+                            <div class="well well-sm sr-only" id="has-been-box">
+                                <p class="has-been-add">已添加的抄送人员：</p>
+                                <ul id="addList">
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id="done-cc-list">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 回到顶部按钮 -->
+        <div id="backtop">
+            <span class="">回到<br/>顶部</span>
+        </div>
+    </eq>
+
+    <div class="loading-modal sr-only" id="loading">
+        <div class="loading-icon">
+            <p><i class="icon-spinner icon-spin icon-2x"></i></p>
+        </div>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

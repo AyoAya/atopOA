@@ -1,0 +1,44 @@
+@CHARSET "UTF-8";
+
+#table .switch button {
+	width: 60px;
+	height: 26px;
+	border: solid 1px #ddd;
+	background: #f7f7f7;
+	font-size: 13px;
+	color: #888;
+	cursor: pointer;
+	border-radius: 3px;
+	transition: all .3s;
+}
+#table .switch button:hover {
+	border: solid 1px #555;
+}
+.modal .modal-panel {
+	width: 500px;
+	margin: 200px auto 0;
+	padding: 0 0 15px 0;
+}
+.modal .modal-panel p {
+	text-align: right;
+}
+.modal .modal-panel .rule span {
+	display: inline-block;
+	padding: 10px 20px;
+}
+.modal .modal-panel .rule-done {
+	width: 120px;
+	height: 40px;
+	border: none;
+	background: #17AB43;
+	color: #fff;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 16px;
+	font-family: microsoft yahei;
+	margin: 15px 15px 0 0;
+	transition: all .3s;
+}
+.modal .modal-panel .rule-done:hover {
+	background: #158526;
+}

@@ -1,0 +1,124 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/customer-charts.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/echarts.js"></script>
+    <script src="__JS__/vintage.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>客诉统计</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Customer">客诉处理</a></li>
+        <li class="active">客诉统计</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+    <div id="state-statistical-box">
+
+    </div>
+
+    <script>
+        // 基于准备好的dom，初始化echarts实例
+        var _stateCharts = echarts.init(document.getElementById('state-statistical-box'));
+        // 指定图表的配置项和数据
+        var _state_options = {
+            //backgroundColor : 'rgb(255,255,255)',
+            title : {
+                text : '客诉处理状态统计图：',
+                subtext : 'Customer complaint state statistics',
+                x: "left",
+            },
+            tooltip: {
+                trigger: "item",
+                formatter: "{a} <br/>{b} : {c}条 ({d}%)"
+            },
+            legend: {
+                x: "center",
+                y: "bottom",
+                data: ["处理失败", "正在处理", "已经处理"]
+            },
+            label: {
+                normal: {
+                    formatter: "{b} {c}条 ({d}%)",
+                    position: "insideTopRight"
+                }
+            },
+            labelLine: {
+                normal: {
+                    smooth: .6
+                }
+            },
+            toolbox: {
+                show: !0,
+                feature: {
+                    dataView: {
+                        show: !0,
+                        readOnly: !1
+                    },
+                    saveAsImage: {
+                        show: !0
+                    }
+                }
+            },
+            calculable: !0,
+            series: [{
+                name: "处理状态",
+                //radius : [25, 150],
+                type: "pie",
+                //roseType: "area",
+                label: {
+                    normal: {
+                        show: !0
+                    },
+                    emphasis: {
+                        show: !0
+                    }
+                },
+                lableLine: {
+                    normal: {
+                        show: !0
+                    },
+                    emphasis: {
+                        show: !0
+                    }
+                },
+                data: [{
+                    value: "{$status.n}",
+                    name: "处理失败"
+                }, {
+                    value: "{$status.d}",
+                    name: "正在处理"
+                }, {
+                    value: "{$status.y}",
+                    name: "已经处理"
+                }],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }]
+        };
+        _stateCharts.setOption(_state_options);
+    </script>
+</block>
+
+
+
+
+
+
+
+
+

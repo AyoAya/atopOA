@@ -1,0 +1,68 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/jquery.toastmessage.css">
+    <link rel="stylesheet" href="__CSS__/thumbword-add.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/jquery.toastmessage.js"></script>
+    <script src="__JS__/thumbword.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>添加缩略词</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Acronym">缩略词</a></li>
+        <li class="active">添加缩略词</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="thumb-container">
+        <form role="form">
+            <div class="form-group">
+                <label>英文简称</label>
+                <input type="text" name="acronym" id="acronym" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>英文全称</label>
+                <input type="text" name="full_name" id="full_name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>中文全称</label>
+                <input type="text" name="meaning" id="meaning" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>参考链接</label>
+                <input type="text" name="ref_url" id="ref_url" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>详细介绍</label>
+                <textarea name="introduction" id="introduction" class="form-control"></textarea>
+            </div>
+            <div class="form-group pull-right">
+                <button type="reset" class="btn btn-default">重置</button>
+                <button type="button" class="btn btn-primary" id="submit-btn">提交</button>
+            </div>
+        </form>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+

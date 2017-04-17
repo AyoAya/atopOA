@@ -1,0 +1,156 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/approval.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/approval-index.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>审批</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">审批</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+<!--
+
+    <div class="app-list">
+        <ul>
+           <li class="app-expense"><a href="__ROOT__/Approval/expense"><i class="icon-credit-card"></i><span>报销</span></a></li>
+           <li class="app-leave"><a href="#" flag="__ROOT__/Approval/leave"><i class="icon-pushpin"></i><span>请假</span></a></li>
+           <li class="app-evection"><a href="#" flag="__ROOT__/Approval/evection"><i class="icon-plane"></i><span>出差</span></a></li>
+           <li class="app-out"><a href="#" flag="__ROOT__/Approval/out"><i class="icon-signout"></i><span>外出</span></a></li>
+           <li class="app-item"><a href="#" flag="__ROOT__/Approval/item"><i class="icon-inbox"></i><span>物品领用</span></a></li>
+           <li class="app-procurement"><a href="#" flag="__ROOT__/Approval/procurement"><i class="icon-shopping-cart"></i><span>采购</span></a></li>
+           <li class="app-dimission"><a href="#" flag="__ROOT__/Approval/dimission"><i class="icon-briefcase"></i><span>离职</span></a></li>
+           <li class="app-placeorder"><a href="#" flag="__ROOT__/Approval/placeorder"><i class="icon-tasks"></i><span>订货</span></a></li>
+        </ul>
+    </div>
+    <div class="row approval-box">
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">我发起的</div>
+                </div>
+                <div class="panel-body">
+                    <div id="initiate">
+                        <volist name="approval" id="value" empty="$_empty">
+                            <div class="expense-row {$value.flag}">
+                                <div class="expense-face pull-left" style="background: {$value.background};">
+                                    <i class="{$value.icon}"></i>
+                                </div>
+                                <div class="expense-context pull-left">
+                                    <p class="expense-context-title">
+                                        <a href="__ROOT__/Approval/details/id/{$value.id}">{$value.person_name}的{$value.type_name}</a>
+                                    </p>
+                                    <p>
+                                        <i class="{$value.icon_class}"></i>&nbsp;<span>{$value.state_text}</span>
+                                        <small class="expense-context-time"><i class="icon-time"></i>&nbsp;{$value.create_time}</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </volist>
+                    </div>
+                    <gt name="pagetotal" value="0">
+                        <ul class="pagination" id="initiate_page_list">
+                            <li><a>当前1/{$pagetotal}</a></li>
+                            <for start="1" end="$pagetotal+1">
+                                <eq name="i" value="1">
+                                    <li class="active"><a>{$i}</a></li>
+                                <else/>
+                                    <li><a>{$i}</a></li>
+                                </eq>
+                            </for>
+                        </ul>
+                    </gt>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title">我审批的</div>
+                </div>
+                <div class="panel-body">
+                    <div id="approval">
+                        <volist name="likedata" id="value" empty="$_empty">
+                            <div class="expense-row {$value.flag}">
+                                <div class="expense-face pull-left" style="background: {$value.background};">
+                                    <i class="{$value.icon}"></i>
+                                </div>
+                                <div class="expense-context pull-left">
+                                    <p class="expense-context-title">
+                                        <a href="__ROOT__/Approval/details/id/{$value.id}">{$value.person_name}的{$value.type_name}</a>
+                                    </p>
+                                    <p>
+                                        <i class="{$value.icon_class}"></i>&nbsp;<span>{$value.have_been_text}</span>
+                                        <small class="expense-context-time"><i class="icon-time"></i>&nbsp;{$value.create_time}</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </volist>
+                    </div>
+                    <gt name="page_approval_total" value="0">
+                        <ul class="pagination" id="approval_page_list">
+                            <li><a>当前1/{$page_approval_total}</a></li>
+                            <for start="1" end="$page_approval_total+1">
+                                <eq name="i" value="1">
+                                    <li class="active"><a>{$i}</a></li>
+                                <else/>
+                                    <li><a>{$i}</a></li>
+                                </eq>
+                            </for>
+                        </ul>
+                    </gt>
+                </div>
+            </div>
+        </div>
+    </div>
+-->
+    <div class="commingSoon">
+        <p><i class="icon-info-sign icon-5x"></i></p>
+        <h1>功能研发中</h1>
+        <p>Function is developing</p>
+        <p>Comming Soon.</p>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

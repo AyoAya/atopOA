@@ -1,0 +1,232 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+	<link rel="stylesheet" href="__CSS__/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="__CSS__/editPerson.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+	<script src="__JS__/jquery.validate.min.js"></script>
+	<script src="__JS__/jquery.form.js"></script>
+	<script src="__JS__/editPerson.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+	<title>修改用户</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+	<ol class="breadcrumb breadcrumb-edit">
+		<li><a href="__ROOT__/Manage">用户管理</a></li>
+		<li class="active">修改用户</li>
+	</ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+	
+	<div class="col-lg-6 col-lg-offset-3 wrap">
+		<form id="addForm" role="form">
+			<div class="page-header"><h2>基本信息</h2></div>
+			<div class="form-group">
+				<label for="account">账号</label>
+				<div class="input-group">
+					<span class="input-group-addon"><i class="icon-user"></i></span>
+					<input type="text" class="form-control" name="account" id="account" placeholder="请输入账号" value="{$personData.account}" readonly>
+				</div>
+				<p class="help-block help-block-color"></p>
+			</div>
+			<div class="form-group">
+				<label for="password">密码</label>
+				<div class="input-group">
+					<span class="input-group-addon"><i class="icon-lock"></i></span>
+					<input type="password" class="form-control" name="password" id="password" placeholder="请输入密码" value="{$personData.password}" readonly>
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-default" id="resetPassword" nowUser="{$Think.get.id}">重置密码</button>
+					</span>
+				</div>
+				<p class="help-block help-block-color"></p>
+			</div>
+			<div class="form-group">
+				<label for="nickname">用户姓名</label>
+				<div class="input-group">
+					<span class="input-group-addon"><i class="icon-user"></i></span>
+					<input type="text" class="form-control" name="nickname" id="nickname" placeholder="请输入用户姓名" value="{$personData.nickname}">
+				</div>
+				<p class="help-block help-block-color"></p>
+			</div>
+			<div class="form-group">
+				<label for="email">电子邮箱</label>
+				<div class="input-group">
+					<span class="input-group-addon"><i class="icon-envelope"></i></span>
+					<input type="text" class="form-control" name="email" id="email" placeholder="请输入电子邮箱" value="{$personData.email}">
+				</div>
+				<p class="help-block help-block-color"></p>
+			</div>
+			<div class="page-header"><h2>部门职位</h2></div>
+			<div class="form-group form-group-edit">
+				<label>部门&nbsp;</label>
+				<div class="btn-group">
+					<button class="btn btn-default" type="button" id="department-value">{$personData.department_name}</button>
+					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu" id="department-list">
+						<volist name="department" id="value">
+							<li index="{$value.id}"><a href="javascript:;">{$value.name}</a></li>
+						</volist>
+					</ul>
+				</div>
+				<p class="help-block help-block-color"></p>
+			</div>
+			<div class="form-group form-group-edit">
+				<label>级别 </label>
+				<div class="btn-group">
+					<button class="btn btn-default" type="button" id="level-value">
+						<volist name="level" id="value">
+							<eq name="value.id" value="$personData.level">
+								{$value.levelname}
+							</eq>
+						</volist>
+					</button>
+					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu" id="level-list">
+						<volist name="level" id="value">
+							<li index="{$value.id}"><a href="javascript:;">{$value.levelname}</a></li>
+						</volist>
+					</ul>
+				</div>
+				<p class="help-block"></p>
+			</div>
+			<div class="form-group form-group-edit">
+				<label>职位&nbsp;</label>
+				<div class="btn-group">
+					<button class="btn btn-default" type="button" id="position-value">{$personData.position_name}</button>
+					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu" id="position-list">
+						<volist name="position" id="value">
+							<li index="{$value.id}"><a href="javascript:;">{$value.name}</a></li>
+						</volist>
+					</ul>
+				</div>
+				<p class="help-block"></p>
+			</div>
+			<div class="page-header"><h2>汇报关系 <small class="small-font-size"></small></h2></div>
+			<div class="form-group" id="report">
+				<volist name="departmentList" id="value">
+				<div class="page-header page-header-department"><h4><kbd>{$value.name}:</kbd></h4></div>
+					<volist name="alluser" id="vo">
+						<eq name="vo.department" value="$value.id">	<!-- 部门分组 -->
+							<eq name="personData.report" value="$vo.id">	<!-- 如果当前report等于汇报人的id则选中 -->
+								<neq name="vo.id" value="$personData.id">	<!-- 无法选中自己（避免自己跟自己汇报） -->
+									<span class="name-box active" index="{$vo.id}">{$vo.nickname}</span>
+								</neq>
+							<else/>
+								<neq name="vo.id" value="$personData.id">
+									<span class="name-box" index="{$vo.id}">{$vo.nickname}</span>
+								</neq>
+							</eq>
+						</eq>
+					</volist>
+				</volist>
+			</div>
+			<div class="page-header"><h2>状态 <small class="small-font-size"></small></h2></div>
+			<div class="btn-group">
+				<button class="btn btn-default" type="button" id="state-value">
+					<switch name="personData.state">
+						<case value="1">启用</case>
+						<case value="2">禁用</case>
+						<case value="3">离职</case>
+					</switch>
+				</button>
+				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu" id="state-list">
+					<li index="1" state="1"><a href="javascript:;">启用</a></li>
+					<li index="2" state="2"><a href="javascript:;">禁用</a></li>
+					<li index="3" state="3"><a href="javascript:;">离职</a></li>
+				</ul>
+			</div>
+			<div class="page-header page-header-edit">
+				<h2>权限配置 <small class="small-font-size">[ 配置可访问的功能模块 ]</small></h2>
+				<div class="btn-group btn-group-edit pull-right">
+					<button class="btn btn-default btn-sm" id="checked-all" type="button">全选</button>
+					<button class="btn btn-default btn-sm" id="checked-rev" type="button">反选</button>
+				</div>
+			</div>
+			<div class="checkbox checkbox-edit">
+				<volist name="authrule" id="value">
+					<label>
+						<neq name="value.title" value="系统">
+						<in name="value.id" value="$authgroup.rules">
+							<input type="checkbox" name="permissions[]" checked="checked" value="{$value.id}">{$value.title}
+						<else/>
+							<input type="checkbox" name="permissions[]" value="{$value.id}">{$value.title}
+						</in>
+						</neq>
+					</label>
+				</volist>
+			</div>
+			<div class="form-group form-group-submit">
+				<input type="hidden" name="id" value="{$Think.get.id}" id="user-id">
+				<input type="hidden" name="department" value="{$personData.department}" id="department-id">
+				<input type="hidden" name="position" value="{$personData.position}" id="position-id">
+				<input type="hidden" name="report" value="<neq name='personData.report' value=''>{$personData.report}</neq>" id="report-id">
+				<input type="hidden" name="level" value="{$personData.level}" id="level-id">
+				<input type="hidden" name="state" value="{$personData.state}" id="state-id">
+				<input type="submit" class="btn btn-primary btn-lg input-reset" value="修改">
+			</div>
+		</form>
+	</div>
+
+	<!-- 添加用户状态模态框 -->
+	<div class="modal fade bs-example-modal-sm" id="adduser-modal" tabindex="-1" role="modal" aria-labelledby="addUserModal" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-body">
+					<p class="adduser-message adduser-message-success"><i class="icon-ok-sign icon-2x modal-icon-success"></i><span class="message-text">成功后的信息</span></p>
+					<p class="adduser-message adduser-message-error"><i class="icon-remove-sign icon-2x modal-icon-error"></i><span class="message-text">失败后的信息</span></p>
+					<p class="adduser-message adduser-message-info"><i class="icon-info-sign icon-2x modal-icon-info"></i><span class="message-text">错误的信息</span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 重置密码模态框 -->
+	<div class="modal fade bs-example-modal-sm" id="modal-message" tabindex="-1" role="modal" aria-labelledby="addUserModal" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">提示</h4>
+				</div>
+				<div class="modal-body">
+					<p class="modal-message modal-message-info">
+						<i class="icon-info-sign icon-2x modal-icon-info"></i>
+						<span class="message-text">密码重置成功</span>
+					</p>
+					<p class="modal-message modal-message-new-password">
+						<span class="message-text">新密码为：<b id="newPassword"></b></span>
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="loading-modal sr-only" id="loading">
+		<div class="loading-icon">
+			<p><i class="icon-spinner icon-spin icon-2x"></i></p>
+		</div>
+	</div>
+
+</block>

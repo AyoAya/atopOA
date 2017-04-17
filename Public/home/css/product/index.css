@@ -1,0 +1,47 @@
+
+.layui-table-rewrite td,.layui-table-rewrite th {
+    font-size: 11px !important;
+    padding: 5px 8px;
+}
+.layui-table-rewrite td {
+    height: 41px;
+}
+/*.layui-table-rewrite td:first-child {
+    text-align: center;
+}*/
+.layui-table-rewrite th {
+    padding: 10px 8px;
+}
+.layui-table-rewrite .th_operation {
+    width: 88px;
+}
+.layui-btn-group a {
+    text-decoration: none;
+}
+
+.layui-form-label {
+    width: 70px;
+    padding-left: 0;
+    padding-right: 10px;
+    text-align: right;
+}
+.layui-inline {
+    margin-left: 15px;
+}
+.layui-inline:first-child {
+    margin-left: 0;
+}
+.input-search {
+    width: 300px;
+}
+.layui-input-inline-search {
+    position: relative;
+}
+.layui-input-inline-search button[type=submit] {
+    position: absolute;
+    right: 0;
+    top: 0;
+    border: none;
+    color: #000;
+    background: none;
+}
