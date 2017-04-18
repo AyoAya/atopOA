@@ -5,17 +5,16 @@
 	<link rel="stylesheet" href="__CSS__/Huploadify.css">
 	<link rel="stylesheet" href="__CSS__/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" href="__CSS__/bootstrap-theme.min.css">
-	<link rel="stylesheet" href="__CSS__/customer.css">
+	<link rel="stylesheet" href="__CSS__/oldcustomer/customer.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
 	<script src="__JS__/jquery.Huploadify.js"></script>
-	<script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
 	<script src="__JS__/jquery.validate.min.js"></script>
 	<script src="__JS__/jquery.form.js"></script>
 	<script src="__JS__/bootstrap-datetimepicker.js"></script>
 	<script src="__JS__/bootstrap-datetimepicker.zh-CN.js"></script>
-	<script src="__JS__/customer.js"></script>
+	<script src="__JS__/oldcustomer/customer.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -26,98 +25,43 @@
 	<ol class="breadcrumb breadcrumb-edit">
 		<li class="active">客诉处理</li>
 	</ol>
-	<!--<div class="total-info">
-		共 <b>{$customerAllTotal}</b> 条记录，正在处理 {$customerTotal.d} 条，已经处理 {$customerTotal.y} 条，无法处理 {$customerTotal.n} 条
-	</div>-->
 </block>
 <!-- 【正文区域】 -->
 <block name="content">
+
+	<!-- 按钮栏 -->
+	<div class="btn-group pull-left btn-group-edit" role="group">
+		<button class="layui-btn layui-btn-primary" data-toggle="modal" data-target="#FilterModal">
+			<span class="glyphicon glyphicon-th-list"></span> 筛选
+		</button>
+		<!--<a href="__ROOT__/customerChart" class="layui-btn layui-btn-primary">
+			<span class="glyphicon glyphicon-signal"></span> 客诉统计
+		</a>-->
+		<a href="__ROOT__/RMA" class="layui-btn layui-btn-primary">
+			<span class="icon-comments-alt"></span> 新版客诉
+		</a>
+	</div>
+
+	<!-- 搜索栏 -->
+	<div id="search" class="pull-right">
+		<input type="text" name="search" id="SearchText" class="layui-input" value="{$filter.searchtext}" placeholder="请输入搜索内容">
+		<span class="search-btn-box">
+			<button id="submitSearch" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+		</span>
+	</div>
+
+
+	<div class="sr-only">
+		<form id="SearchHiddenForm" action="__ROOT__/Customer" method="get">
+			<input type="hidden" name="searchtext" value="" id="SearchHiddenText">
+		</form>
+	</div>
+
+	<div class="clearfix" style="margin-bottom: 25px;"></div>
+
+
 	<div class="customerContainer">
-
-
-		<div class="pull-right" style="position: relative;">
-			<form class="layui-form">
-				<div class="layui-inline" style="width: 300px;">
-					<input type="text" name="search" id="SearchText" class="layui-input" value="{$filter.searchtext}" placeholder="请输入搜索内容">
-					<button style="position: absolute;right:0;top: 0;width: 38px;height: 38px;border: none;background: none;line-height: 42px;" id="submitSearch" lay-submit><i class="layui-icon">&#xe615;</i></button>
-				</div>
-			</form>
-		</div>
-		<div class="sr-only">
-			<form id="SearchHiddenForm" action="__ROOT__/Customer" method="get">
-				<input type="hidden" name="searchtext" value="" id="SearchHiddenText">
-			</form>
-		</div>
-		<div class="btn-group pull-left btn-group-edit" role="group">
-			<button class="layui-btn layui-btn-primary" data-toggle="modal" data-target="#FilterModal">
-				<span class="glyphicon glyphicon-th-list"></span> 筛选
-			</button>
-			<a href="__ROOT__/RMA" class="layui-btn layui-btn-primary">
-				<span class="icon-comments-alt"></span> 新版客诉
-			</a>
-			<eq name="face.department" value="4">
-				<a href="__ROOT__/addCustomer" class="layui-btn layui-btn-primary">
-					<span class="glyphicon glyphicon-plus"></span> 新增客诉
-				</a>
-			</eq>
-		</div>
-		<div class="clearfix" style="margin-bottom: 25px;"></div>
-
-		<table class="customer-table">
-			<tbody>
-				<volist name="customer" id="value" empty="$empty">
-					<tr>
-						<td class="customer-left">
-							<a href="__ROOT__/Customer?salesperson={$value.salesperson}"><img src="{$value.face}" alt="..." width="60"></a>
-						</td>
-						<td class="customer-right">
-							<a href="__ROOT__/customerDetails/{$value.id}" class="customer-content">
-								<p>
-									<eq name="value.version" value="old">
-										<switch name="value.status">
-											<case value="-1">
-												<span class="tag-danger">无法处理</span>
-											</case>
-											<case value="1">
-												<span class="tag-primary">正在处理</span>
-											</case>
-											<case value="0">
-												<span class="tag-success">已经处理</span>
-											</case>
-										</switch>
-									<else/>
-										<eq name="value.rma_state" value="N">
-											<span class="tag-primary">{$value.step.step_name}</span>
-										<else/>
-											<span class="tag-success">客诉关闭</span>
-										</eq>
-									</eq>
-									<notempty name="value.customer">
-										<span class="tag-hollow">客户：{$value.customer}</span>
-									</notempty>
-									<notempty name="value.pn">
-										<span class="tag-hollow">产品：{$value.pn}</span>
-									</notempty>
-									<notempty name="value.vendor">
-										<span class="tag-hollow">品牌：{$value.vendor}</span>
-									</notempty>
-									<notempty name="value.model">
-										<span class="tag-hollow">型号：{$value.model}</span>
-									</notempty>
-								</p>
-								<p class="customer-reason"><b>错误信息：</b>{$value.error_message}</p>
-								<p class="customer-other"><notempty name="value.nickname">{$value.nickname}<else/>{$value.salesperson}</notempty>&nbsp;&nbsp;|&nbsp;&nbsp;{$value.cc_time}</p>
-							</a>
-						</td>
-					</tr>
-				</volist>
-			</tbody>
-		</table>
-
-
-
-
-		<!--<volist name="customer" id="value" empty="$empty">
+		<volist name="customer" id="value" empty="$empty">
 			<div class="media media-edit">
 				<a class="media-left media-top media-img" href="__ROOT__/Customer?salesperson={$value.salesperson}">
 					<img class="userFace" src="{$value.face}" alt="..." width="50" height="70">
@@ -152,8 +96,7 @@
 					<div class="arrow-left-icon"></div>
 				</div>
 			</div>
-		</volist>-->
-
+		</volist>
 	</div>
 	<!-- 数据分页 -->
 	<div class="pageContainer">
