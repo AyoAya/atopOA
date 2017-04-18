@@ -25,6 +25,18 @@ $(function(){
 		}
 	});
 
+	$('#content').scroll(function(){
+		if( $(this).scrollTop() > 100 ){
+			$('#scrollBackTop').removeClass('sr-only');
+		}else{
+			$('#scrollBackTop').addClass('sr-only');
+		}
+	});
+
+	$('#scrollBackTop').click(function(){
+		$('#content').scrollTop(0);
+	});
+
 	/*var browserHeight = $(document).innerHeight();
 	var browserWidth = $(document).innerWidth();
 	var windowWidth = $(window).innerWidth();

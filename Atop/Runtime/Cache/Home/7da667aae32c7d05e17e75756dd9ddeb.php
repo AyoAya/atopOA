@@ -21,8 +21,7 @@
 
 	
 	<link rel="stylesheet" href="/Public/Home/css/bootstrap-datetimepicker.min.css">
-	<link rel="stylesheet" href="/Public/Home/css/addCustomer.css">
-	<link rel="stylesheet" href="/Public/Home/css/productFilter.css">
+	<link rel="stylesheet" href="/Public/Home/css/oldcustomer/addCustomer.css">
 <!-- 引入css文件 -->
 	<script src="/Public/Home/js/jquery.min.js"></script>
 	<script src="/Public/Home/js/bootstrap.min.js"></script>
@@ -32,13 +31,11 @@
 
 	
 	<script src="/Public/Home/js/jquery.validate.min.js" charset="UTF-8"></script>
-	<script src="/Public/webuploader/js/webuploader.js"></script>
 	<script src="/Public/Home/js/jquery.form.js" charset="UTF-8"></script>
-	<script src="/Public/Home/js/productFilter.js" charset="UTF-8"></script>
 	<script src="/Public/Home/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
 	<script src="/Public/Home/js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
 	<script src="/Public/Home/js/jquery.Huploadify.js"></script>
-	<script src="/Public/Home/js/customer.js" charset="UTF-8"></script>
+	<script src="/Public/Home/js/oldcustomer/customer.js" charset="UTF-8"></script>
 <!-- 引入js文件 -->
 	<script src="/Public/Home/js/jquery.rotate.min.js"></script>
 	
@@ -139,88 +136,100 @@
 		<div id="content">
 			<div class="container-fluid" id="content-box">
 				
-
 	<div class="add-customer">
-
-		<form class="layui-form">
-			<div class="layui-inline">
-				<label class="layui-form-label">客诉日期</label>
-				<div class="layui-input-inline">
-					<input type="text" name="cc_time" readonly class="layui-input form_date" lay-verify="required" placeholder="请选择日期">
+		<form role="form" id="form">
+			<div class="form-group form-group-edit col-lg-6" >
+				<label>客诉日期</label>
+				<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd" data-link-field="dtp_input2" id="datetimepicker2">
+					<input class="form-control" id="cc_time" type="text" readonly name="cc_time" placeholder="请选择日期" />
+					<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 				</div>
+				<input type="hidden" id="dtp_input2" value="" />
 			</div>
-			<div class="layui-inline">
-				<label class="layui-form-label">处理人</label>
-				<div class="layui-input-inline">
-					<select name="operation_person">
-						<?php if(is_array($userlist)): $i = 0; $__LIST__ = $userlist;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><option value="<?php echo ($value["id"]); ?>"><?php echo ($value["nickname"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-					</select>
+			<label>销售人员</label>
+			<div class="input-group input-group-edit col-lg-6">
+				<input class="form-control" id="salesperson" type="text" name="salesperson" placeholder="请选择销售人员" readonly />
+				<span class="input-group-btn">
+					<button class="btn btn-default" data-toggle="modal" data-target="#sales-modal" type="button">选择</button>
+				</span>
+			</div>
+			<p class="help-block help-block-color help-block-edit" id="salesperson_error"></p>
+			<div class="form-group form-group-edit">
+				<label>客户</label>
+				<input class="form-control" id="customer" type="text" name="customer" placeholder="例如 Orienta" />
+				<p class="help-block help-block-color"></p>
+			</div>
+			<div class="form-group form-group-edit">
+				<label>订单号</label>
+				<input class="form-control" id="sale_order" type="text" name="sale_order" placeholder="例如 188-Orienta-A" />
+				<p class="help-block help-block-color"></p>
+			</div>
+			<div class="form-group form-group-edit">
+				<label>产品信息</label>
+				<div class="input-group col-lg-12">
+					<input class="form-control" id="pn" type="text" name="pn" placeholder="例如 APCSFP43123CDL20" disabled/>
+					<span class="input-group-btn">
+						<button type="button" id="clear-product" class="btn btn-danger" data-dismiss="modal" data-toggle="tooltip" data-placement="top" title="清空" onMouseOver="$(this).tooltip('show')"><i class="icon-remove"></i></button>
+						<button class="btn btn-default" id="select-product-btn" type="button">添加</button>
+					</span>
 				</div>
+				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="layui-form-item layui-form-item-rewrite">
-				<label class="layui-form-label">客户</label>
-				<div class="layui-input-block">
-					<input type="text" name="customer" class="layui-input" placeholder="例如 Orienta">
-				</div>
+			<div class="form-group form-group-edit">
+				<label>设备厂商</label>
+				<input class="form-control" id="vendor" type="text" name="vendor" placeholder="例如 Huawei" />
+				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="layui-form-item">
-				<label class="layui-form-label">订单号</label>
-				<div class="layui-input-block">
-					<input type="text" name="sale_order" class="layui-input" placeholder="例如 188-Orienta-A">
-				</div>
+			<div class="form-group form-group-edit">
+				<label>设备型号</label>
+				<input class="form-control" id="model" type="text" name="model" placeholder="例如 MA5600T" />
+				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="layui-form-item">
-				<label class="layui-form-label">产品</label>
-				<div class="layui-input-block pn-position-relative">
-					<input type="hidden" name="managers" value="">
-					<input type="text" name="pn" readonly class="layui-input product-select" lay-verify="required" placeholder="例如 APCSFP43123CDL20">
-					<button type="button" class="clear-empty" title="清空"><i class="layui-icon">&#x1006;</i></button>
-				</div>
+			<div class="form-group form-group-edit">
+				<label>错误信息</label>
+				<textarea class="form-control" id="error_message" name="error_message" placeholder="输入详细报错信息，包括交换机报错信息、客户反馈的详细信息等等"></textarea>
+				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="layui-form-item">
-				<label class="layui-form-label">设备厂商</label>
-				<div class="layui-input-block">
-					<input type="text" name="vendor" class="layui-input" placeholder="例如 Huawei">
-				</div>
+			<div class="form-group form-group-edit">
+				<label>原因分析</label>
+				<textarea class="form-control" id="reason" name="reason" placeholder="根据客户反馈的信息做出的初步分析原因"></textarea>
+				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="layui-form-item">
-				<label class="layui-form-label">设备型号</label>
-				<div class="layui-input-block">
-					<input type="text" name="model" class="layui-input" placeholder="例如 MA5600T">
-				</div>
+			<div class="form-group form-group-edit">
+				<label>备注</label>
+				<textarea class="form-control" id="comments" name="comments" placeholder="其他补充信息，例如故障产品的数量，序列号等。"></textarea>
+				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="layui-form-item layui-form-text">
-				<label class="layui-form-label">错误信息</label>
-				<div class="layui-input-block">
-					<textarea name="error_message" lay-verify="required" placeholder="输入详细报错信息，包括交换机报错信息、客户反馈的详细信息等等" class="layui-textarea"></textarea>
-				</div>
+			<div class="form-group btn-box form-group-edit">
+				<input type="hidden" name="userAccount" value="" id="userAccount">
+				<button type="reset" class="btn btn-default btn-lg">重置</button>
+				<button type="submit" class="btn btn-primary btn-lg" id="submit-btn">确定</button>
 			</div>
-			<div class="layui-form-item layui-form-text">
-				<label class="layui-form-label">原因分析</label>
-				<div class="layui-input-block">
-					<textarea name="reason" lay-verify="required" placeholder="根据客户反馈的信息做出的初步分析原因" class="layui-textarea"></textarea>
-				</div>
-			</div>
-			<div class="layui-form-item layui-form-text">
-				<label class="layui-form-label">备注</label>
-				<div class="layui-input-block">
-					<textarea name="comments" placeholder="其他补充信息，例如故障产品的数量，序列号等。" class="layui-textarea"></textarea>
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<div class="layui-input-block">
-					<input type="file" name="Filedata" class="layui-upload-file add-customer-upload-file">
-					<ul id="attachment-list"></ul>
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<div class="layui-input-block">
-					<input type="hidden" name="salesperson" value="<?php echo ($face["account"]); ?>">
-					<button lay-submit lay-filter="customer" class="layui-btn">提交</button>
-					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
-				</div>
-			</div>
+			<input type="hidden" id="manager-id">
 		</form>
+	</div>
+	
+	<!-- 销售人员选择模态框 -->
+	<div class="modal fade bs-example-modal-lg" id="sales-modal" role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">close</span>
+					</button>
+					<h4 class="modal-title">选择销售人员</h4>
+				</div>
+				<div class="modal-body">
+					<ul id="user-list">
+						<?php if(is_array($userlist)): $i = 0; $__LIST__ = $userlist;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><li account="<?php echo ($value["account"]); ?>"><?php echo ($value["nickname"]); ?></li><?php endforeach; endif; else: echo "" ;endif; ?>
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary done-btn" data-dismiss="modal">确定</button>
+				</div>
+			</div>
+		</div>
 	</div>
 	
 	<!-- 消息提示模态框 -->
@@ -236,220 +245,102 @@
 		</div>
 	</div>
 
+	<!-- 消息提示模态框 -->
+	<div class="modal fade bs-example-modal-lg" id="product-modal" role="dialog">
+		<div class="modal-dialog modal-lg modal-dialog-editsize">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<span class="modal-title">选择产品型号</span>
+				</div>
+				<div class="modal-body filter-body">
+					<ul id="conditon-list"></ul>
+					<div class="filter-col">
+						<span class="label-type">类型</span>
+						<ul class="condition-type">
+							<li onclick="filter('type','SFP')">SFP</li><li onclick="filter('type','SFP BIDI')">SFP BIDI</li><li onclick="filter('type','SFP Copper')">SFP Copper</li><li onclick="filter('type','SFP CWDM')">SFP CWDM</li><li onclick="filter('type','SFP DWDM')">SFP DWDM</li><li onclick="filter('type','CSFP')">CSFP</li>
+							<p></p>
+							<li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+')">SFP+</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ AOC')">SFP+ AOC</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ BIDI')">SFP+ BIDI</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ CWDM')">SFP+ CWDM</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ DAC Active')">SFP+ DAC Active</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ DAC Passive')">SFP+ DAC Passive</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ DWDM')">SFP+ DWDM</li>
+							<p></p>
+							<li style="display: none;" class="default-hide-li" onclick="filter('type','XFP')">XFP</li><li style="display: none;" class="default-hide-li" onclick="filter('type','XFP BIDI')">XFP BIDI</li><li style="display: none;" class="default-hide-li" onclick="filter('type','XFP CWDM')">XFP CWDM</li><li style="display: none;" class="default-hide-li" onclick="filter('type','XFP DWDM')">XFP DWDM</li>
+							<p></p>
+							<li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+')">QSFP+</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ AOC')">QSFP+ AOC</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ DAC Active')">QSFP+ DAC Active</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ DAC Passive')">QSFP+ DAC Passive</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ to 4xSFP+')">QSFP+ to 4xSFP+</li>
+							<p></p>
+							<li style="display: none;" class="default-hide-li" onclick="filter('type','CFP2')">CFP2</li>
+						</ul>
+						<span flag="true" class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>
+					</div>
+					<div class="filter-col">
+						<span class="label-type">波长</span>
+						<ul class="condition-wavelength">
+							<?php if(is_array($filter["filterWavelength"])): $i = 0; $__LIST__ = $filter["filterWavelength"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i; if(strlen($value['wavelength']) < 12 AND !strpos($value['wavelength'],'.')): if(($i) <= "9"): ?><li onclick="filter('wavelength','<?php echo ($value["wavelength"]); ?>',this);"><?php echo ($value["wavelength"]); ?></li><?php else: ?><li style="display:none;" class="default-hide-li" onclick="filter('wavelength','<?php echo ($value["wavelength"]); ?>',this);"><?php echo ($value["wavelength"]); ?></li><?php endif; endif; endforeach; endif; else: echo "" ;endif; ?>
+						</ul>
+						<span flag="true" class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>
+					</div>
+					<div class="filter-col">
+						<span class="label-type">距离</span>
+						<ul class="condition-reach">
+							<?php if(is_array($filter["filterReach"])): $i = 0; $__LIST__ = $filter["filterReach"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i; if(($i) <= "7"): ?><li onclick="filter('reach','<?php echo ($value["reach"]); ?>');"><?php echo ($value["reach"]); ?></li><?php else: ?><li style="display:none;" class="default-hide-li" onclick="filter('reach','<?php echo ($value["reach"]); ?>');"><?php echo ($value["reach"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
+						</ul>
+						<span flag="true" class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>
+					</div>
+					<div class="filter-col">
+						<span class="label-type">接口</span>
+						<ul class="condition-connector">
+							<?php if(is_array($filter["filterConnector"])): $i = 0; $__LIST__ = $filter["filterConnector"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><li onclick="filter('connector','<?php echo ($value["connector"]); ?>');"><?php echo ($value["connector"]); ?></li><?php endforeach; endif; else: echo "" ;endif; ?>
+						</ul>
+						<!--<span class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>-->
+					</div>
+					<div class="filter-col">
+						<span class="label-type">环境</span>
+						<ul class="condition-casetemp">
+							<?php if(is_array($filter["filterCasetemp"])): $i = 0; $__LIST__ = $filter["filterCasetemp"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i; if(($value["casetemp"]) == "C"): ?><li value="<?php echo ($value["casetemp"]); ?>" onclick="filter('casetemp','<?php echo ($value["casetemp"]); ?>');">C档（0-70°）</li><?php else: ?><li value="<?php echo ($value["casetemp"]); ?>" onclick="filter('casetemp','<?php echo ($value["casetemp"]); ?>');">I档（-40°-85°）</li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
+						</ul>
+						<!--<span class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>-->
+					</div>
+					<hr>
+					<ul id="product-list">
+						<?php if(is_array($filterdata)): $i = 0; $__LIST__ = $filterdata;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i; if(($i) < "18"): ?><li p_id="<?php echo ($value["pid"]); ?>" nickname="<?php echo ($value["nickname"]); ?>" manager="<?php echo ($value["manager"]); ?>" pn="<?php echo ($value["pn"]); ?>" type="<?php echo ($value["type"]); ?>"><?php echo ($value["pn"]); ?></li>
+								<?php else: ?>
+								<li class="sr-only" p_id="<?php echo ($value["pid"]); ?>" nickname="<?php echo ($value["nickname"]); ?>" manager="<?php echo ($value["manager"]); ?>" pn="<?php echo ($value["pn"]); ?>" type="<?php echo ($value["type"]); ?>"><?php echo ($value["pn"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
+					</ul>
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div id="loading">
 		<div class="loading-icon">
 			<i class="icon-spinner icon-spin"></i>
 		</div>
 	</div>
 
-	<!-- 产品筛选 -->
-	<div id="layer-open-content" style="display: none;">
-		<div class="product-filter-box">
-			<div class="filter-search">
-				<form class="layui-form">
-					<div class="filter-search-block">
-						<input type="text" name="search" placeholder="搜索产品型号" class="layui-input">
-						<button lay-submit class="product-search-btn" lay-filter="productSearch"><i class="layui-icon">&#xe615;</i></button>
-					</div>
-				</form>
-			</div>
-			<div class="product-category-box">
-				<div class="filter-category">
-					<div class="filter-name pull-left">类型：</div>
-					<div class="filter-items pull-left">
-						<ul class="filter-items-type">
-							<?php if(is_array($productFilter["types"])): $i = 0; $__LIST__ = $productFilter["types"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i; if($i > 6): ?><li category="type" class="filter-item overflow" title="<?php echo ($value["type"]); ?>"><?php echo ($value["type"]); ?></li>
-									<?php else: ?>
-									<li category="type" class="filter-item" title="<?php echo ($value["type"]); ?>"><?php echo ($value["type"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
-						</ul>
-					</div>
-					<div class="filter-more pull-left">
-						<?php if(count($productFilter['types']) > 6): ?><i class="icon-chevron-down an-more-btn" flag="off"></i><?php endif; ?>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="filter-category">
-					<div class="filter-name pull-left">波长：</div>
-					<div class="filter-items pull-left">
-						<ul class="filter-items-wavelength">
-							<?php if(is_array($productFilter["wavelengths"])): $i = 0; $__LIST__ = $productFilter["wavelengths"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i; if($i > 6): ?><li category="wavelength" class="filter-item overflow" as_name="<?php echo ($value["wavelength"]); ?>" title="<?php echo ($value["wavelength"]); ?>"><?php echo ($value["wavelength"]); ?></li>
-									<?php else: ?>
-									<li category="wavelength" class="filter-item" as_name="<?php echo ($value["wavelength"]); ?>" title="<?php echo ($value["wavelength"]); ?>"><?php echo ($value["wavelength"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
-						</ul>
-					</div>
-					<div class="filter-more pull-left">
-						<?php if(count($productFilter['wavelengths']) > 6): ?><i class="icon-chevron-down an-more-btn" flag="off"></i><?php endif; ?>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="filter-category">
-					<div class="filter-name pull-left">距离：</div>
-					<div class="filter-items pull-left">
-						<ul class="filter-items-reach">
-							<?php if(is_array($productFilter["reachs"])): $i = 0; $__LIST__ = $productFilter["reachs"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i; if($i > 6): ?><li category="reach" class="filter-item overflow" title="<?php echo ($value["reach"]); ?>"><?php echo ($value["reach"]); ?></li>
-									<?php else: ?>
-									<li category="reach" class="filter-item" title="<?php echo ($value["reach"]); ?>"><?php echo ($value["reach"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
-						</ul>
-					</div>
-					<div class="filter-more pull-left">
-						<?php if(count($productFilter['reachs']) > 6): ?><i class="icon-chevron-down an-more-btn" flag="off"></i><?php endif; ?>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="filter-category">
-					<div class="filter-name pull-left">接口：</div>
-					<div class="filter-items pull-left">
-						<ul class="filter-items-connector">
-							<?php if(is_array($productFilter["connectors"])): $i = 0; $__LIST__ = $productFilter["connectors"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i; if($i > 6): ?><li category="connector" class="filter-item overflow" title="<?php echo ($value["connector"]); ?>"><?php echo ($value["connector"]); ?></li>
-									<?php else: ?>
-									<li category="connector" class="filter-item" title="<?php echo ($value["connector"]); ?>"><?php echo ($value["connector"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
-						</ul>
-					</div>
-					<div class="filter-more pull-left">
-						<?php if(count($productFilter['connectors']) > 6): ?><i class="icon-chevron-down an-more-btn" flag="off"></i><?php endif; ?>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="filter-category">
-					<div class="filter-name pull-left">环境：</div>
-					<div class="filter-items pull-left">
-						<ul class="filter-items-casetemp">
-							<?php if(is_array($productFilter["casetemps"])): $i = 0; $__LIST__ = $productFilter["casetemps"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i; if($i > 6): ?><li category="casetemp" class="filter-item overflow" as_name="<?php echo ($value["casetemp"]); ?>" title="<?php echo ($value["casetemp_as_name"]); ?>"><?php echo ($value["casetemp_as_name"]); ?></li>
-									<?php else: ?>
-									<li category="casetemp" class="filter-item" as_name="<?php echo ($value["casetemp"]); ?>" title="<?php echo ($value["casetemp_as_name"]); ?>"><?php echo ($value["casetemp_as_name"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
-						</ul>
-					</div>
-					<div class="filter-more pull-left">
-						<?php if(count($productFilter['casetemps']) > 6): ?><i class="icon-chevron-down an-more-btn" flag="off"></i><?php endif; ?>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-			</div>
-			<hr>
-			<div class="product-list-box">
-				<ul>
-					<?php if(is_array($productFilter["defaultData"])): $i = 0; $__LIST__ = $productFilter["defaultData"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><li pro_id="<?php echo ($value["id"]); ?>" manager="<?php echo ($value["manager"]); ?>"><?php echo ($value["pn"]); ?></li><?php endforeach; endif; else: echo "" ;endif; ?>
-				</ul>
-			</div>
-			<form id="filter-map" style="display: none;">
-				<input type="hidden" name="type" value="">
-				<input type="hidden" name="wavelength" value="">
-				<input type="hidden" name="reach" value="">
-				<input type="hidden" name="connector" value="">
-				<input type="hidden" name="casetemp" value="">
-			</form>
-			<div class="reset-filter-box">
-				<div class="pull-right"><button class="layui-btn layui-btn-danger reset-filter-btn">重置筛选</button></div>
-				<div class="clearfix"></div>
-			</div>
-		</div>
-	</div>
-
-
+	<form class="sr-only" id="filterForm">
+		<input type="hidden" name="type">
+		<input type="hidden" name="wavelength">
+		<input type="hidden" name="reach">
+		<input type="hidden" name="connector">
+		<input type="hidden" name="casetemp">
+	</form>
 	
 	<script>
-
-		/**
-		 * 获取当前时间
-		 */
-		function p(s) {
-			return s < 10 ? '0' + s: s;
-		}
-		var myDate = new Date();
-		//获取当前年
-		var year = myDate.getFullYear();
-		//获取当前月
-		var month = myDate.getMonth()+1;
-		//获取当前日
-		var date = myDate.getDate();
-		var now = year+'-'+p(month)+"-"+p(date);
-		$('.form_date').val(now);	//填充当天时间
-
-		//定义初始化数据
-		var filter_content = $('#layer-open-content').html();
-		$('.form_date').datetimepicker({
-			language:  'zh-CN',
-			format:'yyyy-mm-dd',
-			weekStart: 1,
-			todayBtn:  1,
-			autoclose: 1,
-			todayHighlight: 1,
-			endDate : new Date(),
-			pickerPosition: "bottom-right",
-			startView: 2,
-			minView: 2,
-			forceParse: 0
-		});
-
-		$('.clear-empty').click(function(){
-			$(this).prev().val('');
-		});
-
-		layui.use(['layer','form'], function(){
-			var layer = layui.layer,
-					form = layui.form();
-
-			form.on('submit(productSearch)', function(data){
-				$.ajax({
-					url : ThinkPHP['AJAX'] + '/Sample/productSearch',
-					type : 'POST',
-					data : data.field,
-					dataType : 'json',
-					success : function( response ){
-						if( response.flag > 0 ){
-							var pns = '';
-							for( var key in response.data ){	//拼装所有产品型号数据
-								pns += '<li pro_id="'+ response.data[key].id +'">'+ response.data[key].pn +'</li>\r\n';
-							}
-							$('.product-list-box ul').html(pns);
-						}else{
-							layer.msg(response.msg);
-						}
-					}
-				});
-				return false;
-			});
-		});
-
-		//点击选择产品展开筛选器
-		var pro_element = null;
-		$(document).on('click', '.product-select', function(){
-			pro_element = $(this);
-			var filter_dialog = layer.open({
-				type : 1,
-				title : '选择产品',
-				area: ['1200px'],
-				shade: ['0.5','#000'],
-				content: filter_content,
-				cancel : function(index, layero){
-					$('#filter-map input').val('');
-					layer.close(index);
-				}
-			});
-		});
-
-
-		//将产品信息添加到栏位
-		$(document).on('click', '.product-list-box ul li' ,function(){
-			if( pro_element.val() == '' ){
-				pro_element.val($(this).text());
-			}else{
-				pro_element.val( pro_element.val() + ' , ' + $(this).text() );
-			}
-			if( pro_element.prev().val() == '' ){
-				pro_element.prev().val($(this).attr('manager'));
-			}else{
-				pro_element.prev().val( pro_element.prev().val() + ',' + $(this).attr('manager') );
-			}
-			/*pro_element.prev().val($(this).attr('pro_id'));
-			pro_element.prev().prev().val($(this).attr('manager'));*/
-			layer.closeAll();
-			$('#filter-map input').val('');
-		});
-
-
+	$('.form_date').datetimepicker({
+        language:  'zh-CN',
+        format:'yyyy-mm-dd',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		endDate : new Date(),
+		pickerPosition: "bottom-left",
+		startView: 2,
+		minView: 2,
+		forceParse: 0
+    });
 	</script>
-
 
 			</div>
 		</div>

@@ -638,6 +638,70 @@ class SampleController extends AuthController {
         $this->display();
     }
 
+
+    public function tmpSampleData(){
+        $first_day = getCurMonthFirstDay('2017-1');
+        $last_day = getCurMonthLastDay('2017-1');
+
+        $sample_model = D('Sample');
+
+        $map['createtime'] = array(array('EGT',strtotime($first_day)),array('ELT',strtotime($last_day)),'AND');
+
+        $sample_result = $sample_model->relation(true)->where( $map )->order('createtime ASC')->select();
+
+        foreach($sample_result as $key=>&$value){
+            if($value['s_status']=='' || $value['s_status']==3 && $value['w_status']=='' && $value['c_status']=='' && $value['y_status']=='' && $value['f_status']=='' && $value['k_status']==''){
+                $value['state'] = '审核中';
+                $value['color'] = 0;
+            }else if($value['s_status']==2 && $value['w_status']=='' && $value['c_status']=='' && $value['y_status']=='' && $value['f_status']=='' && $value['k_status']==''){
+                $value['state'] = '审核未通过';
+                $value['color'] = 2;
+            }else if($value['s_status']==1 && $value['w_status']=='' || $value['w_status']==3 && $value['c_status']=='' && $value['y_status']=='' && $value['f_status']=='' && $value['k_status']==''){
+                $value['state'] = '物料准备中';
+                $value['color'] = 0;
+            }else if($value['s_status']==1 && $value['w_status']==2 && $value['c_status']=='' && $value['y_status']=='' && $value['f_status']=='' && $value['k_status']==''){
+                $value['state'] = '物料准备未完成';
+                $value['color'] = 2;
+            }else if($value['s_status']==1 && $value['w_status']==1 && $value['c_status']=='' || $value['c_status']==3 && $value['y_status']=='' && $value['f_status']=='' && $value['k_status']==''){
+                $value['state'] = '样品制作中';
+                $value['color'] = 0;
+            }else if($value['s_status']==1 && $value['w_status']==1 && $value['c_status']==2 && $value['y_status']=='' && $value['f_status']=='' && $value['k_status']==''){
+                $value['state'] = '样品制作未完成';
+                $value['color'] = 2;
+            }else if($value['s_status']==1 && $value['w_status']==1 && $value['c_status']==1 && $value['y_status']=='' || $value['y_status']==3 && $value['f_status']=='' && $value['k_status']==''){
+                $value['state'] = '样品测试中';
+                $value['color'] = 0;
+            }else if($value['s_status']==1 && $value['w_status']==1 && $value['c_status']==1 && $value['y_status']==2 && $value['f_status']=='' && $value['k_status']==''){
+                $value['state'] = '样品测试未通过';
+                $value['color'] = 2;
+            }else if($value['s_status']==1 && $value['w_status']==1 && $value['c_status']==1 && $value['y_status']==1 && $value['f_status']=='' || $value['f_status']==3 && $value['k_status']==''){
+                $value['state'] = '等待发货';
+                $value['color'] = 0;
+            }else if($value['s_status']==1 && $value['w_status']==1 && $value['c_status']==1 && $value['y_status']==1 && $value['f_status']==2 && $value['k_status']==''){
+                $value['state'] = '发货失败';
+                $value['color'] = 2;
+            }else if($value['s_status']==1 && $value['w_status']==1 && $value['c_status']==1 && $value['y_status']==1 &&  $value['f_status']==1 && $value['k_status']=='' || $value['k_status']==3){
+                $value['state'] = '待反馈';
+                $value['color'] = 0;
+            }else if($value['s_status']==1 && $value['w_status']==1 && $value['c_status']==1 && $value['y_status']==1 && $value['f_status']==1 && $value['k_status']==2 || $value['k_status']==1){
+                $value['state'] = '已反馈';
+                $value['color'] = 3;
+            }else{
+                $result['state'] = 'error';
+                $result['color'] = 2;
+            }
+        }
+
+        //echo $sample_model->getLastSql();
+        //print_r($sample_result);
+        $this->assign('sampledata',$sample_result);
+        $this->display();
+
+    }
+
+
+
+
     //查看所有日志
     public function log(){
         if( !I('get.order') || empty(I('get.order')) ) return;

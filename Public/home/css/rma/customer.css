@@ -23,54 +23,6 @@ body {
 .btn-group-edit {
 	margin: 7px 25px 0 0;
 }
-.media-edit {
-	width: 100%;
-	position: relative;
-	padding: 10px;
-}
-.media-edit .media-btn {
-	position: absolute;
-	right: 0;
-	top: 10px;
-}
-.media-edit .media-img {
-	padding-right: 20px;
-}
-.media-edit .media-img img {
-	width: 60px;
-	height: 60px;
-	overflow: hidden;
-}
-/** 为兼容大小尺寸屏幕适应 **/
-@media screen and (max-device-width: 1920px) {
-	.media-edit {
-		width: 1550px;
-	}
-	.media-heading-edit {
-		width: 1550px;
-	}
-}
-@media screen and (max-device-width: 1366px) {
-	.media-edit {
-		width: 996px;
-	}
-	.media-heading-edit {
-		width: 996px;
-	}
-}
-.media-body-edit {
-	border: solid 1px #ddd;
-	padding: 15px;
-	position: relative;
-	top: -5px;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
-	background: #fff;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
 
 .rma-serach {
 	position: relative;
@@ -89,31 +41,6 @@ body {
 	line-height: 42px;
 }
 
-.media-heading-edit {
-	font-size: 16px;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-.media-heading-edit .label {
-	padding: 2px 5px;
-}
-.media-body-edit h4 a {
-	color: #555;
-}
-.media-body-edit p.error-box {
-	margin-top: 15px;
-	color: #888;
-}
-.media-body-edit p.reson-box {
-	margin-top: 8px;
-	color: #888;
-}
-.media-body-edit p.time-box {
-	font-size: 12px;
-	margin-top: 12px;
-	color: #888;
-}
 .title-text {
 	position: relative;
 	top: 2px;
@@ -124,17 +51,12 @@ body {
 	position: absolute;
 	left: -8px;
 	top: 12px;
-	background: url("../img/arrow_left_not_shadow.png") center center no-repeat;
+	background: url("../../img/arrow_left_not_shadow.png") center center no-repeat;
 }
 .label {
 	line-height: 2;
 }
 
-
-#content-box {
-	border: none;
-	background: none;
-}
 #content-box .empty-box {
 	width: 100%;
 	min-height: 580px;
@@ -148,37 +70,10 @@ body {
 	top: 50%;
 	margin-left: -117px;
 	margin-top: -120px;
-	background: url(../img/empty.png) no-repeat;
+	background: url(../../img/empty.png) no-repeat;
 }
-#backtop {
-	display: none;
-	position: fixed;
-	right: 50px;
-	bottom: 40px;
-	width: 50px;
-	height: 50px;
-	border: solid 1px #555;
-	background: #fff;
-	padding-left: 9px;
-	padding-top: 4.5px;
-	box-sizing: border-box;
-	background: #fff;
-	transition: all .5s;
-}
-#backtop span{
-	cursor: pointer;
-	font-size: 15px;
-	text-align: center;
-	line-height:14px;
-	transition: all .5s;
-}
-#backtop:hover {
-	background: #d9534f;
-	border: solid 1px #d9534f;
-}
-#backtop:hover span {
-	color: #fff;
-}
+
+
 .pagination-edit {
 	margin: 30px 0 10px 0;
 }
@@ -361,6 +256,43 @@ body {
 
 
 
-
+/*** 筛选 ***/
+#rma-filter {
+	position: relative;
+	width: 100%;
+	border: solid 1px #ddd;
+	min-height: 200px;
+	margin-bottom: 25px;
+	padding: 20px 15px;
+}
+#rma-filter:before {
+	content: '';
+	position: absolute;
+	width: 14px;
+	height: 14px;
+	left: 35px;
+	top: -14px;
+	background: url("../../img/arrow_up_border_ddd.png");
+}
+#rma-filter:after {
+	content: '';
+	position: absolute;
+	width: 14px;
+	height: 14px;
+}
+#rma-filter input[name=start_date],#rma-filter input[name=end_date] {
+	width: 150px;
+}
+#rma-filter .layui-form-label {
+	padding-left: 0;
+	margin-bottom: 0;
+}
+#rma-filter .short-input-box .layui-input-inline {
+	width: 150px;
+	margin-right: 0;
+}
+#rma-filter .short-input-box .layui-input {
+	width: 150px;
+}
 
 

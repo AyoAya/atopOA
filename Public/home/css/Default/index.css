@@ -593,6 +593,36 @@ body {
 }
 
 
+/*** 回到顶部 ***/
+#scrollBackTop {
+	position: fixed;
+	bottom: 60px;
+	right: 60px;
+	z-index: 10;
+	width: 50px;
+	height: 50px;
+	border: solid 1px #ccc;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	font-size: 25px;
+	color: #888;
+	background: #fff;
+	line-height: 45px;
+	text-align: center;
+	cursor: pointer;
+	transition: all .3s;
+}
+#scrollBackTop i {
+	color: #888;
+	transition: all .3s;
+}
+#scrollBackTop:hover {
+	border: solid 1px #428bca;
+}
+#scrollBackTop:hover i {
+	color: #428bca;
+}
 
 
 

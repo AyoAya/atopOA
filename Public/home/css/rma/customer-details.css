@@ -29,7 +29,6 @@
 
 body {
 	color: #222;
-	font-size: 15px;
 }
 code {
 	line-height: 180%;
@@ -49,9 +48,6 @@ kbd.kbd-info {
 }
 #table tr,#table th {
 	text-align: center;
-}
-#table td,#table th {
-	font-size: 12px;
 }
 .panel-heading-edit {
 	background: #efefef !important;
@@ -234,7 +230,7 @@ code {
 	width: 26px;
 	height: 26px;
 	border-radius: 10px;
-	background: #fff url(../img/remove_file.png) no-repeat;
+	background: #fff url(../../img/remove_file.png) no-repeat;
 	cursor: pointer;
 }
 #file-preview .file-name {

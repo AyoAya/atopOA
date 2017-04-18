@@ -26,7 +26,7 @@
 	<link rel="stylesheet" href="/Public/Home/css/jquery.toastmessage.css">
 	<link rel="stylesheet" href="/Public/Home/css/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" href="/Public/Home/css/timeline.css"/>
-	<link rel="stylesheet" href="/Public/Home/css/customer-details.css">
+	<link rel="stylesheet" href="/Public/Home/css/rma/customer-details.css">
 <!-- 引入css文件 -->
 	<script src="/Public/Home/js/jquery.min.js"></script>
 	<script src="/Public/Home/js/bootstrap.min.js"></script>
@@ -43,7 +43,7 @@
 	<script src="/Public/Home/js/bootstrap-datetimepicker.js"></script>
 	<script src="/Public/Home/js/bootstrap-datetimepicker.zh-CN.js"></script>
 	<script src="/Public/Home/js/jquery.toastmessage.js"></script>
-	<script src="/Public/Home/js/customer.js"></script>
+	<script src="/Public/Home/js/rma/customer.js"></script>
 <!-- 引入js文件 -->
 	<script src="/Public/Home/js/jquery.rotate.min.js"></script>
 	
@@ -146,8 +146,6 @@
 				
 
 
-
-
 	<?php if(($details["rma_state"]) == "N"): ?>
 		<?php if(($details["version"]) == "new"): ?><div class="pull-left">
 				<?php if(in_array(($_SESSION['user']['id']), is_array($details["operation_person"])?$details["operation_person"]:explode(',',$details["operation_person"]))): ?>
@@ -165,7 +163,7 @@
 			<div class="clearfix" style="margin-bottom: 25px;"></div><?php endif; endif; ?>
 
 
-	<div class="title-bar" style="margin: 0 0 25px 0;">
+	<div class="title-bar" style="margin: 0 0 15px 0;">
 		<h4>基本信息</h4>
 	</div>
 
@@ -178,8 +176,6 @@
 				<td>客户</td>
 				<td>订单号</td>
 				<td>产品</td>
-				<td>设备厂商</td>
-				<td>设备型号</td>
 				<td>
                     <?php if(($details["version"]) == "new"): ?>
                         进度
@@ -196,8 +192,6 @@
 				<td><?php echo ($details["customer"]); ?></td>
 				<td><?php echo ($details["sale_order"]); ?></td>
 				<td><?php echo ($details["pn"]); ?></td>
-				<td><?php echo ($details["vendor"]); ?></td>
-				<td><?php echo ($details["model"]); ?></td>
 				<td>
                     <?php if(($details["version"]) == "new"): ?>
                         <?php if(($details["rma_state"]) == "N"): ?><span class="label label-primary"><?php echo ($details["now_step"]["step_name"]); ?></span>
@@ -212,19 +206,19 @@
 		</tbody>
 	</table>
 
-	<div class="title-bar" style="margin: 70px 0 15px 0;">
-		<h4>客诉分析</h4>
-	</div>
-
 	<table class="layui-table layui-table-rewrite" lay-skin="line" style="margin: 0;">
 		<tbody>
 			<tr>
-				<td>错误现象：</td>
-				<td><?php echo ($details["error_message"]); ?></td>
+				<td>设备厂商：</td>
+				<td><?php echo ($details["vendor"]); ?></td>
 			</tr>
 			<tr>
-				<td>原因分析：</td>
-				<td><?php echo ($details["reason"]); ?></td>
+				<td>设备型号：</td>
+				<td><?php echo ($details["model"]); ?></td>
+			</tr>
+			<tr>
+				<td>错误现象：</td>
+				<td><?php echo ($details["error_message"]); ?></td>
 			</tr>
 			<?php if(!empty($details["comments"])): ?><tr>
 					<td>备注信息：</td>
@@ -233,7 +227,12 @@
 		</tbody>
 	</table>
 
-	<div class="title-bar" style="margin: 50px 0 40px 0;">
+	<div class="title-bar" style="margin: 30px 0 15px 0;">
+		<h4>初步分析</h4>
+	</div>
+	<p style="text-indent: 2em;"><?php echo ($details["reason"]); ?></p>
+
+	<div class="title-bar" style="margin: 30px 0 30px 0;">
 		<h4>处理记录</h4>
 	</div>
 
@@ -244,7 +243,7 @@
 
 						<?php if(($value["id"]) <= $details["now_step"]["id"]): ?><div class="timeline-title-box">
 								<div class="timeline-title pull-left">
-									<div class="timeline-step"><?php echo ($key+1); ?></div>
+									<div class="timeline-step">Step<?php echo ($key+1); ?></div>
 								</div>
 								<div class="timeline-title-text pull-left">
                                     <?php if(($details["version"]) == "new"): ?><span><?php echo ($value["step_name"]); ?> <i class="<?php if(!empty($value["class"])): ?>icon-caret-up<?php else: ?>icon-caret-down<?php endif; ?>"></i></span>
@@ -262,26 +261,34 @@
 												<div class="timeline-circle"></div>
 											</td>
 											<td class="timeline-content">
-												<p><?php echo ($val["log_content"]); ?></p>
-												<?php if(!empty($val["picture"])): if(is_array($val["picture"])): $i = 0; $__LIST__ = $val["picture"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$v): $mod = ($i % 2 );++$i; if(!empty($v)): ?><div class="pic-group pull-left">
-																<img class="customer-complaint-img" src="/<?php echo ($v["filepath"]); ?>" alt="加载失败">
-																<span class="pic-info"><?php echo ($v["filename"]); ?></span>
-															</div><?php endif; endforeach; endif; else: echo "" ;endif; endif; ?>
-												<div class="clearfix"></div>
-												<?php if(!empty($val["attachment"])): if(is_array($val["attachment"])): $i = 0; $__LIST__ = $val["attachment"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$v): $mod = ($i % 2 );++$i; if(($v["filetype"]) == "other"): ?><div class="attachment-box">
-																<div class="attachment-box-dom">
-																	<p class="file-name">
-																		<a href="/<?php echo ($v["filepath"]); ?>"><i class="layui-icon">&#xe621;</i> <?php echo ($v["filename"]); ?></a>
-																	</p>
-																</div>
-															</div>
-														<?php else: ?>
-															<?php if(($v) != ""): ?><div class="pic-group pull-left">
-																	<img class="customer-complaint-img" src="/<?php echo ($v["filepath"]); ?>" height="120" alt="加载失败">
+												<div class="timeline-content-left pull-left">
+													<div class="timeline-user-face">
+														<img src="<?php echo ($val["face"]); ?>" width="48" alt="">
+													</div>
+												</div>
+												<div class="timeline-content-right pull-left">
+													<p><?php echo ($val["log_content"]); ?></p>
+													<?php if(!empty($val["picture"])): if(is_array($val["picture"])): $i = 0; $__LIST__ = $val["picture"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$v): $mod = ($i % 2 );++$i; if(!empty($v)): ?><div class="pic-group pull-left">
+																	<img class="customer-complaint-img" src="/<?php echo ($v["filepath"]); ?>" alt="加载失败">
 																	<span class="pic-info"><?php echo ($v["filename"]); ?></span>
-																</div><?php endif; endif; endforeach; endif; else: echo "" ;endif; endif; ?>
+																</div><?php endif; endforeach; endif; else: echo "" ;endif; endif; ?>
+													<div class="clearfix"></div>
+													<?php if(!empty($val["attachment"])): if(is_array($val["attachment"])): $i = 0; $__LIST__ = $val["attachment"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$v): $mod = ($i % 2 );++$i; if(($v["filetype"]) == "other"): ?><div class="attachment-box">
+																	<div class="attachment-box-dom">
+																		<p class="file-name">
+																			<a href="/<?php echo ($v["filepath"]); ?>"><i class="layui-icon">&#xe621;</i> <?php echo ($v["filename"]); ?></a>
+																		</p>
+																	</div>
+																</div>
+															<?php else: ?>
+																<?php if(($v) != ""): ?><div class="pic-group pull-left">
+																		<img class="customer-complaint-img" src="/<?php echo ($v["filepath"]); ?>" height="120" alt="加载失败">
+																		<span class="pic-info"><?php echo ($v["filename"]); ?></span>
+																	</div><?php endif; endif; endforeach; endif; else: echo "" ;endif; endif; ?>
+													<div class="clearfix"></div>
+													<div class="timeline-other"><?php echo ($val["recorder"]); ?><span class="timeline-divider">|</span><?php echo ($val["timestamp"]); ?></div>
+												</div>
 												<div class="clearfix"></div>
-												<div class="timeline-other"><?php echo ($val["recorder"]); ?><span class="timeline-divider">|</span><?php echo ($val["timestamp"]); ?></div>
 											</td>
 										</tr><?php endforeach; endif; else: echo "" ;endif; endif; ?>
 							</table>
@@ -651,6 +658,8 @@
 			</div>
 		</div>
 	</div>
+	
+	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
 	<script>
 
@@ -661,22 +670,6 @@
 			alert(str);
 			checkIE();
 		}
-
-		/*if (document.all && document.addEventListener && !window.atob) {
-			checkIE();
-		}
-
-		if (document.all && document.querySelector && !document.addEventListener) {
-			checkIE();
-		}
-
-		if (document.all && window.XMLHttpRequest && !document.querySelector) {
-			checkIE();
-		}
-
-		if (document.all && document.compatMode && !window.XMLHttpRequest) {
-			checkIE();
-		}*/
 
 		function checkIE(){
 			var body = document.getElementsByName('body');

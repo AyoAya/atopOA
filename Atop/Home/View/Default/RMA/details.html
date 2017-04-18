@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="__CSS__/jquery.toastmessage.css">
 	<link rel="stylesheet" href="__CSS__/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" href="__CSS__/timeline.css"/>
-	<link rel="stylesheet" href="__CSS__/customer-details.css">
+	<link rel="stylesheet" href="__CSS__/rma/customer-details.css">
 </block>
 
 <block name="linkjs">
@@ -20,7 +20,7 @@
 	<script src="__JS__/bootstrap-datetimepicker.js"></script>
 	<script src="__JS__/bootstrap-datetimepicker.zh-CN.js"></script>
 	<script src="__JS__/jquery.toastmessage.js"></script>
-	<script src="__JS__/customer.js"></script>
+	<script src="__JS__/rma/customer.js"></script>
 </block>
 
 <block name="webtitle">
@@ -35,8 +35,6 @@
 </block>
 
 <block name="content">
-
-
 
 
 	<eq name="details.rma_state" value="N"> {//在当前客诉未关闭的情况下才加载}
@@ -60,7 +58,7 @@
 	</eq>
 
 
-	<div class="title-bar" style="margin: 0 0 25px 0;">
+	<div class="title-bar" style="margin: 0 0 15px 0;">
 		<h4>基本信息</h4>
 	</div>
 
@@ -73,8 +71,6 @@
 				<td>客户</td>
 				<td>订单号</td>
 				<td>产品</td>
-				<td>设备厂商</td>
-				<td>设备型号</td>
 				<td>
                     <eq name="details.version" value="new"> {//如果是新版客诉则显示进度，老版显示状态}
                         进度
@@ -92,8 +88,6 @@
 				<td>{$details.customer}</td>
 				<td>{$details.sale_order}</td>
 				<td>{$details.pn}</td>
-				<td>{$details.vendor}</td>
-				<td>{$details.model}</td>
 				<td>
                     <eq name="details.version" value="new"> {//如果是新版客诉则显示进度，老版显示状态}
                         <eq name="details.rma_state" value="N">
@@ -113,19 +107,19 @@
 		</tbody>
 	</table>
 
-	<div class="title-bar" style="margin: 70px 0 15px 0;">
-		<h4>客诉分析</h4>
-	</div>
-
 	<table class="layui-table layui-table-rewrite" lay-skin="line" style="margin: 0;">
 		<tbody>
 			<tr>
-				<td>错误现象：</td>
-				<td>{$details.error_message}</td>
+				<td>设备厂商：</td>
+				<td>{$details.vendor}</td>
 			</tr>
 			<tr>
-				<td>原因分析：</td>
-				<td>{$details.reason}</td>
+				<td>设备型号：</td>
+				<td>{$details.model}</td>
+			</tr>
+			<tr>
+				<td>错误现象：</td>
+				<td>{$details.error_message}</td>
 			</tr>
 			<notempty name="details.comments">
 				<tr>
@@ -136,7 +130,12 @@
 		</tbody>
 	</table>
 
-	<div class="title-bar" style="margin: 50px 0 40px 0;">
+	<div class="title-bar" style="margin: 30px 0 15px 0;">
+		<h4>初步分析</h4>
+	</div>
+	<p style="text-indent: 2em;">{$details.reason}</p>
+
+	<div class="title-bar" style="margin: 30px 0 30px 0;">
 		<h4>处理记录</h4>
 	</div>
 
@@ -149,7 +148,7 @@
 						<elt name="value.id" value="$details.now_step.id">
 							<div class="timeline-title-box">
 								<div class="timeline-title pull-left">
-									<div class="timeline-step">{$key+1}</div>
+									<div class="timeline-step">Step{$key+1}</div>
 								</div>
 								<div class="timeline-title-text pull-left">
                                     <eq name="details.version" value="new">
@@ -173,40 +172,48 @@
 												<div class="timeline-circle"></div>
 											</td>
 											<td class="timeline-content">
-												<p>{$val.log_content}</p>
-												<notempty name="val.picture">
-													<volist name="val.picture" id="v">
-														<notempty name="v">
-															<div class="pic-group pull-left">
-																<img class="customer-complaint-img" src="__ROOT__/{$v.filepath}" alt="加载失败">
-																<span class="pic-info">{$v.filename}</span>
-															</div>
-														</notempty>
-													</volist>
-												</notempty>
-												<div class="clearfix"></div>
-												<notempty name="val.attachment">
-													<volist name="val.attachment" id="v">
-														<eq name="v.filetype" value="other">
-															<div class="attachment-box">
-																<div class="attachment-box-dom">
-																	<p class="file-name">
-																		<a href="__ROOT__/{$v.filepath}"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
-																	</p>
-																</div>
-															</div>
-														<else/>
-															<neq name="v" value="">
+												<div class="timeline-content-left pull-left">
+													<div class="timeline-user-face">
+														<img src="{$val.face}" width="48" alt="">
+													</div>
+												</div>
+												<div class="timeline-content-right pull-left">
+													<p>{$val.log_content}</p>
+													<notempty name="val.picture">
+														<volist name="val.picture" id="v">
+															<notempty name="v">
 																<div class="pic-group pull-left">
-																	<img class="customer-complaint-img" src="__ROOT__/{$v.filepath}" height="120" alt="加载失败">
+																	<img class="customer-complaint-img" src="__ROOT__/{$v.filepath}" alt="加载失败">
 																	<span class="pic-info">{$v.filename}</span>
 																</div>
-															</neq>
-														</eq>
-													</volist>
-												</notempty>
+															</notempty>
+														</volist>
+													</notempty>
+													<div class="clearfix"></div>
+													<notempty name="val.attachment">
+														<volist name="val.attachment" id="v">
+															<eq name="v.filetype" value="other">
+																<div class="attachment-box">
+																	<div class="attachment-box-dom">
+																		<p class="file-name">
+																			<a href="__ROOT__/{$v.filepath}"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
+																		</p>
+																	</div>
+																</div>
+															<else/>
+																<neq name="v" value="">
+																	<div class="pic-group pull-left">
+																		<img class="customer-complaint-img" src="__ROOT__/{$v.filepath}" height="120" alt="加载失败">
+																		<span class="pic-info">{$v.filename}</span>
+																	</div>
+																</neq>
+															</eq>
+														</volist>
+													</notempty>
+													<div class="clearfix"></div>
+													<div class="timeline-other">{$val.recorder}<span class="timeline-divider">|</span>{$val.timestamp}</div>
+												</div>
 												<div class="clearfix"></div>
-												<div class="timeline-other">{$val.recorder}<span class="timeline-divider">|</span>{$val.timestamp}</div>
 											</td>
 										</tr>
 									</volist>

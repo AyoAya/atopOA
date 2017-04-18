@@ -8,7 +8,7 @@
 	<link href="/Public/Home/img/favicon.ico" rel="shortcut icon">
 
 	
-	<title>ATOP</title>
+    <title>ATOP</title>
 <!-- 网站标题 -->
 	<link rel="stylesheet" href="/Public/layui/css/layui.css">
 	<link rel="stylesheet" href="/Public/Home/css/bootstrap.min.css">
@@ -20,10 +20,7 @@
 	<link rel="stylesheet" href="/Public/Home/css/promotion_index.css">
 
 	
-	<link rel="stylesheet" href="/Public/Home/css/Huploadify.css">
-	<link rel="stylesheet" href="/Public/Home/css/bootstrap-datetimepicker.min.css">
-	<link rel="stylesheet" href="/Public/Home/css/bootstrap-theme.min.css">
-	<link rel="stylesheet" href="/Public/Home/css/oldcustomer/customer.css">
+
 <!-- 引入css文件 -->
 	<script src="/Public/Home/js/jquery.min.js"></script>
 	<script src="/Public/Home/js/bootstrap.min.js"></script>
@@ -32,12 +29,7 @@
 	<script src="/Public/Home/js/index.js"></script>
 
 	
-	<script src="/Public/Home/js/jquery.Huploadify.js"></script>
-	<script src="/Public/Home/js/jquery.validate.min.js"></script>
-	<script src="/Public/Home/js/jquery.form.js"></script>
-	<script src="/Public/Home/js/bootstrap-datetimepicker.js"></script>
-	<script src="/Public/Home/js/bootstrap-datetimepicker.zh-CN.js"></script>
-	<script src="/Public/Home/js/oldcustomer/customer.js"></script>
+
 <!-- 引入js文件 -->
 	<script src="/Public/Home/js/jquery.rotate.min.js"></script>
 	
@@ -128,10 +120,10 @@
 
 		<div id="header">
 			
-	<ol class="breadcrumb breadcrumb-edit">
-		<li><a href="/RMA">客诉处理</a></li>
-		<li class="active">客诉处理(旧版)</li>
-	</ol>
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="/customer">客诉处理</a></li>
+        <li class="active">客诉详情</li>
+    </ol>
 
 		</div>
 
@@ -139,149 +131,41 @@
 			<div class="container-fluid" id="content-box">
 				
 
-	<!-- 按钮栏 -->
-	<div class="btn-group pull-left btn-group-edit" role="group">
-		<button class="layui-btn layui-btn-primary" data-toggle="modal" data-target="#FilterModal">
-			<span class="glyphicon glyphicon-th-list"></span> 筛选
-		</button>
-		<!--<a href="/customerChart" class="layui-btn layui-btn-primary">
-			<span class="glyphicon glyphicon-signal"></span> 客诉统计
-		</a>-->
-	</div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>订单号</th>
+                <th>销售</th>
+                <th>类型</th>
+                <th>产品</th>
+                <th>产品经理</th>
+                <th>数量</th>
+                <th>客户</th>
+                <th>设备厂商</th>
+                <th>设备型号</th>
+                <th>要求交期</th>
+                <th>实际交期</th>
+                <th>状态</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if(is_array($sampledata)): $i = 0; $__LIST__ = $sampledata;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><tr>
+                    <td><?php echo ($value["totalorder"]); ?></td>
+                    <td><?php echo ($value["saleperson"]); ?></td>
+                    <td><?php echo ($value["type"]); ?></td>
+                    <td><?php echo ($value["product"]); ?></td>
+                    <td><?php echo ($value["manager"]); ?></td>
+                    <td><?php echo ($value["number"]); ?></td>
+                    <td><?php echo ($value["customer"]); ?></td>
+                    <td><?php echo ($value["brand"]); ?></td>
+                    <td><?php echo ($value["model"]); ?></td>
+                    <td><?php echo ($value["d_date"]); ?></td>
+                    <td><?php echo (date("Y-m-d",$value["a_date"])); ?></td>
+                    <td><?php echo ($value["state"]); ?></td>
+                </tr><?php endforeach; endif; else: echo "" ;endif; ?>
+        </tbody>
+    </table>
 
-	<!-- 搜索栏 -->
-	<div id="search" class="pull-right">
-		<input type="text" name="search" id="SearchText" class="layui-input" value="<?php echo ($filter["searchtext"]); ?>" placeholder="请输入搜索内容">
-		<span class="search-btn-box">
-			<button id="submitSearch" type="submit"><span class="glyphicon glyphicon-search"></span></button>
-		</span>
-	</div>
-
-
-	<div class="sr-only">
-		<form id="SearchHiddenForm" action="/Customer" method="get">
-			<input type="hidden" name="searchtext" value="" id="SearchHiddenText">
-		</form>
-	</div>
-
-	<div class="clearfix" style="margin-bottom: 25px;"></div>
-
-
-	<div class="customerContainer">
-		<?php if(is_array($customer)): $i = 0; $__LIST__ = $customer;if( count($__LIST__)==0 ) : echo "$empty" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><div class="media media-edit">
-				<a class="media-left media-top media-img" href="/Customer?salesperson=<?php echo ($value["salesperson"]); ?>">
-					<img class="userFace" src="<?php echo ($value["face"]); ?>" alt="..." width="50" height="70">
-				</a>
-				<div class="media-body media-body-edit">
-					<h4 class="media-heading media-heading-edit">
-						<?php switch($value["status"]): case "-1": ?><span class="label label-danger">无法处理</span><?php break;?>
-							<?php case "1": ?><span class="label label-primary">正在处理</span><?php break;?>
-							<?php case "0": ?><span class="label label-success">已经处理</span><?php break; endswitch;?>
-						<a href="/customerDetails/<?php echo ($value["id"]); ?>" class="title-text">
-							<?php if(!empty($value["customer"])): echo ($value["customer"]); ?> &bull;<?php endif; ?>
-							<?php if(!empty($value["pn"])): echo ($value["pn"]); ?> &bull;<?php endif; ?>
-							<?php if(!empty($value["vendor"])): echo ($value["vendor"]); ?> &bull;<?php endif; ?>
-							<?php echo ($value["error_message"]); ?>
-						</a>
-					</h4>
-					<p class="time-box"><?php if(!empty($value["nickname"])): echo ($value["nickname"]); else: echo ($value["salesperson"]); endif; ?> ｜ <?php echo ($value["cc_time"]); ?></p>
-					<div class="arrow-left-icon"></div>
-				</div>
-			</div><?php endforeach; endif; else: echo "$empty" ;endif; ?>
-	</div>
-	<!-- 数据分页 -->
-	<div class="pageContainer">
-		<ul class="pagination pagination-edit"><?php echo ($pageShow); ?></ul>
-	</div>
-
-	<!-- 数据筛选模态框 -->
-	<div class="modal fade" tabindex="-1" role="dialog" id="FilterModal" aria-labelledby="FilterModal" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h4 class="modal-title">筛选</h4>
-				</div>
-				<form class="form-inline" role="form" action="/Customer" method="get" id="FilterForm">
-				<div class="modal-body">
-					<div class="form-group form-group-margin">
-						<label for="">状　　态&nbsp;</label>
-						<div class="btn-group" id="statusList">
-							<button type="button" class="btn btn-default <?php if(($filter["status"]) == "1"): ?>active<?php endif; ?>" state="1">正在处理</button>
-							<button type="button" class="btn btn-default <?php if(($filter["status"]) == "-1"): ?>active<?php endif; ?>" state="-1">无法处理</button>
-							<button type="button" class="btn btn-default <?php if(($filter["status"]) == "0"): ?>active<?php endif; ?>" state="0">已经处理</button>
-							<button type="button" id="AllStatus" class="btn btn-default <?php if(!in_array(($filter["status"]), explode(',',"-1,0,1"))): ?>active<?php endif; ?>" state="2">所有状态</button>
-						</div>
-					</div>
-					<div class="form-group form-group-margin">
-						<label>客诉日期&nbsp;</label>
-						<div class="input-group">
-							<span class="input-group-addon">从</span>
-							<input id="" type="text" class="form-control startDate" readonly name="startdate" value="<?php echo ($filter["startdate"]); ?>" placeholder="">
-						</div>
-						<div class="input-group">
-							<span class="input-group-addon">至</span>
-							<input id="" type="text" class="form-control endDate" readonly name="enddate" value="<?php echo ($filter["enddate"]); ?>" placeholder="" id="">
-						</div>
-					</div>
-					<div class="form-group form-group-margin">
-						<label>订单编号&nbsp;</label>
-						<input type="text" class="form-control" name="order" value="<?php echo ($filter["sale_order"]); ?>" placeholder="" id="">　
-						<label>销售人员&nbsp;</label>
-						<input type="text" class="form-control" name="person" value="<?php echo ($filter["salesperson"]); ?>" placeholder="" id="">　
-					</div>
-					<div class="form-group form-group-margin">
-						<label>客　　户&nbsp;</label>
-						<input type="text" class="form-control" name="customer" value="<?php echo ($filter["customer"]); ?>" placeholder="" id="">　
-						<label>设备厂商&nbsp;</label>
-						<input type="text" class="form-control" name="vendor" value="<?php echo ($filter["vendor"]); ?>" placeholder="" id="">　
-					</div>
-				</div>
-				<div class="modal-footer">
-					<input type="hidden" name="status" value="<?php if(!in_array(($filter["status"]), explode(',',"-1,0,1"))): ?>2<?php else: echo ($filter["status"]); endif; ?>" id="filterStatus">
-					<a href="/Customer" class="btn btn-default">清空条件</a>
-					<input type="submit" class="btn btn-primary" value="确定">
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	
-	<!-- 回到顶部按钮 -->
-	<div id="backtop">
-		<span class="">回到<br/>顶部</span>
-	</div>
-
-	<script>
-		$('.startDate').datetimepicker({
-			language:  'zh-CN',
-			format:'yyyy-mm-dd',
-			weekStart: 1,
-			todayBtn:  1,
-			autoclose: 1,
-			todayHighlight: 1,
-			startDate : '2014-3-21',
-			endDate : new Date(),
-			startView: 2,
-			minView: 2,
-			forceParse: 0
-		});
-		$('.endDate').datetimepicker({
-			language:  'zh-CN',
-			format:'yyyy-mm-dd',
-			weekStart: 1,
-			todayBtn:  1,
-			autoclose: 1,
-			todayHighlight: 1,
-			startDate : '2014-3-21',
-			endDate : new Date(),
-			startView: 2,
-			minView: 2,
-			forceParse: 0
-		});
-	</script>
 
 			</div>
 		</div>
@@ -324,8 +208,6 @@
 			</div>
 		</div>
 	</div>
-	
-	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
 	<script>
 
@@ -336,6 +218,22 @@
 			alert(str);
 			checkIE();
 		}
+
+		/*if (document.all && document.addEventListener && !window.atob) {
+			checkIE();
+		}
+
+		if (document.all && document.querySelector && !document.addEventListener) {
+			checkIE();
+		}
+
+		if (document.all && window.XMLHttpRequest && !document.querySelector) {
+			checkIE();
+		}
+
+		if (document.all && document.compatMode && !window.XMLHttpRequest) {
+			checkIE();
+		}*/
 
 		function checkIE(){
 			var body = document.getElementsByName('body');

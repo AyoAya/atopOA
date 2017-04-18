@@ -136,7 +136,7 @@ label {
 }
 #user-list li.active {
 	border: solid 1px #2e8ded;
-	background: url(../img/selected.png) right bottom no-repeat;
+	background: url(../../img/selected.png) right bottom no-repeat;
 }
 
 

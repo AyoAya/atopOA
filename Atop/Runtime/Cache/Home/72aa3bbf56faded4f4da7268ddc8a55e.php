@@ -23,7 +23,7 @@
 	<link rel="stylesheet" href="/Public/Home/css/Huploadify.css">
 	<link rel="stylesheet" href="/Public/Home/css/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" href="/Public/Home/css/bootstrap-theme.min.css">
-	<link rel="stylesheet" href="/Public/Home/css/customer.css">
+	<link rel="stylesheet" href="/Public/Home/css/rma/customer.css">
 <!-- 引入css文件 -->
 	<script src="/Public/Home/js/jquery.min.js"></script>
 	<script src="/Public/Home/js/bootstrap.min.js"></script>
@@ -38,7 +38,7 @@
 	<script src="/Public/Home/js/jquery.form.js"></script>
 	<script src="/Public/Home/js/bootstrap-datetimepicker.js"></script>
 	<script src="/Public/Home/js/bootstrap-datetimepicker.zh-CN.js"></script>
-	<script src="/Public/Home/js/customer.js"></script>
+	<script src="/Public/Home/js/rma/customer.js"></script>
 <!-- 引入js文件 -->
 	<script src="/Public/Home/js/jquery.rotate.min.js"></script>
 	
@@ -144,26 +144,13 @@
 	<div class="customerContainer">
 
 
-		<!--<div class="input-group">
-			<input type="text" name="search" id="SearchText" class="form-control" value="<?php echo ($filter["searchtext"]); ?>" placeholder="请输入搜索内容">
-			<span class="input-group-btn">
-			<button class="btn btn-primary" id="submitSearch" type="submit"><span class="glyphicon glyphicon-search"></span></button>
-		</span>
-		</div>
-		<div class="sr-only">
-			<form id="SearchHiddenForm" action="/RMA" method="get">
-				<input type="hidden" name="searchtext" value="" id="SearchHiddenText">
-			</form>
-		</div>-->
-
-
 		<div class="pull-left">
-			<a class="layui-btn layui-btn-primary" data-toggle="modal" data-target="#FilterModal">
+			<a class="layui-btn layui-btn-primary">
 				<span class="glyphicon glyphicon-th-list"></span> 筛选
 			</a>
-			<a href="/RMA/chart" class="layui-btn layui-btn-primary">
+			<!--<a href="/RMA/chart" class="layui-btn layui-btn-primary">
 				<span class="glyphicon glyphicon-signal"></span> 客诉统计
-			</a>
+			</a>-->
 			<a href="/customer" class="layui-btn layui-btn-primary">
 				<span class="icon-comments-alt"></span> 旧版客诉
 			</a>
@@ -175,13 +162,87 @@
 		<div class="pull-right">
 			<form class="layui-form">
 				<div class="layui-inline rma-serach">
-					<input type="text" class="layui-input" lay-verify="required" placeholder="搜索">
+					<input type="text" name="searchtext" value="<?php echo ($_GET['searchtext']); ?>" class="layui-input" placeholder="搜索">
 					<button lay-submit lay-filter="search" class="submit-serach-icon"><i class="layui-icon">&#xe615;</i></button>
 				</div>
 			</form>
 		</div>
 
 		<div class="clearfix" style="margin-bottom: 25px;"></div>
+
+
+		<!-- 筛选 -->
+		<div id="rma-filter">
+			<form class="layui-form">
+				<div class="layui-form-item">
+					<label class="layui-form-label">与我相关</label>
+					<div class="layui-input-inline">
+						<input type="radio" name="withme" title="是">
+						<input type="radio" name="withme" title="否" checked>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">当前进度</label>
+						<div class="layui-input-inline">
+							<select name="step_name">
+								<option value="">选择指定步骤</option>
+								<option value="1">步骤1</option>
+								<option value="2">步骤2</option>
+								<option value="3">步骤3</option>
+								<option value="4">步骤4</option>
+								<option value="5">步骤5</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
+						<label class="layui-form-label">客诉日期</label>
+						<div class="layui-input-inline" style="width: 150px;">
+							<input type="text" name="start_date" placeholder="起始时间" autocomplete="off" class="layui-input">
+						</div>
+						<div class="layui-form-mid">-</div>
+						<div class="layui-input-inline" style="width: 150px;">
+							<input type="text" name="end_date" placeholder="结束时间" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item short-input-box">
+					<div class="layui-inline">
+						<label class="layui-form-label">订单编号</label>
+						<div class="layui-input-inline">
+							<input type="text" name="order" class="layui-input" placeholder="订单编号">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">销售人员</label>
+						<div class="layui-input-inline">
+							<input type="text" name="saleperson" class="layui-input" placeholder="销售人员">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">客户名称</label>
+						<div class="layui-input-inline">
+							<input type="text" name="customer" class="layui-input" placeholder="客户名称">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">设备厂商</label>
+						<div class="layui-input-inline">
+							<input type="text" name="vendor" class="layui-input" placeholder="设备厂商">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item" style="margin-bottom: 0">
+					<div class="layui-input-block" style="margin-left: 80px;">
+						<button class="layui-btn">筛选</button>
+						<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+					</div>
+				</div>
+			</form>
+			<div class="arrow-icon"></div>
+		</div>
 
 
 		<table class="customer-table">
@@ -199,7 +260,7 @@
 									<?php else: ?>
 										<?php if(($value["rma_state"]) == "N"): ?><span class="tag-primary"><?php echo ($value["step"]["step_name"]); ?></span>
 										<?php else: ?>
-											<span class="tag-success">客诉关闭</span><?php endif; endif; ?>
+											<span class="tag-success">已关闭</span><?php endif; endif; ?>
 									<?php if(!empty($value["customer"])): ?><span class="tag-hollow">客户：<?php echo ($value["customer"]); ?></span><?php endif; ?>
 									<?php if(!empty($value["pn"])): ?><span class="tag-hollow">产品：<?php echo ($value["pn"]); ?></span><?php endif; ?>
 									<?php if(!empty($value["vendor"])): ?><span class="tag-hollow">品牌：<?php echo ($value["vendor"]); ?></span><?php endif; ?>
@@ -213,95 +274,17 @@
 			</tbody>
 		</table>
 
-
-
-
-		<!--<?php if(is_array($customer)): $i = 0; $__LIST__ = $customer;if( count($__LIST__)==0 ) : echo "$empty" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><div class="media media-edit">
-				<a class="media-left media-top media-img" href="/RMA?salesperson=<?php echo ($value["salesperson"]); ?>">
-					<img class="userFace" src="<?php echo ($value["face"]); ?>" alt="..." width="50" height="70">
-				</a>
-				<div class="media-body media-body-edit">
-					<h4 class="media-heading media-heading-edit">
-						<?php switch($value["status"]): case "-1": ?><span class="label label-danger">无法处理</span><?php break;?>
-							<?php case "1": ?><span class="label label-primary">正在处理</span><?php break;?>
-							<?php case "0": ?><span class="label label-success">已经处理</span><?php break; endswitch;?>
-						<a href="/RMADetails/<?php echo ($value["id"]); ?>" class="title-text">
-							<?php if(!empty($value["customer"])): echo ($value["customer"]); ?> &bull;<?php endif; ?>
-							<?php if(!empty($value["pn"])): echo ($value["pn"]); ?> &bull;<?php endif; ?>
-							<?php if(!empty($value["vendor"])): echo ($value["vendor"]); ?> &bull;<?php endif; ?>
-							<?php echo ($value["error_message"]); ?>
-						</a>
-					</h4>
-					<p class="time-box"><?php if(!empty($value["nickname"])): echo ($value["nickname"]); else: echo ($value["salesperson"]); endif; ?> ｜ <?php echo ($value["cc_time"]); ?></p>
-					<div class="arrow-left-icon"></div>
-				</div>
-			</div><?php endforeach; endif; else: echo "$empty" ;endif; ?>-->
-
 	</div>
 	<!-- 数据分页 -->
 	<div class="pageContainer">
 		<ul class="pagination pagination-edit"><?php echo ($pageShow); ?></ul>
 	</div>
 
-	<!-- 数据筛选模态框 -->
-	<div class="modal fade" tabindex="-1" role="dialog" id="FilterModal" aria-labelledby="FilterModal" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h4 class="modal-title">筛选</h4>
-				</div>
-				<form class="form-inline" role="form" action="/RMA" method="get" id="FilterForm">
-				<div class="modal-body">
-					<div class="form-group form-group-margin">
-						<label for="">状　　态&nbsp;</label>
-						<div class="btn-group" id="statusList">
-							<button type="button" class="btn btn-default <?php if(($filter["status"]) == "1"): ?>active<?php endif; ?>" state="1">正在处理</button>
-							<button type="button" class="btn btn-default <?php if(($filter["status"]) == "-1"): ?>active<?php endif; ?>" state="-1">无法处理</button>
-							<button type="button" class="btn btn-default <?php if(($filter["status"]) == "0"): ?>active<?php endif; ?>" state="0">已经处理</button>
-							<button type="button" id="AllStatus" class="btn btn-default <?php if(!in_array(($filter["status"]), explode(',',"-1,0,1"))): ?>active<?php endif; ?>" state="2">所有状态</button>
-						</div>
-					</div>
-					<div class="form-group form-group-margin">
-						<label>客诉日期&nbsp;</label>
-						<div class="input-group">
-							<span class="input-group-addon">从</span>
-							<input id="" type="text" class="form-control startDate" readonly name="startdate" value="<?php echo ($filter["startdate"]); ?>" placeholder="">
-						</div>
-						<div class="input-group">
-							<span class="input-group-addon">至</span>
-							<input id="" type="text" class="form-control endDate" readonly name="enddate" value="<?php echo ($filter["enddate"]); ?>" placeholder="" id="">
-						</div>
-					</div>
-					<div class="form-group form-group-margin">
-						<label>订单编号&nbsp;</label>
-						<input type="text" class="form-control" name="order" value="<?php echo ($filter["sale_order"]); ?>" placeholder="" id="">　
-						<label>销售人员&nbsp;</label>
-						<input type="text" class="form-control" name="person" value="<?php echo ($filter["salesperson"]); ?>" placeholder="" id="">　
-					</div>
-					<div class="form-group form-group-margin">
-						<label>客　　户&nbsp;</label>
-						<input type="text" class="form-control" name="customer" value="<?php echo ($filter["customer"]); ?>" placeholder="" id="">　
-						<label>设备厂商&nbsp;</label>
-						<input type="text" class="form-control" name="vendor" value="<?php echo ($filter["vendor"]); ?>" placeholder="" id="">　
-					</div>
-				</div>
-				<div class="modal-footer">
-					<input type="hidden" name="status" value="<?php if(!in_array(($filter["status"]), explode(',',"-1,0,1"))): ?>2<?php else: echo ($filter["status"]); endif; ?>" id="filterStatus">
-					<a href="/RMA" class="btn btn-default">清空条件</a>
-					<input type="submit" class="btn btn-primary" value="确定">
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	
-	<!-- 回到顶部按钮 -->
-	<div id="backtop">
-		<span class="">回到<br/>顶部</span>
-	</div>
+
+
+
+
+
 
 	<script>
 		$('.startDate').datetimepicker({
@@ -373,6 +356,8 @@
 			</div>
 		</div>
 	</div>
+	
+	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
 	<script>
 
@@ -383,22 +368,6 @@
 			alert(str);
 			checkIE();
 		}
-
-		/*if (document.all && document.addEventListener && !window.atob) {
-			checkIE();
-		}
-
-		if (document.all && document.querySelector && !document.addEventListener) {
-			checkIE();
-		}
-
-		if (document.all && window.XMLHttpRequest && !document.querySelector) {
-			checkIE();
-		}
-
-		if (document.all && document.compatMode && !window.XMLHttpRequest) {
-			checkIE();
-		}*/
 
 		function checkIE(){
 			var body = document.getElementsByName('body');

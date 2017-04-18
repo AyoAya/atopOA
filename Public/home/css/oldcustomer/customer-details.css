@@ -272,3 +272,55 @@ code {
 	position: relative;
 	top: -5px;
 }
+
+
+.panel-body {
+	word-break:break-all; /*支持IE，chrome，FF不支持*/
+	word-wrap:break-word;/*支持IE，chrome，FF*/
+}
+
+
+
+/*** 转为新版客诉 ***/
+#changeNewVersion .warning-prompt {
+	color: #888;
+	font-size: 12px;
+}
+#changeNewVersion .warning-prompt i {
+	margin-right: 10px;
+	font-size: 14px;
+	color: #f0ad4e;
+}
+#changeNewVersion .layui-form-item {
+	margin-top: 15px;
+	margin-bottom: 0;
+}
+#changeNewVersion .layui-form-label {
+	width: auto;
+	padding-left: 0;
+}
+#changeNewVersion .layui-input-block {
+	margin-left: 45px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

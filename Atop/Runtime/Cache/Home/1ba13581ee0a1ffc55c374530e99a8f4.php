@@ -223,6 +223,8 @@
 			</div>
 		</div>
 	</div>
+	
+	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
 	<script>
 
@@ -233,22 +235,6 @@
 			alert(str);
 			checkIE();
 		}
-
-		/*if (document.all && document.addEventListener && !window.atob) {
-			checkIE();
-		}
-
-		if (document.all && document.querySelector && !document.addEventListener) {
-			checkIE();
-		}
-
-		if (document.all && window.XMLHttpRequest && !document.querySelector) {
-			checkIE();
-		}
-
-		if (document.all && document.compatMode && !window.XMLHttpRequest) {
-			checkIE();
-		}*/
 
 		function checkIE(){
 			var body = document.getElementsByName('body');

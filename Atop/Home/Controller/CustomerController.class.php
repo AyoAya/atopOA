@@ -1,6 +1,7 @@
 <?php
 namespace Home\Controller;
 
+use Think\Model;
 use Think\Page;
 class CustomerController extends AuthController{
     private $str = '';
@@ -9,14 +10,15 @@ class CustomerController extends AuthController{
     //客诉处理
     public function index(){
         $customer = M('Oacustomercomplaint');
-        //已经处理的条数
+        /*//已经处理的条数
         $customerTotal['y'] = $customer->where('status=0')->count();
         //无法处理的条数
         $customerTotal['n'] = $customer->where('status=-1')->count();
         //处理中的条数
         $customerTotal['d'] = $customer->where('status=1')->count();
         $this->assign('customerTotal',$customerTotal);
-        $this->assign('customerAllTotal',$customer->count());
+
+        $this->assign('customerAllTotal',$customer->count());*/
 
         if( I('get.status')!='' && I('get.status')!=2 ){
             $condition['status'] = I('get.status');
@@ -45,6 +47,7 @@ class CustomerController extends AuthController{
         if( !empty(I('get.salesperson')) ){
             $condition['salesperson'] = I('get.salesperson');
         }
+        $condition['version'] = 'old';
         $user = M('User');
         $levelReport = $user->field('level,report,department')->find(session('user')['id']);
         $str = '';
@@ -271,26 +274,29 @@ class CustomerController extends AuthController{
             if(!empty($value['attachment']) && $value['attachment']!='NULL'){
                 $json = json_decode($value['attachment']);
                 if(!is_null($json)){
-                    $value['attachment'] = json_decode($value['attachment']);
-                    //遍历附件列表检查附件后缀
-                    foreach($value['attachment'] as $ke=>&$val){
-                        /*if(file_exists(checkZH_CN($val))){
+                    # 针对不同的附件存入方式进行不同的操作
+                    if( count($json) == count($json,1) ){   //一维数组
+                        $value['attachment'] = object_to_array($json);
+                        //遍历附件列表检查附件后缀
+                        foreach($value['attachment'] as $ke=>&$val){
+                            $mimetype = mime_content_type($val['SavePath']);    //获取文件类型
                             //获取文件扩展名
-                            $new_filetype = getExtension($val);
-                            //如果数据为image则为图像显示，否则一律为文件处理(下载)
-                            if($new_filetype=='jpeg' || $new_filetype=='jpg' || $new_filetype=='gif' || $new_filetype=='png' ||  $new_filetype=='bmp'){
-                                $val = array('filename'=>getBasename($val),'filetype'=>'image','filepath'=>substr($val,1));
+                            if( strstr($mimetype, 'image') ){
+                                $val = array('filename'=>$val['SourceName'],'filetype'=>'image','filepath'=>$val['SavePath']);
                             }else{
-                                $val = array('filename'=>getBasename($val),'filetype'=>'other','filepath'=>substr($val,1));
+                                $val = array('filename'=>$val['SourceName'],'filetype'=>'other','filepath'=>$val['SavePath']);
                             }
-                        }*/
-                        //获取文件扩展名
-                        $new_filetype = getExtension($val);
-                        //如果数据为image则为图像显示，否则一律为文件处理(下载)
-                        if($new_filetype=='jpeg' || $new_filetype=='jpg' || $new_filetype=='gif' || $new_filetype=='png' ||  $new_filetype=='bmp'){
-                            $val = array('filename'=>getBasename($val),'filetype'=>'image','filepath'=>substr($val,1));
-                        }else{
-                            $val = array('filename'=>getBasename($val),'filetype'=>'other','filepath'=>substr($val,1));
+                        }
+                    }else{  //二维数组
+                        $value['attachment'] = $json;
+                        foreach($value['attachment'] as $ke=>&$val){
+                            $mimetype = mime_content_type($val['SavePath']);    //获取文件类型
+                            //获取文件扩展名
+                            if( strstr($mimetype, 'image') ){
+                                $val = array('filename'=>$val['SourceName'],'filetype'=>'image','filepath'=>$val['SavePath']);
+                            }else{
+                                $val = array('filename'=>$val['SourceName'],'filetype'=>'other','filepath'=>$val['SavePath']);
+                            }
                         }
                     }
                 }else{
@@ -349,13 +355,91 @@ class CustomerController extends AuthController{
             //将数据进行反编译，实现br标签换行
             $value['log_content']= htmlspecialchars_decode($value['log_content']);
         }
-        //print_r($resultData);
+        # 如果当前登录的用户是该条客诉的销售，那么将FAE工程师列表注入模板
+        if( session('user')['account'] == $resultData['salesperson'] ){
+            $FAE_person_list = $user->field('id,nickname')->where( ['position'=>12,'state'=>1] )->select(); //筛选所有职位为FAE工程师并状态为正常的人员集
+            $this->assign('FAE_person_list',$FAE_person_list);
+        }
         $this->assign('details',$resultData);
         $sessionArr['session_name'] = session_name();
         $sessionArr['session_id'] = session_id();
         $this->assign('sessionArr',$sessionArr);
         //print_r($resultData);
         $this->display();
+    }
+
+    # 转为新版客诉
+    public function changeNewVersion(){
+        if( IS_POST ){
+            $post = I('post.');
+
+            $oacustomercomplaint_model = M('Oacustomercomplaint');
+            $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
+            $oacustomeroperation_model = M('Oacustomeroperation');
+
+            $model = new Model();   //准备事务开启模型
+            $model->startTrans();   //开启事务
+
+            # 转为新版客诉1：将主表上的version字段值改为new
+            $customercomplaint_save_id = $oacustomercomplaint_model->save( ['id'=>$post['main_assoc'],'version'=>'new'] );
+
+            # 转为新版客诉2：将从表上的version字段值改为new并且内容等于新客诉的改为步骤1，不为新客诉的改为2
+            $customercomplaintlog_save_id_version = $oacustomercomplaintlog_model->where( 'cc_id='.$post['main_assoc'] )->save( ['version'=>'new'] );
+            $customercomplaintlog_save_id_step = $oacustomercomplaintlog_model->where( 'cc_id='.$post['main_assoc'].' AND log_content<>"新客诉。"' )->save( ['step'=>2] );
+
+            # 当由旧版客诉转为新版客诉是默认插入一条数据
+            $log_data['cc_id'] = $post['main_assoc'];
+            $log_data['log_date'] = date('Y-m-d');
+            $log_data['log_content'] = '['.session('user')['nickname'].'] 将该客诉由旧版转入';
+            $log_data['recorder'] = session('user')['account'];
+            $log_data['timestamp'] = date('Y-m-d H:i:s');
+            $log_data['uid'] = session('user')['id'];
+            $log_data['step'] = 2;
+            $log_data['version'] = 'new';
+            $customercomplaintlog_add_id = $oacustomercomplaintlog_model->add($log_data);
+
+            # 转为新版客诉3：将步骤信息记录到操作表
+                # 1) 记录销售步骤操作人
+            $operation_data['main_assoc'] = $post['main_assoc'];
+            $operation_data['step_assoc'] = 1;
+            $operation_data['operation_person'] = session('user')['id'];
+            $operation_add_id_sale = $oacustomeroperation_model->add($operation_data);
+                # 1) 记录FAE步骤操作人
+            $operation_data['step_assoc'] = 2;
+            $operation_data['operation_person'] = $post['operation_person'];
+            $operation_add_id_fae = $oacustomeroperation_model->add($operation_data);
+
+            # 当每个环节都成功之后再返回最终结果
+            if( $customercomplaint_save_id !== false && $customercomplaintlog_save_id_version !== false && $customercomplaintlog_save_id_step !== false && $customercomplaintlog_add_id && $operation_add_id_sale && $operation_add_id_fae ){
+
+                # 当由旧版客诉转为新版客诉时，给fae工程师推送邮件
+                $id = $post['main_assoc'];
+                $user_nickname = session('user')['nickname'];
+                $user_data = M('User')->field('nickname dear,email')->find( $post['operation_person'] );
+                extract($user_data);
+                $http_host = $_SERVER['HTTP_HOST'];
+                $step_data = M('Oacustomerstep')->field('id step_id,step_name')->find(2);
+                extract($step_data);
+                $subject = '客诉步骤更新 [ ID:'.$id.' ]';
+                $body = <<<HTML
+<style>
+p {
+    line-height: 25px;
+}
+</style>
+<p>Dear $dear,</p>
+<p>[$user_nickname] 将客诉步骤推送到：Step$step_id - $step_name</p>
+<p>详情请点击链接：<a target="_blank" href="http://$http_host/customerDetails/$id">http://$http_host/customerDetails/$id</a></p>
+HTML;
+                $result = send_Email('vinty_email@163.com','',$subject,$body);
+                if( $result != 1 ){ //如果邮件发送失败则返回错误信息
+                    $this->ajaxReturn( ['falg'=>0,'msg'=>$result] );exit;
+                }
+                $this->ajaxReturn( ['flag'=>1,'msg'=>'操作成功','id'=>$post['main_assoc']] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0,'msg'=>'操作失败'] );
+            }
+        }
     }
     
     //文件上传(客诉处理/客诉详情/添加客诉)

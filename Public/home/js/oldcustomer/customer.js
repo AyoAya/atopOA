@@ -6,6 +6,44 @@ $(function(){
 
 	//alert($('body').width());
 
+
+	//转为新版客诉
+	layui.use(['form','layer'], function(){
+		var form = layui.form(),
+			layer = layui.layer;
+
+		form.on('submit(changeNewVersion)', function(data){
+			$.ajax({
+				url : ThinkPHP['AJAX'] + '/Customer/changeNewVersion',
+				type : 'POST',
+				data : data.field,
+				dataType : 'json',
+				beforeSend : function(){
+					layer.load(2, {shade : [0.7,'#fff']});
+				},
+				success : function(response){
+					if( response.flag == 1 ){
+						layer.msg(response.msg,{icon:1,time:2000});
+						setTimeout(function(){
+							location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/RMA/details/id/' + response.id;
+						},2000);
+					}else{
+						layer.closeAll();
+						layer.msg(response.msg,{icon:2,time:2000});
+					}
+				}
+			});
+			return false;
+		});
+
+	});
+
+
+
+
+
+
+
 	//多余的文本转换成省略号
 	$('.media-heading-edit').css({'overflow':'hidden','white-space':'nowrap','text-overflow':'ellipsis','width':$(window).width()-385});
 
