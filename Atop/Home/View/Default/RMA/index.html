@@ -36,8 +36,8 @@
 
 
 		<div class="pull-left">
-			<a class="layui-btn layui-btn-primary">
-				<span class="glyphicon glyphicon-th-list"></span> 筛选
+			<a class="layui-btn layui-btn-primary filter-btn">
+				<span class="glyphicon glyphicon-th-list"></span> 筛选 <if condition="$_GET['withme'] or $_GET['step'] or $_GET['start_date'] or $_GET['end_date'] or $_GET['order'] or $_GET['salesperson'] or $_GET['customer'] or $_GET['vendor']"><i class="icon-caret-up"></i><else/><i class="icon-caret-down"></i></if>
 			</a>
 			<!--<a href="__ROOT__/RMA/chart" class="layui-btn layui-btn-primary">
 				<span class="glyphicon glyphicon-signal"></span> 客诉统计
@@ -55,7 +55,7 @@
 		<div class="pull-right">
 			<form class="layui-form">
 				<div class="layui-inline rma-serach">
-					<input type="text" name="searchtext" value="{$Think.get.searchtext}" class="layui-input" placeholder="搜索">
+					<input type="text" name="search" value="{$Think.get.search}" class="layui-input" placeholder="搜索">
 					<button lay-submit lay-filter="search" class="submit-serach-icon"><i class="layui-icon">&#xe615;</i></button>
 				</div>
 			</form>
@@ -65,20 +65,19 @@
 
 
 		<!-- 筛选 -->
-		<div id="rma-filter">
+		<div id="rma-filter" <if condition="$_GET['withme'] or $_GET['step'] or $_GET['start_date'] or $_GET['end_date'] or $_GET['order'] or $_GET['salesperson'] or $_GET['customer'] or $_GET['vendor']">style="display:block;"<else/>style="display:none;"</if>>
 			<form class="layui-form">
 				<div class="layui-form-item">
 					<label class="layui-form-label">与我相关</label>
 					<div class="layui-input-inline">
-						<input type="radio" name="withme" title="是">
-						<input type="radio" name="withme" title="否" checked>
+						<input type="checkbox" name="withme" value="on" title="我参与的或属于我的" <present name="Think.get.withme"><eq name="Think.get.withme" value="on">checked</eq></present>>
 					</div>
 				</div>
 				<div class="layui-form-item">
 					<div class="layui-inline">
 						<label class="layui-form-label">当前进度</label>
 						<div class="layui-input-inline">
-							<select name="step_name">
+							<select name="step">
 								<option value="">选择指定步骤</option>
 								<option value="1">步骤1</option>
 								<option value="2">步骤2</option>
@@ -93,11 +92,11 @@
 					<div class="layui-inline">
 						<label class="layui-form-label">客诉日期</label>
 						<div class="layui-input-inline" style="width: 150px;">
-							<input type="text" name="start_date" placeholder="起始时间" autocomplete="off" class="layui-input">
+							<input type="text" name="start_date" placeholder="起始时间" autocomplete="off" class="layui-input startDate" value="{$Think.get.start_date}">
 						</div>
 						<div class="layui-form-mid">-</div>
 						<div class="layui-input-inline" style="width: 150px;">
-							<input type="text" name="end_date" placeholder="结束时间" autocomplete="off" class="layui-input">
+							<input type="text" name="end_date" placeholder="结束时间" autocomplete="off" class="layui-input endDate" value="{$Think.get.end_date}">
 						</div>
 					</div>
 				</div>
@@ -105,25 +104,25 @@
 					<div class="layui-inline">
 						<label class="layui-form-label">订单编号</label>
 						<div class="layui-input-inline">
-							<input type="text" name="order" class="layui-input" placeholder="订单编号">
+							<input type="text" name="order" class="layui-input" placeholder="订单编号" value="{$Think.get.order}">
 						</div>
 					</div>
 					<div class="layui-inline">
 						<label class="layui-form-label">销售人员</label>
 						<div class="layui-input-inline">
-							<input type="text" name="saleperson" class="layui-input" placeholder="销售人员">
+							<input type="text" name="salesperson" class="layui-input" placeholder="销售人员" value="{$Think.get.salesperson}">
 						</div>
 					</div>
 					<div class="layui-inline">
 						<label class="layui-form-label">客户名称</label>
 						<div class="layui-input-inline">
-							<input type="text" name="customer" class="layui-input" placeholder="客户名称">
+							<input type="text" name="customer" class="layui-input" placeholder="客户名称" value="{$Think.get.customer}">
 						</div>
 					</div>
 					<div class="layui-inline">
 						<label class="layui-form-label">设备厂商</label>
 						<div class="layui-input-inline">
-							<input type="text" name="vendor" class="layui-input" placeholder="设备厂商">
+							<input type="text" name="vendor" class="layui-input" placeholder="设备厂商" value="{$Think.get.vendor}">
 						</div>
 					</div>
 				</div>
@@ -131,6 +130,9 @@
 					<div class="layui-input-block" style="margin-left: 80px;">
 						<button class="layui-btn">筛选</button>
 						<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+						<if condition="$_GET['withme'] or $_GET['step'] or $_GET['start_date'] or $_GET['end_date'] or $_GET['order'] or $_GET['salesperson'] or $_GET['customer'] or $_GET['vendor']">
+							<a href="__ROOT__/RMA" class="layui-btn layui-btn-danger">清除条件</a>
+						</if>
 					</div>
 				</div>
 			</form>
@@ -214,7 +216,10 @@
 			startView: 2,
 			minView: 2,
 			forceParse: 0
-		});
+		}).on('change',function(ev){
+			var startDate = $('.startDate').val();
+			$(".endDate").datetimepicker('setStartDate',startDate);
+		});;
 		$('.endDate').datetimepicker({
 			language:  'zh-CN',
 			format:'yyyy-mm-dd',
@@ -227,7 +232,10 @@
 			startView: 2,
 			minView: 2,
 			forceParse: 0
-		});
+		}).on('change',function(ev){
+			var endDate = $(".endDate").val();
+			$(".startDate").datetimepicker('setEndDate',endDate);
+		});;
 	</script>
 </block>
 

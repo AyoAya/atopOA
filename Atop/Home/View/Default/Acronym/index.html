@@ -17,11 +17,6 @@
 	<ol class="breadcrumb breadcrumb-edit">
 		<li class="active">缩略词</li>
 	</ol>
-	<div class="btn-group pull-right btn-group-edit" role="group">
-		<a href="__ROOT__/Acronym/add" class="btn btn-primary">
-			<span class="glyphicon glyphicon-plus"></span> 添加缩略词
-		</a>
-	</div>
 </block>
 <!-- 【正文区域】 -->
 <block name="content">
@@ -31,6 +26,17 @@
 		<p>Function is developing</p>
 		<p>Comming Soon.</p>
 	</div>-->
+
+
+	<div class="pull-left">
+		<a href="__ROOT__/Acronym/add" class="layui-btn layui-btn-primary">
+			<span class="glyphicon glyphicon-plus"></span> 添加缩略词
+		</a>
+	</div>
+
+	<div class="clearfix" style="margin-bottom: 25px;"></div>
+
+
 	<ul class="letter">
 		<span>分类：</span>
 		<volist name="acronym" id="value">

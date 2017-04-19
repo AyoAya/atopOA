@@ -8,44 +8,50 @@ class RMAController extends AuthController{
     private $filter = array();
     //客诉处理
     public function index(){
-        $customer = M('Oacustomercomplaint');
-        /*//已经处理的条数
-        $customerTotal['y'] = $customer->where('status=0')->count();
-        //无法处理的条数
-        $customerTotal['n'] = $customer->where('status=-1')->count();
-        //处理中的条数
-        $customerTotal['d'] = $customer->where('status=1')->count();
-        $this->assign('customerTotal',$customerTotal);
-        $this->assign('customerAllTotal',$customer->count());*/
 
-        if( I('get.status')!='' && I('get.status')!=2 ){
-            $condition['status'] = I('get.status');
-        }else{
-            $condition['status'] = array('in','-1,0,1');
+        $customer = M('Oacustomercomplaint');
+
+        $where = 'a.id=b.main_assoc AND b.step_assoc=c.id ';
+
+        if( !empty(I('get.withme')) ){
+            $where .= 'AND b.operation_person LIKE "%'.session('user')['id'].'%" ';  //与我相关，查询所有自己参与的客诉
         }
-        //时间段区间查询
-        if( !empty(I('get.startdate')) && !empty(I('get.enddate')) ){
-            $condition['cc_time'] = array(array('elt',I('get.enddate')),array('egt',I('get.startdate')),'AND');
+        if( !empty(I('get.step')) ){
+            if( is_int(I('get.step')) ){  //如果提交的进度值为数字类型则表明筛选该步骤id的数据，我、如果不是则为已关闭的类型
+                $where .= 'AND b.step_assoc='.I('get.step').' ';    //查询所有等于该步骤的客诉
+            }else{
+                if( I('get.step') == 'close' ){
+                    $where .= 'AND a.rma_state="N" ';    //查询所有已关闭的客诉
+                }
+            }
+        }
+        if( !empty(I('get.start_date')) && !empty(I('get.end_date')) ){
+            $where .= 'AND a.cc_time>="'.I('get.start_date').'" AND a.cc_time<="'.I('get.end_date').'" ';
+        }elseif( !empty(I('get.start_date')) && empty(I('get.end_date')) ){
+            $where .= 'AND a.cc_time>="'.I('get.start_date').'" ';
+        }elseif( empty(I('get.start_date')) && !empty(I('get.end_date')) ){
+            $where .= 'AND a.cc_time<="'.I('get.end_date').'" ';
         }
         if( !empty(I('get.order')) ){
-            $condition['sale_order'] = I('get.order');
-        }
-        if( !empty(I('get.person')) ){
-            $condition['salesperson'] = I('get.person');
-        }
-        if( !empty(I('get.customer')) ){
-            $condition['customer'] = I('get.customer');
-        }
-        if( !empty(I('get.vendor')) ){
-            $condition['vendor'] = I('get.vendor');
-        }
-        if( !empty(I('get.searchtext')) ){
-            $condition['customer|pn|vendor|error_message'] = array('like','%'.I('get.searchtext').'%');
+            $where .= 'AND a.sale_order='.I('get.order').' ';
         }
         if( !empty(I('get.salesperson')) ){
-            $condition['salesperson'] = I('get.salesperson');
+            $where .= 'AND a.salesperson="'.I('get.salesperson').'" ';
         }
-        $condition['version'] = 'new';
+        if( !empty(I('get.customer')) ){
+            $where .= 'AND a.customer="'.I('get.customer').'" ';
+        }
+        if( !empty(I('get.vendor')) ){
+            $where .= 'AND a.vendor="'.I('get.vendor').'" ';
+        }
+        if( !empty(I('get.search')) ){
+            $where = 'a.id=b.main_assoc AND b.step_assoc=c.id ';
+            $where .= 'AND CONCAT(a.salesperson,a.customer,a.sale_order,a.vendor,a.model,a.error_message) LIKE "%'.I('get.search').'%"';
+        }
+
+        $where .= 'AND a.version="new"';
+
+
         $user = M('User');
         $levelReport = $user->field('level,report,department')->find(session('user')['id']);
         $str = '';
@@ -65,10 +71,10 @@ class RMAController extends AuthController{
                 goto step;
             }
         }
-        //die;
+
+
         step:
-        $count = $customer->where($condition)->count();
-        //echo $customer->getLastSql();
+        $count = $customer->table('atop_oacustomercomplaint a,atop_oacustomeroperation b,atop_oacustomerstep c')->group('a.id')->where($where)->count();
         //分页
         $page = new Page($count,C('LIMIT_SIZE'));
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
@@ -78,25 +84,10 @@ class RMAController extends AuthController{
         if(C('PAGE_STATUS_INFO')){
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
-        $result = $customer->where($condition)->order('cc_time DESC,id DESC')->limit($page->firstRow.','.$page->listRows)->select();
+        $result = $customer->table('atop_oacustomercomplaint a,atop_oacustomeroperation b,atop_oacustomerstep c')
+                            ->field('a.id,a.cc_time,a.salesperson,a.customer,a.sale_order,a.pn,a.vendor,a.model,a.error_message,a.reason,a.comments,a.status,a.uid,a.rma_state,a.version,c.id step_id,c.step_name')
+                            ->where($where)->order('a.cc_time DESC,a.id DESC')->group('a.id')->limit($page->firstRow.','.$page->listRows)->select();
 
-        foreach($condition as $key=>&$value){
-            if($key='cc_time'){
-                foreach($value as $ke=>&$val){
-                    if(is_array($val)){
-                        if($val[0]=='egt'){
-                            $condition['startdate'] = $val[1];
-                        }else{
-                            $condition['enddate'] = $val[1];
-                        }
-                    }
-                }
-            }
-        }
-        //将搜索文本注入模板
-        if(!empty(I('get.searchtext'))){
-            $condition['searchtext'] = I('get.searchtext');
-        }
         //整合标题，为考虑页面布局，文本宽度大于一定条件后将隐藏部分并添加省略号
         $user = M('User');
         $step = M('Oacustomerstep');

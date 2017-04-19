@@ -46,44 +46,22 @@
 		<block name="sidebar">
 			<div id="sidebar">
 				<div class="sidebar-inset">
-					<div class="logo">
 
-					</div>
-					<div id="face">
-						<div class="face-box">
-							<div class="face">
-								<a href="__MODULE__/Center">
-									<img id="face-picture" src="{$face.face}" alt="" width="70" height="70">
-								</a>
-							</div>
-							<p id="userName">Hello
-								<empty name="Think.session.user.nickname">
-									<span id="user_info">{$Think.session.user.account} <span class="caret" id="rotate-caret"></span></span>
-								<else/>
-									<span id="user_info">{$Think.session.user.nickname} <span class="caret" id="rotate-caret"></span></span>
-								</empty>
-							</p>
-							<a href="__ROOT__/notice" style="display: block;"><span class="sidebar-message"><span class="badge sidebar-message-badge"></span></span></a>
-							<a href="javascript:void(0);" style="display: block;"><span class="sidebar-notice"></span></a>
-							<div id="face_dropdown">
-								<ul>
-									<li><a href="__ROOT__/Center/modify"><i class="icon-list-alt"></i> 修改资料</a></li>
-									<li><a href="__ROOT__/Center/face"><i class="icon-github-alt"></i> 修改头像</a></li>
-									<li><a href="__ROOT__/Logout"><i class="icon-signout"></i> 退出登录</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<!-- <ul id="nav"> -->
+					<!-- Logo区 -->
+					<div class="logo"></div>
+
+					<!-- 导航区 -->
 					<ul id="nav">
-						<li><a href="__ROOT__/Index"><b class="icon-home"></b><span>首页</span></a></li>
+						<li>
+							<a href="__ROOT__/Index"><i class="icon-home"></i><span>首页</span></a>
+						</li>
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
 							<ol class="sr-only">
-								<li><a href="__ROOT__/Project">项目管理</a></li>
-								<li><a href="__ROOT__/Sample">样品管理</a></li>
-								<li><a href="__ROOT__/Product">产品管理</a></li>
-								<li><a href="__ROOT__/Compatibility">兼容表</a></li>
+								<li><a href="__ROOT__/Project"><i class="icon-angle-right"></i>&nbsp;项目管理</a></li>
+								<li><a href="__ROOT__/Sample"><i class="icon-angle-right"></i>&nbsp;样品管理</a></li>
+								<li><a href="__ROOT__/Product"><i class="icon-angle-right"></i>&nbsp;产品管理</a></li>
+								<li><a href="__ROOT__/Compatibility"><i class="icon-angle-right"></i>&nbsp;兼容表</a></li>
 							</ol>
 						</li>
 						<!--<li id="Audit">
@@ -94,34 +72,64 @@
 								<span><a href="__ROOT__/Expense"><i class="icon-credit-card"></i>&nbsp;&nbsp;报销</a></span>
 							</div>
 						</li>-->
-						<li><a href="__ROOT__/Approval"><i class="icon-legal"></i><span>审批</span></a></li>
-						<li><a href="__ROOT__/DCC"><i class="icon-print"></i><span>文档中心</span></a></li>
-						<li><a href="__ROOT__/Acronym"><i class="icon-book"></i><span>缩略词</span></a></li>
-						<li><a href="__ROOT__/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a></li>
-						<li><a href="__ROOT__/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a></li>
+						<li>
+							<a href="__ROOT__/Approval"><i class="icon-legal"></i><span>审批</span></a>
+						</li>
+						<li>
+							<a href="__ROOT__/DCC"><i class="icon-print"></i><span>文档中心</span></a>
+						</li>
+						<li>
+							<a href="__ROOT__/Acronym"><i class="icon-book"></i><span>缩略词</span></a>
+						</li>
+						<li>
+							<a href="__ROOT__/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
+						</li>
+						<li>
+							<a href="__ROOT__/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a>
+						</li>
 						<eq name="Think.session.user.account" value="admin">
-							<li><a href="__ROOT__/System"><i class="icon-cog"></i><span>系统</span></a></li>
+							<li>
+								<a href="__ROOT__/System"><i class="icon-cog"></i><span>系统</span></a>
+							</li>
 						</eq>
 					</ul>
+
+					<!-- 版权信息 -->
+					<div class="copyright-info">
+						<p>Copyright @ 2016</p>
+						<p>华拓光通信股份有限公司</p>
+						<p>版权所有</p>
+					</div>
+
 				</div>
 			</div>
 		</block>
 
-		<!--<div id="ResearchChildMenu">
-			<span><a href="__ROOT__/Project"><i class="icon-globe"></i>&nbsp;&nbsp;项目管理</a></span>
-			<span><a href="__ROOT__/Sample"><i class="icon-beaker"></i>&nbsp;&nbsp;样品管理</a></span>
-			<span><a href="__ROOT__/Product"><i class="icon-th"></i>&nbsp;&nbsp;产品管理</a></span>
-			<span><a href="__ROOT__/Compatibility"><i class="icon-bar-chart"></i>&nbsp;&nbsp;兼容表</a></span>
-		</div>-->
-
-
-
+		<!-- 二级导航及用户信息/常用操作区 -->
 		<div id="header">
 			<block name="breadcrumb">
 
 			</block>
+			<div class="user-operation-box pull-right">
+				<div class="user-operation-item pull-left">
+					<a href="__MODULE__/Center">
+						<img src="{$face.face}" width="30" alt="">
+						<!--<i class="layui-icon">&#xe612;</i>-->&nbsp;&nbsp;{$Think.session.user.nickname}
+						<div class="clearfix"></div>
+					</a>
+				</div>
+				<div class="user-operation-item pull-left">
+					<a href="__ROOT__/notice"><i class="icon-bell"></i>&nbsp;&nbsp;通知</a>
+				</div>
+				<div class="user-operation-item pull-left">
+					<a href="__ROOT__/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="clearfix"></div>
 		</div>
 
+		<!-- 正文区域 -->
 		<div id="content">
 			<div class="container-fluid" id="content-box">
 				<block name="content">
@@ -146,6 +154,7 @@
 		</block>
 	</div>
 
+	<!-- 检测IE（如果是低版本IE浏览器则直接屏蔽） -->
 	<div style="display: none" id=browser_ie>
 		<div class=brower_info>
 			<div class="browser_box">
@@ -160,19 +169,20 @@
 		</div>
 	</div>
 
+	<!-- 定义消息提示模态框 -->
 	<div class="modal fade bs-example-modal-sm" id="MessageModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 		<div class="modal-dialog modal-sm" role="document">
 			<div class="modal-content" id="MessageText">
 				<!-- 消息内容 -->
-				<!--<p><i class="icon-ok-sign text-success"></i>&nbsp;添加成功</p>-->
 			</div>
 		</div>
 	</div>
-	
+
+	<!-- 回到顶部 -->
 	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
-	<script>
 
+	<script>
 		//如果检测到用户浏览器为IE则禁用
 		var str = navigator.userAgent;
 

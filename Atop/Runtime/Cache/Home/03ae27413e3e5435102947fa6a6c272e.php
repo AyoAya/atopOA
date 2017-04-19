@@ -66,10 +66,11 @@
 		
 			<div id="sidebar">
 				<div class="sidebar-inset">
+					<!-- Logo区 -->
 					<div class="logo">
 
 					</div>
-					<div id="face">
+					<!--<div id="face">
 						<div class="face-box">
 							<div class="face">
 								<a href="/index.php/Home/Center">
@@ -91,17 +92,21 @@
 								</ul>
 							</div>
 						</div>
-					</div>
-					<!-- <ul id="nav"> -->
+					</div>-->
+
+
+					<!-- 导航区 -->
 					<ul id="nav">
-						<li><a href="/Index"><b class="icon-home"></b><span>首页</span></a></li>
+						<li>
+							<a href="/Index"><i class="icon-home"></i><span>首页</span></a>
+						</li>
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
 							<ol class="sr-only">
-								<li><a href="/Project">项目管理</a></li>
-								<li><a href="/Sample">样品管理</a></li>
-								<li><a href="/Product">产品管理</a></li>
-								<li><a href="/Compatibility">兼容表</a></li>
+								<li><a href="/Project"><i class="icon-angle-right"></i>&nbsp;项目管理</a></li>
+								<li><a href="/Sample"><i class="icon-angle-right"></i>&nbsp;样品管理</a></li>
+								<li><a href="/Product"><i class="icon-angle-right"></i>&nbsp;产品管理</a></li>
+								<li><a href="/Compatibility"><i class="icon-angle-right"></i>&nbsp;兼容表</a></li>
 							</ol>
 						</li>
 						<!--<li id="Audit">
@@ -112,26 +117,32 @@
 								<span><a href="/Expense"><i class="icon-credit-card"></i>&nbsp;&nbsp;报销</a></span>
 							</div>
 						</li>-->
-						<li><a href="/Approval"><i class="icon-legal"></i><span>审批</span></a></li>
-						<li><a href="/DCC"><i class="icon-print"></i><span>文档中心</span></a></li>
-						<li><a href="/Acronym"><i class="icon-book"></i><span>缩略词</span></a></li>
-						<li><a href="/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a></li>
-						<li><a href="/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a></li>
-						<?php if(($_SESSION['user']['account']) == "admin"): ?><li><a href="/System"><i class="icon-cog"></i><span>系统</span></a></li><?php endif; ?>
+						<li>
+							<a href="/Approval"><i class="icon-legal"></i><span>审批</span></a>
+						</li>
+						<li>
+							<a href="/DCC"><i class="icon-print"></i><span>文档中心</span></a>
+						</li>
+						<li>
+							<a href="/Acronym"><i class="icon-book"></i><span>缩略词</span></a>
+						</li>
+						<li>
+							<a href="/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
+						</li>
+						<li>
+							<a href="/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a>
+						</li>
+						<?php if(($_SESSION['user']['account']) == "admin"): ?><li>
+								<a href="/System"><i class="icon-cog"></i><span>系统</span></a>
+							</li><?php endif; ?>
 					</ul>
+
+
 				</div>
 			</div>
 		
 
-		<!--<div id="ResearchChildMenu">
-			<span><a href="/Project"><i class="icon-globe"></i>&nbsp;&nbsp;项目管理</a></span>
-			<span><a href="/Sample"><i class="icon-beaker"></i>&nbsp;&nbsp;样品管理</a></span>
-			<span><a href="/Product"><i class="icon-th"></i>&nbsp;&nbsp;产品管理</a></span>
-			<span><a href="/Compatibility"><i class="icon-bar-chart"></i>&nbsp;&nbsp;兼容表</a></span>
-		</div>-->
-
-
-
+		<!-- 二级导航及用户信息/常用操作区 -->
 		<div id="header">
 			
 	<ol class="breadcrumb breadcrumb-edit">
@@ -139,8 +150,26 @@
 		<li class="active">客诉详情</li>
 	</ol>
 
+			<div class="user-operation-box pull-right">
+				<div class="user-operation-item pull-left">
+					<a href="/notice" title="通知"><i class="icon-bell"></i>&nbsp;&nbsp;通知</a>
+				</div>
+				<div class="user-operation-item pull-left">
+					<a href="/index.php/Home/Center" title="用户">
+							<!--<img src="<?php echo ($face["face"]); ?>" width="24" alt="">-->
+							<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>
+						<div class="clearfix"></div>
+					</a>
+				</div>
+				<div class="user-operation-item pull-left">
+					<a href="/Logout" title="退出"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="clearfix"></div>
 		</div>
 
+		<!-- 正文区域 -->
 		<div id="content">
 			<div class="container-fluid" id="content-box">
 				
@@ -227,10 +256,10 @@
 		</tbody>
 	</table>
 
-	<div class="title-bar" style="margin: 30px 0 15px 0;">
+	<div class="title-bar" style="margin: 15px 0 15px 0;">
 		<h4>初步分析</h4>
 	</div>
-	<p style="text-indent: 2em;"><?php echo ($details["reason"]); ?></p>
+	<p style="text-indent: 15px;"><?php echo ($details["reason"]); ?></p>
 
 	<div class="title-bar" style="margin: 30px 0 30px 0;">
 		<h4>处理记录</h4>
@@ -246,7 +275,7 @@
 									<div class="timeline-step">Step<?php echo ($key+1); ?></div>
 								</div>
 								<div class="timeline-title-text pull-left">
-                                    <?php if(($details["version"]) == "new"): ?><span><?php echo ($value["step_name"]); ?> <i class="<?php if(!empty($value["class"])): ?>icon-caret-up<?php else: ?>icon-caret-down<?php endif; ?>"></i></span>
+                                    <?php if(($details["version"]) == "new"): ?><span><?php echo ($value["step_name"]); ?> <i class="<?php if(!empty($value["class"])): ?>icon-caret-down<?php else: ?>icon-caret-up<?php endif; ?>"></i></span>
                                     <?php else: ?>
                                         <span>处理记录 <i class="<?php if(!empty($value["class"])): ?>icon-caret-up<?php else: ?>icon-caret-down<?php endif; ?>"></i></span><?php endif; ?>
 								</div>
@@ -636,6 +665,7 @@
 		
 	</div>
 
+	<!-- 检测IE（如果是低版本IE浏览器则直接屏蔽） -->
 	<div style="display: none" id=browser_ie>
 		<div class=brower_info>
 			<div class="browser_box">
@@ -650,19 +680,20 @@
 		</div>
 	</div>
 
+	<!-- 定义消息提示模态框 -->
 	<div class="modal fade bs-example-modal-sm" id="MessageModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 		<div class="modal-dialog modal-sm" role="document">
 			<div class="modal-content" id="MessageText">
 				<!-- 消息内容 -->
-				<!--<p><i class="icon-ok-sign text-success"></i>&nbsp;添加成功</p>-->
 			</div>
 		</div>
 	</div>
-	
+
+	<!-- 回到顶部 -->
 	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
-	<script>
 
+	<script>
 		//如果检测到用户浏览器为IE则禁用
 		var str = navigator.userAgent;
 

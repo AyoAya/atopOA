@@ -54,10 +54,11 @@
 		
 			<div id="sidebar">
 				<div class="sidebar-inset">
+					<!-- Logo区 -->
 					<div class="logo">
 
 					</div>
-					<div id="face">
+					<!--<div id="face">
 						<div class="face-box">
 							<div class="face">
 								<a href="/index.php/Home/Center">
@@ -79,8 +80,10 @@
 								</ul>
 							</div>
 						</div>
-					</div>
-					<!-- <ul id="nav"> -->
+					</div>-->
+
+
+					<!-- 导航区 -->
 					<ul id="nav">
 						<li><a href="/Index"><b class="icon-home"></b><span>首页</span></a></li>
 						<li>
@@ -103,31 +106,47 @@
 						<li><a href="/Approval"><i class="icon-legal"></i><span>审批</span></a></li>
 						<li><a href="/DCC"><i class="icon-print"></i><span>文档中心</span></a></li>
 						<li><a href="/Acronym"><i class="icon-book"></i><span>缩略词</span></a></li>
-						<li><a href="/Customer"><i class="icon-comments-alt"></i><span>客诉处理</span></a></li>
+						<li><a href="/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a></li>
 						<li><a href="/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a></li>
 						<?php if(($_SESSION['user']['account']) == "admin"): ?><li><a href="/System"><i class="icon-cog"></i><span>系统</span></a></li><?php endif; ?>
 					</ul>
+
+
 				</div>
 			</div>
 		
 
-		<!--<div id="ResearchChildMenu">
-			<span><a href="/Project"><i class="icon-globe"></i>&nbsp;&nbsp;项目管理</a></span>
-			<span><a href="/Sample"><i class="icon-beaker"></i>&nbsp;&nbsp;样品管理</a></span>
-			<span><a href="/Product"><i class="icon-th"></i>&nbsp;&nbsp;产品管理</a></span>
-			<span><a href="/Compatibility"><i class="icon-bar-chart"></i>&nbsp;&nbsp;兼容表</a></span>
-		</div>-->
-
-
-
+		<!-- 二级导航及用户信息/常用操作区 -->
 		<div id="header">
 			
 	<ol class="breadcrumb breadcrumb-edit">
 		<li class="active">个人中心</li>
 	</ol>
 
+			<div class="user-operation-box pull-right">
+				<div class="user-operation-item pull-left">
+					<a href="/notice" title="通知"><i class="icon-bell"></i></a>
+				</div>
+				<div class="user-operation-item pull-left">
+					<a href="/index.php/Home/Center" title="用户">
+						<div class="user-info-l pull-left">
+							<img src="<?php echo ($face["face"]); ?>" width="24" alt="">
+						</div>
+						<div class="user-info-r pull-left">
+							<span><?php echo ($_SESSION['user']['nickname']); ?></span>
+						</div>
+						<div class="clearfix"></div>
+					</a>
+				</div>
+				<div class="user-operation-item pull-left">
+					<a href="/Logout" title="退出"><i class="icon-signout"></i></a>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="clearfix"></div>
 		</div>
 
+		<!-- 正文区域 -->
 		<div id="content">
 			<div class="container-fluid" id="content-box">
 				
@@ -152,6 +171,7 @@
 		
 	</div>
 
+	<!-- 检测IE（如果是低版本IE浏览器则直接屏蔽） -->
 	<div style="display: none" id=browser_ie>
 		<div class=brower_info>
 			<div class="browser_box">
@@ -166,17 +186,20 @@
 		</div>
 	</div>
 
+	<!-- 定义消息提示模态框 -->
 	<div class="modal fade bs-example-modal-sm" id="MessageModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 		<div class="modal-dialog modal-sm" role="document">
 			<div class="modal-content" id="MessageText">
 				<!-- 消息内容 -->
-				<!--<p><i class="icon-ok-sign text-success"></i>&nbsp;添加成功</p>-->
 			</div>
 		</div>
 	</div>
 
-	<script>
+	<!-- 回到顶部 -->
+	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
+
+	<script>
 		//如果检测到用户浏览器为IE则禁用
 		var str = navigator.userAgent;
 
@@ -184,22 +207,6 @@
 			alert(str);
 			checkIE();
 		}
-
-		/*if (document.all && document.addEventListener && !window.atob) {
-			checkIE();
-		}
-
-		if (document.all && document.querySelector && !document.addEventListener) {
-			checkIE();
-		}
-
-		if (document.all && window.XMLHttpRequest && !document.querySelector) {
-			checkIE();
-		}
-
-		if (document.all && document.compatMode && !window.XMLHttpRequest) {
-			checkIE();
-		}*/
 
 		function checkIE(){
 			var body = document.getElementsByName('body');

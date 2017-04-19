@@ -130,10 +130,10 @@
 		</tbody>
 	</table>
 
-	<div class="title-bar" style="margin: 30px 0 15px 0;">
+	<div class="title-bar" style="margin: 15px 0 15px 0;">
 		<h4>初步分析</h4>
 	</div>
-	<p style="text-indent: 2em;">{$details.reason}</p>
+	<p style="text-indent: 15px;">{$details.reason}</p>
 
 	<div class="title-bar" style="margin: 30px 0 30px 0;">
 		<h4>处理记录</h4>
@@ -152,7 +152,7 @@
 								</div>
 								<div class="timeline-title-text pull-left">
                                     <eq name="details.version" value="new">
-									    <span>{$value.step_name} <i class="<notempty name='value.class'>icon-caret-up<else/>icon-caret-down</notempty>"></i></span>
+									    <span>{$value.step_name} <i class="<notempty name='value.class'>icon-caret-down<else/>icon-caret-up</notempty>"></i></span>
                                     <else/>
                                         <span>处理记录 <i class="<notempty name='value.class'>icon-caret-up<else/>icon-caret-down</notempty>"></i></span>
                                     </eq>

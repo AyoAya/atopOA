@@ -194,6 +194,25 @@ $(function(){
 
 	});
 
+
+	$('.filter-btn').click(function(){
+		var filter_dom = $('#rma-filter'),
+			caret_dom = $(this).find('i'),
+			icon_type = $(this).find('i').attr('class');
+		if( icon_type == 'icon-caret-down' ){
+			caret_dom.attr('class','icon-caret-up');
+		}else{
+			caret_dom.attr('class','icon-caret-down');
+		}
+		filter_dom.slideToggle('fast');
+	});
+
+
+
+
+
+
+
 	//点击弹出rma处理窗口
 	/*$(document).on('click','.is_rma_box',function(){
 		/!*$('.sale-audit-box').removeClass('sr-only');

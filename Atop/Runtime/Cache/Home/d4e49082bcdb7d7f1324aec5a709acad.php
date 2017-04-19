@@ -21,7 +21,7 @@
 
 	
 	<link rel="stylesheet" href="/Public/Home/css/bootstrap-datetimepicker.min.css">
-	<link rel="stylesheet" href="/Public/Home/css/addCustomer.css">
+	<link rel="stylesheet" href="/Public/Home/css/rma/addCustomer.css">
 	<link rel="stylesheet" href="/Public/Home/css/productFilter.css">
 <!-- 引入css文件 -->
 	<script src="/Public/Home/js/jquery.min.js"></script>
@@ -38,7 +38,7 @@
 	<script src="/Public/Home/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
 	<script src="/Public/Home/js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
 	<script src="/Public/Home/js/jquery.Huploadify.js"></script>
-	<script src="/Public/Home/js/customer.js" charset="UTF-8"></script>
+	<script src="/Public/Home/js/rma/customer.js" charset="UTF-8"></script>
 <!-- 引入js文件 -->
 	<script src="/Public/Home/js/jquery.rotate.min.js"></script>
 	
