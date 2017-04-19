@@ -30,6 +30,52 @@
 <!-- 【正文区域】 -->
 <block name="content">
 
+	<!-- 天行joke笑话接口 -->
+	<ul id="joke-api"></ul>
+	<ul id="pic-api"></ul>
+
+	<script>
+
+		$(function(){
+
+
+			$.ajax({
+				url : 'https://api.tianapi.com/txapi/joke/?key=2a05570608f52dd9ab8346e58cc1fbf2&num=10',
+				type : 'get',
+				dataType : 'json',
+				success : function(response){
+					if( response.code == 200 ){
+						var joke_list = '';
+						for( var key in response.newslist ){
+							joke_list += '<li><p class="joke-title">'+ response.newslist[key].title +'</p><p class="joke-content">'+ response.newslist[key].content +'</p></li>';
+						}
+						$('#joke-api').append(joke_list);
+					}
+				}
+			});
+			$.ajax({
+				url : 'https://api.tianapi.com/meinv/?key=2a05570608f52dd9ab8346e58cc1fbf2&num=10',
+				type : 'get',
+				dataType : 'json',
+				success : function(response){
+					if( response.code == 200 ){
+						var pic_list = '';
+						for( var key in response.newslist ){
+							pic_list += '<li><p class="joke-title">'+ response.newslist[key].title +'</p><img class="joke-content" src="'+ response.newslist[key].picUrl +'" width="290"></li>';
+						}
+						$('#pic-api').append(pic_list);
+					}
+					console.log(response);
+				}
+			});
+
+
+		});
+
+
+	</script>
+
+
 </block>
 
 
