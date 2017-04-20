@@ -46,7 +46,9 @@
 					</button>
 				</in>
 			</div>
-			<div class="clearfix" style="margin-bottom: 25px;"></div>
+			<in name="Think.session.user.id" value="$details.operation_person"> {//当前用户符合条件才加载}
+				<div class="clearfix" style="margin-bottom: 25px;"></div>
+			</in>
 		<else/>
 			<div class="pull-left">
 				<button type="button" class="layui-btn layui-btn-primary" data-toggle="modal" data-target="#customer-rma-modal">
@@ -62,22 +64,22 @@
 		<h4>基本信息</h4>
 	</div>
 
-	<table class="layui-table" id="table" lay-skin="row">
+	<table class="layui-table" id="table">
 		<thead>
 			<tr>
-				<td>客诉ID</td>
-				<td>客诉时间</td>
-				<td>销售人员</td>
-				<td>客户</td>
-				<td>订单号</td>
-				<td>产品</td>
-				<td>
+				<th>客诉ID</th>
+				<th>客诉时间</th>
+				<th>销售人员</th>
+				<th>客户</th>
+				<th>订单号</th>
+				<th>产品型号</th>
+				<th>
                     <eq name="details.version" value="new"> {//如果是新版客诉则显示进度，老版显示状态}
-                        进度
+                        当前进度
                     <else/>
                         状态
                     </eq>
-                </td>
+                </th>
 			</tr>
 		</thead>
 		<tbody>
@@ -91,7 +93,7 @@
 				<td>
                     <eq name="details.version" value="new"> {//如果是新版客诉则显示进度，老版显示状态}
                         <eq name="details.rma_state" value="N">
-                            <span class="label label-primary">{$details.now_step.step_name}</span>
+                            <span class="label label-primary">Step{$details.now_step.id}-{$details.now_step.step_name}</span>
                         <else/>
                             <span class="label label-success">客诉已关闭</span>
                         </eq>
@@ -111,22 +113,26 @@
 		<tbody>
 			<tr>
 				<td>设备厂商：</td>
-				<td>{$details.vendor}</td>
+				<td><p>{$details.vendor}</p></td>
 			</tr>
 			<tr>
 				<td>设备型号：</td>
-				<td>{$details.model}</td>
+				<td><p>{$details.model}</p></td>
 			</tr>
 			<tr>
 				<td>错误现象：</td>
-				<td>{$details.error_message}</td>
+				<td><p>{$details.error_message}</p></td>
 			</tr>
-			<notempty name="details.comments">
-				<tr>
-					<td>备注信息：</td>
-					<td>{$details.comments}</td>
-				</tr>
-			</notempty>
+			<tr>
+				<td>备注信息：</td>
+				<td><p>
+					<notempty name="details.comments">
+						{$details.comments}
+					<else/>
+						无
+					</notempty>
+				</p></td>
+			</tr>
 		</tbody>
 	</table>
 
@@ -177,8 +183,8 @@
 														<img src="{$val.face}" width="48" alt="">
 													</div>
 												</div>
-												<div class="timeline-content-right pull-left">
-													<p>{$val.log_content}</p>
+												<div class="timeline-content-right pull-right">
+													{$val.log_content}
 													<notempty name="val.picture">
 														<volist name="val.picture" id="v">
 															<notempty name="v">
@@ -211,7 +217,14 @@
 														</volist>
 													</notempty>
 													<div class="clearfix"></div>
-													<div class="timeline-other">{$val.recorder}<span class="timeline-divider">|</span>{$val.timestamp}</div>
+													<div class="timeline-other">
+														<eq name="val.recorder" value="OASystem">
+															OA系统
+														<else/>
+															{$val.nickname}
+														</eq>
+														<span class="timeline-divider">|</span>{$val.timestamp}
+													</div>
 												</div>
 												<div class="clearfix"></div>
 											</td>
@@ -272,10 +285,10 @@
                                                 <lt name="details.now_step.id" value="$maxStep">
                                                     <eq name="details.rma_state" value="N">	{//往下推送的前提是该客诉尚未关闭}
                                                         <neq name="details.now_step.id" value="4">	{//如果当前步骤在RMA分析报告（QA），则可以选择性的跳过协助处理RMA报告直接到审核并关闭RMA}
-                                                            <option value="{$details.next_step.id}">推送到：{$details.next_step.step_name}</option>
+                                                            <option value="{$details.next_step.id}">推送到：Step-{$details.next_step.id} {$details.next_step.step_name}</option>
                                                         <else/>
                                                             <volist name="details.next_step" id="value">
-                                                                <option value="{$value.id}">推送到：{$value.step_name}</option>
+                                                                <option value="{$value.id}">推送到：Step{$value.id}-{$value.step_name}</option>
                                                             </volist>
                                                         </neq>
                                                     </eq>
@@ -327,7 +340,7 @@
                                     </div>
                                     <div class="layui-inline">
                                         <div class="layui-input-inline">
-                                            <input type="file" name="Filedata" lay-type="file|image" class="layui-upload-file" multiple>
+                                            <input type="file" name="Filedata"  lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf" class="layui-upload-file" multiple>
                                         </div>
                                     </div>
                                     <ul id="attachment-list"></ul>
@@ -369,7 +382,7 @@
                                 </div>
                                 <div class="layui-inline">
                                     <div class="layui-input-inline">
-                                        <input type="file" name="Filedata" lay-type="file|image" class="layui-upload-file" multiple>
+                                        <input type="file" name="Filedata"  lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf" class="layui-upload-file" multiple>
                                     </div>
                                 </div>
                                 <ul id="attachment-list"></ul>

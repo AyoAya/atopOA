@@ -37,6 +37,7 @@
 	
 </head>
 <body>
+
 	<script type="text/javascript">
 		var ThinkPHP = {
 				'AJAX' : '/index.php/Home',
@@ -50,19 +51,17 @@
 				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
+
 	<div id="bodyContainer">
 		
 			<div id="sidebar">
 				<div class="sidebar-inset">
 
 					<!-- Logo区 -->
-					<div class="logo"></div>
+					<a href="/Index" class="logo"></a>
 
 					<!-- 导航区 -->
 					<ul id="nav">
-						<li>
-							<a href="/Index"><i class="icon-home"></i><span>首页</span></a>
-						</li>
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
 							<ol class="sr-only">
@@ -102,9 +101,8 @@
 
 					<!-- 版权信息 -->
 					<div class="copyright-info">
-						<p>Copyright @ 2016</p>
-						<p>华拓光通信股份有限公司</p>
-						<p>版权所有</p>
+						<p>ATOP Corporation</p>
+						<p>Copyright &copy; 2016</p>
 					</div>
 
 				</div>
@@ -120,19 +118,26 @@
 
 			<div class="user-operation-box pull-right">
 				<div class="user-operation-item pull-left">
+					<a href="/notice"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
+				</div>
+				<div class="user-operation-item pull-left">
 					<a href="/index.php/Home/Center">
-						<img src="<?php echo ($face["face"]); ?>" width="30" alt="">
-						<!--<i class="layui-icon">&#xe612;</i>-->&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>
-						<div class="clearfix"></div>
+						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
 					</a>
 				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/notice"><i class="icon-bell"></i>&nbsp;&nbsp;通知</a>
-				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
-				</div>
 				<div class="clearfix"></div>
+
+
+				<div class="user-options">
+					<ul>
+						<li><a href="#">修改资料</a></li>
+						<li><a href="#">修改头像</a></li>
+						<li><a href="#">退出登录</a></li>
+					</ul>
+				</div>
+				<!--<div class="user-operation-item pull-left">
+					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
+				</div>-->
 			</div>
 			<div class="clearfix"></div>
 		</div>
@@ -328,7 +333,9 @@
 	</div>
 
 	<!-- 回到顶部 -->
-	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	<div class="footer-operation-bar">
+		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	</div>
 
 
 	<script>

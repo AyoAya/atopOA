@@ -56,13 +56,10 @@
 				<div class="sidebar-inset">
 
 					<!-- Logo区 -->
-					<div class="logo"></div>
+					<a href="/Index" class="logo"></a>
 
 					<!-- 导航区 -->
 					<ul id="nav">
-						<li>
-							<a href="/Index"><i class="icon-home"></i><span>首页</span></a>
-						</li>
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
 							<ol class="sr-only">
@@ -102,9 +99,8 @@
 
 					<!-- 版权信息 -->
 					<div class="copyright-info">
-						<p>Copyright @ 2016</p>
-						<p>华拓光通信股份有限公司</p>
-						<p>版权所有</p>
+						<p>ATOP Corporation</p>
+						<p>Copyright &copy; 2016</p>
 					</div>
 
 				</div>
@@ -217,7 +213,9 @@
 	</div>
 
 	<!-- 回到顶部 -->
-	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	<div class="footer-operation-bar">
+		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	</div>
 
 
 	<script>

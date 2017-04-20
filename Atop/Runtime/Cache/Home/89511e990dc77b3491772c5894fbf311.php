@@ -37,6 +37,7 @@
 	
 </head>
 <body>
+
 	<script type="text/javascript">
 		var ThinkPHP = {
 				'AJAX' : '/index.php/Home',
@@ -50,49 +51,24 @@
 				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
+
 	<div id="bodyContainer">
 		
 			<div id="sidebar">
 				<div class="sidebar-inset">
+
 					<!-- Logo区 -->
-					<div class="logo">
-
-					</div>
-					<!--<div id="face">
-						<div class="face-box">
-							<div class="face">
-								<a href="/index.php/Home/Center">
-									<img id="face-picture" src="<?php echo ($face["face"]); ?>" alt="" width="70" height="70">
-								</a>
-							</div>
-							<p id="userName">Hello
-								<?php if(empty($_SESSION['user']['nickname'])): ?><span id="user_info"><?php echo ($_SESSION['user']['account']); ?> <span class="caret" id="rotate-caret"></span></span>
-								<?php else: ?>
-									<span id="user_info"><?php echo ($_SESSION['user']['nickname']); ?> <span class="caret" id="rotate-caret"></span></span><?php endif; ?>
-							</p>
-							<a href="/notice" style="display: block;"><span class="sidebar-message"><span class="badge sidebar-message-badge"></span></span></a>
-							<a href="javascript:void(0);" style="display: block;"><span class="sidebar-notice"></span></a>
-							<div id="face_dropdown">
-								<ul>
-									<li><a href="/Center/modify"><i class="icon-list-alt"></i> 修改资料</a></li>
-									<li><a href="/Center/face"><i class="icon-github-alt"></i> 修改头像</a></li>
-									<li><a href="/Logout"><i class="icon-signout"></i> 退出登录</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>-->
-
+					<a href="/Index" class="logo"></a>
 
 					<!-- 导航区 -->
 					<ul id="nav">
-						<li><a href="/Index"><b class="icon-home"></b><span>首页</span></a></li>
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
 							<ol class="sr-only">
-								<li><a href="/Project">项目管理</a></li>
-								<li><a href="/Sample">样品管理</a></li>
-								<li><a href="/Product">产品管理</a></li>
-								<li><a href="/Compatibility">兼容表</a></li>
+								<li><a href="/Project"><i class="icon-angle-right"></i>&nbsp;项目管理</a></li>
+								<li><a href="/Sample"><i class="icon-angle-right"></i>&nbsp;样品管理</a></li>
+								<li><a href="/Product"><i class="icon-angle-right"></i>&nbsp;产品管理</a></li>
+								<li><a href="/Compatibility"><i class="icon-angle-right"></i>&nbsp;兼容表</a></li>
 							</ol>
 						</li>
 						<!--<li id="Audit">
@@ -103,14 +79,31 @@
 								<span><a href="/Expense"><i class="icon-credit-card"></i>&nbsp;&nbsp;报销</a></span>
 							</div>
 						</li>-->
-						<li><a href="/Approval"><i class="icon-legal"></i><span>审批</span></a></li>
-						<li><a href="/DCC"><i class="icon-print"></i><span>文档中心</span></a></li>
-						<li><a href="/Acronym"><i class="icon-book"></i><span>缩略词</span></a></li>
-						<li><a href="/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a></li>
-						<li><a href="/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a></li>
-						<?php if(($_SESSION['user']['account']) == "admin"): ?><li><a href="/System"><i class="icon-cog"></i><span>系统</span></a></li><?php endif; ?>
+						<li>
+							<a href="/Approval"><i class="icon-legal"></i><span>审批</span></a>
+						</li>
+						<li>
+							<a href="/DCC"><i class="icon-print"></i><span>文档中心</span></a>
+						</li>
+						<li>
+							<a href="/Acronym"><i class="icon-book"></i><span>缩略词</span></a>
+						</li>
+						<li>
+							<a href="/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
+						</li>
+						<li>
+							<a href="/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a>
+						</li>
+						<?php if(($_SESSION['user']['account']) == "admin"): ?><li>
+								<a href="/System"><i class="icon-cog"></i><span>系统</span></a>
+							</li><?php endif; ?>
 					</ul>
 
+					<!-- 版权信息 -->
+					<div class="copyright-info">
+						<p>ATOP Corporation</p>
+						<p>Copyright &copy; 2016</p>
+					</div>
 
 				</div>
 			</div>
@@ -125,25 +118,30 @@
 
 			<div class="user-operation-box pull-right">
 				<div class="user-operation-item pull-left">
-					<a href="/notice" title="通知"><i class="icon-bell"></i></a>
+					<a href="/notice"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
 				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/index.php/Home/Center" title="用户">
-						<div class="user-info-l pull-left">
-							<img src="<?php echo ($face["face"]); ?>" width="24" alt="">
-						</div>
-						<div class="user-info-r pull-left">
-							<span><?php echo ($_SESSION['user']['nickname']); ?></span>
-						</div>
-						<div class="clearfix"></div>
+				<div class="user-operation-item pull-left user-options-btn">
+					<a href="/index.php/Home/Center">
+						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
 					</a>
 				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/Logout" title="退出"><i class="icon-signout"></i></a>
-				</div>
 				<div class="clearfix"></div>
+
+				<!--<div class="user-operation-item pull-left">
+					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
+				</div>-->
 			</div>
 			<div class="clearfix"></div>
+		</div>
+
+
+		<!-- 用户选项 -->
+		<div class="user-options">
+			<ul>
+				<li><a href="#"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
+				<li><a href="#"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
+				<li><a href="#"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
+			</ul>
 		</div>
 
 		<!-- 正文区域 -->
@@ -196,7 +194,9 @@
 	</div>
 
 	<!-- 回到顶部 -->
-	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	<div class="footer-operation-bar">
+		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	</div>
 
 
 	<script>

@@ -12,7 +12,7 @@
 <body>
 <div id="bodyContainer">
 	<div id="logo">
-		<span>华拓光通信股份有限公司</span>
+		<span>华拓光通信OA系统</span>
 	</div>
 
 	<div id="wrap">

@@ -28,7 +28,7 @@ $(function(){
 					if( response.flag == 1 ){
 						layer.msg(response.msg, { icon : 1,time : 2000 });
 						setTimeout(function(){
-							location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/customerDetails/' + response.id;
+							location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/RMA/details/id/' + response.id;
 						},2000);
 					}else{
 						layer.closeAll();

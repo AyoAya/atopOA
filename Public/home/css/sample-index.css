@@ -68,6 +68,27 @@ h2 a.addsample:hover {
 	color: #555;
 }*/
 
+.search-box {
+	width: 300px;
+	position: relative;
+}
+.search-box .search-btn {
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	border: none;
+	width: 36px;
+	height: 36px;
+	text-align: left;
+}
+.search-box .search-btn i {
+	position: absolute;
+	left: 50%;
+	margin-left: -9px;
+	top: 0;
+}
+
+
 .col-lg-4 {
 	padding-left: 0;
 	margin-left: 0;

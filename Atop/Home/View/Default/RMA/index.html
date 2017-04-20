@@ -61,7 +61,7 @@
 			</form>
 		</div>
 
-		<div class="clearfix" style="margin-bottom: 25px;"></div>
+		<div class="clearfix" style="margin-bottom: 15px;"></div>
 
 
 		<!-- 筛选 -->
@@ -70,7 +70,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">与我相关</label>
 					<div class="layui-input-inline">
-						<input type="checkbox" name="withme" value="on" title="我参与的或属于我的" <present name="Think.get.withme"><eq name="Think.get.withme" value="on">checked</eq></present>>
+						<input type="checkbox" name="withme" value="on" lay-skin="primary" title="" <present name="Think.get.withme"><eq name="Think.get.withme" value="on">checked</eq></present>>
 					</div>
 				</div>
 				<div class="layui-form-item">
@@ -79,11 +79,10 @@
 						<div class="layui-input-inline">
 							<select name="step">
 								<option value="">选择指定步骤</option>
-								<option value="1">步骤1</option>
-								<option value="2">步骤2</option>
-								<option value="3">步骤3</option>
-								<option value="4">步骤4</option>
-								<option value="5">步骤5</option>
+								<volist name="stepData" id="value">
+									<option value="{$value.id}" <eq name="Think.get.step" value="$value.id">selected</eq>>Step{$value.id}-{$value.step_name}</option>
+								</volist>
+								<option value="close" <eq name="Think.get.step" value="close">selected</eq>>已关闭</option>
 							</select>
 						</div>
 					</div>
@@ -164,7 +163,7 @@
 										</switch>
 									<else/>
 										<eq name="value.rma_state" value="N">
-											<span class="tag-primary">{$value.step.step_name}</span>
+											<span class="tag-primary">Step{$value.step.id}-{$value.step.step_name}</span>
 										<else/>
 											<span class="tag-success">已关闭</span>
 										</eq>
@@ -173,13 +172,13 @@
 										<span class="tag-hollow">客户：{$value.customer}</span>
 									</notempty>
 									<notempty name="value.pn">
-										<span class="tag-hollow">产品：{$value.pn}</span>
+										<span class="tag-hollow">产品型号：{$value.pn}</span>
 									</notempty>
 									<notempty name="value.vendor">
-										<span class="tag-hollow">品牌：{$value.vendor}</span>
+										<span class="tag-hollow">设备品牌：{$value.vendor}</span>
 									</notempty>
 									<notempty name="value.model">
-										<span class="tag-hollow">型号：{$value.model}</span>
+										<span class="tag-hollow">设备型号：{$value.model}</span>
 									</notempty>
 								</p>
 								<p class="customer-reason"><b>错误信息：</b>{$value.error_message}</p>

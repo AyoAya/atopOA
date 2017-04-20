@@ -44,6 +44,7 @@
 	
 </head>
 <body>
+
 	<script type="text/javascript">
 		var ThinkPHP = {
 				'AJAX' : '/index.php/Home',
@@ -57,19 +58,17 @@
 				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
+
 	<div id="bodyContainer">
 		
 			<div id="sidebar">
 				<div class="sidebar-inset">
 
 					<!-- Logo区 -->
-					<div class="logo"></div>
+					<a href="/Index" class="logo"></a>
 
 					<!-- 导航区 -->
 					<ul id="nav">
-						<li>
-							<a href="/Index"><i class="icon-home"></i><span>首页</span></a>
-						</li>
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
 							<ol class="sr-only">
@@ -109,9 +108,8 @@
 
 					<!-- 版权信息 -->
 					<div class="copyright-info">
-						<p>Copyright @ 2016</p>
-						<p>华拓光通信股份有限公司</p>
-						<p>版权所有</p>
+						<p>ATOP Corporation</p>
+						<p>Copyright &copy; 2016</p>
 					</div>
 
 				</div>
@@ -130,21 +128,30 @@
 
 			<div class="user-operation-box pull-right">
 				<div class="user-operation-item pull-left">
+					<a href="/notice"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
+				</div>
+				<div class="user-operation-item pull-left user-options-btn">
 					<a href="/index.php/Home/Center">
-						<img src="<?php echo ($face["face"]); ?>" width="30" alt="">
-						<!--<i class="layui-icon">&#xe612;</i>-->&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>
-						<div class="clearfix"></div>
+						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
 					</a>
 				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/notice"><i class="icon-bell"></i>&nbsp;&nbsp;通知</a>
-				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
-				</div>
 				<div class="clearfix"></div>
+
+				<!--<div class="user-operation-item pull-left">
+					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
+				</div>-->
 			</div>
 			<div class="clearfix"></div>
+		</div>
+
+
+		<!-- 用户选项 -->
+		<div class="user-options">
+			<ul>
+				<li><a href="#"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
+				<li><a href="#"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
+				<li><a href="#"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
+			</ul>
 		</div>
 
 		<!-- 正文区域 -->
@@ -178,7 +185,7 @@
 			</form>
 		</div>
 
-		<div class="clearfix" style="margin-bottom: 25px;"></div>
+		<div class="clearfix" style="margin-bottom: 15px;"></div>
 
 
 		<!-- 筛选 -->
@@ -187,7 +194,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">与我相关</label>
 					<div class="layui-input-inline">
-						<input type="checkbox" name="withme" value="on" title="我参与的或属于我的" <?php if(isset($_GET['withme'])): if(($_GET['withme']) == "on"): ?>checked<?php endif; endif; ?>>
+						<input type="checkbox" name="withme" value="on" lay-skin="primary" title="" <?php if(isset($_GET['withme'])): if(($_GET['withme']) == "on"): ?>checked<?php endif; endif; ?>>
 					</div>
 				</div>
 				<div class="layui-form-item">
@@ -196,11 +203,8 @@
 						<div class="layui-input-inline">
 							<select name="step">
 								<option value="">选择指定步骤</option>
-								<option value="1">步骤1</option>
-								<option value="2">步骤2</option>
-								<option value="3">步骤3</option>
-								<option value="4">步骤4</option>
-								<option value="5">步骤5</option>
+								<?php if(is_array($stepData)): $i = 0; $__LIST__ = $stepData;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><option value="<?php echo ($value["id"]); ?>" <?php if(($_GET['step']) == $value["id"]): ?>selected<?php endif; ?>>Step<?php echo ($value["id"]); ?>-<?php echo ($value["step_name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+								<option value="close" <?php if(($_GET['step']) == "close"): ?>selected<?php endif; ?>>已关闭</option>
 							</select>
 						</div>
 					</div>
@@ -268,13 +272,13 @@
 											<?php case "1": ?><span class="tag-primary">正在处理</span><?php break;?>
 											<?php case "0": ?><span class="tag-success">已经处理</span><?php break; endswitch;?>
 									<?php else: ?>
-										<?php if(($value["rma_state"]) == "N"): ?><span class="tag-primary"><?php echo ($value["step"]["step_name"]); ?></span>
+										<?php if(($value["rma_state"]) == "N"): ?><span class="tag-primary">Step<?php echo ($value["step"]["id"]); ?>-<?php echo ($value["step"]["step_name"]); ?></span>
 										<?php else: ?>
 											<span class="tag-success">已关闭</span><?php endif; endif; ?>
 									<?php if(!empty($value["customer"])): ?><span class="tag-hollow">客户：<?php echo ($value["customer"]); ?></span><?php endif; ?>
-									<?php if(!empty($value["pn"])): ?><span class="tag-hollow">产品：<?php echo ($value["pn"]); ?></span><?php endif; ?>
-									<?php if(!empty($value["vendor"])): ?><span class="tag-hollow">品牌：<?php echo ($value["vendor"]); ?></span><?php endif; ?>
-									<?php if(!empty($value["model"])): ?><span class="tag-hollow">型号：<?php echo ($value["model"]); ?></span><?php endif; ?>
+									<?php if(!empty($value["pn"])): ?><span class="tag-hollow">产品型号：<?php echo ($value["pn"]); ?></span><?php endif; ?>
+									<?php if(!empty($value["vendor"])): ?><span class="tag-hollow">设备品牌：<?php echo ($value["vendor"]); ?></span><?php endif; ?>
+									<?php if(!empty($value["model"])): ?><span class="tag-hollow">设备型号：<?php echo ($value["model"]); ?></span><?php endif; ?>
 								</p>
 								<p class="customer-reason"><b>错误信息：</b><?php echo ($value["error_message"]); ?></p>
 								<p class="customer-other"><?php if(!empty($value["nickname"])): echo ($value["nickname"]); else: echo ($value["salesperson"]); endif; ?>&nbsp;&nbsp;|&nbsp;&nbsp;<?php echo ($value["cc_time"]); ?></p>
@@ -375,7 +379,9 @@
 	</div>
 
 	<!-- 回到顶部 -->
-	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	<div class="footer-operation-bar">
+		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	</div>
 
 
 	<script>

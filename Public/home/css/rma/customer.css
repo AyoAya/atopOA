@@ -10,6 +10,9 @@
 body {
 	overflow-x: hidden;
 }
+p {
+	line-height: 24px;
+}
 .customerContainer {
 	width: 100%;
 }
@@ -129,7 +132,7 @@ body {
 	top: -1px;
 }
 .tag-hollow {
-	color: #777;
+	color: #555;
 	margin-right: 15px;
 	font-size: 12px;
 	position: relative;
@@ -219,7 +222,7 @@ body {
 .customer-table .customer-left {
 	width: 60px;
 	vertical-align: top;
-	padding: 32px 15px;
+	padding: 30px 15px;
 }
 .customer-table .customer-left img {
 	width: 60px;
@@ -234,20 +237,27 @@ body {
 }
 .customer-table .customer-right .customer-content {
 	display: block;
-	padding: 32px 15px 32px 10px;
+	padding: 30px 15px 30px 10px;
 	height: auto;
 	position: relative;
 	text-decoration: none;
 	word-break:break-all;
 	outline: none;
 }
+.customer-table .customer-right .customer-content span {
+	font-size: 14px;
+}
 .customer-table .customer-right .customer-content .customer-reason,.customer-table .customer-right .customer-content .customer-other {
-	font-size: 12px;
-	color: #888;
+	font-size: 14px;
+	color: #555;
 	margin-top: 10px;
+}
+.customer-table .customer-right .customer-content .customer-other {
+	font-size: 12px;
 }
 .customer-table .customer-right .customer-content .customer-reason {
 	margin-top: 14px;
+	line-height: 24px;
 }
 
 
@@ -261,7 +271,7 @@ body {
 	position: relative;
 	width: 100%;
 	border: solid 1px #ddd;
-	margin-bottom: 25px;
+	margin-bottom: 15px;
 	padding: 20px 15px;
 }
 #rma-filter:before {

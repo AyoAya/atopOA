@@ -17,12 +17,11 @@ class RMAController extends AuthController{
             $where .= 'AND b.operation_person LIKE "%'.session('user')['id'].'%" ';  //与我相关，查询所有自己参与的客诉
         }
         if( !empty(I('get.step')) ){
-            if( is_int(I('get.step')) ){  //如果提交的进度值为数字类型则表明筛选该步骤id的数据，我、如果不是则为已关闭的类型
-                $where .= 'AND b.step_assoc='.I('get.step').' ';    //查询所有等于该步骤的客诉
+            if( I('get.step') != 'close' ){  //如果提交的进度值为数字类型则表明筛选该步骤id的数据，我、如果不是则为已关闭的类型
+                $where = 'a.id=b.main_assoc ';
+                $where .= 'AND b.step_assoc='.I('get.step').' AND a.rma_state="N" ';    //查询所有等于该步骤的客诉
             }else{
-                if( I('get.step') == 'close' ){
-                    $where .= 'AND a.rma_state="N" ';    //查询所有已关闭的客诉
-                }
+                $where .= 'AND a.rma_state="Y" ';    //查询所有已关闭的客诉
             }
         }
         if( !empty(I('get.start_date')) && !empty(I('get.end_date')) ){
@@ -74,7 +73,8 @@ class RMAController extends AuthController{
 
 
         step:
-        $count = $customer->table('atop_oacustomercomplaint a,atop_oacustomeroperation b,atop_oacustomerstep c')->group('a.id')->where($where)->count();
+        $count = $customer->table('atop_oacustomercomplaint a,atop_oacustomeroperation b,atop_oacustomerstep c')->where($where)->group('a.id')->select();
+        $count = count($count);
         //分页
         $page = new Page($count,C('LIMIT_SIZE'));
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
@@ -88,9 +88,12 @@ class RMAController extends AuthController{
                             ->field('a.id,a.cc_time,a.salesperson,a.customer,a.sale_order,a.pn,a.vendor,a.model,a.error_message,a.reason,a.comments,a.status,a.uid,a.rma_state,a.version,c.id step_id,c.step_name')
                             ->where($where)->order('a.cc_time DESC,a.id DESC')->group('a.id')->limit($page->firstRow.','.$page->listRows)->select();
 
-        //整合标题，为考虑页面布局，文本宽度大于一定条件后将隐藏部分并添加省略号
         $user = M('User');
         $step = M('Oacustomerstep');
+
+        $step_data = $step->where('id > 1')->select();
+        $this->assign('stepData',$step_data);
+
         $operation = M('Oacustomeroperation');
         foreach($result as $key=>&$value){
             //如果用户为空则采用默认头像
@@ -261,7 +264,7 @@ class RMAController extends AuthController{
             $log['log_date'] = I('post.cc_time');
             $log['log_content'] = '新客诉。';
             $log['attachment'] = I('post.attachment','',false);
-            $log['recorder'] = session('user')['account'];
+            $log['recorder'] = 'OASystem';
             $log['timestamp'] = date('Y-m-d H:i:s');
             $log['uid'] = session('user')['id'];
             $log['version'] = 'new';
@@ -383,7 +386,7 @@ class RMAController extends AuthController{
             }
         }
 
-        foreach($oacustomerstep_model_result as $keyy=>&$valuee){
+        foreach( $oacustomerstep_model_result as $keyy=>&$valuee ){
             if( $resultData['version'] == 'new' ){
                 if( $valuee['id'] != $now_step ){
                     $valuee['class'] = 'timeline-hide';
@@ -401,11 +404,9 @@ class RMAController extends AuthController{
                             //遍历附件列表检查附件后缀
                             foreach($value['attachment'] as $ke=>&$val){
                                 //获取文件扩展名
-                                $new_filetype = getExtension($val);
-                                $mimetype = mime_content_type($val['SavePath']);    //获取文件类型
-                                echo $mimetype.' | ';
+                                $old_filetype = getExtension($val);
                                 //如果数据为image则为图像显示，否则一律为文件处理(下载)
-                                if($new_filetype=='jpeg' || $new_filetype=='jpg' || $new_filetype=='gif' || $new_filetype=='png' ||  $new_filetype=='bmp'){
+                                if( $old_filetype=='jpeg' || $old_filetype=='jpg' || $old_filetype=='gif' || $old_filetype=='png' || $old_filetype=='bmp' ){
                                     $val = array('filename'=>getBasename($val),'filetype'=>'image','filepath'=>$val);
                                 }else{
                                     $val = array('filename'=>getBasename($val),'filetype'=>'other','filepath'=>$val);
@@ -414,9 +415,10 @@ class RMAController extends AuthController{
                         }else{  //二维数组
                             $value['attachment'] = $json;
                             foreach($value['attachment'] as $ke=>&$val){
-                                $mimetype = mime_content_type($val['SavePath']);    //获取文件类型
+                                //$mimetype = mime_content_type($val['SavePath']);    //获取文件类型
+                                $old_filetype = getExtension($val['SavePath']);
                                 //获取文件扩展名
-                                if( strstr($mimetype, 'image') ){
+                                if( $old_filetype=='jpeg' || $old_filetype=='jpg' || $old_filetype=='gif' || $old_filetype=='png' || $old_filetype=='bmp' ){
                                     $val = array('filename'=>$val['SourceName'],'filetype'=>'image','filepath'=>$val['SavePath']);
                                 }else{
                                     $val = array('filename'=>$val['SourceName'],'filetype'=>'other','filepath'=>$val['SavePath']);
@@ -433,7 +435,7 @@ class RMAController extends AuthController{
                             //获取文件扩展名
                             $old_filetype = getExtension($val);
                             //如果数据为image则为图像显示，否则一律为文件处理(下载)
-                            if($old_filetype=='jpeg' || $old_filetype=='jpg' || $old_filetype=='gif' || $old_filetype=='png' || $old_filetype=='bmp'){
+                            if( $old_filetype=='jpeg' || $old_filetype=='jpg' || $old_filetype=='gif' || $old_filetype=='png' || $old_filetype=='bmp' ){
                                 $val = array('filename'=>getBasename($val),'filetype'=>'image','filepath'=>$oldFilePath.$val);
                             }else{
                                 $val = array('filename'=>getBasename($val),'filetype'=>'other','filepath'=>$oldFilePath.$val);
@@ -453,11 +455,16 @@ class RMAController extends AuthController{
                     }
                 }
                 //如果该用户头像文件不存在则采用默认头像
-                $face = $user->field('face')->find($value['uid']);
-                if($face){
-                    $value['face'] = $face['face'];
+                if( $value['recorder'] != 'OASystem' ){
+                    $face = $user->field('nickname,face')->find($value['uid']);
+                    if($face){
+                        $value['face'] = $face['face'];
+                        $value['nickname'] = $face['nickname'];
+                    }else{
+                        $value['face'] = '/Public/home/img/face/default_face.png';
+                    }
                 }else{
-                    $value['face'] = '/Public/home/img/face/default_face.png';
+                    $value['face'] = '/Public/home/img/OA_ststem_face.png';
                 }
                 //将数据进行反编译，实现br标签换行
                 $value['log_content']= htmlspecialchars_decode($value['log_content']);
@@ -582,6 +589,7 @@ class RMAController extends AuthController{
 
                 # 记录操作日志
                 $logData['log_content'] = '['.session('user')['nickname'].'] 关闭客诉';
+                $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
                 $add_id_2 = $oacustomercomplaintlog_model->add($logData);
 
@@ -620,6 +628,7 @@ class RMAController extends AuthController{
 
                 # 记录操作日志
                 $logData['log_content'] = '['.session('user')['nickname'].'] 将操作人转交给 ['.$QA_person_data['nickname'].']';
+                $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
                 $add_id_2 = $oacustomercomplaintlog_model->add($logData);
 
@@ -639,17 +648,26 @@ class RMAController extends AuthController{
 
                 $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
                 $oacustomeroperaion_model = M('Oacustomeroperation');
+                $oacustomerstep_model = M('Oacustomerstep');
 
                 # 开启事务
                 M()->startTrans();
 
                 $add_id_1 = $oacustomercomplaintlog_model->add($logData);
-                $step_result = M('Oacustomerstep')->find($post['step']-1);  //获取到上一个步骤
+                //$step_result = $oacustomerstep_model->find($post['step']-1);  //获取到上一个步骤
+
+                $step_result = $oacustomeroperaion_model->field('b.id,b.step_name')
+                                                        ->table('atop_oacustomeroperation a,atop_oacustomerstep b')
+                                                        ->where( 'a.main_assoc='.$post['cc_id'].' AND a.step_assoc=b.id' )
+                                                        ->order('a.step_assoc DESC')
+                                                        ->limit(2)
+                                                        ->select();  //获取到上一个步骤
 
                 $logDataBak = $logData;
 
                 # 记录操作日志
-                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤回退到：'.$step_result['step_name'];
+                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤回退到：Step-'.$step_result[1]['id'].' '.$step_result[1]['step_name'];
+                $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
                 $add_id_2 = $oacustomercomplaintlog_model->add($logData);
 
@@ -683,7 +701,8 @@ class RMAController extends AuthController{
                 $logDataBak = $logData; //防止系统日志冲突
 
                 # 记录操作日志
-                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤推送到：'.$step_result['step_name'];
+                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤推送到：Step-'.$step_result['id'].' '.$step_result['step_name'];
+                $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
                 $add_id_2 = $oacustomercomplaintlog_model->add($logData);
 

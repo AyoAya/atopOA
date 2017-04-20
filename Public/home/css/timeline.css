@@ -55,7 +55,7 @@
     font-size: 18px;
     color: #428bca;
     font-weight: bold;
-    padding-left: 50px !important;
+    padding-left: 40px !important;
     line-height: 50px;
 }
 .timeline .timeline-heading .timeline-table .timeline-title-text span {
@@ -111,7 +111,7 @@
 }
 .timeline .timeline-heading .timeline-table .timeline-content {
     width: 800px;
-    padding-left: 25px;
+    padding-left: 40px;
 }
 .timeline .timeline-heading .timeline-table .timeline-content .timeline-user-face {
     width: 48px;
@@ -122,6 +122,9 @@
     overflow: hidden;
     margin-right: 10px;
     border: solid 1px #ddd;
+}
+.timeline .timeline-heading .timeline-table .timeline-content .timeline-content-right {
+    width: 670px;
 }
 .timeline .timeline-heading .timeline-table .timeline-content p {
     line-height: 25px;

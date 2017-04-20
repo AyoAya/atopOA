@@ -293,7 +293,7 @@ function thumbFace($path,$name){
  * @return mixed
  */
 function getExtension($file){
-    return end(explode('.',$file));
+    return strtolower(end(explode('.',$file)));
 }
 
 /**

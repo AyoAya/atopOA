@@ -49,6 +49,7 @@
 	
 </head>
 <body>
+
 	<script type="text/javascript">
 		var ThinkPHP = {
 				'AJAX' : '/index.php/Home',
@@ -62,44 +63,17 @@
 				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
+
 	<div id="bodyContainer">
 		
 			<div id="sidebar">
 				<div class="sidebar-inset">
+
 					<!-- Logo区 -->
-					<div class="logo">
-
-					</div>
-					<!--<div id="face">
-						<div class="face-box">
-							<div class="face">
-								<a href="/index.php/Home/Center">
-									<img id="face-picture" src="<?php echo ($face["face"]); ?>" alt="" width="70" height="70">
-								</a>
-							</div>
-							<p id="userName">Hello
-								<?php if(empty($_SESSION['user']['nickname'])): ?><span id="user_info"><?php echo ($_SESSION['user']['account']); ?> <span class="caret" id="rotate-caret"></span></span>
-								<?php else: ?>
-									<span id="user_info"><?php echo ($_SESSION['user']['nickname']); ?> <span class="caret" id="rotate-caret"></span></span><?php endif; ?>
-							</p>
-							<a href="/notice" style="display: block;"><span class="sidebar-message"><span class="badge sidebar-message-badge"></span></span></a>
-							<a href="javascript:void(0);" style="display: block;"><span class="sidebar-notice"></span></a>
-							<div id="face_dropdown">
-								<ul>
-									<li><a href="/Center/modify"><i class="icon-list-alt"></i> 修改资料</a></li>
-									<li><a href="/Center/face"><i class="icon-github-alt"></i> 修改头像</a></li>
-									<li><a href="/Logout"><i class="icon-signout"></i> 退出登录</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>-->
-
+					<a href="/Index" class="logo"></a>
 
 					<!-- 导航区 -->
 					<ul id="nav">
-						<li>
-							<a href="/Index"><i class="icon-home"></i><span>首页</span></a>
-						</li>
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
 							<ol class="sr-only">
@@ -137,6 +111,11 @@
 							</li><?php endif; ?>
 					</ul>
 
+					<!-- 版权信息 -->
+					<div class="copyright-info">
+						<p>ATOP Corporation</p>
+						<p>Copyright &copy; 2016</p>
+					</div>
 
 				</div>
 			</div>
@@ -152,21 +131,30 @@
 
 			<div class="user-operation-box pull-right">
 				<div class="user-operation-item pull-left">
-					<a href="/notice" title="通知"><i class="icon-bell"></i>&nbsp;&nbsp;通知</a>
+					<a href="/notice"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
 				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/index.php/Home/Center" title="用户">
-							<!--<img src="<?php echo ($face["face"]); ?>" width="24" alt="">-->
-							<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>
-						<div class="clearfix"></div>
+				<div class="user-operation-item pull-left user-options-btn">
+					<a href="/index.php/Home/Center">
+						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
 					</a>
 				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/Logout" title="退出"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
-				</div>
 				<div class="clearfix"></div>
+
+				<!--<div class="user-operation-item pull-left">
+					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
+				</div>-->
 			</div>
 			<div class="clearfix"></div>
+		</div>
+
+
+		<!-- 用户选项 -->
+		<div class="user-options">
+			<ul>
+				<li><a href="#"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
+				<li><a href="#"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
+				<li><a href="#"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
+			</ul>
 		</div>
 
 		<!-- 正文区域 -->
@@ -182,7 +170,8 @@
 						<span class="glyphicon glyphicon-plus"></span> 添加处理记录
 					</button><?php endif; ?>
 			</div>
-			<div class="clearfix" style="margin-bottom: 25px;"></div>
+			<?php if(in_array(($_SESSION['user']['id']), is_array($details["operation_person"])?$details["operation_person"]:explode(',',$details["operation_person"]))): ?>
+				<div class="clearfix" style="margin-bottom: 25px;"></div><?php endif; ?>
 		<?php else: ?>
 			<div class="pull-left">
 				<button type="button" class="layui-btn layui-btn-primary" data-toggle="modal" data-target="#customer-rma-modal">
@@ -196,21 +185,21 @@
 		<h4>基本信息</h4>
 	</div>
 
-	<table class="layui-table" id="table" lay-skin="row">
+	<table class="layui-table" id="table">
 		<thead>
 			<tr>
-				<td>客诉ID</td>
-				<td>客诉时间</td>
-				<td>销售人员</td>
-				<td>客户</td>
-				<td>订单号</td>
-				<td>产品</td>
-				<td>
+				<th>客诉ID</th>
+				<th>客诉时间</th>
+				<th>销售人员</th>
+				<th>客户</th>
+				<th>订单号</th>
+				<th>产品型号</th>
+				<th>
                     <?php if(($details["version"]) == "new"): ?>
-                        进度
+                        当前进度
                     <?php else: ?>
                         状态<?php endif; ?>
-                </td>
+                </th>
 			</tr>
 		</thead>
 		<tbody>
@@ -223,7 +212,7 @@
 				<td><?php echo ($details["pn"]); ?></td>
 				<td>
                     <?php if(($details["version"]) == "new"): ?>
-                        <?php if(($details["rma_state"]) == "N"): ?><span class="label label-primary"><?php echo ($details["now_step"]["step_name"]); ?></span>
+                        <?php if(($details["rma_state"]) == "N"): ?><span class="label label-primary">Step<?php echo ($details["now_step"]["id"]); ?>-<?php echo ($details["now_step"]["step_name"]); ?></span>
                         <?php else: ?>
                             <span class="label label-success">客诉已关闭</span><?php endif; ?>
                     <?php else: ?>
@@ -239,20 +228,24 @@
 		<tbody>
 			<tr>
 				<td>设备厂商：</td>
-				<td><?php echo ($details["vendor"]); ?></td>
+				<td><p><?php echo ($details["vendor"]); ?></p></td>
 			</tr>
 			<tr>
 				<td>设备型号：</td>
-				<td><?php echo ($details["model"]); ?></td>
+				<td><p><?php echo ($details["model"]); ?></p></td>
 			</tr>
 			<tr>
 				<td>错误现象：</td>
-				<td><?php echo ($details["error_message"]); ?></td>
+				<td><p><?php echo ($details["error_message"]); ?></p></td>
 			</tr>
-			<?php if(!empty($details["comments"])): ?><tr>
-					<td>备注信息：</td>
-					<td><?php echo ($details["comments"]); ?></td>
-				</tr><?php endif; ?>
+			<tr>
+				<td>备注信息：</td>
+				<td><p>
+					<?php if(!empty($details["comments"])): echo ($details["comments"]); ?>
+					<?php else: ?>
+						无<?php endif; ?>
+				</p></td>
+			</tr>
 		</tbody>
 	</table>
 
@@ -295,8 +288,8 @@
 														<img src="<?php echo ($val["face"]); ?>" width="48" alt="">
 													</div>
 												</div>
-												<div class="timeline-content-right pull-left">
-													<p><?php echo ($val["log_content"]); ?></p>
+												<div class="timeline-content-right pull-right">
+													<?php echo ($val["log_content"]); ?>
 													<?php if(!empty($val["picture"])): if(is_array($val["picture"])): $i = 0; $__LIST__ = $val["picture"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$v): $mod = ($i % 2 );++$i; if(!empty($v)): ?><div class="pic-group pull-left">
 																	<img class="customer-complaint-img" src="/<?php echo ($v["filepath"]); ?>" alt="加载失败">
 																	<span class="pic-info"><?php echo ($v["filename"]); ?></span>
@@ -315,7 +308,12 @@
 																		<span class="pic-info"><?php echo ($v["filename"]); ?></span>
 																	</div><?php endif; endif; endforeach; endif; else: echo "" ;endif; endif; ?>
 													<div class="clearfix"></div>
-													<div class="timeline-other"><?php echo ($val["recorder"]); ?><span class="timeline-divider">|</span><?php echo ($val["timestamp"]); ?></div>
+													<div class="timeline-other">
+														<?php if(($val["recorder"]) == "OASystem"): ?>OA系统
+														<?php else: ?>
+															<?php echo ($val["nickname"]); endif; ?>
+														<span class="timeline-divider">|</span><?php echo ($val["timestamp"]); ?>
+													</div>
 												</div>
 												<div class="clearfix"></div>
 											</td>
@@ -360,9 +358,9 @@
                                                 <?php if(($details["now_step"]["id"]) == $maxStep): ?><option value="N">关闭客诉</option><?php endif; ?>
                                                 <?php if(($details["now_step"]["id"]) < $maxStep): if(($details["rma_state"]) == "N"): ?>
                                                         <?php if(($details["now_step"]["id"]) != "4"): ?>
-                                                            <option value="<?php echo ($details["next_step"]["id"]); ?>">推送到：<?php echo ($details["next_step"]["step_name"]); ?></option>
+                                                            <option value="<?php echo ($details["next_step"]["id"]); ?>">推送到：Step-<?php echo ($details["next_step"]["id"]); ?> <?php echo ($details["next_step"]["step_name"]); ?></option>
                                                         <?php else: ?>
-                                                            <?php if(is_array($details["next_step"])): $i = 0; $__LIST__ = $details["next_step"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><option value="<?php echo ($value["id"]); ?>">推送到：<?php echo ($value["step_name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; endif; endif; endif; ?>
+                                                            <?php if(is_array($details["next_step"])): $i = 0; $__LIST__ = $details["next_step"];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><option value="<?php echo ($value["id"]); ?>">推送到：Step<?php echo ($value["id"]); ?>-<?php echo ($value["step_name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; endif; endif; endif; ?>
                                             </select>
                                         </div>
                                     </div>
@@ -396,7 +394,7 @@
                                     </div>
                                     <div class="layui-inline">
                                         <div class="layui-input-inline">
-                                            <input type="file" name="Filedata" lay-type="file|image" class="layui-upload-file" multiple>
+                                            <input type="file" name="Filedata"  lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf" class="layui-upload-file" multiple>
                                         </div>
                                     </div>
                                     <ul id="attachment-list"></ul>
@@ -437,7 +435,7 @@
                                 </div>
                                 <div class="layui-inline">
                                     <div class="layui-input-inline">
-                                        <input type="file" name="Filedata" lay-type="file|image" class="layui-upload-file" multiple>
+                                        <input type="file" name="Filedata"  lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf" class="layui-upload-file" multiple>
                                     </div>
                                 </div>
                                 <ul id="attachment-list"></ul>
@@ -690,7 +688,9 @@
 	</div>
 
 	<!-- 回到顶部 -->
-	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	<div class="footer-operation-bar">
+		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	</div>
 
 
 	<script>

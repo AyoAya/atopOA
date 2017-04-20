@@ -35,6 +35,7 @@
 	
 </head>
 <body>
+
 	<script type="text/javascript">
 		var ThinkPHP = {
 				'AJAX' : '/index.php/Home',
@@ -48,19 +49,17 @@
 				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
+
 	<div id="bodyContainer">
 		
 			<div id="sidebar">
 				<div class="sidebar-inset">
 
 					<!-- Logo区 -->
-					<div class="logo"></div>
+					<a href="/Index" class="logo"></a>
 
 					<!-- 导航区 -->
 					<ul id="nav">
-						<li>
-							<a href="/Index"><i class="icon-home"></i><span>首页</span></a>
-						</li>
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
 							<ol class="sr-only">
@@ -100,9 +99,8 @@
 
 					<!-- 版权信息 -->
 					<div class="copyright-info">
-						<p>Copyright @ 2016</p>
-						<p>华拓光通信股份有限公司</p>
-						<p>版权所有</p>
+						<p>ATOP Corporation</p>
+						<p>Copyright &copy; 2016</p>
 					</div>
 
 				</div>
@@ -115,47 +113,61 @@
 	<ol class="breadcrumb breadcrumb-edit">
 		<li class="active">样品管理</li>
 	</ol>
-	<div id="search" class="input-group pull-right">
-		<form id="SearchHiddenForm" action="/Sample" method="get">
-			<input type="text" name="search" id="SearchText" class="form-control search-input" value="<?php if(isset($search)): echo ($search); endif; ?>" placeholder="搜索订单号或销售">
-			<span class="input-group-btn">
-				<button class="btn btn-primary" id="submitSearch" type="submit"><span class="glyphicon glyphicon-search"></span></button>
-			</span>
-			<?php if(isset($search)): ?><a href="/Sample" class="btn btn-danger clear-condition" data-toggle="tooltip" data-placement="left" title="清除筛选条件" onMouseOver="$(this).tooltip('show')"><i class="icon-remove"></i></a><?php endif; ?>
-		</form>
-	</div>
-	<div class="btn-group pull-right btn-group-edit" role="group">
-		<a href="/sampleChart" class="btn btn-primary">
-			<span class="glyphicon glyphicon-th"></span> 样品统计
-		</a>
-		<?php if(($department["department"]) == "4"): ?><a href="/addSample" class="btn btn-primary">
-				<span class="glyphicon glyphicon-plus"></span> 我要下单
-			</a><?php endif; ?>
-	</div>
 
 			<div class="user-operation-box pull-right">
 				<div class="user-operation-item pull-left">
+					<a href="/notice"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
+				</div>
+				<div class="user-operation-item pull-left user-options-btn">
 					<a href="/index.php/Home/Center">
-						<img src="<?php echo ($face["face"]); ?>" width="30" alt="">
-						<!--<i class="layui-icon">&#xe612;</i>-->&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>
-						<div class="clearfix"></div>
+						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
 					</a>
 				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/notice"><i class="icon-bell"></i>&nbsp;&nbsp;通知</a>
-				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
-				</div>
 				<div class="clearfix"></div>
+
+				<!--<div class="user-operation-item pull-left">
+					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
+				</div>-->
 			</div>
 			<div class="clearfix"></div>
+		</div>
+
+
+		<!-- 用户选项 -->
+		<div class="user-options">
+			<ul>
+				<li><a href="#"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
+				<li><a href="#"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
+				<li><a href="#"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
+			</ul>
 		</div>
 
 		<!-- 正文区域 -->
 		<div id="content">
 			<div class="container-fluid" id="content-box">
 				
+
+	<div class="pull-left">
+		<!--<a href="/sampleChart" class="layui-btn layui-btn-primary">
+			<span class="glyphicon glyphicon-th"></span> 样品统计
+		</a>-->
+		<?php if(($department["department"]) == "4"): ?><a href="/addSample" class="layui-btn layui-btn-primary">
+				<span class="glyphicon glyphicon-plus"></span> 我要下单
+			</a><?php endif; ?>
+		<?php if(isset($search)): ?><a href="/Sample" class="layui-btn layui-btn-danger clear-condition">清除条件</a><?php endif; ?>
+	</div>
+
+
+	<div class="pull-right search-box">
+		<form id="SearchHiddenForm" class="layui-form" action="/Sample" method="get">
+			<input type="text" name="search" id="SearchText" class="layui-input search-input" value="<?php if(isset($search)): echo ($search); endif; ?>" placeholder="搜索订单号或销售">
+			<button class="layui-btn layui-btn-primary search-btn" id="submitSearch" type="submit"><i class="layui-icon">&#xe615;</i></button>
+		</form>
+	</div>
+
+	<div class="clearfix" style="margin-bottom: 15px;"></div>
+
+
 
 	<?php if(is_array($newResult)): $i = 0; $__LIST__ = $newResult;if( count($__LIST__)==0 ) : echo "$empty" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><div class="col-lg-4">
 			<div class="order-box">
@@ -236,7 +248,9 @@
 	</div>
 
 	<!-- 回到顶部 -->
-	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	<div class="footer-operation-bar">
+		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	</div>
 
 
 	<script>
