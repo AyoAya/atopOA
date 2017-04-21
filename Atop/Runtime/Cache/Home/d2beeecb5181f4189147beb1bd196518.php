@@ -16,12 +16,12 @@
 	<link rel="stylesheet" href="/Public/Home/css/jquery.mCustomScrollbar.css">
 	<link rel="stylesheet" href="/Public/Home/css/iconfont.css">
 	<link rel="stylesheet" href="/Public/Home/css/basic.css">
-	<link rel="stylesheet" href="/Public/Home/css/<?php echo ($face["theme"]); ?>/index.css">
+	<link rel="stylesheet" href="/Public/Home/css/Theme/<?php echo ($face["theme"]); ?>.css">
 	<link rel="stylesheet" href="/Public/Home/css/promotion_index.css">
 
 	
 	<link rel="stylesheet" href="/Public/Home/css/fliptimer.css">
-	<link rel="stylesheet" href="/Public/Home/css/home.css">
+	<link rel="stylesheet" href="/Public/Home/css/welcome.css">
 <!-- 引入css文件 -->
 	<script src="/Public/Home/js/jquery.min.js"></script>
 	<script src="/Public/Home/js/bootstrap.min.js"></script>
@@ -39,17 +39,18 @@
 
 	<script type="text/javascript">
 		var ThinkPHP = {
-				'AJAX' : '/index.php/Home',
-				'ROOT' : '',
-				'IMG' : '/Public/Home/img',
-				'UPLOAD' : '/Uploads',
-				'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
-				'UPLOADIFY' : '/Public/home/uploadify',
-				'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
-				'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
-				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
+			'AJAX' : '/index.php/Home',
+			'ROOT' : '',
+			'IMG' : '/Public/Home/img',
+			'UPLOAD' : '/Uploads',
+			'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
+			'UPLOADIFY' : '/Public/home/uploadify',
+			'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
+			'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
+			'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
+
 
 	<div id="bodyContainer">
 		
@@ -63,11 +64,11 @@
 					<ul id="nav">
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
-							<ol class="sr-only">
-								<li><a href="/Project"><i class="icon-angle-right"></i>&nbsp;项目管理</a></li>
-								<li><a href="/Sample"><i class="icon-angle-right"></i>&nbsp;样品管理</a></li>
-								<li><a href="/Product"><i class="icon-angle-right"></i>&nbsp;产品管理</a></li>
-								<li><a href="/Compatibility"><i class="icon-angle-right"></i>&nbsp;兼容表</a></li>
+							<ol class="<?php if(in_array((CONTROLLER_NAME), explode(',',"Project,Sample,Product,Compatibility"))): else: ?>sr-only<?php endif; ?>">
+								<li><a href="/Project" class="<?php if((CONTROLLER_NAME) == "Project"): ?>active<?php endif; ?>">&nbsp;&nbsp;项目管理</a></li>
+								<li><a href="/Sample" class="<?php if((CONTROLLER_NAME) == "Sample"): ?>active<?php endif; ?>">&nbsp;&nbsp;样品管理</a></li>
+								<li><a href="/Product" class="<?php if((CONTROLLER_NAME) == "Product"): ?>active<?php endif; ?>">&nbsp;&nbsp;产品管理</a></li>
+								<li><a href="/Compatibility" class="<?php if((CONTROLLER_NAME) == "Compatibility"): ?>active<?php endif; ?>">&nbsp;&nbsp;兼容表</a></li>
 							</ol>
 						</li>
 						<!--<li id="Audit">
@@ -79,22 +80,22 @@
 							</div>
 						</li>-->
 						<li>
-							<a href="/Approval"><i class="icon-legal"></i><span>审批</span></a>
+							<a href="/Approval" class="<?php if((CONTROLLER_NAME) == "Approval"): ?>active<?php endif; ?>"><i class="icon-legal"></i><span>审批</span></a>
 						</li>
 						<li>
-							<a href="/DCC"><i class="icon-print"></i><span>文档中心</span></a>
+							<a href="/DCC" class="<?php if((CONTROLLER_NAME) == "DCC"): ?>active<?php endif; ?>"><i class="icon-print"></i><span>文档中心</span></a>
 						</li>
 						<li>
-							<a href="/Acronym"><i class="icon-book"></i><span>缩略词</span></a>
+							<a href="/Acronym" class="<?php if((CONTROLLER_NAME) == "Acronym"): ?>active<?php endif; ?>"><i class="icon-book"></i><span>缩略词</span></a>
 						</li>
 						<li>
-							<a href="/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
+							<a href="/RMA" class="<?php if((CONTROLLER_NAME) == "RMA"): ?>active<?php endif; ?>"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
 						</li>
 						<li>
-							<a href="/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a>
+							<a href="/Manage" class="<?php if((CONTROLLER_NAME) == "Manage"): ?>active<?php endif; ?>"><i class="icon-user"></i><span>用户管理</span></a>
 						</li>
 						<?php if(($_SESSION['user']['account']) == "admin"): ?><li>
-								<a href="/System"><i class="icon-cog"></i><span>系统</span></a>
+								<a href="/System" class="<?php if((CONTROLLER_NAME) == "System"): ?>active<?php endif; ?>"><i class="icon-cog"></i><span>系统</span></a>
 							</li><?php endif; ?>
 					</ul>
 
@@ -110,27 +111,29 @@
 
 		<!-- 二级导航及用户信息/常用操作区 -->
 		<div id="header">
+			<!-- 面包屑导航 -->
 			
 	<ol class="breadcrumb breadcrumb-edit">
 		<li class="active">首页</li>
 	</ol>
-	<!--<div class="btn-group pull-right btn-group-edit" role="group">
-		<a href="/Organization" class="btn btn-primary">
-			<span class="glyphicon glyphicon-th"></span> 组织架构图
-		</a>
-		<a href="/addManage" class="btn btn-primary">
-			<span class="glyphicon glyphicon-plus"></span> 添加用户
-		</a>
-	</div>-->
+
 
 			<div class="user-operation-box pull-right">
 				<div class="user-operation-item pull-left">
-					<a href="/notice"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
+					<a href="/Notice" class="option-name"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
 				</div>
 				<div class="user-operation-item pull-left user-options-btn">
-					<a href="/index.php/Home/Center">
+					<a class="option-name">
 						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
 					</a>
+					<!-- 用户选项 -->
+					<div class="user-options">
+						<ul>
+							<li><a href="/Center/modify"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
+							<li><a href="/Center/face"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
+							<li><a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
+						</ul>
+					</div>
 				</div>
 				<div class="clearfix"></div>
 
@@ -142,19 +145,108 @@
 		</div>
 
 
-		<!-- 用户选项 -->
-		<div class="user-options">
-			<ul>
-				<li><a href="#"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
-				<li><a href="#"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
-				<li><a href="#"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
-			</ul>
-		</div>
 
 		<!-- 正文区域 -->
 		<div id="content">
 			<div class="container-fluid" id="content-box">
 				
+
+
+	<div class="welconme-container">
+		<div class="welcome-user"><img class="welcome-user-face" src="<?php echo ($face["face"]); ?>" width="40" alt=""> <?php echo ($_SESSION['user']['nickname']); ?><small><?php echo get_welcome_str();?></small></div>
+		<div class="welcome-text">欢迎登录华拓光通信OA系统</div>
+		<div>今天是<?php echo date('Y年m月d日');?>，<?php echo week();?>，本周是今年的第<?php echo date('W');?>周</div>
+	</div>
+
+	<div class="wrap">
+		<div class="pull-left" style="width: 39%;">
+			<div class="section">
+				<div class="section-title">服务器信息</div>
+				<div class="section-body">
+					<table class="server-info-table">
+						<tbody>
+							<tr>
+								<td>系统类型：</td>
+								<td><?php echo php_uname('s');?></td>
+							</tr>
+							<tr>
+								<td>系统版本：</td>
+								<td><?php echo php_uname('r');?></td>
+							</tr>
+							<tr>
+								<td>PHP版本：</td>
+								<td><?php echo PHP_VERSION;?></td>
+							</tr>
+							<tr>
+								<td>Zend版本：</td>
+								<td><?php echo Zend_Version();?></td>
+							</tr>
+							<tr>
+								<td>服务器IP：</td>
+								<td><?php echo $_SERVER['SERVER_NAME'];?></td>
+							</tr>
+							<tr>
+								<td>客户端IP：</td>
+								<td><?php echo $_SERVER['REMOTE_ADDR'];?></td>
+							</tr>
+							<tr>
+								<td>Web端口：</td>
+								<td><?php echo $_SERVER['SERVER_PORT'];?></td>
+							</tr>
+							<tr>
+								<td>解译引擎：</td>
+								<td><?php echo $_SERVER['SERVER_SOFTWARE'];?></td>
+							</tr>
+							<tr>
+								<td>服务器语言：</td>
+								<td><?php echo $_SERVER['HTTP_ACCEPT_LANGUAGE'];?></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="pull-right" style="width: 60%;">
+			<div class="section">
+				<div class="section-title">OA更新日志</div>
+				<div class="section-body">
+					<table class="oa-update-log">
+						<tbody>
+							<tr>
+								<td>2017/4/21更新</td>
+								<td>
+									1. 调整后台界面（侧边栏、页头、滚动条、操作按钮等），通知栏及用户操作栏调整至右上角，用户栏集成修改资料/修改头像/退出登录，
+										后台首页界面更新，左侧菜单栏二级菜单切换为下拉展开式，首页栏目集成在logo上（返回首页可通过点击logo跳转）。
+									<br><br>
+									2. 新版客诉上线，新版客诉将增加推送功能，提供每个步骤日志更新及回退、转交处理人等操作，旧版客诉将停止维护，如需更新则须通过销售转为新版方可操作。
+									<br><br>
+									3. 未来样品管理功能将重构。
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	<!-- 天行joke笑话接口 -->
 	<!--<ul id="joke-api"></ul>
@@ -246,10 +338,13 @@
 		</div>
 	</div>
 
+	<!-- Modal集 -->
+	
+
+	
+
 	<!-- 回到顶部 -->
-	<div class="footer-operation-bar">
-		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
-	</div>
+	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
 
 	<script>

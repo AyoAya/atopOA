@@ -73,7 +73,7 @@
 	padding-bottom: 0;
 }
 #nav li ol li a {
-	text-indent: 30px;
+	text-indent: 53px;
 	padding: 0;
 	height: 50px !important;
 	line-height: 50px !important;
@@ -101,11 +101,11 @@
 }
 #nav li a:hover {
 	color: #fff;
-	background: #428bca;
+	background: rgba(0,0,0,.2);
 }
 #nav li a.active {
 	color: #fff;
-	background: rgba(255,255,255,.1);
+	background: #428bca;
 }
 #nav li a b {
 	display: inline-block;
@@ -127,7 +127,7 @@
 	right: 0;
 	top: 0;
 	height: 41px;
-	z-index: 1;
+	z-index: 2;
 	background: #fff;
 	border-bottom: solid 1px #ccc;
 	padding-left: 30px;
@@ -146,37 +146,46 @@
 	line-height: 40px;
 	text-align: center;
 	min-width: 60px;
-	border-bottom: solid 3px #fff;
 	transition: all .3s;
 	font-size: 12px;
 	position: relative;
 }
+#header .user-operation-box .user-options-btn {
+	min-width: 120px;
+	cursor: default;
+	position: relative;
+}
+#header .user-operation-box .user-options-btn a b {
+	transition: all .3s;
+}
+#header .user-operation-box .user-options-btn:hover .user-options {
+	display: block;
+}
+#header .user-operation-box .user-options-btn a:hover b {
+	transform:rotate(30deg);
+	-ms-transform:rotate(30deg); /* IE 9 */
+	-moz-transform:rotate(30deg); /* Firefox */
+	-webkit-transform:rotate(30deg); /* Safari and Chrome */
+	-o-transform:rotate(30deg); /* Opera */
+}
 .user-options {
+	width: 100%;
 	display: none;
 	position: absolute;
-	right: 40px;
-	top: 50px;
-	z-index: 9;
+	right: 0px;
+	top: 40px;
+	z-index: 10;
 	background: #fff;
 }
 .user-options ul {
 	border: solid 1px #ccc;
+	border-top: none;
 	padding: 5px 0;
 	position: relative;
-}
-.user-options ul:before {
-	content: '';
-	width: 15px;
-	height: 15px;
-	background: url("../../img/arrow_up_border_ccc.png") center center no-repeat;
-	position: absolute;
-	right: 26px;
-	top: -15px;
 }
 .user-options ul li {
 }
 .user-options ul li a {
-	padding: 7px 20px;
 	display: block;
 	color: #555;
 }
@@ -185,9 +194,9 @@
 	border-top: solid 1px #eee;
 }
 .user-options ul li a:hover {
-	background: #eee;
+	background: #efefef;
 }
-#header .user-operation-box .user-operation-item a:hover {
+#header .user-operation-box .user-operation-item:hover a.option-name {
 	color: #d9534f;
 }
 #header .user-operation-box .user-operation-item img {
@@ -245,29 +254,23 @@
 	bottom: 60px;
 	right: 60px;
 	z-index: 1;
-	width: 50px;
-	height: 50px;
-	border: solid 1px #ccc;
+	width: 70px;
+	height: 70px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
-	font-size: 25px;
-	color: #888;
-	background: #fff;
-	line-height: 45px;
+	font-size: 34px;
+	color: #fff;
+	background: #81c0f2;
+	line-height: 65px;
 	text-align: center;
 	cursor: pointer;
-	transition: all .3s;
-}
-#scrollBackTop i {
-	color: #888;
-	transition: all .3s;
 }
 #scrollBackTop:hover {
-	border: solid 1px #428bca;
+	background: #428bca;;
 }
 #scrollBackTop:hover i {
-	color: #428bca;
+	color: #fff;
 }
 
 

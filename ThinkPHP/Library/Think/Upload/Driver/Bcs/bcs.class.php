@@ -20,7 +20,7 @@ define ( 'BCS_SUPERFILE_SLICE_SIZE', 1024 * 1024 );
 require_once (BCS_API_PATH . '/requestcore.class.php');
 require_once (BCS_API_PATH . '/mimetypes.class.php');
 /**
- * Default BCS Exception.
+ * Theme BCS Exception.
  */
 class BCS_Exception extends \Exception {
 }

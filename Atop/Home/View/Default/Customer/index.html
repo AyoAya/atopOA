@@ -77,7 +77,7 @@
 								<span class="label label-success">已经处理</span>
 							</case>
 						</switch>
-						<a href="__ROOT__/customerDetails/{$value.id}" class="title-text">
+						<a href="__ROOT__/Customer/details/id/{$value.id}" class="title-text">
 							<notempty name="value.customer">
 								{$value.customer} &bull;
 							</notempty>
@@ -101,60 +101,6 @@
 		<ul class="pagination pagination-edit">{$pageShow}</ul>
 	</div>
 
-	<!-- 数据筛选模态框 -->
-	<div class="modal fade" tabindex="-1" role="dialog" id="FilterModal" aria-labelledby="FilterModal" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h4 class="modal-title">筛选</h4>
-				</div>
-				<form class="form-inline" role="form" action="__ROOT__/Customer" method="get" id="FilterForm">
-				<div class="modal-body">
-					<div class="form-group form-group-margin">
-						<label for="">状　　态&nbsp;</label>
-						<div class="btn-group" id="statusList">
-							<button type="button" class="btn btn-default <eq name='filter.status' value='1'>active</eq>" state="1">正在处理</button>
-							<button type="button" class="btn btn-default <eq name='filter.status' value='-1'>active</eq>" state="-1">无法处理</button>
-							<button type="button" class="btn btn-default <eq name='filter.status' value='0'>active</eq>" state="0">已经处理</button>
-							<button type="button" id="AllStatus" class="btn btn-default <notin name='filter.status' value='-1,0,1'>active</notin>" state="2">所有状态</button>
-						</div>
-					</div>
-					<div class="form-group form-group-margin">
-						<label>客诉日期&nbsp;</label>
-						<div class="input-group">
-							<span class="input-group-addon">从</span>
-							<input id="" type="text" class="form-control startDate" readonly name="startdate" value="{$filter.startdate}" placeholder="">
-						</div>
-						<div class="input-group">
-							<span class="input-group-addon">至</span>
-							<input id="" type="text" class="form-control endDate" readonly name="enddate" value="{$filter.enddate}" placeholder="" id="">
-						</div>
-					</div>
-					<div class="form-group form-group-margin">
-						<label>订单编号&nbsp;</label>
-						<input type="text" class="form-control" name="order" value="{$filter.sale_order}" placeholder="" id="">　
-						<label>销售人员&nbsp;</label>
-						<input type="text" class="form-control" name="person" value="{$filter.salesperson}" placeholder="" id="">　
-					</div>
-					<div class="form-group form-group-margin">
-						<label>客　　户&nbsp;</label>
-						<input type="text" class="form-control" name="customer" value="{$filter.customer}" placeholder="" id="">　
-						<label>设备厂商&nbsp;</label>
-						<input type="text" class="form-control" name="vendor" value="{$filter.vendor}" placeholder="" id="">　
-					</div>
-				</div>
-				<div class="modal-footer">
-					<input type="hidden" name="status" value="<notin name='filter.status' value='-1,0,1'>2<else/>{$filter.status}</notin>" id="filterStatus">
-					<a href="__ROOT__/Customer" class="btn btn-default">清空条件</a>
-					<input type="submit" class="btn btn-primary" value="确定">
-				</div>
-				</form>
-			</div>
-		</div>
-	</div>
 	
 	<!-- 回到顶部按钮 -->
 	<div id="backtop">
@@ -189,6 +135,66 @@
 			forceParse: 0
 		});
 	</script>
+</block>
+
+
+<block name="modals">
+
+	<!-- 数据筛选模态框 -->
+	<div class="modal fade" tabindex="1030" role="dialog" id="FilterModal" aria-labelledby="FilterModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">筛选</h4>
+				</div>
+				<form class="form-inline" role="form" action="__ROOT__/Customer" method="get" id="FilterForm">
+					<div class="modal-body">
+						<div class="form-group form-group-margin">
+							<label for="">状　　态&nbsp;</label>
+							<div class="btn-group" id="statusList">
+								<button type="button" class="btn btn-default <eq name='filter.status' value='1'>active</eq>" state="1">正在处理</button>
+								<button type="button" class="btn btn-default <eq name='filter.status' value='-1'>active</eq>" state="-1">无法处理</button>
+								<button type="button" class="btn btn-default <eq name='filter.status' value='0'>active</eq>" state="0">已经处理</button>
+								<button type="button" id="AllStatus" class="btn btn-default <notin name='filter.status' value='-1,0,1'>active</notin>" state="2">所有状态</button>
+							</div>
+						</div>
+						<div class="form-group form-group-margin">
+							<label>客诉日期&nbsp;</label>
+							<div class="input-group">
+								<span class="input-group-addon">从</span>
+								<input id="" type="text" class="form-control startDate" readonly name="startdate" value="{$filter.startdate}" placeholder="">
+							</div>
+							<div class="input-group">
+								<span class="input-group-addon">至</span>
+								<input id="" type="text" class="form-control endDate" readonly name="enddate" value="{$filter.enddate}" placeholder="" id="">
+							</div>
+						</div>
+						<div class="form-group form-group-margin">
+							<label>订单编号&nbsp;</label>
+							<input type="text" class="form-control" name="order" value="{$filter.sale_order}" placeholder="" id="">　
+							<label>销售人员&nbsp;</label>
+							<input type="text" class="form-control" name="person" value="{$filter.salesperson}" placeholder="" id="">　
+						</div>
+						<div class="form-group form-group-margin">
+							<label>客　　户&nbsp;</label>
+							<input type="text" class="form-control" name="customer" value="{$filter.customer}" placeholder="" id="">　
+							<label>设备厂商&nbsp;</label>
+							<input type="text" class="form-control" name="vendor" value="{$filter.vendor}" placeholder="" id="">　
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="hidden" name="status" value="<notin name='filter.status' value='-1,0,1'>2<else/>{$filter.status}</notin>" id="filterStatus">
+						<a href="__ROOT__/Customer" class="btn btn-default">清空条件</a>
+						<input type="submit" class="btn btn-primary" value="确定">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 </block>
 
 

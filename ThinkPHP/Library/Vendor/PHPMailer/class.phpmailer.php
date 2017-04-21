@@ -186,7 +186,7 @@ class PHPMailer {
   public $Port          = 25;
 
   /**
-   * Sets the SMTP HELO of the message (Default is $Hostname).
+   * Sets the SMTP HELO of the message (Theme is $Hostname).
    * @var string
    */
   public $Helo          = '';

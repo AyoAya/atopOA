@@ -336,7 +336,7 @@ code {
 .customer-rma-form .layui-form-select {
 	width: 201.5px;
 }
-.customer-rma-form .step-select p {
+.customer-rma-form .step-select span {
 	color: #888;
 	font-size: 12px;
 	margin-left: 15px;
@@ -433,9 +433,37 @@ p.file-name a {
 
 
 
-
-
-
+/*** 添加操作日志按钮 ***/
+.addOperationLog {
+	position: fixed;
+	bottom: 60px;
+	right: 60px;
+	z-index: 1;
+	width: 70px;
+	height: 70px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	font-size: 13px;
+	color: #fff;
+	background: #81c0f2;
+	line-height: 65px;
+	text-align: center;
+	cursor: pointer;
+}
+.addOperationLog p {
+	padding-top: 10px;
+}
+.addOperationLog p span {
+	display: block;
+}
+.addOperationLog p span:first-child {
+	font-size: 25px;
+	margin-bottom: 5px;
+}
+.addOperationLog:hover {
+	background: #428bca;;
+}
 
 
 

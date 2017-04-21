@@ -6,9 +6,9 @@
 $(function(){
 
 
-	$('.user-options-btn').mouseover(function(){
+	/*$('.user-options-btn').mouseover(function(){
 		$('.user-options').css('display','block');
-	});
+	});*/
 	/*$('.user-options').mouseout(function(){
 		setTimeout(function(){
 			$('.user-options').css('display','none');

@@ -37,6 +37,7 @@
 	
 </head>
 <body>
+
 	<script type="text/javascript">
 		var ThinkPHP = {
 				'AJAX' : '/index.php/Home',
@@ -50,26 +51,24 @@
 				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
+
 	<div id="bodyContainer">
 		
 			<div id="sidebar">
 				<div class="sidebar-inset">
 
 					<!-- Logo区 -->
-					<div class="logo"></div>
+					<a href="/Index" class="logo"></a>
 
 					<!-- 导航区 -->
 					<ul id="nav">
 						<li>
-							<a href="/Index"><i class="icon-home"></i><span>首页</span></a>
-						</li>
-						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
 							<ol class="sr-only">
-								<li><a href="/Project"><i class="icon-angle-right"></i>&nbsp;项目管理</a></li>
-								<li><a href="/Sample"><i class="icon-angle-right"></i>&nbsp;样品管理</a></li>
-								<li><a href="/Product"><i class="icon-angle-right"></i>&nbsp;产品管理</a></li>
-								<li><a href="/Compatibility"><i class="icon-angle-right"></i>&nbsp;兼容表</a></li>
+								<li><a href="/Project" class="<?php if((CONTROLLER_NAME) == "RMA"): ?>active<?php endif; ?>"><i class="icon-angle-right"></i>&nbsp;项目管理</a></li>
+								<li><a href="/Sample" class="<?php if((CONTROLLER_NAME) == "RMA"): ?>active<?php endif; ?>"><i class="icon-angle-right"></i>&nbsp;样品管理</a></li>
+								<li><a href="/Product" class="<?php if((CONTROLLER_NAME) == "RMA"): ?>active<?php endif; ?>"><i class="icon-angle-right"></i>&nbsp;产品管理</a></li>
+								<li><a href="/Compatibility" class="<?php if((CONTROLLER_NAME) == "RMA"): ?>active<?php endif; ?>"><i class="icon-angle-right"></i>&nbsp;兼容表</a></li>
 							</ol>
 						</li>
 						<!--<li id="Audit">
@@ -81,30 +80,29 @@
 							</div>
 						</li>-->
 						<li>
-							<a href="/Approval"><i class="icon-legal"></i><span>审批</span></a>
+							<a href="/Approval" class="<?php if((CONTROLLER_NAME) == "Approval"): ?>active<?php endif; ?>"><i class="icon-legal"></i><span>审批</span></a>
 						</li>
 						<li>
-							<a href="/DCC"><i class="icon-print"></i><span>文档中心</span></a>
+							<a href="/DCC" class="<?php if((CONTROLLER_NAME) == "DCC"): ?>active<?php endif; ?>"><i class="icon-print"></i><span>文档中心</span></a>
 						</li>
 						<li>
-							<a href="/Acronym"><i class="icon-book"></i><span>缩略词</span></a>
+							<a href="/Acronym" class="<?php if((CONTROLLER_NAME) == "Acronym"): ?>active<?php endif; ?>"><i class="icon-book"></i><span>缩略词</span></a>
 						</li>
 						<li>
-							<a href="/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
+							<a href="/RMA" class="<?php if((CONTROLLER_NAME) == "RMA"): ?>active<?php endif; ?>"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
 						</li>
 						<li>
-							<a href="/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a>
+							<a href="/Manage" class="<?php if((CONTROLLER_NAME) == "Manage"): ?>active<?php endif; ?>"><i class="icon-github-alt"></i><span>用户管理</span></a>
 						</li>
 						<?php if(($_SESSION['user']['account']) == "admin"): ?><li>
-								<a href="/System"><i class="icon-cog"></i><span>系统</span></a>
+								<a href="/System" class="<?php if((CONTROLLER_NAME) == "System"): ?>active<?php endif; ?>"><i class="icon-cog"></i><span>系统</span></a>
 							</li><?php endif; ?>
 					</ul>
 
 					<!-- 版权信息 -->
 					<div class="copyright-info">
-						<p>Copyright @ 2016</p>
-						<p>华拓光通信股份有限公司</p>
-						<p>版权所有</p>
+						<p>ATOP Corporation</p>
+						<p>Copyright &copy; 2016</p>
 					</div>
 
 				</div>
@@ -113,30 +111,41 @@
 
 		<!-- 二级导航及用户信息/常用操作区 -->
 		<div id="header">
+			<!-- 面包屑导航 -->
 			
     <ol class="breadcrumb breadcrumb-edit">
         <li><a href="/Manage">用户管理</a></li>
         <li class="active">组织架构图</li>
     </ol>
 
+
 			<div class="user-operation-box pull-right">
 				<div class="user-operation-item pull-left">
-					<a href="/index.php/Home/Center">
-						<img src="<?php echo ($face["face"]); ?>" width="30" alt="">
-						<!--<i class="layui-icon">&#xe612;</i>-->&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>
-						<div class="clearfix"></div>
+					<a href="/Notice" class="option-name"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
+				</div>
+				<div class="user-operation-item pull-left user-options-btn">
+					<a class="option-name">
+						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
 					</a>
-				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/notice"><i class="icon-bell"></i>&nbsp;&nbsp;通知</a>
-				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
+					<!-- 用户选项 -->
+					<div class="user-options">
+						<ul>
+							<li><a href="/Center/modify"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
+							<li><a href="/Center/face"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
+							<li><a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
+						</ul>
+					</div>
 				</div>
 				<div class="clearfix"></div>
+
+				<!--<div class="user-operation-item pull-left">
+					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
+				</div>-->
 			</div>
 			<div class="clearfix"></div>
 		</div>
+
+
 
 		<!-- 正文区域 -->
 		<div id="content">
@@ -212,7 +221,9 @@
 	</div>
 
 	<!-- 回到顶部 -->
-	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	<div class="footer-operation-bar">
+		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	</div>
 
 
 	<script>

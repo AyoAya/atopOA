@@ -62,7 +62,7 @@
 		var $cache_dir      =  'templates_c/';
 
 		/**
-		* Default Output Cache Lifetime in Seconds
+		* Theme Output Cache Lifetime in Seconds
 		* Can be overwritten by global configuration array $_CONFIG['cache_lifetime']
 		*
 		* @access public

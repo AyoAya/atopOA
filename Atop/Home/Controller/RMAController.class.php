@@ -336,7 +336,7 @@ class RMAController extends AuthController{
         $oacustomerstep_model = M('Oacustomerstep');
         $oacustomeroperation_model = M('Oacustomeroperation');
 
-        $oacustomerstep_model_result = $oacustomerstep_model->field('a.id,a.step_name,a.fallback,a.transfer')->table('atop_oacustomerstep a,atop_oacustomeroperation b')->where('b.main_assoc='.I('get.id').' AND step_assoc=a.id')->select();
+        $oacustomerstep_model_result = $oacustomerstep_model->field('a.id,a.step_name,a.fallback,a.transfer')->table('atop_oacustomerstep a,atop_oacustomeroperation b')->where('b.main_assoc='.I('get.id').' AND step_assoc=a.id')->order('a.id ASC')->select();
 
         $max_step = $oacustomerstep_model->max('id');   //获取到最大步骤
         $this->assign('maxStep',$max_step);
@@ -363,8 +363,11 @@ class RMAController extends AuthController{
             $QA_list = M('User')->where( 'department=3 AND id<>'.session('user')['id'] )->select(); //获取到同部门且不包含自己的人员列表
             $this->assign('QAlist',$QA_list);
         }elseif( $resultData['now_step']['id'] == 5 || $resultData['now_step']['id'] == 6 ){
+
+            $prev_step_info = $oacustomeroperation_model->where( ['main_assoc'=>$resultData['id']] )->order('step_assoc DESC')->limit(2)->select();
+
             //如果当前步骤在可以回退则获取回退步骤列表
-            $oacustomeroperation_result = $oacustomeroperation_model->where( 'main_assoc='.I('get.id').' AND step_assoc='.($resultData['now_step']['id']-1) )->select()[0];  //获取到上一个步骤节点
+            $oacustomeroperation_result = $prev_step_info[1];  //获取到上一个步骤节点
 
             if( strpos($oacustomeroperation_result['operation_person'],',') ){  //如果操作人id包含逗号说明有多个操作人
                 $in['id'] = ['in',$oacustomeroperation_result['operation_person']];
@@ -666,7 +669,7 @@ class RMAController extends AuthController{
                 $logDataBak = $logData;
 
                 # 记录操作日志
-                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤回退到：Step-'.$step_result[1]['id'].' '.$step_result[1]['step_name'];
+                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤回退到：Step'.$step_result[1]['id'].' - '.$step_result[1]['step_name'];
                 $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
                 $add_id_2 = $oacustomercomplaintlog_model->add($logData);
@@ -677,8 +680,8 @@ class RMAController extends AuthController{
                     M()->commit();
 
                     $emails = $this->GetInvolvedIn($post['cc_id']);
-                    $logDataBak['step_id'] = $step_result['id'];
-                    $logDataBak['step_name'] = $step_result['step_name'];
+                    $logDataBak['step_id'] = $step_result[1]['id'];
+                    $logDataBak['step_name'] = $step_result[1]['step_name'];
                     $this->pushEmail('FALLBACK',$emails,$logDataBak,$post['cc_id']);
 
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
@@ -688,6 +691,7 @@ class RMAController extends AuthController{
                 }
 
             }else{
+
                 $oacustomercomplaint_model = M('Oacustomercomplaint');
                 $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
                 $oacustomeroperaion_model = M('Oacustomeroperation');
@@ -696,15 +700,10 @@ class RMAController extends AuthController{
                 M()->startTrans();
 
                 $add_id_1 = $oacustomercomplaintlog_model->add($logData);
-                $step_result = M('Oacustomerstep')->find($post['step']+1);  //获取到下一个步骤
 
                 $logDataBak = $logData; //防止系统日志冲突
 
-                # 记录操作日志
-                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤推送到：Step-'.$step_result['id'].' '.$step_result['step_name'];
-                $logData['recorder'] = 'OASystem';
-                $logData['attachment'] = '';
-                $add_id_2 = $oacustomercomplaintlog_model->add($logData);
+                $logDataBak['push_step'] = $post['operation_type'];
 
                 if( $post['step'] == 2 ){
                     $operation_person_result = $oacustomeroperaion_model->field('operation_person')->where( ['main_assoc'=>$post['cc_id'],'step_assoc'=>1] )->select();
@@ -712,6 +711,14 @@ class RMAController extends AuthController{
                 }elseif( $post['step'] == 3 ){
                     $operation_person_id = $post['operation_person'];     //获取到QA作为下一步推送人
                 }elseif( $post['operation_type'] == 5 ){  //如果用户将步骤推送到协助处理RMA，则获取该客诉产品的产品经理
+
+                    $step_result = M('Oacustomerstep')->find($post['operation_type']);  //获取到下一个步骤
+
+                    # 记录操作日志
+                    $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤推送到：Step'.$step_result['id'].' - '.$step_result['step_name'];
+                    $logData['recorder'] = 'OASystem';
+                    $logData['attachment'] = '';
+                    $add_id_2 = $oacustomercomplaintlog_model->add($logData);
 
                     $productrelationships_model = M('Productrelationships');
                     $oacustomercomplaint_result = $oacustomercomplaint_model->field('pn')->find( $post['cc_id'] );  //获取到该客诉产品列表
@@ -736,6 +743,17 @@ class RMAController extends AuthController{
                         }
                     }
                 }elseif( $post['operation_type'] == 6 ){
+
+
+                    $step_result = M('Oacustomerstep')->find($post['operation_type']);  //获取到下一个步骤
+
+                    # 记录操作日志
+                    $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤推送到：Step'.$step_result['id'].' - '.$step_result['step_name'];
+                    $logData['recorder'] = 'OASystem';
+                    $logData['attachment'] = '';
+                    $add_id_2 = $oacustomercomplaintlog_model->add($logData);
+
+
                     $operation_person_result = $oacustomeroperaion_model->field('operation_person')->where( ['main_assoc'=>$post['cc_id'],'step_assoc'=>2] )->select();
                     $operation_person_id = $operation_person_result[0]['operation_person'];     //获取到FAE工程师id作为下一步推送人
                 }
@@ -744,6 +762,7 @@ class RMAController extends AuthController{
                 $operationData['step_assoc'] = $post['operation_type'];
                 $operationData['operation_person'] = $operation_person_id;
                 $add_id_3 = $oacustomeroperaion_model->add($operationData);
+
 
                 if( $add_id_1 && $add_id_2 && $add_id_3 ){
                     M()->commit();
@@ -836,7 +855,7 @@ p {
 <p>详情请点击链接：<a target="_blank" href="http://$http_host/customerDetails/$id">http://$http_host/customerDetails/$id</a></p>
 HTML;
         }elseif( $type == 'PUSH_STEP' ){
-            $step_result = M('Oacustomerstep')->find($step+1);  //获取到下一个步骤数据
+            $step_result = M('Oacustomerstep')->find($push_step);  //获取到下一个步骤数据
             $step_name = $step_result['step_name'];
             $step_id = $step_result['id'];
             $subject = '客诉步骤更新 [ ID:'.$id.' ]';
@@ -881,7 +900,7 @@ p {
 <p>详情请点击链接：<a target="_blank" href="http://$http_host/customerDetails/$id">http://$http_host/customerDetails/$id</a></p>
 HTML;
         }elseif( $type == 'FALLBACK' ){
-            $subject = '客诉处理人回退 [ ID:'.$id.' ]';
+            $subject = '客诉步骤回退 [ ID:'.$id.' ]';
             $body = <<<HTML
 <style>
 p {

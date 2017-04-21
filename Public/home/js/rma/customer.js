@@ -4,6 +4,7 @@
 
 $(function(){
 
+
 	var attachmentData = new Array();	//定义存放附件的数组
 	var attachmentList = new Array();	//定义存放附件的数组
 		//初始化layui组件
@@ -207,6 +208,19 @@ $(function(){
 		filter_dom.slideToggle('fast');
 	});
 
+
+	// 监听滚动，如果添加处理日志存在并且出现返回顶部按钮则将添加日志按钮向上调整
+	$('#content').scroll(function(){
+
+		if( $('.addOperationLog') ){
+			if( $('#scrollBackTop').hasClass('sr-only') ){
+				$('.addOperationLog').css({bottom : '60px'});
+			}else{
+				$('.addOperationLog').css({bottom : '140px'});
+			}
+		}
+
+	});
 
 
 

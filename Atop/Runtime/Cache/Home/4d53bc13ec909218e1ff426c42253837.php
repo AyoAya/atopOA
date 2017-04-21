@@ -45,6 +45,7 @@
 	
 </head>
 <body>
+
 	<script type="text/javascript">
 		var ThinkPHP = {
 				'AJAX' : '/index.php/Home',
@@ -58,46 +59,25 @@
 				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
+
+
 	<div id="bodyContainer">
 		
 			<div id="sidebar">
 				<div class="sidebar-inset">
-					<div class="logo">
 
-					</div>
-					<div id="face">
-						<div class="face-box">
-							<div class="face">
-								<a href="/index.php/Home/Center">
-									<img id="face-picture" src="<?php echo ($face["face"]); ?>" alt="" width="70" height="70">
-								</a>
-							</div>
-							<p id="userName">Hello
-								<?php if(empty($_SESSION['user']['nickname'])): ?><span id="user_info"><?php echo ($_SESSION['user']['account']); ?> <span class="caret" id="rotate-caret"></span></span>
-								<?php else: ?>
-									<span id="user_info"><?php echo ($_SESSION['user']['nickname']); ?> <span class="caret" id="rotate-caret"></span></span><?php endif; ?>
-							</p>
-							<a href="/notice" style="display: block;"><span class="sidebar-message"><span class="badge sidebar-message-badge"></span></span></a>
-							<a href="javascript:void(0);" style="display: block;"><span class="sidebar-notice"></span></a>
-							<div id="face_dropdown">
-								<ul>
-									<li><a href="/Center/modify"><i class="icon-list-alt"></i> 修改资料</a></li>
-									<li><a href="/Center/face"><i class="icon-github-alt"></i> 修改头像</a></li>
-									<li><a href="/Logout"><i class="icon-signout"></i> 退出登录</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<!-- <ul id="nav"> -->
+					<!-- Logo区 -->
+					<a href="/Index" class="logo"></a>
+
+					<!-- 导航区 -->
 					<ul id="nav">
-						<li><a href="/Index"><b class="icon-home"></b><span>首页</span></a></li>
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
-							<ol class="sr-only">
-								<li><a href="/Project">项目管理</a></li>
-								<li><a href="/Sample">样品管理</a></li>
-								<li><a href="/Product">产品管理</a></li>
-								<li><a href="/Compatibility">兼容表</a></li>
+							<ol class="<?php if(in_array((CONTROLLER_NAME), explode(',',"Project,Sample,Product,Compatibility"))): else: ?>sr-only<?php endif; ?>">
+								<li><a href="/Project" class="<?php if((CONTROLLER_NAME) == "Project"): ?>active<?php endif; ?>">&nbsp;&nbsp;项目管理</a></li>
+								<li><a href="/Sample" class="<?php if((CONTROLLER_NAME) == "Sample"): ?>active<?php endif; ?>">&nbsp;&nbsp;样品管理</a></li>
+								<li><a href="/Product" class="<?php if((CONTROLLER_NAME) == "Product"): ?>active<?php endif; ?>">&nbsp;&nbsp;产品管理</a></li>
+								<li><a href="/Compatibility" class="<?php if((CONTROLLER_NAME) == "Compatibility"): ?>active<?php endif; ?>">&nbsp;&nbsp;兼容表</a></li>
 							</ol>
 						</li>
 						<!--<li id="Audit">
@@ -108,35 +88,75 @@
 								<span><a href="/Expense"><i class="icon-credit-card"></i>&nbsp;&nbsp;报销</a></span>
 							</div>
 						</li>-->
-						<li><a href="/Approval"><i class="icon-legal"></i><span>审批</span></a></li>
-						<li><a href="/DCC"><i class="icon-print"></i><span>文档中心</span></a></li>
-						<li><a href="/Acronym"><i class="icon-book"></i><span>缩略词</span></a></li>
-						<li><a href="/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a></li>
-						<li><a href="/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a></li>
-						<?php if(($_SESSION['user']['account']) == "admin"): ?><li><a href="/System"><i class="icon-cog"></i><span>系统</span></a></li><?php endif; ?>
+						<li>
+							<a href="/Approval" class="<?php if((CONTROLLER_NAME) == "Approval"): ?>active<?php endif; ?>"><i class="icon-legal"></i><span>审批</span></a>
+						</li>
+						<li>
+							<a href="/DCC" class="<?php if((CONTROLLER_NAME) == "DCC"): ?>active<?php endif; ?>"><i class="icon-print"></i><span>文档中心</span></a>
+						</li>
+						<li>
+							<a href="/Acronym" class="<?php if((CONTROLLER_NAME) == "Acronym"): ?>active<?php endif; ?>"><i class="icon-book"></i><span>缩略词</span></a>
+						</li>
+						<li>
+							<a href="/RMA" class="<?php if((CONTROLLER_NAME) == "RMA"): ?>active<?php endif; ?>"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
+						</li>
+						<li>
+							<a href="/Manage" class="<?php if((CONTROLLER_NAME) == "Manage"): ?>active<?php endif; ?>"><i class="icon-user"></i><span>用户管理</span></a>
+						</li>
+						<?php if(($_SESSION['user']['account']) == "admin"): ?><li>
+								<a href="/System" class="<?php if((CONTROLLER_NAME) == "System"): ?>active<?php endif; ?>"><i class="icon-cog"></i><span>系统</span></a>
+							</li><?php endif; ?>
 					</ul>
+
+					<!-- 版权信息 -->
+					<div class="copyright-info">
+						<p>ATOP Corporation</p>
+						<p>Copyright &copy; 2016</p>
+					</div>
+
 				</div>
 			</div>
 		
 
-		<!--<div id="ResearchChildMenu">
-			<span><a href="/Project"><i class="icon-globe"></i>&nbsp;&nbsp;项目管理</a></span>
-			<span><a href="/Sample"><i class="icon-beaker"></i>&nbsp;&nbsp;样品管理</a></span>
-			<span><a href="/Product"><i class="icon-th"></i>&nbsp;&nbsp;产品管理</a></span>
-			<span><a href="/Compatibility"><i class="icon-bar-chart"></i>&nbsp;&nbsp;兼容表</a></span>
-		</div>-->
-
-
-
+		<!-- 二级导航及用户信息/常用操作区 -->
 		<div id="header">
+			<!-- 面包屑导航 -->
 			
     <ol class="breadcrumb breadcrumb-edit">
         <li><a href="/Project">项目管理</a></li>
         <li class="active">项目详情</li>
     </ol>
 
+
+			<div class="user-operation-box pull-right">
+				<div class="user-operation-item pull-left">
+					<a href="/Notice" class="option-name"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
+				</div>
+				<div class="user-operation-item pull-left user-options-btn">
+					<a class="option-name">
+						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
+					</a>
+					<!-- 用户选项 -->
+					<div class="user-options">
+						<ul>
+							<li><a href="/Center/modify"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
+							<li><a href="/Center/face"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
+							<li><a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+
+				<!--<div class="user-operation-item pull-left">
+					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
+				</div>-->
+			</div>
+			<div class="clearfix"></div>
 		</div>
 
+
+
+		<!-- 正文区域 -->
 		<div id="content">
 			<div class="container-fluid" id="content-box">
 				
@@ -497,8 +517,8 @@
             <div class="form-group discuss-submit-box">
                 <input type="hidden" id="cc_list">
                 <button type="button" id="submit-discuss-content" class="btn btn-primary" discuss_id="<?php echo ($getID); ?>">发表</button>
-            </div>
-            <!-- 添加抄送人模态框 -->
+            </div><!--
+            &lt;!&ndash; 添加抄送人模态框 &ndash;&gt;
             <div class="modal fade" id="CCpeopleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -533,11 +553,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- 回到顶部按钮 -->
-        <div id="backtop">
-            <span class="">回到<br/>顶部</span>
+            </div>-->
         </div><?php endif; ?>
 
     <div class="loading-modal sr-only" id="loading">
@@ -566,6 +582,7 @@
 		
 	</div>
 
+	<!-- 检测IE（如果是低版本IE浏览器则直接屏蔽） -->
 	<div style="display: none" id=browser_ie>
 		<div class=brower_info>
 			<div class="browser_box">
@@ -580,19 +597,64 @@
 		</div>
 	</div>
 
+	<!-- 定义消息提示模态框 -->
 	<div class="modal fade bs-example-modal-sm" id="MessageModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 		<div class="modal-dialog modal-sm" role="document">
 			<div class="modal-content" id="MessageText">
 				<!-- 消息内容 -->
-				<!--<p><i class="icon-ok-sign text-success"></i>&nbsp;添加成功</p>-->
 			</div>
 		</div>
 	</div>
+
+	<!-- Modal集 -->
 	
-	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+
+    <?php if(($tab) == "discuss"): ?><!-- 添加抄送人模态框 -->
+        <div class="modal fade" id="CCpeopleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <p class="modal-title" id="myModalLabel">添加抄送人</p>
+                    </div>
+                    <div class="modal-body">
+                        <form class="layui-form layui-form-pane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">部门</label>
+                                <div class="layui-input-block">
+                                    <select name="select" id="dpmtSelect" lay-filter="change">
+                                        <?php if(is_array($departments)): $i = 0; $__LIST__ = $departments;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><option value="<?php echo ($value["id"]); ?>"><?php echo ($value["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        <ul id="cc-person-list">
+                            <?php if(is_array($users)): $i = 0; $__LIST__ = $users;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><li email="<?php echo ($value["email"]); ?>" user-id="<?php echo ($value["id"]); ?>" title="<?php echo ($value["nickname"]); ?>"><?php echo ($value["nickname"]); ?></li><?php endforeach; endif; else: echo "" ;endif; ?>
+                        </ul>
+                        <div class="well well-sm sr-only" id="has-been-box">
+                            <p class="has-been-add">已添加的抄送人员：</p>
+                            <ul id="addList">
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="done-cc-list">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div><?php endif; ?>
+
+
+
+	<!-- 回到顶部 -->
+	<div class="footer-operation-bar">
+		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	</div>
+
 
 	<script>
-
 		//如果检测到用户浏览器为IE则禁用
 		var str = navigator.userAgent;
 

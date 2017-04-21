@@ -490,8 +490,8 @@ class SampleController extends AuthController {
 
     //样品单总览
     public function overview(){
-        if(!empty(I('get.overview')) && !I('get.overview')) return;
-        $overview = I('get.overview');
+        if(!empty(I('get.order')) && !I('get.order')) return;
+        $overview = I('get.order');
         $sample = D('Sample');
         $user = M('User');
         //检测当前访问该页面的用户是否属于销售部门

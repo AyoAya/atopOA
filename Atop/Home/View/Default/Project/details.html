@@ -461,50 +461,6 @@
                 <input type="hidden" id="cc_list">
                 <button type="button" id="submit-discuss-content" class="btn btn-primary" discuss_id="{$getID}">发表</button>
             </div>
-            <!-- 添加抄送人模态框 -->
-            <div class="modal fade" id="CCpeopleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <p class="modal-title" id="myModalLabel">添加抄送人</p>
-                        </div>
-                        <div class="modal-body">
-                            <form class="layui-form layui-form-pane">
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">部门</label>
-                                    <div class="layui-input-block">
-                                        <select name="select" id="dpmtSelect" lay-filter="change">
-                                            <volist name="departments" id="value">
-                                                <option value="{$value.id}">{$value.name}</option>
-                                            </volist>
-                                        </select>
-                                    </div>
-                                </div>
-                            </form>
-                            <ul id="cc-person-list">
-                                <volist name="users" id="value">
-                                    <li email="{$value.email}" user-id="{$value.id}" title="{$value.nickname}">{$value.nickname}</li>
-                                </volist>
-                            </ul>
-                            <div class="well well-sm sr-only" id="has-been-box">
-                                <p class="has-been-add">已添加的抄送人员：</p>
-                                <ul id="addList">
-
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="button" class="btn btn-primary" id="done-cc-list">确定</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- 回到顶部按钮 -->
-        <div id="backtop">
-            <span class="">回到<br/>顶部</span>
         </div>
     </eq>
 
@@ -513,6 +469,56 @@
             <p><i class="icon-spinner icon-spin icon-2x"></i></p>
         </div>
     </div>
+
+</block>
+
+
+
+
+<block name="modals">
+
+    <eq name="tab" value="discuss">
+        <!-- 添加抄送人模态框 -->
+        <div class="modal fade" id="CCpeopleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <p class="modal-title" id="myModalLabel">添加抄送人</p>
+                    </div>
+                    <div class="modal-body">
+                        <form class="layui-form layui-form-pane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">部门</label>
+                                <div class="layui-input-block">
+                                    <select name="select" id="dpmtSelect" lay-filter="change">
+                                        <volist name="departments" id="value">
+                                            <option value="{$value.id}">{$value.name}</option>
+                                        </volist>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        <ul id="cc-person-list">
+                            <volist name="users" id="value">
+                                <li email="{$value.email}" user-id="{$value.id}" title="{$value.nickname}">{$value.nickname}</li>
+                            </volist>
+                        </ul>
+                        <div class="well well-sm sr-only" id="has-been-box">
+                            <p class="has-been-add">已添加的抄送人员：</p>
+                            <ul id="addList">
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="done-cc-list">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </eq>
 
 </block>
 

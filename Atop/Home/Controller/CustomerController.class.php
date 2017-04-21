@@ -272,27 +272,29 @@ class CustomerController extends AuthController{
             //为保留原始数据attachment列存入数据为文件名和json数据，为保证数据不冲突判断列数据是否为json格式来区分新版还是老版
             //判断附件是否为空并且是否为json格式，如果为json格式则用新版读取方式否则用老版数据
             if(!empty($value['attachment']) && $value['attachment']!='NULL'){
-                $json = json_decode($value['attachment']);
+                $json = json_decode($value['attachment'],true);
                 if(!is_null($json)){
                     # 针对不同的附件存入方式进行不同的操作
                     if( count($json) == count($json,1) ){   //一维数组
-                        $value['attachment'] = object_to_array($json);
+                        $value['attachment'] = $json;
                         //遍历附件列表检查附件后缀
                         foreach($value['attachment'] as $ke=>&$val){
-                            $mimetype = mime_content_type($val['SavePath']);    //获取文件类型
                             //获取文件扩展名
-                            if( strstr($mimetype, 'image') ){
-                                $val = array('filename'=>$val['SourceName'],'filetype'=>'image','filepath'=>$val['SavePath']);
+                            $old_filetype = getExtension($val);
+                            //如果数据为image则为图像显示，否则一律为文件处理(下载)
+                            if( $old_filetype=='jpeg' || $old_filetype=='jpg' || $old_filetype=='gif' || $old_filetype=='png' || $old_filetype=='bmp' ){
+                                $val = array('filename'=>getBasename($val),'filetype'=>'image','filepath'=>$val);
                             }else{
-                                $val = array('filename'=>$val['SourceName'],'filetype'=>'other','filepath'=>$val['SavePath']);
+                                $val = array('filename'=>getBasename($val),'filetype'=>'other','filepath'=>$val);
                             }
                         }
                     }else{  //二维数组
                         $value['attachment'] = $json;
                         foreach($value['attachment'] as $ke=>&$val){
-                            $mimetype = mime_content_type($val['SavePath']);    //获取文件类型
+                            //$mimetype = mime_content_type($val['SavePath']);    //获取文件类型
+                            $old_filetype = getExtension($val['SavePath']);
                             //获取文件扩展名
-                            if( strstr($mimetype, 'image') ){
+                            if( $old_filetype=='jpeg' || $old_filetype=='jpg' || $old_filetype=='gif' || $old_filetype=='png' || $old_filetype=='bmp' ){
                                 $val = array('filename'=>$val['SourceName'],'filetype'=>'image','filepath'=>$val['SavePath']);
                             }else{
                                 $val = array('filename'=>$val['SourceName'],'filetype'=>'other','filepath'=>$val['SavePath']);

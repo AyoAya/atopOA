@@ -109,36 +109,40 @@
 
 		<!-- 二级导航及用户信息/常用操作区 -->
 		<div id="header">
+			<!-- 面包屑导航 -->
 			
 	<ol class="breadcrumb breadcrumb-edit">
 		<li class="active">首页</li>
 	</ol>
 
+
 			<div class="user-operation-box pull-right">
 				<div class="user-operation-item pull-left">
-					<a href="/notice"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
+					<a href="/Notice" class="option-name"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
 				</div>
-				<div class="user-operation-item pull-left">
-					<a href="/index.php/Home/Center">
+				<div class="user-operation-item pull-left user-options-btn">
+					<a class="option-name">
 						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
 					</a>
+					<!-- 用户选项 -->
+					<div class="user-options">
+						<ul>
+							<li><a href="/Center/modify"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
+							<li><a href="/Center/face"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
+							<li><a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
+						</ul>
+					</div>
 				</div>
 				<div class="clearfix"></div>
 
-
-				<div class="user-options">
-					<ul>
-						<li><a href="#">修改资料</a></li>
-						<li><a href="#">修改头像</a></li>
-						<li><a href="#">退出登录</a></li>
-					</ul>
-				</div>
 				<!--<div class="user-operation-item pull-left">
 					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
 				</div>-->
 			</div>
 			<div class="clearfix"></div>
 		</div>
+
+
 
 		<!-- 正文区域 -->
 		<div id="content">

@@ -10765,3 +10765,723 @@ INFO: [ app_end ] --START--
 INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
 INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
 
+[ 2017-04-20T18:07:49+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-20T18:07:52+08:00 ] 192.168.0.104 /index.php/Home/Center
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000000s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.000000s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.000000s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:07:52+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 30 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:07:54+08:00 ] 192.168.0.104 /RMA
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.015600s ]
+INFO: [ app_init ] --END-- [ RunTime:0.015600s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0156s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomercomplaint` [ RunTime:0.0000s ]
+SQL: SELECT `level`,`report`,`department` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomercomplaint` [ RunTime:0.0000s ]
+SQL: SELECT * FROM atop_oacustomercomplaint a,atop_oacustomeroperation b,atop_oacustomerstep c WHERE ( a.id=b.main_assoc AND b.step_assoc=c.id AND a.version="new" ) GROUP BY a.id  [ RunTime:0.0156s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomercomplaint` [ RunTime:0.0000s ]
+SQL: SELECT a.id,a.cc_time,a.salesperson,a.customer,a.sale_order,a.pn,a.vendor,a.model,a.error_message,a.reason,a.comments,a.status,a.uid,a.rma_state,a.version,c.id step_id,c.step_name FROM atop_oacustomercomplaint a,atop_oacustomeroperation b,atop_oacustomerstep c WHERE ( a.id=b.main_assoc AND b.step_assoc=c.id AND a.version="new" ) GROUP BY a.id ORDER BY a.cc_time DESC,a.id DESC LIMIT 0,10   [ RunTime:0.0156s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomerstep` [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomerstep` WHERE ( id > 1 )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomeroperation` [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5216 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5216 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 3 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5215 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5215 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5214 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5214 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 6 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5213 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5213 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 3 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5212 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5212 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0156s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5211 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5211 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5210 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5210 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5209 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5209 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5208 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5208 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5207 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5207 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 6 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [8] Undefined variable: condition E:\work\atopOA\Atop\Home\Controller\RMAController.class.php 第 117 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000000s ]
+NOTIC: [8] Undefined variable: customerAllTotal E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 126 行.
+NOTIC: [8] Undefined variable: customerTotal E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 126 行.
+NOTIC: [8] Undefined variable: customerTotal E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 126 行.
+NOTIC: [8] Undefined variable: customerTotal E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 126 行.
+NOTIC: [8] Undefined index: withme E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: start_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: end_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: order E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: salesperson E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: customer E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: vendor E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: search E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 182 行.
+NOTIC: [8] Undefined index: withme E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: start_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: end_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: order E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: salesperson E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: customer E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: vendor E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 206 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 206 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 206 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 206 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 206 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 207 行.
+NOTIC: [8] Undefined index: start_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 216 行.
+NOTIC: [8] Undefined index: end_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 220 行.
+NOTIC: [8] Undefined index: order E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 228 行.
+NOTIC: [8] Undefined index: salesperson E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 234 行.
+NOTIC: [8] Undefined index: customer E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 240 行.
+NOTIC: [8] Undefined index: vendor E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 246 行.
+NOTIC: [8] Undefined index: withme E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: start_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: end_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: order E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: salesperson E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: customer E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: vendor E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.031200s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.031200s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:07:54+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0156s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 30 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:08:07+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='32' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 32 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:08:19+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-20T18:08:24+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 30 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:08:37+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='32' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 32 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:08:49+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-20T18:08:54+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.015601s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 30 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:09:07+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='32' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 32 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:09:12+08:00 ] 192.168.0.104 /RMA/details/id/5216
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0156s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0156s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomercomplaint` [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomercomplaintlog` [ RunTime:0.0156s ]
+SQL: SELECT * FROM `atop_oacustomercomplaint` WHERE `id` = 5216 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `nickname` FROM `atop_user` WHERE `account` = 'jonas'  [ RunTime:0.0000s ]
+NOTIC: [2] Illegal string offset 'reason' E:\work\atopOA\Atop\Home\Controller\RMAController.class.php 第 322 行.
+SQL: SHOW COLUMNS FROM `atop_oacustomerstep` [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomeroperation` [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomerstep` [ RunTime:0.0000s ]
+SQL: SELECT a.id,a.step_name,a.fallback,a.transfer FROM atop_oacustomerstep a,atop_oacustomeroperation b WHERE ( b.main_assoc=5216 AND step_assoc=a.id )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(id) AS tp_max FROM `atop_oacustomerstep` LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomeroperation` WHERE ( main_assoc=5216 ) ORDER BY step_assoc DESC LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomerstep` WHERE `id` = 3 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomerstep` WHERE `id` = 4 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_user` WHERE ( department=3 AND id<>30 )  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomercomplaintlog` WHERE `step` = 1 AND `cc_id` = 5216 ORDER BY log_date,id ASC  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomercomplaintlog` WHERE `step` = 2 AND `cc_id` = 5216 ORDER BY log_date,id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `nickname`,`face` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomercomplaintlog` WHERE `step` = 3 AND `cc_id` = 5216 ORDER BY log_date,id ASC  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_user` WHERE `department` = 3  [ RunTime:0.0000s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000000s ]
+NOTIC: [8] Undefined index: class E:\work\atopOA\Atop\Runtime\Cache\Home\03ae27413e3e5435102947fa6a6c272e.php 第 264 行.
+NOTIC: [8] Undefined index: log E:\work\atopOA\Atop\Runtime\Cache\Home\03ae27413e3e5435102947fa6a6c272e.php 第 483 行.
+NOTIC: [8] Undefined index: sale_audit E:\work\atopOA\Atop\Runtime\Cache\Home\03ae27413e3e5435102947fa6a6c272e.php 第 607 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.078000s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.078000s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.015600s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:09:12+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 30 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:09:16+08:00 ] 192.168.0.104 /RMA
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.015600s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomercomplaint` [ RunTime:0.0000s ]
+SQL: SELECT `level`,`report`,`department` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomercomplaint` [ RunTime:0.0000s ]
+SQL: SELECT * FROM atop_oacustomercomplaint a,atop_oacustomeroperation b,atop_oacustomerstep c WHERE ( a.id=b.main_assoc AND b.step_assoc=c.id AND a.version="new" ) GROUP BY a.id  [ RunTime:0.0156s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomercomplaint` [ RunTime:0.0000s ]
+SQL: SELECT a.id,a.cc_time,a.salesperson,a.customer,a.sale_order,a.pn,a.vendor,a.model,a.error_message,a.reason,a.comments,a.status,a.uid,a.rma_state,a.version,c.id step_id,c.step_name FROM atop_oacustomercomplaint a,atop_oacustomeroperation b,atop_oacustomerstep c WHERE ( a.id=b.main_assoc AND b.step_assoc=c.id AND a.version="new" ) GROUP BY a.id ORDER BY a.cc_time DESC,a.id DESC LIMIT 0,10   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomerstep` [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomerstep` WHERE ( id > 1 )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomeroperation` [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5216 )  [ RunTime:0.0156s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5216 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 3 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5215 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5215 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5214 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5214 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 6 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5213 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5213 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 3 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5212 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5212 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5211 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5211 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5210 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5210 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5209 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5209 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5208 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5208 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT u.nickname,u.face FROM atop_user u,atop_oacustomercomplaint o WHERE ( u.account=o.salesperson AND o.id=5207 )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(step_assoc) AS tp_max FROM `atop_oacustomeroperation` WHERE `main_assoc` = 5207 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [2] Missing argument 1 for Think\Model::table(), called in E:\work\atopOA\Atop\Home\Controller\RMAController.class.php on line 114 and defined E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1627 行.
+NOTIC: [8] Undefined variable: table E:\work\atopOA\ThinkPHP\Library\Think\Model.class.php 第 1629 行.
+SQL: SELECT `id`,`step_name` FROM `atop_oacustomerstep` WHERE `id` = 6 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [8] Undefined variable: condition E:\work\atopOA\Atop\Home\Controller\RMAController.class.php 第 117 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000000s ]
+NOTIC: [8] Undefined variable: customerAllTotal E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 126 行.
+NOTIC: [8] Undefined variable: customerTotal E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 126 行.
+NOTIC: [8] Undefined variable: customerTotal E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 126 行.
+NOTIC: [8] Undefined variable: customerTotal E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 126 行.
+NOTIC: [8] Undefined index: withme E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: start_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: end_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: order E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: salesperson E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: customer E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: vendor E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 166 行.
+NOTIC: [8] Undefined index: search E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 182 行.
+NOTIC: [8] Undefined index: withme E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: start_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: end_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: order E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: salesperson E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: customer E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: vendor E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 192 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 206 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 206 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 206 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 206 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 206 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 207 行.
+NOTIC: [8] Undefined index: start_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 216 行.
+NOTIC: [8] Undefined index: end_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 220 行.
+NOTIC: [8] Undefined index: order E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 228 行.
+NOTIC: [8] Undefined index: salesperson E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 234 行.
+NOTIC: [8] Undefined index: customer E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 240 行.
+NOTIC: [8] Undefined index: vendor E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 246 行.
+NOTIC: [8] Undefined index: withme E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: step E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: start_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: end_date E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: order E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: salesperson E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: customer E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+NOTIC: [8] Undefined index: vendor E:\work\atopOA\Atop\Runtime\Cache\Home\72aa3bbf56faded4f4da7268ddc8a55e.php 第 254 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.015600s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.015600s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:09:17+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 30 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:09:19+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-20T18:09:21+08:00 ] 192.168.0.104 /RMA/details/id/5216
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomercomplaint` [ RunTime:0.0156s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomercomplaintlog` [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomercomplaint` WHERE `id` = 5216 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `nickname` FROM `atop_user` WHERE `account` = 'jonas'  [ RunTime:0.0000s ]
+NOTIC: [2] Illegal string offset 'reason' E:\work\atopOA\Atop\Home\Controller\RMAController.class.php 第 322 行.
+SQL: SHOW COLUMNS FROM `atop_oacustomerstep` [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomeroperation` [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_oacustomerstep` [ RunTime:0.0000s ]
+SQL: SELECT a.id,a.step_name,a.fallback,a.transfer FROM atop_oacustomerstep a,atop_oacustomeroperation b WHERE ( b.main_assoc=5216 AND step_assoc=a.id )  [ RunTime:0.0000s ]
+SQL: SELECT MAX(id) AS tp_max FROM `atop_oacustomerstep` LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomeroperation` WHERE ( main_assoc=5216 ) ORDER BY step_assoc DESC LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomerstep` WHERE `id` = 3 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomerstep` WHERE `id` = 4 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_user` WHERE ( department=3 AND id<>30 )  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomercomplaintlog` WHERE `step` = 1 AND `cc_id` = 5216 ORDER BY log_date,id ASC  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomercomplaintlog` WHERE `step` = 2 AND `cc_id` = 5216 ORDER BY log_date,id ASC  [ RunTime:0.0000s ]
+SQL: SELECT `nickname`,`face` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_oacustomercomplaintlog` WHERE `step` = 3 AND `cc_id` = 5216 ORDER BY log_date,id ASC  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_user` WHERE `department` = 3  [ RunTime:0.0000s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000000s ]
+NOTIC: [8] Undefined index: class E:\work\atopOA\Atop\Runtime\Cache\Home\03ae27413e3e5435102947fa6a6c272e.php 第 264 行.
+NOTIC: [8] Undefined index: log E:\work\atopOA\Atop\Runtime\Cache\Home\03ae27413e3e5435102947fa6a6c272e.php 第 483 行.
+NOTIC: [8] Undefined index: sale_audit E:\work\atopOA\Atop\Runtime\Cache\Home\03ae27413e3e5435102947fa6a6c272e.php 第 607 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.046800s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.046800s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.015600s ]
+INFO: [ app_end ] --END-- [ RunTime:0.015600s ]
+
+[ 2017-04-20T18:09:21+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 30 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:09:49+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-20T18:09:51+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 30 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+
+[ 2017-04-20T18:10:19+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-20T18:10:21+08:00 ] 192.168.0.104 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 30 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000000s ]
+

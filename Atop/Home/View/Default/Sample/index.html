@@ -26,7 +26,7 @@
 			<span class="glyphicon glyphicon-th"></span> 样品统计
 		</a>-->
 		<eq name="department.department" value="4">
-			<a href="__ROOT__/addSample" class="layui-btn layui-btn-primary">
+			<a href="__ROOT__/Sample/sample" class="layui-btn layui-btn-primary">
 				<span class="glyphicon glyphicon-plus"></span> 我要下单
 			</a>
 		</eq>
@@ -61,7 +61,7 @@
 						<p>{$value.createtime|date="Y-m-d",###}</p>
 					</span>
 					<div>
-						<h4><a href="__ROOT__/sampleOverview/{$value.totalorder}">{$value.totalorder}</a></h4>
+						<h4><a href="__ROOT__/Sample/overview/order/{$value.totalorder}">{$value.totalorder}</a></h4>
 					</div>
 				</div>
 				<div class="order-body">

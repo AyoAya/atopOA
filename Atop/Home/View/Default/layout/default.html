@@ -14,7 +14,7 @@
 	<link rel="stylesheet" href="__CSS__/jquery.mCustomScrollbar.css">
 	<link rel="stylesheet" href="__CSS__/iconfont.css">
 	<link rel="stylesheet" href="__CSS__/basic.css">
-	<link rel="stylesheet" href="__CSS__/{$face.theme}/index.css">
+	<link rel="stylesheet" href="__CSS__/Theme/{$face.theme}.css">
 	<link rel="stylesheet" href="__CSS__/promotion_index.css">
 
 	<block name="linkcss"></block><!-- 引入css文件 -->
@@ -32,17 +32,18 @@
 
 	<script type="text/javascript">
 		var ThinkPHP = {
-				'AJAX' : '__MODULE__',
-				'ROOT' : '__ROOT__',
-				'IMG' : '__IMG__',
-				'UPLOAD' : '__UPLOAD__',
-				'HTTP_HOST' : '{$Think.server.http_host}',
-				'UPLOADIFY' : '__PUBLIC__/home/uploadify',
-				'UPLOADIFY_CONFIG_FILESIZELIMIT' : '{$Think.config.UPLOAD_FILESIZELIMIT}',
-				'UPLOADIFY_CONFIG_UPLOADLIMIT' : '{$Think.config.UPLOAD_UPLOADLIMIT}',
-				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '{$Think.config.UPLOAD_FILETYPEEXTS}',
+			'AJAX' : '__MODULE__',
+			'ROOT' : '__ROOT__',
+			'IMG' : '__IMG__',
+			'UPLOAD' : '__UPLOAD__',
+			'HTTP_HOST' : '{$Think.server.http_host}',
+			'UPLOADIFY' : '__PUBLIC__/home/uploadify',
+			'UPLOADIFY_CONFIG_FILESIZELIMIT' : '{$Think.config.UPLOAD_FILESIZELIMIT}',
+			'UPLOADIFY_CONFIG_UPLOADLIMIT' : '{$Think.config.UPLOAD_UPLOADLIMIT}',
+			'UPLOADIFY_CONFIG_FILETYPEEXTS' : '{$Think.config.UPLOAD_FILETYPEEXTS}',
 		}
 	</script>
+
 
 	<div id="bodyContainer">
 		<block name="sidebar">
@@ -56,11 +57,11 @@
 					<ul id="nav">
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
-							<ol class="sr-only">
-								<li><a href="__ROOT__/Project"><i class="icon-angle-right"></i>&nbsp;项目管理</a></li>
-								<li><a href="__ROOT__/Sample"><i class="icon-angle-right"></i>&nbsp;样品管理</a></li>
-								<li><a href="__ROOT__/Product"><i class="icon-angle-right"></i>&nbsp;产品管理</a></li>
-								<li><a href="__ROOT__/Compatibility"><i class="icon-angle-right"></i>&nbsp;兼容表</a></li>
+							<ol class="<in name='CONTROLLER_NAME' value='Project,Sample,Product,Compatibility'><else/>sr-only</in>">
+								<li><a href="__ROOT__/Project" class="<eq name='CONTROLLER_NAME' value='Project'>active</eq>">&nbsp;&nbsp;项目管理</a></li>
+								<li><a href="__ROOT__/Sample" class="<eq name='CONTROLLER_NAME' value='Sample'>active</eq>">&nbsp;&nbsp;样品管理</a></li>
+								<li><a href="__ROOT__/Product" class="<eq name='CONTROLLER_NAME' value='Product'>active</eq>">&nbsp;&nbsp;产品管理</a></li>
+								<li><a href="__ROOT__/Compatibility" class="<eq name='CONTROLLER_NAME' value='Compatibility'>active</eq>">&nbsp;&nbsp;兼容表</a></li>
 							</ol>
 						</li>
 						<!--<li id="Audit">
@@ -72,23 +73,23 @@
 							</div>
 						</li>-->
 						<li>
-							<a href="__ROOT__/Approval"><i class="icon-legal"></i><span>审批</span></a>
+							<a href="__ROOT__/Approval" class="<eq name='CONTROLLER_NAME' value='Approval'>active</eq>"><i class="icon-legal"></i><span>审批</span></a>
 						</li>
 						<li>
-							<a href="__ROOT__/DCC"><i class="icon-print"></i><span>文档中心</span></a>
+							<a href="__ROOT__/DCC" class="<eq name='CONTROLLER_NAME' value='DCC'>active</eq>"><i class="icon-print"></i><span>文档中心</span></a>
 						</li>
 						<li>
-							<a href="__ROOT__/Acronym"><i class="icon-book"></i><span>缩略词</span></a>
+							<a href="__ROOT__/Acronym" class="<eq name='CONTROLLER_NAME' value='Acronym'>active</eq>"><i class="icon-book"></i><span>缩略词</span></a>
 						</li>
 						<li>
-							<a href="__ROOT__/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
+							<a href="__ROOT__/RMA" class="<eq name='CONTROLLER_NAME' value='RMA'>active</eq>"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
 						</li>
 						<li>
-							<a href="__ROOT__/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a>
+							<a href="__ROOT__/Manage" class="<eq name='CONTROLLER_NAME' value='Manage'>active</eq>"><i class="icon-user"></i><span>用户管理</span></a>
 						</li>
 						<eq name="Think.session.user.account" value="admin">
 							<li>
-								<a href="__ROOT__/System"><i class="icon-cog"></i><span>系统</span></a>
+								<a href="__ROOT__/System" class="<eq name='CONTROLLER_NAME' value='System'>active</eq>"><i class="icon-cog"></i><span>系统</span></a>
 							</li>
 						</eq>
 					</ul>
@@ -105,17 +106,25 @@
 
 		<!-- 二级导航及用户信息/常用操作区 -->
 		<div id="header">
-			<block name="breadcrumb">
+			<!-- 面包屑导航 -->
+			<block name="breadcrumb"></block>
 
-			</block>
 			<div class="user-operation-box pull-right">
 				<div class="user-operation-item pull-left">
-					<a href="__ROOT__/notice"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
+					<a href="__ROOT__/Notice" class="option-name"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
 				</div>
 				<div class="user-operation-item pull-left user-options-btn">
-					<a href="__MODULE__/Center">
+					<a class="option-name">
 						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;{$Think.session.user.nickname}&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
 					</a>
+					<!-- 用户选项 -->
+					<div class="user-options">
+						<ul>
+							<li><a href="__ROOT__/Center/modify"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
+							<li><a href="__ROOT__/Center/face"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
+							<li><a href="__ROOT__/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
+						</ul>
+					</div>
 				</div>
 				<div class="clearfix"></div>
 
@@ -127,14 +136,6 @@
 		</div>
 
 
-		<!-- 用户选项 -->
-		<div class="user-options">
-			<ul>
-				<li><a href="#"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
-				<li><a href="#"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
-				<li><a href="#"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
-			</ul>
-		</div>
 
 		<!-- 正文区域 -->
 		<div id="content">
@@ -185,10 +186,13 @@
 		</div>
 	</div>
 
+	<!-- Modal集 -->
+	<block name="modals">
+
+	</block>
+
 	<!-- 回到顶部 -->
-	<div class="footer-operation-bar">
-		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
-	</div>
+	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
 
 	<script>

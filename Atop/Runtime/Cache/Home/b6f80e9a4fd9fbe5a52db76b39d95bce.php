@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="/Public/Home/css/jquery.mCustomScrollbar.css">
 	<link rel="stylesheet" href="/Public/Home/css/iconfont.css">
 	<link rel="stylesheet" href="/Public/Home/css/basic.css">
-	<link rel="stylesheet" href="/Public/Home/css/<?php echo ($face["theme"]); ?>/index.css">
+	<link rel="stylesheet" href="/Public/Home/css/Theme/<?php echo ($face["theme"]); ?>.css">
 	<link rel="stylesheet" href="/Public/Home/css/promotion_index.css">
 
 	
@@ -43,17 +43,18 @@
 
 	<script type="text/javascript">
 		var ThinkPHP = {
-				'AJAX' : '/index.php/Home',
-				'ROOT' : '',
-				'IMG' : '/Public/Home/img',
-				'UPLOAD' : '/Uploads',
-				'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
-				'UPLOADIFY' : '/Public/home/uploadify',
-				'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
-				'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
-				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
+			'AJAX' : '/index.php/Home',
+			'ROOT' : '',
+			'IMG' : '/Public/Home/img',
+			'UPLOAD' : '/Uploads',
+			'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
+			'UPLOADIFY' : '/Public/home/uploadify',
+			'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
+			'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
+			'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
+
 
 	<div id="bodyContainer">
 		
@@ -67,11 +68,11 @@
 					<ul id="nav">
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
-							<ol class="sr-only">
-								<li><a href="/Project"><i class="icon-angle-right"></i>&nbsp;项目管理</a></li>
-								<li><a href="/Sample"><i class="icon-angle-right"></i>&nbsp;样品管理</a></li>
-								<li><a href="/Product"><i class="icon-angle-right"></i>&nbsp;产品管理</a></li>
-								<li><a href="/Compatibility"><i class="icon-angle-right"></i>&nbsp;兼容表</a></li>
+							<ol class="<?php if(in_array((CONTROLLER_NAME), explode(',',"Project,Sample,Product,Compatibility"))): else: ?>sr-only<?php endif; ?>">
+								<li><a href="/Project" class="<?php if((CONTROLLER_NAME) == "Project"): ?>active<?php endif; ?>">&nbsp;&nbsp;项目管理</a></li>
+								<li><a href="/Sample" class="<?php if((CONTROLLER_NAME) == "Sample"): ?>active<?php endif; ?>">&nbsp;&nbsp;样品管理</a></li>
+								<li><a href="/Product" class="<?php if((CONTROLLER_NAME) == "Product"): ?>active<?php endif; ?>">&nbsp;&nbsp;产品管理</a></li>
+								<li><a href="/Compatibility" class="<?php if((CONTROLLER_NAME) == "Compatibility"): ?>active<?php endif; ?>">&nbsp;&nbsp;兼容表</a></li>
 							</ol>
 						</li>
 						<!--<li id="Audit">
@@ -83,22 +84,22 @@
 							</div>
 						</li>-->
 						<li>
-							<a href="/Approval"><i class="icon-legal"></i><span>审批</span></a>
+							<a href="/Approval" class="<?php if((CONTROLLER_NAME) == "Approval"): ?>active<?php endif; ?>"><i class="icon-legal"></i><span>审批</span></a>
 						</li>
 						<li>
-							<a href="/DCC"><i class="icon-print"></i><span>文档中心</span></a>
+							<a href="/DCC" class="<?php if((CONTROLLER_NAME) == "DCC"): ?>active<?php endif; ?>"><i class="icon-print"></i><span>文档中心</span></a>
 						</li>
 						<li>
-							<a href="/Acronym"><i class="icon-book"></i><span>缩略词</span></a>
+							<a href="/Acronym" class="<?php if((CONTROLLER_NAME) == "Acronym"): ?>active<?php endif; ?>"><i class="icon-book"></i><span>缩略词</span></a>
 						</li>
 						<li>
-							<a href="/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
+							<a href="/RMA" class="<?php if((CONTROLLER_NAME) == "RMA"): ?>active<?php endif; ?>"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
 						</li>
 						<li>
-							<a href="/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a>
+							<a href="/Manage" class="<?php if((CONTROLLER_NAME) == "Manage"): ?>active<?php endif; ?>"><i class="icon-user"></i><span>用户管理</span></a>
 						</li>
 						<?php if(($_SESSION['user']['account']) == "admin"): ?><li>
-								<a href="/System"><i class="icon-cog"></i><span>系统</span></a>
+								<a href="/System" class="<?php if((CONTROLLER_NAME) == "System"): ?>active<?php endif; ?>"><i class="icon-cog"></i><span>系统</span></a>
 							</li><?php endif; ?>
 					</ul>
 
@@ -114,19 +115,29 @@
 
 		<!-- 二级导航及用户信息/常用操作区 -->
 		<div id="header">
+			<!-- 面包屑导航 -->
 			
 	<ol class="breadcrumb breadcrumb-edit">
 		<li class="active">用户管理</li>
 	</ol>
 
+
 			<div class="user-operation-box pull-right">
 				<div class="user-operation-item pull-left">
-					<a href="/notice"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
+					<a href="/Notice" class="option-name"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
 				</div>
 				<div class="user-operation-item pull-left user-options-btn">
-					<a href="/index.php/Home/Center">
+					<a class="option-name">
 						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
 					</a>
+					<!-- 用户选项 -->
+					<div class="user-options">
+						<ul>
+							<li><a href="/Center/modify"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
+							<li><a href="/Center/face"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
+							<li><a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
+						</ul>
+					</div>
 				</div>
 				<div class="clearfix"></div>
 
@@ -138,14 +149,6 @@
 		</div>
 
 
-		<!-- 用户选项 -->
-		<div class="user-options">
-			<ul>
-				<li><a href="#"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
-				<li><a href="#"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
-				<li><a href="#"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
-			</ul>
-		</div>
 
 		<!-- 正文区域 -->
 		<div id="content">
@@ -158,10 +161,10 @@
 	<a href="/Manage/abnormal" class="layui-btn layui-btn-primary">
 		<span class="glyphicon glyphicon-user"></span> 离职人员
 	</a>
-	<a href="/Organization" class="layui-btn layui-btn-primary">
+	<a href="/Manage/organization" class="layui-btn layui-btn-primary">
 		<span class="glyphicon glyphicon-th"></span> 组织架构图
 	</a>
-	<a href="/addManage" class="layui-btn layui-btn-primary">
+	<a href="/Manage/addManage" class="layui-btn layui-btn-primary">
 		<span class="glyphicon glyphicon-plus"></span> 添加用户
 	</a>
 	<div class="clearfix" style="margin-bottom: 15px;"></div>
@@ -195,7 +198,7 @@
 					<td><span class="label <?php echo ($value["state_class"]); ?>"><?php echo ($value["state_text"]); ?></span></td>
 					<td>
 						<?php if(($value["id"]) != $_SESSION['user']['id']): ?><div class="btn-group">
-								<a href="/editManage/<?php echo ($value["id"]); ?>" class="btn btn-default btn-sm" personid="<?php echo ($value["id"]); ?>"><i class="icon-pencil"></i> 编辑</a>
+								<a href="/Manage/edit/id/<?php echo ($value["id"]); ?>" class="btn btn-default btn-sm" personid="<?php echo ($value["id"]); ?>"><i class="icon-pencil"></i> 编辑</a>
 								<button class="btn btn-default btn-sm delete-user" personid="<?php echo ($value["id"]); ?>"><i class="icon-remove"></i> 删除</button>
 							</div><?php endif; ?>
 					</td>							
@@ -205,26 +208,6 @@
 	
 	<!-- 分页 -->
 	<ul class="pagination pagination-edit"><?php echo ($pageShow); ?></ul>
-	
-	<!-- 删除用户提示模态框 -->
-	<div class="modal fade bs-example-modal-sm" id="deluser-modal" tabindex="-1" role="modal" aria-labelledby="addUserModal" aria-hidden="true">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">警告</h4>
-				</div>
-				<div class="modal-body">
-					<p id="delete-user-tip"><i class="icon-info-sign icon-3x modal-icon-info"></i><span class="message-text">你真的要删除该用户吗？</span></p>
-				</div>
-				<div class="modal-footer">
-					<input type="hidden" name="hiddenID" value="" id="hiddenID">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" id="done-delete">确定</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
 
 			</div>
@@ -269,6 +252,31 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Modal集 -->
+	
+
+	<!-- 删除用户提示模态框 -->
+	<div class="modal fade bs-example-modal-sm" id="deluser-modal" tabindex="-1" role="modal" aria-labelledby="addUserModal" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">警告</h4>
+				</div>
+				<div class="modal-body">
+					<p id="delete-user-tip"><i class="icon-info-sign icon-3x modal-icon-info"></i><span class="message-text">你真的要删除该用户吗？</span></p>
+				</div>
+				<div class="modal-footer">
+					<input type="hidden" name="hiddenID" value="" id="hiddenID">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-primary" id="done-delete">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 
 	<!-- 回到顶部 -->
 	<div class="footer-operation-bar">

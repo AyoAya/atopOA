@@ -27,6 +27,7 @@
 </block>
 <!-- 【正文区域】 -->
 <block name="content">
+
 	<div class="add-customer">
 		<form role="form" id="form">
 			<div class="form-group form-group-edit col-lg-6" >
@@ -99,7 +100,26 @@
 			<input type="hidden" id="manager-id">
 		</form>
 	</div>
-	
+
+	<script>
+	$('.form_date').datetimepicker({
+        language:  'zh-CN',
+        format:'yyyy-mm-dd',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		endDate : new Date(),
+		pickerPosition: "bottom-left",
+		startView: 2,
+		minView: 2,
+		forceParse: 0
+    });
+	</script>
+</block>
+
+<block name="modals">
+
 	<!-- 销售人员选择模态框 -->
 	<div class="modal fade bs-example-modal-lg" id="sales-modal" role="dialog">
 		<div class="modal-dialog modal-lg">
@@ -124,7 +144,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- 消息提示模态框 -->
 	<div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
 		<div class="modal-dialog modal-sm">
@@ -230,25 +250,8 @@
 		<input type="hidden" name="connector">
 		<input type="hidden" name="casetemp">
 	</form>
-	
-	<script>
-	$('.form_date').datetimepicker({
-        language:  'zh-CN',
-        format:'yyyy-mm-dd',
-        weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		endDate : new Date(),
-		pickerPosition: "bottom-left",
-		startView: 2,
-		minView: 2,
-		forceParse: 0
-    });
-	</script>
+
 </block>
-
-
 
 
 

@@ -280,9 +280,9 @@ abstract class Smarty_Resource {
         if ($_default_handler) {
             if (!is_callable($_default_handler)) {
                 if ($source instanceof Smarty_Config_Source) {
-                    throw new SmartyException("Default config handler not callable");
+                    throw new SmartyException("Theme config handler not callable");
                 } else {
-                    throw new SmartyException("Default template handler not callable");
+                    throw new SmartyException("Theme template handler not callable");
                 }
             }
             $_return = call_user_func_array($_default_handler,
