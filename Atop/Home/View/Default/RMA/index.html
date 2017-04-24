@@ -163,7 +163,7 @@
 										</switch>
 									<else/>
 										<eq name="value.rma_state" value="N">
-											<span class="tag-primary">Step{$value.step.id}-{$value.step.step_name}</span>
+											<span class="tag-primary">Step{$value.step_id}-{$value.step_name}</span>
 										<else/>
 											<span class="tag-success">已关闭</span>
 										</eq>
@@ -218,7 +218,7 @@
 		}).on('change',function(ev){
 			var startDate = $('.startDate').val();
 			$(".endDate").datetimepicker('setStartDate',startDate);
-		});;
+		});
 		$('.endDate').datetimepicker({
 			language:  'zh-CN',
 			format:'yyyy-mm-dd',

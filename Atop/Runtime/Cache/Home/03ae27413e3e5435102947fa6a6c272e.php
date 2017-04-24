@@ -202,6 +202,7 @@
                     <?php else: ?>
                         状态<?php endif; ?>
                 </th>
+				<?php if(isset($RMACloseReason)): ?><th>关闭原因</th><?php endif; ?>
 			</tr>
 		</thead>
 		<tbody>
@@ -222,6 +223,7 @@
                             <?php case "1": ?><span class="label label-primary">正在处理</span><?php break;?>
                             <?php case "0": ?><span class="label label-success">已经处理</span><?php break; endswitch; endif; ?>
 				</td>
+				<?php if(isset($RMACloseReason)): ?><td><?php echo ($RMACloseReason["close_reason"]); ?></td><?php endif; ?>
 			</tr>
 		</tbody>
 	</table>
@@ -328,7 +330,7 @@
                                             <div class="timeline-circle"></div>
                                         </td>
                                         <td class="timeline-content">
-                                            <p style="font-size: 16px;color: #888;"><i class="icon-info-sign"></i> 没有数据</p>
+                                            <p style="font-size: 14px;color: #888;">等待<?php echo ($details["operation_person_name"]); ?>处理中...</p>
                                         </td>
                                     </tr>
                                 </table><?php endif; endif; ?>

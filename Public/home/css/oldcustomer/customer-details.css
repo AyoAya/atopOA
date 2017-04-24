@@ -30,7 +30,7 @@
 
 body {
 	color: #222;
-	font-size: 15px;
+	font-size: 14px;
 }
 code {
 	line-height: 180%;
@@ -296,11 +296,11 @@ code {
 	margin-bottom: 0;
 }
 #changeNewVersion .layui-form-label {
-	width: auto;
+	width: 72px;
 	padding-left: 0;
 }
 #changeNewVersion .layui-input-block {
-	margin-left: 45px;
+	margin-left: 80px;
 }
 
 

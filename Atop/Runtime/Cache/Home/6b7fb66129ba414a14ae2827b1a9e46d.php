@@ -356,6 +356,15 @@
 									</select>
 								</div>
 							</div>
+							<?php if(isset($vendorBrand)): ?>
+								<div class="layui-form-item">
+									<label class="layui-form-label">设备厂商</label>
+									<div class="layui-input-block">
+										<select name="vendor">
+											<?php if(is_array($vendorBrand)): $i = 0; $__LIST__ = $vendorBrand;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><option value="<?php echo ($value["id"]); ?>"><?php echo ($value["brand"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+										</select>
+									</div>
+								</div><?php endif; ?>
 						</div>
 						<div class="modal-footer">
 							<input type="hidden" name="main_assoc" value="<?php echo ($details["id"]); ?>">

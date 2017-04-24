@@ -19,8 +19,8 @@ class RMAController extends AuthController{
         }
         if( !empty(I('get.step')) ){
             if( I('get.step') != 'close' ){  //如果提交的进度值为数字类型则表明筛选该步骤id的数据，我、如果不是则为已关闭的类型
-                $where = 'a.id=b.main_assoc ';
-                $where .= 'AND b.step_assoc='.I('get.step').' AND a.rma_state="N" ';    //查询所有等于该步骤的客诉
+                //$where = 'a.id=b.main_assoc ';
+                $where .= 'AND b.step_assoc="'.I('get.step').'" AND a.rma_state="N" ';    //查询所有等于该步骤的客诉
             }else{
                 $where .= 'AND a.rma_state="Y" ';    //查询所有已关闭的客诉
             }
@@ -51,6 +51,8 @@ class RMAController extends AuthController{
 
         $where .= 'AND a.version="new"';
 
+        //echo $where;
+
 
         $user = M('User');
         $levelReport = $user->field('level,report,department')->find(session('user')['id']);
@@ -75,7 +77,9 @@ class RMAController extends AuthController{
 
         step:
         $count = $customer->table('atop_oacustomercomplaint a,atop_oacustomeroperation b,atop_oacustomerstep c')->where($where)->group('a.id')->select();
+        //echo $customer->getLastSql();
         $count = count($count);
+        //echo $count;
         //分页
         $page = new Page($count,C('LIMIT_SIZE'));
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
@@ -86,9 +90,9 @@ class RMAController extends AuthController{
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
         $result = $customer->table('atop_oacustomercomplaint a,atop_oacustomeroperation b,atop_oacustomerstep c')
-                            ->field('a.id,a.cc_time,a.salesperson,a.customer,a.sale_order,a.pn,a.vendor,a.model,a.error_message,a.reason,a.comments,a.status,a.uid,a.rma_state,a.version,c.id step_id,c.step_name')
+                            ->field('a.id,a.cc_time,a.salesperson,a.customer,a.sale_order,a.pn,a.vendor,a.model,a.error_message,a.reason,a.comments,a.status,a.uid,a.rma_state,a.version,b.main_assoc,b.step_assoc,c.id step_id,c.step_name')
                             ->where($where)->order('a.cc_time DESC,a.id DESC')->group('a.id')->limit($page->firstRow.','.$page->listRows)->select();
-
+        //print_r($result);
         $user = M('User');
         $step = M('Oacustomerstep');
 
@@ -110,11 +114,8 @@ class RMAController extends AuthController{
             //过滤html标签
             $value['error_message'] = str_replace('<br />','',$value['error_message']);
             $value['reason'] = str_replace('<br />','',$value['reason']);
-            if( $value['version'] == 'new' ){
-                $now_step = $operation->where( ['main_assoc'=>$value['id']] )->max('step_assoc');
-                $value['step'] = $step->table()->field('id,step_name')->find($now_step);
-            }
         }
+        //print_r($result);
         $this->assign('filter',$condition);
         $pageShow = $page->show();
         $this->assign('pageShow',$pageShow);
@@ -310,13 +311,20 @@ class RMAController extends AuthController{
     
     //客诉详情
     public function details(){
-        if(!I('get.id')) return false;
+        if(!I('get.id')) {
+            $this->error('参数错误');
+        };
         $user = M('User');
         //获取客诉处理记录并注入模板
         $complaint = M('Oacustomercomplaint');
         $complaintlog = M('Oacustomercomplaintlog');
         //获取当前id指定的客诉
         $resultData = $complaint->find(I('get.id'));
+
+        if( $resultData['rma_state'] == 'Y' && $resultData['assoc_close_reason'] != '' ) {   //如果客诉已关闭并且关闭原因不为空则将关闭原因注入模板
+            $this->assign('RMACloseReason',M('Oacustomerclosereason')->find( $resultData['assoc_close_reason'] ) );
+        }
+
         foreach($resultData as $key=>&$value){
             if($key=='error_message'){
                 $value = htmlspecialchars_decode($value);
@@ -363,6 +371,9 @@ class RMAController extends AuthController{
         $this->assign('closeReason',$close_reason);
 
         $resultData['operation_person'] = $now_operation_person;
+
+        $resultData['operation_person_name'] = $user->field('nickname')->find($now_operation_person)['nickname'];
+
         //print_r($resultData);
 
         # 如果当前步骤为销售确认是否转RMA则将QA部门(品质部)人员列表注入模板
@@ -703,17 +714,16 @@ class RMAController extends AuthController{
             }else{
 
                 $oacustomercomplaint_model = M('Oacustomercomplaint');
-                $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
                 $oacustomeroperaion_model = M('Oacustomeroperation');
 
                 # 开启事务
-                M()->startTrans();
+                $model = new Model();
 
-                $add_id_1 = $oacustomercomplaintlog_model->add($logData);
+                $add_id_1 = $model->table('atop_oacustomercomplaintlog')->add($logData);
 
                 $logDataBak = $logData; //防止系统日志冲突
 
-                $logDataBak['push_step'] = $post['operation_type'];
+                $logDataBak['push_step'] = $post['operation_type']; //将用户选择的推送步骤添加到邮件数据
 
                 if( $post['step'] == 2 ){
                     $operation_person_result = $oacustomeroperaion_model->field('operation_person')->where( ['main_assoc'=>$post['cc_id'],'step_assoc'=>1] )->select();
@@ -721,14 +731,6 @@ class RMAController extends AuthController{
                 }elseif( $post['step'] == 3 ){
                     $operation_person_id = $post['operation_person'];     //获取到QA作为下一步推送人
                 }elseif( $post['operation_type'] == 5 ){  //如果用户将步骤推送到协助处理RMA，则获取该客诉产品的产品经理
-
-                    $step_result = M('Oacustomerstep')->find($post['operation_type']);  //获取到下一个步骤
-
-                    # 记录操作日志
-                    $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤推送到：Step'.$step_result['id'].' - '.$step_result['step_name'];
-                    $logData['recorder'] = 'OASystem';
-                    $logData['attachment'] = '';
-                    $add_id_2 = $oacustomercomplaintlog_model->add($logData);
 
                     $productrelationships_model = M('Productrelationships');
                     $oacustomercomplaint_result = $oacustomercomplaint_model->field('pn')->find( $post['cc_id'] );  //获取到该客诉产品列表
@@ -753,29 +755,26 @@ class RMAController extends AuthController{
                         }
                     }
                 }elseif( $post['operation_type'] == 6 ){
-
-
-                    $step_result = M('Oacustomerstep')->find($post['operation_type']);  //获取到下一个步骤
-
-                    # 记录操作日志
-                    $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤推送到：Step'.$step_result['id'].' - '.$step_result['step_name'];
-                    $logData['recorder'] = 'OASystem';
-                    $logData['attachment'] = '';
-                    $add_id_2 = $oacustomercomplaintlog_model->add($logData);
-
-
                     $operation_person_result = $oacustomeroperaion_model->field('operation_person')->where( ['main_assoc'=>$post['cc_id'],'step_assoc'=>2] )->select();
                     $operation_person_id = $operation_person_result[0]['operation_person'];     //获取到FAE工程师id作为下一步推送人
                 }
 
+                $step_result = M('Oacustomerstep')->find($post['operation_type']);  //获取到下一个步骤
+
+                # 记录操作日志
+                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤推送到：Step'.$step_result['id'].' - '.$step_result['step_name'];
+                $logData['recorder'] = 'OASystem';
+                $logData['attachment'] = '';
+                $add_id_2 = $model->table('atop_oacustomercomplaintlog')->add($logData);
+
                 $operationData['main_assoc'] = $post['cc_id'];
                 $operationData['step_assoc'] = $post['operation_type'];
                 $operationData['operation_person'] = $operation_person_id;
-                $add_id_3 = $oacustomeroperaion_model->add($operationData);
+                $add_id_3 = $model->table('atop_oacustomeroperation')->add($operationData);
 
 
                 if( $add_id_1 && $add_id_2 && $add_id_3 ){
-                    M()->commit();
+                    $model->commit();
 
                     # 如果是添加日志，则获取到当前步骤前的所有步骤处理人员，分别推送邮件
                     $userInfo = $userEmail = $this->GetPushPerson($operation_person_id);   //获取收件人信息
@@ -785,7 +784,7 @@ class RMAController extends AuthController{
 
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
                 }else{
-                    M()->rollback();
+                    $model->rollback();
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加失败'] );
                 }
             }

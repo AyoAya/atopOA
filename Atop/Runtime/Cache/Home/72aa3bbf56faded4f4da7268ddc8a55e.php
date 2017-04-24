@@ -275,7 +275,7 @@
 											<?php case "1": ?><span class="tag-primary">正在处理</span><?php break;?>
 											<?php case "0": ?><span class="tag-success">已经处理</span><?php break; endswitch;?>
 									<?php else: ?>
-										<?php if(($value["rma_state"]) == "N"): ?><span class="tag-primary">Step<?php echo ($value["step"]["id"]); ?>-<?php echo ($value["step"]["step_name"]); ?></span>
+										<?php if(($value["rma_state"]) == "N"): ?><span class="tag-primary">Step<?php echo ($value["step_id"]); ?>-<?php echo ($value["step_name"]); ?></span>
 										<?php else: ?>
 											<span class="tag-success">已关闭</span><?php endif; endif; ?>
 									<?php if(!empty($value["customer"])): ?><span class="tag-hollow">客户：<?php echo ($value["customer"]); ?></span><?php endif; ?>
@@ -319,7 +319,7 @@
 		}).on('change',function(ev){
 			var startDate = $('.startDate').val();
 			$(".endDate").datetimepicker('setStartDate',startDate);
-		});;
+		});
 		$('.endDate').datetimepicker({
 			language:  'zh-CN',
 			format:'yyyy-mm-dd',

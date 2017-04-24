@@ -188,7 +188,7 @@
                     </div>
                     <?php if(($pagetotal) > "0"): ?><ul class="pagination" id="initiate_page_list">
                             <li><a>当前1/<?php echo ($pagetotal); ?></a></li>
-                            <?php $__FOR_START_28497__=1;$__FOR_END_28497__=$pagetotal+1;for($i=$__FOR_START_28497__;$i < $__FOR_END_28497__;$i+=1){ if(($i) == "1"): ?><li class="active"><a><?php echo ($i); ?></a></li>
+                            <?php $__FOR_START_16868__=1;$__FOR_END_16868__=$pagetotal+1;for($i=$__FOR_START_16868__;$i < $__FOR_END_16868__;$i+=1){ if(($i) == "1"): ?><li class="active"><a><?php echo ($i); ?></a></li>
                                 <?php else: ?>
                                     <li><a><?php echo ($i); ?></a></li><?php endif; } ?>
                         </ul><?php endif; ?>
@@ -219,7 +219,7 @@
                     </div>
                     <?php if(($page_approval_total) > "0"): ?><ul class="pagination" id="approval_page_list">
                             <li><a>当前1/<?php echo ($page_approval_total); ?></a></li>
-                            <?php $__FOR_START_17334__=1;$__FOR_END_17334__=$page_approval_total+1;for($i=$__FOR_START_17334__;$i < $__FOR_END_17334__;$i+=1){ if(($i) == "1"): ?><li class="active"><a><?php echo ($i); ?></a></li>
+                            <?php $__FOR_START_13901__=1;$__FOR_END_13901__=$page_approval_total+1;for($i=$__FOR_START_13901__;$i < $__FOR_END_13901__;$i+=1){ if(($i) == "1"): ?><li class="active"><a><?php echo ($i); ?></a></li>
                                 <?php else: ?>
                                     <li><a><?php echo ($i); ?></a></li><?php endif; } ?>
                         </ul><?php endif; ?>

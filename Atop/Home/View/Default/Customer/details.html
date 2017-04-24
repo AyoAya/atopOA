@@ -208,6 +208,18 @@
 									</select>
 								</div>
 							</div>
+							<present name="vendorBrand"> {//如果设备厂商不存在则让销售选择}
+								<div class="layui-form-item">
+									<label class="layui-form-label">设备厂商</label>
+									<div class="layui-input-block">
+										<select name="vendor">
+											<volist name="vendorBrand" id="value">
+												<option value="{$value.brand}">{$value.brand}</option>
+											</volist>
+										</select>
+									</div>
+								</div>
+							</present>
 						</div>
 						<div class="modal-footer">
 							<input type="hidden" name="main_assoc" value="{$details.id}">

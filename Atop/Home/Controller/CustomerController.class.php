@@ -248,6 +248,15 @@ class CustomerController extends AuthController{
         $complaintlog = M('Oacustomercomplaintlog');
         //获取当前id指定的客诉
         $resultData = $complaint->find(I('get.id'));
+
+        $productModel = $resultData['model'];
+        $vendor_brand = M('VendorBrand');
+        $is_exists = $vendor_brand->where( ['brand'=>$productModel] )->select();
+
+        if( empty($is_exists) ){   //查看该客诉的设备品牌是否存在于表中，如果存在则不用选择，不存在则注入模板
+            $this->assign('vendorBrand',$vendor_brand->order('brand ASC')->select());
+        }
+
         foreach($resultData as $key=>&$value){
             if($key=='error_message'){
                 $value = htmlspecialchars_decode($value);
@@ -383,7 +392,11 @@ class CustomerController extends AuthController{
             $model->startTrans();   //开启事务
 
             # 转为新版客诉1：将主表上的version字段值改为new
-            $customercomplaint_save_id = $oacustomercomplaint_model->save( ['id'=>$post['main_assoc'],'version'=>'new'] );
+            if( isset($post['vendor']) ){   //如果vendor存在则说明须重写该字段
+                $customercomplaint_save_id = $oacustomercomplaint_model->save( ['id'=>$post['main_assoc'],'version'=>'new','vendor'=>$post['vendor']] );
+            }else{
+                $customercomplaint_save_id = $oacustomercomplaint_model->save( ['id'=>$post['main_assoc'],'version'=>'new'] );
+            }
 
             # 转为新版客诉2：将从表上的version字段值改为new并且内容等于新客诉的改为步骤1，不为新客诉的改为2
             $customercomplaintlog_save_id_version = $oacustomercomplaintlog_model->where( 'cc_id='.$post['main_assoc'] )->save( ['version'=>'new'] );
@@ -393,7 +406,7 @@ class CustomerController extends AuthController{
             $log_data['cc_id'] = $post['main_assoc'];
             $log_data['log_date'] = date('Y-m-d');
             $log_data['log_content'] = '['.session('user')['nickname'].'] 将该客诉由旧版转入';
-            $log_data['recorder'] = session('user')['account'];
+            $log_data['recorder'] = 'OASystem';
             $log_data['timestamp'] = date('Y-m-d H:i:s');
             $log_data['uid'] = session('user')['id'];
             $log_data['step'] = 2;
@@ -433,7 +446,7 @@ p {
 <p>[$user_nickname] 将客诉步骤推送到：Step$step_id - $step_name</p>
 <p>详情请点击链接：<a target="_blank" href="http://$http_host/customerDetails/$id">http://$http_host/customerDetails/$id</a></p>
 HTML;
-                $result = send_Email('vinty_email@163.com','',$subject,$body);
+                $result = send_Email('vinty_email@163.com','',$subject,$body);  //$email
                 if( $result != 1 ){ //如果邮件发送失败则返回错误信息
                     $this->ajaxReturn( ['falg'=>0,'msg'=>$result] );exit;
                 }

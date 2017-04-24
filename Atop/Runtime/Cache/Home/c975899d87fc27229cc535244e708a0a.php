@@ -226,6 +226,7 @@
 				</div>
 			</div>
 			<div class="layui-form-item">
+				<label class="layui-form-label">其它附件</label>
 				<div class="layui-input-block">
 					<input type="file" name="Filedata" class="layui-upload-file add-customer-upload-file" lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf">
 					<ul id="attachment-list"></ul>
@@ -235,7 +236,7 @@
 				<h4>选择处理人</h4>
 			</div>
 			<div class="layui-inline" style="margin-bottom: 15px;">
-				<label class="layui-form-label">处理人</label>
+				<label class="layui-form-label">FAE</label>
 				<div class="layui-input-inline">
 					<select name="operation_person">
 						<?php if(is_array($userlist)): $i = 0; $__LIST__ = $userlist;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><option value="<?php echo ($value["id"]); ?>"><?php echo ($value["nickname"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
