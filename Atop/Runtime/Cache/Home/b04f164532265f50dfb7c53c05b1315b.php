@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="/Public/Home/css/jquery.mCustomScrollbar.css">
 	<link rel="stylesheet" href="/Public/Home/css/iconfont.css">
 	<link rel="stylesheet" href="/Public/Home/css/basic.css">
-	<link rel="stylesheet" href="/Public/Home/css/<?php echo ($face["theme"]); ?>/index.css">
+	<link rel="stylesheet" href="/Public/Home/css/Theme/<?php echo ($face["theme"]); ?>.css">
 	<link rel="stylesheet" href="/Public/Home/css/promotion_index.css">
 
 	
@@ -47,79 +47,82 @@
 	
 </head>
 <body>
+
 	<script type="text/javascript">
 		var ThinkPHP = {
-				'AJAX' : '/index.php/Home',
-				'ROOT' : '',
-				'IMG' : '/Public/Home/img',
-				'UPLOAD' : '/Uploads',
-				'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
-				'UPLOADIFY' : '/Public/home/uploadify',
-				'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
-				'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
-				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
+			'AJAX' : '/index.php/Home',
+			'ROOT' : '',
+			'IMG' : '/Public/Home/img',
+			'UPLOAD' : '/Uploads',
+			'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
+			'UPLOADIFY' : '/Public/home/uploadify',
+			'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
+			'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
+			'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
+
+
 	<div id="bodyContainer">
 		
 			<div id="sidebar">
-				<div id="face">
-					<div class="face-box">
-						<div class="face">
-							<a href="/index.php/Home/Center">
-								<img id="face-picture" src="<?php echo ($face["face"]); ?>" alt="" width="70" height="70">
-							</a>
-						</div>
-						<p id="userName">Hello
-							<?php if(empty($_SESSION['user']['nickname'])): ?><span id="user_info"><?php echo ($_SESSION['user']['account']); ?> <span class="caret" id="rotate-caret"></span></span>
-							<?php else: ?>
-								<span id="user_info"><?php echo ($_SESSION['user']['nickname']); ?> <span class="caret" id="rotate-caret"></span></span><?php endif; ?>
-						</p>
-						<a href="/notice" style="display: block;"><span class="sidebar-message"><span class="badge sidebar-message-badge"></span></span></a>
-						<a href="javascript:void(0);" style="display: block;"><span class="sidebar-notice"></span></a>
-						<div id="face_dropdown">
-							<ul>
-								<li><a href="/Center/modify"><i class="icon-list-alt"></i> 修改资料</a></li>
-								<li><a href="/Center/face"><i class="icon-github-alt"></i> 修改头像</a></li>
-								<li><a href="/Logout"><i class="icon-signout"></i> 退出登录</a></li>
-							</ul>
-						</div>
+				<div class="sidebar-inset">
+
+					<!-- Logo区 -->
+					<a href="/Index" class="logo"></a>
+
+					<!-- 导航区 -->
+					<ul id="nav">
+						<li>
+							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
+							<ol class="<?php if(in_array((CONTROLLER_NAME), explode(',',"Project,Sample,Product,Compatibility"))): else: ?>sr-only<?php endif; ?>">
+								<li><a href="/Project" class="<?php if((CONTROLLER_NAME) == "Project"): ?>active<?php endif; ?>">&nbsp;&nbsp;项目管理</a></li>
+								<li><a href="/Sample" class="<?php if((CONTROLLER_NAME) == "Sample"): ?>active<?php endif; ?>">&nbsp;&nbsp;样品管理</a></li>
+								<li><a href="/Product" class="<?php if((CONTROLLER_NAME) == "Product"): ?>active<?php endif; ?>">&nbsp;&nbsp;产品管理</a></li>
+								<li><a href="/Compatibility" class="<?php if((CONTROLLER_NAME) == "Compatibility"): ?>active<?php endif; ?>">&nbsp;&nbsp;兼容表</a></li>
+							</ol>
+						</li>
+						<!--<li id="Audit">
+							<div class="auditBTN">
+								<i class="icon-legal"></i><span>审批　　&nbsp;&nbsp;<span class="icon-caret-right"></span></span>
+							</div>
+							<div id="AuditChildMenu">
+								<span><a href="/Expense"><i class="icon-credit-card"></i>&nbsp;&nbsp;报销</a></span>
+							</div>
+						</li>-->
+						<li>
+							<a href="/Approval" class="<?php if((CONTROLLER_NAME) == "Approval"): ?>active<?php endif; ?>"><i class="icon-legal"></i><span>审批</span></a>
+						</li>
+						<li>
+							<a href="/DCC" class="<?php if((CONTROLLER_NAME) == "DCC"): ?>active<?php endif; ?>"><i class="icon-print"></i><span>文档中心</span></a>
+						</li>
+						<li>
+							<a href="/Acronym" class="<?php if((CONTROLLER_NAME) == "Acronym"): ?>active<?php endif; ?>"><i class="icon-book"></i><span>缩略词</span></a>
+						</li>
+						<li>
+							<a href="/RMA" class="<?php if((CONTROLLER_NAME) == "RMA"): ?>active<?php endif; ?>"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
+						</li>
+						<li>
+							<a href="/Manage" class="<?php if((CONTROLLER_NAME) == "Manage"): ?>active<?php endif; ?>"><i class="icon-user"></i><span>用户管理</span></a>
+						</li>
+						<?php if(($_SESSION['user']['account']) == "admin"): ?><li>
+								<a href="/System" class="<?php if((CONTROLLER_NAME) == "System"): ?>active<?php endif; ?>"><i class="icon-cog"></i><span>系统</span></a>
+							</li><?php endif; ?>
+					</ul>
+
+					<!-- 版权信息 -->
+					<div class="copyright-info">
+						<p>ATOP Corporation</p>
+						<p>Copyright &copy; 2016</p>
 					</div>
+
 				</div>
-				<!-- <ul id="nav"> -->
-				<ul id="nav">
-					<li><a href="/Index"><b class="icon-home"></b><span>首页</span></a></li>
-					<li id="Reserach">
-						<a class="reserchBTN"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;<span class="icon-caret-right"></span></span></a>
-					</li>
-					<!--<li id="Audit">
-						<div class="auditBTN">
-							<i class="icon-legal"></i><span>审批　　&nbsp;&nbsp;<span class="icon-caret-right"></span></span>
-						</div>
-						<div id="AuditChildMenu">
-							<span><a href="/Expense"><i class="icon-credit-card"></i>&nbsp;&nbsp;报销</a></span>
-						</div>
-					</li>-->
-					<li><a href="/Approval"><i class="icon-legal"></i><span>审批</span></a></li>
-					<li><a href="/DCC"><i class="icon-print"></i><span>文档中心</span></a></li>
-					<li><a href="/Acronym"><i class="icon-book"></i><span>缩略词</span></a></li>
-					<li><a href="/Customer"><i class="icon-comments-alt"></i><span>客诉处理</span></a></li>
-					<li><a href="/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a></li>
-					<?php if(($_SESSION['user']['account']) == "admin"): ?><li><a href="/System"><i class="icon-cog"></i><span>系统</span></a></li><?php endif; ?>
-				</ul>
 			</div>
 		
 
-		<div id="ResearchChildMenu">
-			<span><a href="/Project"><i class="icon-globe"></i>&nbsp;&nbsp;项目管理</a></span>
-			<span><a href="/Sample"><i class="icon-beaker"></i>&nbsp;&nbsp;样品管理</a></span>
-			<span><a href="/Product"><i class="icon-th"></i>&nbsp;&nbsp;产品管理</a></span>
-			<span><a href="/Compatibility"><i class="icon-bar-chart"></i>&nbsp;&nbsp;兼容表</a></span>
-		</div>
-
-
-
+		<!-- 二级导航及用户信息/常用操作区 -->
 		<div id="header">
+			<!-- 面包屑导航 -->
 			
 	<ol class="breadcrumb breadcrumb-edit">
 		<li><a href="/Sample">样品管理</a></li>
@@ -131,8 +134,36 @@
 		</a>
 	</div> -->
 
+
+			<div class="user-operation-box pull-right">
+				<div class="user-operation-item pull-left">
+					<a href="/Notice" class="option-name"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
+				</div>
+				<div class="user-operation-item pull-left user-options-btn">
+					<a class="option-name">
+						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;<?php echo ($_SESSION['user']['nickname']); ?>&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
+					</a>
+					<!-- 用户选项 -->
+					<div class="user-options">
+						<ul>
+							<li><a href="/Center/modify"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
+							<li><a href="/Center/face"><i class="icon-github-alt"></i>&nbsp;&nbsp;修改头像</a></li>
+							<li><a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出登录</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+
+				<!--<div class="user-operation-item pull-left">
+					<a href="/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
+				</div>-->
+			</div>
+			<div class="clearfix"></div>
 		</div>
 
+
+
+		<!-- 正文区域 -->
 		<div id="content">
 			<div class="container-fluid" id="content-box">
 				
@@ -196,7 +227,7 @@
                 <tbody>
                 <tr>
 					<td class="<?php if(($sample["color"]) == "0"): ?>do<?php endif; if(($sample["color"]) == "2"): ?>no<?php endif; if(($sample["color"]) == "3"): ?>yes<?php endif; ?>"><span><?php echo ($sample["state"]); ?></span></td>
-                    <td><a href="/sampleOverview/<?php echo ($sample["totalorder"]); ?>"><?php echo ($sample["totalorder"]); ?></a></td>
+                    <td><a href="/Sample/overview/order/<?php echo ($sample["totalorder"]); ?>"><?php echo ($sample["totalorder"]); ?></a></td>
                     <td><?php echo ($sample["type"]); ?></td>
                     <td><?php echo ($sample["product"]); ?></td>
                     <td><?php echo ($sample["manager"]); ?></td>
@@ -434,7 +465,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">最新日志<a href="/sampleLog/<?php echo ($sample["order"]); ?>" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
+								<h4 class="panel-title">最新日志<a href="/Sample/log/order/<?php echo ($sample["order"]); ?>" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
 							</div>
 							<div class="panel-body panel-body-min-height">
 								<div>
@@ -463,7 +494,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">最新日志<a href="/sampleLog/<?php echo ($sample["order"]); ?>" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
+								<h4 class="panel-title">最新日志<a href="/Sample/log/order/<?php echo ($sample["order"]); ?>" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
 							</div>
 							<div class="panel-body panel-body-min-height">
 								<div>
@@ -492,7 +523,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">最新日志<a href="/sampleLog/<?php echo ($sample["order"]); ?>" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
+								<h4 class="panel-title">最新日志<a href="/Sample/log/order/<?php echo ($sample["order"]); ?>" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
 							</div>
 							<div class="panel-body panel-body-min-height">
 								<div>
@@ -521,7 +552,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">最新日志<a href="/sampleLog/<?php echo ($sample["order"]); ?>" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
+								<h4 class="panel-title">最新日志<a href="/Sample/log/order/<?php echo ($sample["order"]); ?>" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
 							</div>
 							<div class="panel-body panel-body-min-height">
 								<div>
@@ -550,7 +581,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">最新日志<a href="/sampleLog/<?php echo ($sample["order"]); ?>" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
+								<h4 class="panel-title">最新日志<a href="/Sample/log/order/<?php echo ($sample["order"]); ?>" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
 							</div>
 							<div class="panel-body panel-body-min-height">
 								<div>
@@ -579,7 +610,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">最新日志<a href="/sampleLog/<?php echo ($sample["order"]); ?>" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
+								<h4 class="panel-title">最新日志<a href="/Sample/log/order/<?php echo ($sample["order"]); ?>" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
 							</div>
 							<div class="panel-body panel-body-min-height">
 								<div>
@@ -609,7 +640,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">物流信息<a class="alllog pull-right" href="/sampleLogistics/<?php echo ($sample["order"]); ?>"><i class="icon-truck">&nbsp;</i>物流状态</a></h4>
+								<h4 class="panel-title">物流信息<a class="alllog pull-right" href="/Sample/logistics/order/<?php echo ($sample["order"]); ?>"><i class="icon-truck">&nbsp;</i>物流状态</a></h4>
 							</div>
 							<div class="panel-body">
 								<p>
@@ -622,7 +653,7 @@
 										<?php case "yuantong": ?>圆通速递<?php break;?>
 										<?php case "zhongtong": ?>中通速递<?php break; endswitch;?>
 									<span class="awb">
-										运单号：<a href="/sampleLogistics/<?php echo ($sample["order"]); ?>"><?php echo ($sample["awb"]); ?></a>
+										运单号：<a href="/Sample/logistics/order/<?php echo ($sample["order"]); ?>"><?php echo ($sample["awb"]); ?></a>
 									</span>
 								</p>
 							</div>
@@ -734,445 +765,6 @@
                         </div>
                     </div><?php endif; endif; endif; ?>
 
-		<!-- 审核 -->
-		<?php if(($sample["aid"]) == $_SESSION['user']['id']): if($sample["s_status"] == 0 || $sample["s_status"] == '' || $sample["s_status"] == 3): ?><div id="audit" class="auditContainer">
-					<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="audit-modal">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-									<h4 class="modal-title">审核</h4>
-								</div>
-								<div class="modal-body">
-									<form class="sampleAid form-inline" role="form">
-										<div class="form-group">
-											<label>状态</label>
-											<div class="btn-group">
-												<button type="button" class="btn btn-default stateText">通过</button>
-												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-													<span class="caret"></span>
-												</button>
-												<ul class="dropdown-menu state" role="menu">
-													<li state="1"><a href="javascript:void(0);">通过</a></li>
-													<li state="2"><a href="javascript:void(0);">拒绝</a></li>
-													<li state="3"><a href="javascript:void(0);">添加日志</a></li>
-												</ul>
-											</div>
-											<div class="help-block product-engineer-tip">&nbsp;</div>
-										</div>　
-										<div class="form-group productEngineerContainer">
-											<label>物料准备</label>
-											<div class="input-group">
-												<input type="text" name="approval" value="" class="form-control approval min-approval material-default-value" readonly>
-												<span class="input-group-btn">
-													<button type="button" class="btn btn-default" data-toggle="modal" data-target="#ProductEngineer">选择</button>
-												</span>
-											</div>
-											<div class="help-block product-engineer-tip">&nbsp;</div>
-										</div>　
-										<div class="form-group">
-											<label>预计交期</label>
-											<input type="text" name="e_date" value="<?php if(empty($sample["e_date"])): echo ($sample["d_date"]); else: echo ($sample["e_date"]); endif; ?>" class="form-control e-date" readonly>
-											<div class="help-block product-engineer-tip">&nbsp;</div>
-										</div>
-										<div class="clearfix"></div>
-										<div class="form-group">
-											<textarea class="form-control textarea" name="comment"></textarea>
-										</div>
-										<div class="clearfix"></div>
-										<div class="form-group">
-											<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
-										</div>
-										<input type="hidden" name="status" value="1" class="status">
-										<input type="hidden" name="wid" value="" class="cid material-hidden-value">
-										<input type="hidden" name="assoc" value="<?php echo ($sample["id"]); ?>">
-										<input type="hidden" name="total_order" value="<?php echo ($sample["totalorder"]); ?>">
-										<input type="hidden" name="product" value="<?php echo ($sample["product"]); ?>">
-										<input type="hidden" name="order" value="<?php echo ($sample["order"]); ?>">
-										<input type="hidden" name="uid" value="<?php echo ($sample["uid"]); ?>">
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!--选择计划专员模态框-->
-					<div class="modal fade bs-example-modal-lg" id="ProductEngineer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-						<div class="modal-dialog modal-lg">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-									<h4 class="modal-title" id="myModalLabel">选择计划专员</h4>
-								</div>
-								<div class="modal-body">
-									<ul class="user-select-box material-user-list">
-										<?php if(is_array($users)): $i = 0; $__LIST__ = $users;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><!--不显示超级管理员-->
-											<?php if($value["department"] == 5): ?><li index="<?php echo ($value["id"]); ?>"><?php echo ($value["nickname"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
-									</ul>
-								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div><?php endif; endif; ?>
-
-		<!-- 物料准备 -->
-		<?php if(($sample["w_id"]) == $_SESSION['user']['id']): if($sample["w_status"] == 0 || $sample["w_status"] == '' || $sample["w_status"] == 3): ?><div id="audit" class="auditContainer">
-					<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="material-modal">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-									<h4 class="modal-title">物料准备</h4>
-								</div>
-								<div class="modal-body">
-									<form class="sampleWid form-inline" role="form">
-										<div class="form-group">
-											<label>状态</label>
-											<div class="btn-group">
-												<button type="button" class="btn btn-default stateText">已完成</button>
-												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-													<span class="caret"></span>
-												</button>
-												<ul class="dropdown-menu state" role="menu">
-													<li state="1"><a href="javascript:void(0);">已完成</a></li>
-													<li state="2"><a href="javascript:void(0);">未完成</a></li>
-													<li state="3"><a href="javascript:void(0);">添加日志</a></li>
-												</ul>
-											</div>
-											<div class="help-block product-engineer-tip">&nbsp;</div>
-										</div>　
-										<div class="form-group productEngineerContainer">
-											<label>样品制作</label>
-											<input type="text" name="approval" value="<?php echo ($sample["a_name"]); ?>" class="form-control approval min-approval" readonly>
-											<div class="help-block product-engineer-tip">&nbsp;</div>
-										</div>　
-										<div class="form-group">
-											<label>预计交期</label>
-											<input type="text" name="e_date" value="<?php if(empty($sample["e_date"])): echo ($sample["d_date"]); else: echo ($sample["e_date"]); endif; ?>" class="form-control e-date" readonly>
-											<div class="help-block product-engineer-tip">&nbsp;</div>
-										</div>
-										<div class="clearfix"></div>
-										<div class="form-group">
-											<textarea class="form-control textarea" name="comment"></textarea>
-										</div>
-										<div class="clearfix"></div>
-										<div class="form-group">
-											<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
-										</div>
-										<input type="hidden" name="status" value="1" class="status">
-										<input type="hidden" name="cid" value="<?php echo ($sample["aid"]); ?>" class="cid">
-										<input type="hidden" name="assoc" value="<?php echo ($sample["id"]); ?>">
-										<input type="hidden" name="total_order" value="<?php echo ($sample["totalorder"]); ?>">
-										<input type="hidden" name="product" value="<?php echo ($sample["product"]); ?>">
-										<input type="hidden" name="order" value="<?php echo ($sample["order"]); ?>">
-										<input type="hidden" name="uid" value="<?php echo ($sample["uid"]); ?>">
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!--选择产品工程师模态框-->
-					<!--<div class="modal fade bs-example-modal-lg" id="ProductEngineer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-						<div class="modal-dialog modal-lg">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-									<h4 class="modal-title" id="myModalLabel">选择产品工程师</h4>
-								</div>
-								<div class="modal-body">
-									<ul class="user-select-box">
-										<?php if(is_array($users)): $i = 0; $__LIST__ = $users;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?>&lt;!&ndash;不显示超级管理员&ndash;&gt;
-											<?php if($value["id"] == $_SESSION['user']['id'] || $value["account"] != 'admin' && $value["report"] == $_SESSION['user']['id']): ?><li index="<?php echo ($value["id"]); ?>"><?php echo ($value["nickname"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
-									</ul>
-								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
-								</div>
-							</div>
-						</div>
-					</div>-->
-				</div><?php endif; endif; ?>
-
-		<!-- 样品制作 -->
-		<?php if(($sample["c_id"]) == $_SESSION['user']['id']): if($sample["c_status"] == 0 || $sample["c_status"] == '' || $sample["c_status"] == 3): ?><div id="audit" class="auditContainer">
-					<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="productEngineer-modal">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-									<h4 class="modal-title">样品制作</h4>
-								</div>
-								<div class="modal-body">
-									<form class="sampleCid form-inline" role="form">
-										<div class="form-group">
-											<label>状态</label>
-											<div class="btn-group">
-												<button type="button" class="btn btn-default stateText">已完成</button>
-												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-													<span class="caret"></span>
-												</button>
-												<ul class="dropdown-menu state" role="menu">
-													<li state="1"><a href="javascript:void(0);">已完成</a></li>
-													<li state="2"><a href="javascript:void(0);">无法完成</a></li>
-													<li state="3"><a href="javascript:void(0);">制作中</a></li>
-												</ul>
-											</div>
-											<div class="help-block product-engineer-tip">&nbsp;</div>
-										</div>　
-										<div class="form-group productEngineerContainer">
-											<label>样品测试</label>
-											<div class="input-group">
-												<input type="text" name="approval" value="" class="form-control approval min-approval" readonly>
-												<span class="input-group-btn">
-													<button type="button" class="btn btn-default" data-toggle="modal" data-target="#ProductEngineer">选择</button>
-												</span>
-											</div>
-											<div class="help-block product-engineer-tip">&nbsp;</div>
-										</div>　
-										<div class="form-group">
-											<label>预计交期</label>
-											<input type="text" name="e_date" value="<?php if(empty($sample["e_date"])): echo ($sample["d_date"]); else: echo ($sample["e_date"]); endif; ?>" class="form-control e-date" readonly>
-											<div class="help-block product-engineer-tip">&nbsp;</div>
-										</div>
-										<div class="clearfix"></div>
-										<div class="form-group">
-											<textarea class="form-control textarea" name="comment"></textarea>
-										</div>
-										<div class="clearfix"></div>
-										<div class="form-group">
-											<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
-										</div>
-										<input type="hidden" name="status" value="1" class="status">
-										<input type="hidden" name="cid" value="" class="cid">
-										<input type="hidden" name="assoc" value="<?php echo ($sample["id"]); ?>">
-										<input type="hidden" name="total_order" value="<?php echo ($sample["totalorder"]); ?>">
-										<input type="hidden" name="product" value="<?php echo ($sample["product"]); ?>">
-										<input type="hidden" name="order" value="<?php echo ($sample["order"]); ?>">
-										<input type="hidden" name="uid" value="<?php echo ($sample["uid"]); ?>">
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!--选择产品工程师模态框-->
-					<div class="modal fade bs-example-modal-lg" id="ProductEngineer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-						<div class="modal-dialog modal-lg">
-							<div class="modal-content">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-									<h4 class="modal-title" id="myModalLabel">测试工程师</h4>
-								</div>
-								<div class="modal-body">
-									<ul class="user-select-box">
-										<?php if(is_array($users)): $i = 0; $__LIST__ = $users;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><!--不显示超级管理员及自身-->
-											<?php if($value["account"] != 'admin' && $value["position"] == 11): ?><li index="<?php echo ($value["id"]); ?>"><?php echo ($value["nickname"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
-									</ul>
-								</div>
-								<div class="modal-footer">
-									<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div><?php endif; endif; ?>
-
-        <!-- 样品测试 -->
-        <?php if(($sample["y_id"]) == $_SESSION['user']['id']): if($sample["y_status"] == 0 || $sample["y_status"] == '' || $sample["y_status"] == 3): ?><div class="auditContainer">
-                    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="testEngineer-modal">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title">样品测试</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form class="sampleYid form-inline" role="form">
-                                        <div class="form-group">
-                                            <label>状态</label>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-default stateText">通过</button>
-                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu state" role="menu">
-                                                    <li state="1"><a href="javascript:void(0);">通过</a></li>
-                                                    <li state="2"><a href="javascript:void(0);">未通过</a></li>
-                                                    <li state="3"><a href="javascript:void(0);">添加日志</a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="help-block product-engineer-tip">&nbsp;</div>
-                                        </div>　
-										<div class="form-group">
-											<label>预计交期</label>
-											<input type="text" name="e_date" value="<?php if(empty($sample["e_date"])): echo ($sample["d_date"]); else: echo ($sample["e_date"]); endif; ?>" class="form-control e-date" readonly>
-											<div class="help-block product-engineer-tip">&nbsp;</div>
-										</div>　
-                                        <div class="clearfix"></div>
-                                        <div class="form-group textarea-form-group">
-                                            <textarea class="form-control textarea" name="comment"></textarea>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <input type="submit" class="btn btn-primary btn-lg doneBtn margin-doneBtn" value="确定">
-                                        </div>
-                                        <input type="hidden" name="status" value="1" class="status">
-                                        <input type="hidden" name="cid" value="<?php echo ($sample["aid"]); ?>" class="cid">
-                                        <input type="hidden" name="assoc" value="<?php echo ($sample["id"]); ?>">
-                                        <input type="hidden" name="total_order" value="<?php echo ($sample["totalorder"]); ?>">
-                                        <input type="hidden" name="product" value="<?php echo ($sample["product"]); ?>">
-                                        <input type="hidden" name="order" value="<?php echo ($sample["order"]); ?>">
-                                        <input type="hidden" name="uid" value="<?php echo ($sample["uid"]); ?>">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><?php endif; endif; ?>
-
-        <!-- 发货 -->
-        <?php if(($sample["f_id"]) == $_SESSION['user']['id']): if($sample["f_status"] == 0 || $sample["f_status"] == '' || $sample["f_status"] == 3): ?><div class="auditContainer">
-                    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="delivery-modal">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title">发货</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form class="sampleFid form-inline" role="form">
-                                        <div class="form-group">
-                                            <label>状态</label>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-default stateText">已发货</button>
-                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu state" role="menu">
-                                                    <li state="1"><a href="javascript:void(0);">已发货</a></li>
-                                                    <li state="2"><a href="javascript:void(0);">未发货</a></li>
-                                                    <li state="3"><a href="javascript:void(0);">添加日志</a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="help-block product-engineer-tip">&nbsp;</div>
-                                        </div>　
-                                        <div class="form-group form-group-logistics">
-                                            <label>物流</label>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-default logistics-name">顺丰物流</button>
-                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                    <span class="caret"></span>
-                                                    <span class="sr-only">Toggle Dropdown</span>
-                                                </button>
-                                                <ul class="dropdown-menu logistics-list" role="menu">
-                                                    <li logistics="shunfeng"><a href="javascript:void(0);">顺丰物流</a></li>
-                                                    <li logistics="dhl"><a href="javascript:void(0);">DHL</a></li>
-                                                    <li logistics="fedex"><a href="javascript:void(0);">FedEx</a></li>
-                                                    <li logistics="ups"><a href="javascript:void(0);">UPS</a></li>
-                                                    <li logistics="shentong"><a href="javascript:void(0);">申通快递</a></li>
-                                                    <li logistics="yuantong"><a href="javascript:void(0);">圆通速递</a></li>
-                                                    <li logistics="zhongtong"><a href="javascript:void(0);">中通速递</a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="help-block logistics-tip">&nbsp;</div>
-                                        </div>　
-                                        <div class="form-group productEngineerContainer">
-                                            <label>运单号</label>
-                                            <input type="text" name="approval" value="" class="form-control approval">
-                                            <div class="help-block product-engineer-tip logistics-tip">&nbsp;</div>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                        <div class="form-group">
-                                            <textarea class="form-control textarea" name="comment"></textarea>
-                                        </div>
-										<div class="clearfix"></div>
-										<div class="form-group form-group-upload-btn">
-											<!--<input type="file" name="testReport[]" id="testReport">-->
-											<div id="testReport"></div>
-											<div class="test-report-file-info"></div>
-										</div>
-										<hr />
-                                        <div class="clearfix"></div>
-                                        <div class="form-group">
-                                            <input type="submit" class="btn btn-primary btn-lg doneBtn margin-doneBtn" value="确定">
-                                        </div>
-                                        <input type="hidden" name="status" value="1" class="status">
-                                        <input type="hidden" name="cid" value="<?php echo ($sample["uid"]); ?>" class="cid">
-                                        <input type="hidden" name="logistics" value="shunfeng" class="logistics-code">
-                                        <input type="hidden" name="assoc" value="<?php echo ($sample["id"]); ?>">
-                                        <input type="hidden" name="total_order" value="<?php echo ($sample["totalorder"]); ?>">
-                                        <input type="hidden" name="product" value="<?php echo ($sample["product"]); ?>">
-                                        <input type="hidden" name="order" value="<?php echo ($sample["order"]); ?>">
-                                        <input type="hidden" name="uid" value="<?php echo ($sample["uid"]); ?>">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><?php endif; endif; ?>
-
-        <!-- 反馈 -->
-        <?php if(($sample["k_id"]) == $_SESSION['user']['id']): if($sample["k_status"] == 0 || $sample["k_status"] == '' || $sample["k_status"] == 3): ?><div class="auditContainer">
-                    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="feedback-modal">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title">反馈</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form class="sampleKid form-inline" role="form">
-                                        <div class="form-group">
-                                            <label>状态</label>
-                                            <div class="btn-group">
-                                                <button type="button" class="btn btn-default stateText">已通过</button>
-                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu state" role="menu">
-                                                    <li state="1"><a href="javascript:void(0);">已通过</a></li>
-                                                    <li state="2"><a href="javascript:void(0);">未通过</a></li>
-                                                    <li state="3"><a href="javascript:void(0);">添加日志</a></li>
-                                                </ul>
-                                            </div>
-                                            <div class="help-block product-engineer-tip">&nbsp;</div>
-                                        </div>　
-                                        <div class="clearfix"></div>
-                                        <div class="form-group">
-                                            <textarea class="form-control textarea" name="comment"></textarea>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                        <div class="form-group">
-                                            <input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
-                                        </div>
-                                        <input type="hidden" name="status" value="1" class="status">
-                                        <input type="hidden" name="cid" value="<?php echo ($sample["aid"]); ?>" class="cid">
-                                        <input type="hidden" name="assoc" value="<?php echo ($sample["id"]); ?>">
-                                        <input type="hidden" name="total_order" value="<?php echo ($sample["totalorder"]); ?>">
-                                        <input type="hidden" name="product" value="<?php echo ($sample["product"]); ?>">
-                                        <input type="hidden" name="order" value="<?php echo ($sample["order"]); ?>">
-                                        <input type="hidden" name="uid" value="<?php echo ($sample["uid"]); ?>">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><?php endif; endif; ?>
-
-		<!-- 消息提示模态框 -->
-		<div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
-			<div class="modal-dialog modal-sm">
-				<div class="modal-content">
-					<div class="modal-body" id="message-modal-text">
-						<p class="modal-message modal-message-success"><i class="icon-ok-sign icon-2x modal-icon-success"></i><span class="message-text">成功后的信息</span></p>
-						<p class="modal-message modal-message-error"><i class="icon-remove-sign icon-2x modal-icon-error"></i><span class="message-text">失败后的信息</span></p>
-						<p class="modal-message modal-message-info"><i class="icon-info-sign icon-2x modal-icon-info"></i><span class="message-text">错误的信息</span></p>
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<!-- loading -->
 		<div class="loading-modal sr-only" id="loading">
 			<div class="loading-icon">
@@ -1221,6 +813,7 @@
 		
 	</div>
 
+	<!-- 检测IE（如果是低版本IE浏览器则直接屏蔽） -->
 	<div style="display: none" id=browser_ie>
 		<div class=brower_info>
 			<div class="browser_box">
@@ -1235,17 +828,464 @@
 		</div>
 	</div>
 
+	<!-- 定义消息提示模态框 -->
 	<div class="modal fade bs-example-modal-sm" id="MessageModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 		<div class="modal-dialog modal-sm" role="document">
 			<div class="modal-content" id="MessageText">
 				<!-- 消息内容 -->
-				<!--<p><i class="icon-ok-sign text-success"></i>&nbsp;添加成功</p>-->
 			</div>
 		</div>
 	</div>
 
-	<script>
+	<!-- Modal集 -->
+	
 
+	<!-- 审核 -->
+	<?php if(($sample["aid"]) == $_SESSION['user']['id']): if($sample["s_status"] == 0 || $sample["s_status"] == '' || $sample["s_status"] == 3): ?><div id="audit" class="auditContainer">
+				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="audit-modal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								<h4 class="modal-title">审核</h4>
+							</div>
+							<div class="modal-body">
+								<form class="sampleAid form-inline" role="form">
+									<div class="form-group">
+										<label>状态</label>
+										<div class="btn-group">
+											<button type="button" class="btn btn-default stateText">通过</button>
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu state" role="menu">
+												<li state="1"><a href="javascript:void(0);">通过</a></li>
+												<li state="2"><a href="javascript:void(0);">拒绝</a></li>
+												<li state="3"><a href="javascript:void(0);">添加日志</a></li>
+											</ul>
+										</div>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>　
+									<div class="form-group productEngineerContainer">
+										<label>物料准备</label>
+										<div class="input-group">
+											<input type="text" name="approval" value="" class="form-control approval min-approval material-default-value" readonly>
+											<span class="input-group-btn">
+													<button type="button" class="btn btn-default" data-toggle="modal" data-target="#ProductEngineer">选择</button>
+												</span>
+										</div>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>　
+									<div class="form-group">
+										<label>预计交期</label>
+										<input type="text" name="e_date" value="<?php if(empty($sample["e_date"])): echo ($sample["d_date"]); else: echo ($sample["e_date"]); endif; ?>" class="form-control e-date" readonly>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="form-group">
+										<textarea class="form-control textarea" name="comment"></textarea>
+									</div>
+									<div class="clearfix"></div>
+									<div class="form-group">
+										<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
+									</div>
+									<input type="hidden" name="status" value="1" class="status">
+									<input type="hidden" name="wid" value="" class="cid material-hidden-value">
+									<input type="hidden" name="assoc" value="<?php echo ($sample["id"]); ?>">
+									<input type="hidden" name="total_order" value="<?php echo ($sample["totalorder"]); ?>">
+									<input type="hidden" name="product" value="<?php echo ($sample["product"]); ?>">
+									<input type="hidden" name="order" value="<?php echo ($sample["order"]); ?>">
+									<input type="hidden" name="uid" value="<?php echo ($sample["uid"]); ?>">
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--选择计划专员模态框-->
+				<div class="modal fade bs-example-modal-lg" id="ProductEngineer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title" id="myModalLabel">选择计划专员</h4>
+							</div>
+							<div class="modal-body">
+								<ul class="user-select-box material-user-list">
+									<?php if(is_array($users)): $i = 0; $__LIST__ = $users;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><!--不显示超级管理员-->
+										<?php if($value["department"] == 5): ?><li index="<?php echo ($value["id"]); ?>"><?php echo ($value["nickname"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
+								</ul>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><?php endif; endif; ?>
+
+	<!-- 物料准备 -->
+	<?php if(($sample["w_id"]) == $_SESSION['user']['id']): if($sample["w_status"] == 0 || $sample["w_status"] == '' || $sample["w_status"] == 3): ?><div id="audit" class="auditContainer">
+				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="material-modal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								<h4 class="modal-title">物料准备</h4>
+							</div>
+							<div class="modal-body">
+								<form class="sampleWid form-inline" role="form">
+									<div class="form-group">
+										<label>状态</label>
+										<div class="btn-group">
+											<button type="button" class="btn btn-default stateText">已完成</button>
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu state" role="menu">
+												<li state="1"><a href="javascript:void(0);">已完成</a></li>
+												<li state="2"><a href="javascript:void(0);">未完成</a></li>
+												<li state="3"><a href="javascript:void(0);">添加日志</a></li>
+											</ul>
+										</div>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>　
+									<div class="form-group productEngineerContainer">
+										<label>样品制作</label>
+										<input type="text" name="approval" value="<?php echo ($sample["a_name"]); ?>" class="form-control approval min-approval" readonly>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>　
+									<div class="form-group">
+										<label>预计交期</label>
+										<input type="text" name="e_date" value="<?php if(empty($sample["e_date"])): echo ($sample["d_date"]); else: echo ($sample["e_date"]); endif; ?>" class="form-control e-date" readonly>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="form-group">
+										<textarea class="form-control textarea" name="comment"></textarea>
+									</div>
+									<div class="clearfix"></div>
+									<div class="form-group">
+										<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
+									</div>
+									<input type="hidden" name="status" value="1" class="status">
+									<input type="hidden" name="cid" value="<?php echo ($sample["aid"]); ?>" class="cid">
+									<input type="hidden" name="assoc" value="<?php echo ($sample["id"]); ?>">
+									<input type="hidden" name="total_order" value="<?php echo ($sample["totalorder"]); ?>">
+									<input type="hidden" name="product" value="<?php echo ($sample["product"]); ?>">
+									<input type="hidden" name="order" value="<?php echo ($sample["order"]); ?>">
+									<input type="hidden" name="uid" value="<?php echo ($sample["uid"]); ?>">
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--选择产品工程师模态框-->
+				<!--<div class="modal fade bs-example-modal-lg" id="ProductEngineer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">选择产品工程师</h4>
+                            </div>
+                            <div class="modal-body">
+                                <ul class="user-select-box">
+                                    <?php if(is_array($users)): $i = 0; $__LIST__ = $users;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?>&lt;!&ndash;不显示超级管理员&ndash;&gt;
+                                        <?php if($value["id"] == $_SESSION['user']['id'] || $value["account"] != 'admin' && $value["report"] == $_SESSION['user']['id']): ?><li index="<?php echo ($value["id"]); ?>"><?php echo ($value["nickname"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+			</div><?php endif; endif; ?>
+
+	<!-- 样品制作 -->
+	<?php if(($sample["c_id"]) == $_SESSION['user']['id']): if($sample["c_status"] == 0 || $sample["c_status"] == '' || $sample["c_status"] == 3): ?><div id="audit" class="auditContainer">
+				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="productEngineer-modal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								<h4 class="modal-title">样品制作</h4>
+							</div>
+							<div class="modal-body">
+								<form class="sampleCid form-inline" role="form">
+									<div class="form-group">
+										<label>状态</label>
+										<div class="btn-group">
+											<button type="button" class="btn btn-default stateText">已完成</button>
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu state" role="menu">
+												<li state="1"><a href="javascript:void(0);">已完成</a></li>
+												<li state="2"><a href="javascript:void(0);">无法完成</a></li>
+												<li state="3"><a href="javascript:void(0);">制作中</a></li>
+											</ul>
+										</div>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>　
+									<div class="form-group productEngineerContainer">
+										<label>样品测试</label>
+										<div class="input-group">
+											<input type="text" name="approval" value="" class="form-control approval min-approval" readonly>
+											<span class="input-group-btn">
+													<button type="button" class="btn btn-default" data-toggle="modal" data-target="#ProductEngineer">选择</button>
+												</span>
+										</div>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>　
+									<div class="form-group">
+										<label>预计交期</label>
+										<input type="text" name="e_date" value="<?php if(empty($sample["e_date"])): echo ($sample["d_date"]); else: echo ($sample["e_date"]); endif; ?>" class="form-control e-date" readonly>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="form-group">
+										<textarea class="form-control textarea" name="comment"></textarea>
+									</div>
+									<div class="clearfix"></div>
+									<div class="form-group">
+										<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
+									</div>
+									<input type="hidden" name="status" value="1" class="status">
+									<input type="hidden" name="cid" value="" class="cid">
+									<input type="hidden" name="assoc" value="<?php echo ($sample["id"]); ?>">
+									<input type="hidden" name="total_order" value="<?php echo ($sample["totalorder"]); ?>">
+									<input type="hidden" name="product" value="<?php echo ($sample["product"]); ?>">
+									<input type="hidden" name="order" value="<?php echo ($sample["order"]); ?>">
+									<input type="hidden" name="uid" value="<?php echo ($sample["uid"]); ?>">
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--选择产品工程师模态框-->
+				<div class="modal fade bs-example-modal-lg" id="ProductEngineer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title" id="myModalLabel">测试工程师</h4>
+							</div>
+							<div class="modal-body">
+								<ul class="user-select-box">
+									<?php if(is_array($users)): $i = 0; $__LIST__ = $users;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><!--不显示超级管理员及自身-->
+										<?php if($value["account"] != 'admin' && $value["position"] == 11): ?><li index="<?php echo ($value["id"]); ?>"><?php echo ($value["nickname"]); ?></li><?php endif; endforeach; endif; else: echo "" ;endif; ?>
+								</ul>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><?php endif; endif; ?>
+
+	<!-- 样品测试 -->
+	<?php if(($sample["y_id"]) == $_SESSION['user']['id']): if($sample["y_status"] == 0 || $sample["y_status"] == '' || $sample["y_status"] == 3): ?><div class="auditContainer">
+				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="testEngineer-modal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								<h4 class="modal-title">样品测试</h4>
+							</div>
+							<div class="modal-body">
+								<form class="sampleYid form-inline" role="form">
+									<div class="form-group">
+										<label>状态</label>
+										<div class="btn-group">
+											<button type="button" class="btn btn-default stateText">通过</button>
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu state" role="menu">
+												<li state="1"><a href="javascript:void(0);">通过</a></li>
+												<li state="2"><a href="javascript:void(0);">未通过</a></li>
+												<li state="3"><a href="javascript:void(0);">添加日志</a></li>
+											</ul>
+										</div>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>　
+									<div class="form-group">
+										<label>预计交期</label>
+										<input type="text" name="e_date" value="<?php if(empty($sample["e_date"])): echo ($sample["d_date"]); else: echo ($sample["e_date"]); endif; ?>" class="form-control e-date" readonly>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>　
+									<div class="clearfix"></div>
+									<div class="form-group textarea-form-group">
+										<textarea class="form-control textarea" name="comment"></textarea>
+									</div>
+
+									<div class="form-group">
+										<input type="submit" class="btn btn-primary btn-lg doneBtn margin-doneBtn" value="确定">
+									</div>
+									<input type="hidden" name="status" value="1" class="status">
+									<input type="hidden" name="cid" value="<?php echo ($sample["aid"]); ?>" class="cid">
+									<input type="hidden" name="assoc" value="<?php echo ($sample["id"]); ?>">
+									<input type="hidden" name="total_order" value="<?php echo ($sample["totalorder"]); ?>">
+									<input type="hidden" name="product" value="<?php echo ($sample["product"]); ?>">
+									<input type="hidden" name="order" value="<?php echo ($sample["order"]); ?>">
+									<input type="hidden" name="uid" value="<?php echo ($sample["uid"]); ?>">
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><?php endif; endif; ?>
+
+	<!-- 发货 -->
+	<?php if(($sample["f_id"]) == $_SESSION['user']['id']): if($sample["f_status"] == 0 || $sample["f_status"] == '' || $sample["f_status"] == 3): ?><div class="auditContainer">
+				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="delivery-modal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								<h4 class="modal-title">发货</h4>
+							</div>
+							<div class="modal-body">
+								<form class="sampleFid form-inline" role="form">
+									<div class="form-group">
+										<label>状态</label>
+										<div class="btn-group">
+											<button type="button" class="btn btn-default stateText">已发货</button>
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu state" role="menu">
+												<li state="1"><a href="javascript:void(0);">已发货</a></li>
+												<li state="2"><a href="javascript:void(0);">未发货</a></li>
+												<li state="3"><a href="javascript:void(0);">添加日志</a></li>
+											</ul>
+										</div>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>　
+									<div class="form-group form-group-logistics">
+										<label>物流</label>
+										<div class="btn-group">
+											<button type="button" class="btn btn-default logistics-name">顺丰物流</button>
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+												<span class="caret"></span>
+												<span class="sr-only">Toggle Dropdown</span>
+											</button>
+											<ul class="dropdown-menu logistics-list" role="menu">
+												<li logistics="shunfeng"><a href="javascript:void(0);">顺丰物流</a></li>
+												<li logistics="dhl"><a href="javascript:void(0);">DHL</a></li>
+												<li logistics="fedex"><a href="javascript:void(0);">FedEx</a></li>
+												<li logistics="ups"><a href="javascript:void(0);">UPS</a></li>
+												<li logistics="shentong"><a href="javascript:void(0);">申通快递</a></li>
+												<li logistics="yuantong"><a href="javascript:void(0);">圆通速递</a></li>
+												<li logistics="zhongtong"><a href="javascript:void(0);">中通速递</a></li>
+											</ul>
+										</div>
+										<div class="help-block logistics-tip">&nbsp;</div>
+									</div>　
+									<div class="form-group productEngineerContainer">
+										<label>运单号</label>
+										<input type="text" name="approval" value="" class="form-control approval">
+										<div class="help-block product-engineer-tip logistics-tip">&nbsp;</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="form-group">
+										<textarea class="form-control textarea" name="comment"></textarea>
+									</div>
+									<div class="clearfix"></div>
+									<div class="form-group form-group-upload-btn">
+										<!--<input type="file" name="testReport[]" id="testReport">-->
+										<div id="testReport"></div>
+										<div class="test-report-file-info"></div>
+									</div>
+									<hr />
+									<div class="clearfix"></div>
+									<div class="form-group">
+										<input type="submit" class="btn btn-primary btn-lg doneBtn margin-doneBtn" value="确定">
+									</div>
+									<input type="hidden" name="status" value="1" class="status">
+									<input type="hidden" name="cid" value="<?php echo ($sample["uid"]); ?>" class="cid">
+									<input type="hidden" name="logistics" value="shunfeng" class="logistics-code">
+									<input type="hidden" name="assoc" value="<?php echo ($sample["id"]); ?>">
+									<input type="hidden" name="total_order" value="<?php echo ($sample["totalorder"]); ?>">
+									<input type="hidden" name="product" value="<?php echo ($sample["product"]); ?>">
+									<input type="hidden" name="order" value="<?php echo ($sample["order"]); ?>">
+									<input type="hidden" name="uid" value="<?php echo ($sample["uid"]); ?>">
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><?php endif; endif; ?>
+
+	<!-- 反馈 -->
+	<?php if(($sample["k_id"]) == $_SESSION['user']['id']): if($sample["k_status"] == 0 || $sample["k_status"] == '' || $sample["k_status"] == 3): ?><div class="auditContainer">
+				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="feedback-modal">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+								<h4 class="modal-title">反馈</h4>
+							</div>
+							<div class="modal-body">
+								<form class="sampleKid form-inline" role="form">
+									<div class="form-group">
+										<label>状态</label>
+										<div class="btn-group">
+											<button type="button" class="btn btn-default stateText">已通过</button>
+											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu state" role="menu">
+												<li state="1"><a href="javascript:void(0);">已通过</a></li>
+												<li state="2"><a href="javascript:void(0);">未通过</a></li>
+												<li state="3"><a href="javascript:void(0);">添加日志</a></li>
+											</ul>
+										</div>
+										<div class="help-block product-engineer-tip">&nbsp;</div>
+									</div>　
+									<div class="clearfix"></div>
+									<div class="form-group">
+										<textarea class="form-control textarea" name="comment"></textarea>
+									</div>
+									<div class="clearfix"></div>
+									<div class="form-group">
+										<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
+									</div>
+									<input type="hidden" name="status" value="1" class="status">
+									<input type="hidden" name="cid" value="<?php echo ($sample["aid"]); ?>" class="cid">
+									<input type="hidden" name="assoc" value="<?php echo ($sample["id"]); ?>">
+									<input type="hidden" name="total_order" value="<?php echo ($sample["totalorder"]); ?>">
+									<input type="hidden" name="product" value="<?php echo ($sample["product"]); ?>">
+									<input type="hidden" name="order" value="<?php echo ($sample["order"]); ?>">
+									<input type="hidden" name="uid" value="<?php echo ($sample["uid"]); ?>">
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><?php endif; endif; ?>
+
+	<!-- 消息提示模态框 -->
+	<div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-body" id="message-modal-text">
+					<p class="modal-message modal-message-success"><i class="icon-ok-sign icon-2x modal-icon-success"></i><span class="message-text">成功后的信息</span></p>
+					<p class="modal-message modal-message-error"><i class="icon-remove-sign icon-2x modal-icon-error"></i><span class="message-text">失败后的信息</span></p>
+					<p class="modal-message modal-message-info"><i class="icon-info-sign icon-2x modal-icon-info"></i><span class="message-text">错误的信息</span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!-- 回到顶部 -->
+	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+
+
+	<script>
 		//如果检测到用户浏览器为IE则禁用
 		var str = navigator.userAgent;
 
@@ -1253,22 +1293,6 @@
 			alert(str);
 			checkIE();
 		}
-
-		/*if (document.all && document.addEventListener && !window.atob) {
-			checkIE();
-		}
-
-		if (document.all && document.querySelector && !document.addEventListener) {
-			checkIE();
-		}
-
-		if (document.all && window.XMLHttpRequest && !document.querySelector) {
-			checkIE();
-		}
-
-		if (document.all && document.compatMode && !window.XMLHttpRequest) {
-			checkIE();
-		}*/
 
 		function checkIE(){
 			var body = document.getElementsByName('body');

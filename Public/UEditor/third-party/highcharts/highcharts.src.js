@@ -2020,7 +2020,7 @@ SVGElement.prototype = {
 		wrapper.attrSetters = {};
 	},
 	/**
-	 * Default base for animation
+	 * Theme base for animation
 	 */
 	opacity: 1,
 	/**
@@ -6460,7 +6460,7 @@ function Axis() {
 Axis.prototype = {
 	
 	/**
-	 * Default options for the X axis - the Y axis has extended defaults 
+	 * Theme options for the X axis - the Y axis has extended defaults
 	 */
 	defaultOptions: {
 		// allowDecimals: null,
@@ -12551,7 +12551,7 @@ Point.prototype = {
 	 * causes a name clash in MooTools
 	 * @param {String} eventType
 	 * @param {Object} eventArgs Additional event arguments
-	 * @param {Function} defaultFunction Default event handler
+	 * @param {Function} defaultFunction Theme event handler
 	 */
 	firePointEvent: function (eventType, eventArgs, defaultFunction) {
 		var point = this,

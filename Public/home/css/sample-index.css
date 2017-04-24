@@ -1,72 +1,25 @@
 @CHARSET "UTF-8";
 
-/* h2 a.addsample {
-	text-indent: 20px;
-	font-size: 14px;
-	float: right;
-	width: 120px;
-	height: 34px;
-	border: solid 1px #ccc;
-	border-radius: 4px;
-	margin: 6px 7px 0 0;
-	line-height: 34px;
-}
-h2 a.addsample i {
-	display: inline-block;
+.search-box {
+	width: 300px;
 	position: relative;
-	top: 3px;
-	margin: 2px 10px 0 0;
-	width: 16px;
-	height: 16px;
-	background: url(../img/addsample.png) no-repeat;	
 }
-h2 a.addsample:hover {
-	color: #555;
-	border: solid 1px #555;
+.search-box .search-btn {
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	border: none;
+	width: 36px;
+	height: 36px;
+	text-align: left;
 }
-.btn-read {
-	color: #888;
-	padding: 3px 12px;
-	cursor: pointer;
-	border: solid 1px #ccc;
-	background: #f7f7f7;
-	border-radius: 3px;
-	transition: all .2s;
+.search-box .search-btn i {
+	position: absolute;
+	left: 50%;
+	margin-left: -9px;
+	top: 0;
 }
-.btn-read:hover {
-	color: #555;
-	border: solid 1px #555;
-	background: #f7f7f7;
-} */
 
-
-
-/*.breadcrumb-edit {
-	display: inline-block;
-}
-.btn-group-edit {
-	margin: 7px 25px 0 0;
-}
-.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td {
-	vertical-align: middle;
-	text-align: center;
-}
-.table {
-	margin-bottom: 0;
-}
-.code {
-	color: #555;
-}
-.overview-btn {
-	position: relative;
-	top: -5px;
-}
-.slide-btn {
-	display: inline-block;
-	margin-left: 3px;
-	cursor: pointer;
-	color: #555;
-}*/
 
 .col-lg-4 {
 	padding-left: 0;

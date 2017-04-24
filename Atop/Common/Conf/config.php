@@ -34,22 +34,6 @@
   'URL_ROUTER_ON' => true,
   'URL_ROUTE_RULES' => 
   array (
-    '/^Customer\/page\/([\d+.+])$/' => 'Home/Customer/index?p=:1',
-    '/^Manage\/page\/([\d+.+])$/' => 'Home/Manage/index?p=:1',
     '/^Logout$/' => 'index.php/Home/Index/logout',
-    '/^customerDetails\/(\d+)$/' => 'Home/Customer/details?id=:1',
-    '/^addCustomer$/' => 'Home/Customer/addCustomer',
-    '/^addManage$/' => 'Home/Manage/addManage',
-    '/^Organization/' => 'Home/Manage/organization',
-    '/^addSample$/' => 'Home/Sample/sample',
-    '/^sampleChart$/' => 'Home/Sample/chart',
-    '/^customerChart$/' => 'Home/Customer/chart',
-    '/^editManage\/(\d+)$/' => 'Home/Manage/edit?id=:1',
-    '/^delManage\/(\d+)$/' => 'Home/Manage/del?id=:1',
-    'sampleDetails/:order' => 'Home/Sample/details',
-    'sampleOverview/:overview' => 'Home/Sample/overview',
-    'sampleLog/:order' => 'Home/Sample/log',
-    'sampleLogistics/:order' => 'Home/Sample/logistics',
-    '/^notice$/' => 'index.php/Home/Notice/index',
   ),
 );

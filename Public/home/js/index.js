@@ -6,8 +6,14 @@
 $(function(){
 
 
-	//alert(ThinkPHP['SESSIONNAME']);
-	//alert(ThinkPHP['SESSIONID']);
+	/*$('.user-options-btn').mouseover(function(){
+		$('.user-options').css('display','block');
+	});*/
+	/*$('.user-options').mouseout(function(){
+		setTimeout(function(){
+			$('.user-options').css('display','none');
+		},1000);
+	});*/
 
 	//$('.browser_list img').tooltip('show');
 	$.ajax({
@@ -23,6 +29,18 @@ $(function(){
 				}
 			}
 		}
+	});
+
+	$('#content').scroll(function(){
+		if( $(this).scrollTop() > 100 ){
+			$('#scrollBackTop').removeClass('sr-only');
+		}else{
+			$('#scrollBackTop').addClass('sr-only');
+		}
+	});
+
+	$('#scrollBackTop').click(function(){
+		$('#content').scrollTop(0);
 	});
 
 	/*var browserHeight = $(document).innerHeight();

@@ -1937,7 +1937,7 @@ if (typeof(SyntaxHighlighter) == 'undefined') var SyntaxHighlighter = function()
         /**
          * Returns value of the parameter passed to the highlighter.
          * @param {String} name				Name of the parameter.
-         * @param {Object} defaultValue		Default value.
+         * @param {Object} defaultValue		Theme value.
          * @return {Object}					Returns found value or default value otherwise.
          */
         getParam: function(name, defaultValue)
@@ -3570,7 +3570,7 @@ typeof(exports) != 'undefined' ? exports.SyntaxHighlighter = SyntaxHighlighter :
 		var keywords =	'AddHandler AddressOf AndAlso Alias And Ansi As Assembly Auto ' +
 						'Boolean ByRef Byte ByVal Call Case Catch CBool CByte CChar CDate ' +
 						'CDec CDbl Char CInt Class CLng CObj Const CShort CSng CStr CType ' +
-						'Date Decimal Declare Default Delegate Dim DirectCast Do Double Each ' +
+						'Date Decimal Declare Theme Delegate Dim DirectCast Do Double Each ' +
 						'Else ElseIf End Enum Erase Error Event Exit False Finally For Friend ' +
 						'Function Get GetType GoSub GoTo Handles If Implements Imports In ' +
 						'Inherits Integer Interface Is Let Lib Like Long Loop Me Mod Module ' +

@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="__CSS__/jquery.toastmessage.css">
 	<link rel="stylesheet" href="__CSS__/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" href="__CSS__/timeline.css"/>
-	<link rel="stylesheet" href="__CSS__/customer-details.css">
+	<link rel="stylesheet" href="__CSS__/rma/customer-details.css">
 </block>
 
 <block name="linkjs">
@@ -20,7 +20,7 @@
 	<script src="__JS__/bootstrap-datetimepicker.js"></script>
 	<script src="__JS__/bootstrap-datetimepicker.zh-CN.js"></script>
 	<script src="__JS__/jquery.toastmessage.js"></script>
-	<script src="__JS__/customer.js"></script>
+	<script src="__JS__/rma/customer.js"></script>
 </block>
 
 <block name="webtitle">
@@ -37,18 +37,16 @@
 <block name="content">
 
 
-
-
 	<eq name="details.rma_state" value="N"> {//在当前客诉未关闭的情况下才加载}
 		<eq name="details.version" value="new">
-			<div class="pull-left">
-				<in name="Think.session.user.id" value="$details.operation_person"> {//当前用户符合条件才加载}
-					<button type="button" class="layui-btn layui-btn-primary" data-toggle="modal" data-target="#customer-rma-modal">
-						<span class="glyphicon glyphicon-plus"></span> 添加处理记录
-					</button>
-				</in>
-			</div>
-			<div class="clearfix" style="margin-bottom: 25px;"></div>
+			<in name="Think.session.user.id" value="$details.operation_person"> {//当前用户符合条件才加载}
+				<div class="addOperationLog" data-toggle="modal" data-target="#customer-rma-modal" title="添加处理记录">
+					<p>
+						<span>添加</span>
+						<span>处理记录</span>
+					</p>
+				</div>
+			</in>
 		<else/>
 			<div class="pull-left">
 				<button type="button" class="layui-btn layui-btn-primary" data-toggle="modal" data-target="#customer-rma-modal">
@@ -60,28 +58,26 @@
 	</eq>
 
 
-	<div class="title-bar" style="margin: 0 0 25px 0;">
+	<div class="title-bar" style="margin: 0 0 15px 0;">
 		<h4>基本信息</h4>
 	</div>
 
-	<table class="layui-table" id="table" lay-skin="row">
+	<table class="layui-table" id="table">
 		<thead>
 			<tr>
-				<td>客诉ID</td>
-				<td>客诉时间</td>
-				<td>销售人员</td>
-				<td>客户</td>
-				<td>订单号</td>
-				<td>产品</td>
-				<td>设备厂商</td>
-				<td>设备型号</td>
-				<td>
+				<th>客诉ID</th>
+				<th>客诉时间</th>
+				<th>销售人员</th>
+				<th>客户</th>
+				<th>订单号</th>
+				<th>产品型号</th>
+				<th>
                     <eq name="details.version" value="new"> {//如果是新版客诉则显示进度，老版显示状态}
-                        进度
+                        当前进度
                     <else/>
                         状态
                     </eq>
-                </td>
+                </th>
 			</tr>
 		</thead>
 		<tbody>
@@ -92,12 +88,10 @@
 				<td>{$details.customer}</td>
 				<td>{$details.sale_order}</td>
 				<td>{$details.pn}</td>
-				<td>{$details.vendor}</td>
-				<td>{$details.model}</td>
 				<td>
                     <eq name="details.version" value="new"> {//如果是新版客诉则显示进度，老版显示状态}
                         <eq name="details.rma_state" value="N">
-                            <span class="label label-primary">{$details.now_step.step_name}</span>
+                            <span class="label label-primary">Step{$details.now_step.id}-{$details.now_step.step_name}</span>
                         <else/>
                             <span class="label label-success">客诉已关闭</span>
                         </eq>
@@ -113,30 +107,39 @@
 		</tbody>
 	</table>
 
-	<div class="title-bar" style="margin: 70px 0 15px 0;">
-		<h4>客诉分析</h4>
-	</div>
-
 	<table class="layui-table layui-table-rewrite" lay-skin="line" style="margin: 0;">
 		<tbody>
 			<tr>
-				<td>错误现象：</td>
-				<td>{$details.error_message}</td>
+				<td>设备厂商：</td>
+				<td><p>{$details.vendor}</p></td>
 			</tr>
 			<tr>
-				<td>原因分析：</td>
-				<td>{$details.reason}</td>
+				<td>设备型号：</td>
+				<td><p>{$details.model}</p></td>
 			</tr>
-			<notempty name="details.comments">
-				<tr>
-					<td>备注信息：</td>
-					<td>{$details.comments}</td>
-				</tr>
-			</notempty>
+			<tr>
+				<td>错误现象：</td>
+				<td><p>{$details.error_message}</p></td>
+			</tr>
+			<tr>
+				<td>备注信息：</td>
+				<td><p>
+					<notempty name="details.comments">
+						{$details.comments}
+					<else/>
+						无
+					</notempty>
+				</p></td>
+			</tr>
 		</tbody>
 	</table>
 
-	<div class="title-bar" style="margin: 50px 0 40px 0;">
+	<div class="title-bar" style="margin: 15px 0 15px 0;">
+		<h4>初步分析</h4>
+	</div>
+	<p style="text-indent: 15px;">{$details.reason}</p>
+
+	<div class="title-bar" style="margin: 30px 0 30px 0;">
 		<h4>处理记录</h4>
 	</div>
 
@@ -144,16 +147,16 @@
 	<div class="timeline">
 		<div class="timeline-heading">
 			<volist name="nodeData" id="value">
-					<div class="timeline-table {$value.class}"><!-- 如果要隐藏子节点列表为该元素添加 timeline-hide -->
+					<div class="timeline-table"><!-- 如果要隐藏子节点列表为该元素添加 timeline-hide {$value.class} -->
 
 						<elt name="value.id" value="$details.now_step.id">
 							<div class="timeline-title-box">
 								<div class="timeline-title pull-left">
-									<div class="timeline-step">{$key+1}</div>
+									<div class="timeline-step">Step{$value.id}</div>
 								</div>
 								<div class="timeline-title-text pull-left">
                                     <eq name="details.version" value="new">
-									    <span>{$value.step_name} <i class="<notempty name='value.class'>icon-caret-up<else/>icon-caret-down</notempty>"></i></span>
+									    <span>{$value.step_name} <i class="<notempty name='value.class'>icon-caret-down<else/>icon-caret-up</notempty>"></i></span>
                                     <else/>
                                         <span>处理记录 <i class="<notempty name='value.class'>icon-caret-up<else/>icon-caret-down</notempty>"></i></span>
                                     </eq>
@@ -173,40 +176,55 @@
 												<div class="timeline-circle"></div>
 											</td>
 											<td class="timeline-content">
-												<p>{$val.log_content}</p>
-												<notempty name="val.picture">
-													<volist name="val.picture" id="v">
-														<notempty name="v">
-															<div class="pic-group pull-left">
-																<img class="customer-complaint-img" src="__ROOT__/{$v.filepath}" alt="加载失败">
-																<span class="pic-info">{$v.filename}</span>
-															</div>
-														</notempty>
-													</volist>
-												</notempty>
-												<div class="clearfix"></div>
-												<notempty name="val.attachment">
-													<volist name="val.attachment" id="v">
-														<eq name="v.filetype" value="other">
-															<div class="attachment-box">
-																<div class="attachment-box-dom">
-																	<p class="file-name">
-																		<a href="__ROOT__/{$v.filepath}"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
-																	</p>
-																</div>
-															</div>
-														<else/>
-															<neq name="v" value="">
+												<div class="timeline-content-left pull-left">
+													<div class="timeline-user-face">
+														<img src="{$val.face}" width="48" alt="">
+													</div>
+												</div>
+												<div class="timeline-content-right pull-right">
+													{$val.log_content}
+													<notempty name="val.picture">
+														<volist name="val.picture" id="v">
+															<notempty name="v">
 																<div class="pic-group pull-left">
-																	<img class="customer-complaint-img" src="__ROOT__/{$v.filepath}" height="120" alt="加载失败">
+																	<img class="customer-complaint-img" src="__ROOT__/{$v.filepath}" alt="加载失败">
 																	<span class="pic-info">{$v.filename}</span>
 																</div>
-															</neq>
+															</notempty>
+														</volist>
+													</notempty>
+													<div class="clearfix"></div>
+													<notempty name="val.attachment">
+														<volist name="val.attachment" id="v">
+															<eq name="v.filetype" value="other">
+																<div class="attachment-box">
+																	<div class="attachment-box-dom">
+																		<p class="file-name">
+																			<a href="__ROOT__/{$v.filepath}"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
+																		</p>
+																	</div>
+																</div>
+															<else/>
+																<neq name="v" value="">
+																	<div class="pic-group pull-left">
+																		<img class="customer-complaint-img" src="__ROOT__/{$v.filepath}" height="120" alt="加载失败">
+																		<span class="pic-info">{$v.filename}</span>
+																	</div>
+																</neq>
+															</eq>
+														</volist>
+													</notempty>
+													<div class="clearfix"></div>
+													<div class="timeline-other">
+														<eq name="val.recorder" value="OASystem">
+															OA系统
+														<else/>
+															{$val.nickname}
 														</eq>
-													</volist>
-												</notempty>
+														<span class="timeline-divider">|</span>{$val.timestamp}
+													</div>
+												</div>
 												<div class="clearfix"></div>
-												<div class="timeline-other">{$val.recorder}<span class="timeline-divider">|</span>{$val.timestamp}</div>
 											</td>
 										</tr>
 									</volist>
@@ -231,336 +249,6 @@
 			</volist>
 		</div>
 	</div>
-
-	<!-- customer-rma-modal -->
-    <eq name="details.rma_state" value="N"> {//在当前客诉未关闭的情况下才加载}
-        <eq name="details.version" value="new">
-            <in name="Think.session.user.id" value="$details.operation_person"> {//当前用户符合条件才加载}
-                <div class="modal fade" id="customer-rma-modal">
-                    <form class="layui-form customer-rma-form">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title" id="myModalLabel">添加处理记录</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label">处理类型</label>
-                                        <div class="layui-input-inline">
-                                            <select name="operation_type" lay-filter="operation">
-                                                <option value="X">添加日志</option>
-                                                <eq name="details.now_step.transfer" value="Y">
-                                                    <option value="Z">转交</option>
-                                                </eq>
-                                                <eq name="details.now_step.fallback" value="Y">
-                                                    <option value="H">回退</option>
-                                                </eq>
-                                                <eq name="details.now_step.id" value="3">
-                                                    <option value="N">关闭客诉</option>
-                                                </eq>
-                                                <eq name="details.now_step.id" value="$maxStep">
-                                                    <option value="N">关闭客诉</option>
-                                                </eq>
-                                                <lt name="details.now_step.id" value="$maxStep">
-                                                    <eq name="details.rma_state" value="N">	{//往下推送的前提是该客诉尚未关闭}
-                                                        <neq name="details.now_step.id" value="4">	{//如果当前步骤在RMA分析报告（QA），则可以选择性的跳过协助处理RMA报告直接到审核并关闭RMA}
-                                                            <option value="{$details.next_step.id}">推送到：{$details.next_step.step_name}</option>
-                                                        <else/>
-                                                            <volist name="details.next_step" id="value">
-                                                                <option value="{$value.id}">推送到：{$value.step_name}</option>
-                                                            </volist>
-                                                        </neq>
-                                                    </eq>
-                                                </lt>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <present name="QAlist">
-                                        <div class="layui-inline operation-person-select sr-only">
-                                            <label class="layui-form-label">处理人</label>
-                                            <div class="layui-input-inline">
-                                                <select name="operation_person">
-                                                    <volist name="QAlist" id="value">
-														<neq name="value.id" value="$Think.session.user.id">
-															<option value="{$value.id}">{$value.nickname}</option>
-														</neq>
-                                                    </volist>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </present>
-
-                                    <present name="FAElist">
-                                        <div class="layui-inline fae-person-select sr-only">
-                                            <label class="layui-form-label">FAE</label>
-                                            <div class="layui-input-inline">
-                                                <select name="operation_person">
-                                                    <volist name="FAElist" id="value">
-														<neq name="value.id" value="$Think.session.user.id">
-                                                        	<option value="{$value.id}">{$value.nickname}</option>
-														</neq>
-                                                    </volist>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </present>
-
-                                    <present name="fallback">
-                                        <div class="layui-inline step-select sr-only">
-                                            <div class="layui-input-inline">
-                                                <p>回退到：{$fallback.step_name}<br>处理人：{$fallback.nickname}</p>
-                                            </div>
-                                        </div>
-                                    </present>
-
-                                    <div class="layui-form-item layui-form-text">
-                                        <textarea name="log_content" placeholder="请输入处理内容" class="layui-textarea"></textarea>
-                                    </div>
-                                    <div class="layui-inline">
-                                        <div class="layui-input-inline">
-                                            <input type="file" name="Filedata" lay-type="file|image" class="layui-upload-file" multiple>
-                                        </div>
-                                    </div>
-                                    <ul id="attachment-list"></ul>
-                                </div>
-                                <div class="modal-footer">
-                                    <input type="hidden" name="recorder" value="{$Think.session.user.account}">
-                                    <input type="hidden" name="cc_id" value="{$details.id}">
-                                    <input type="hidden" name="step" value="{$details.now_step.id}">
-                                    <input type="hidden" name="version" value="{$details.version}">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                    <button lay-submit lay-filter="rmaCustomer" class="btn btn-primary">确定</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </in>
-        <else/>
-            <div class="modal fade" id="customer-rma-modal">
-                <form class="layui-form customer-rma-form">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">添加处理记录</h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="layui-inline">
-                                    <label class="layui-form-label">处理类型</label>
-                                    <div class="layui-input-inline">
-                                        <select name="operation_type" lay-filter="operation">
-                                            <option value="X">添加日志</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="layui-form-item layui-form-text">
-                                    <textarea name="log_content" placeholder="请输入处理内容" class="layui-textarea"></textarea>
-                                </div>
-                                <div class="layui-inline">
-                                    <div class="layui-input-inline">
-                                        <input type="file" name="Filedata" lay-type="file|image" class="layui-upload-file" multiple>
-                                    </div>
-                                </div>
-                                <ul id="attachment-list"></ul>
-                            </div>
-                            <div class="modal-footer">
-                                <input type="hidden" name="recorder" value="{$Think.session.user.account}">
-                                <input type="hidden" name="cc_id" value="{$details.id}">
-                                <input type="hidden" name="step" value="{$details.now_step.id}">
-                                <input type="hidden" name="version" value="{$details.version}">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                <button lay-submit lay-filter="rmaCustomer" class="btn btn-primary">确定</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </eq>
-    </eq>
-
-
-
-
-	<!--<div class="panel panel-default">
-		<div class="panel-heading panel-heading-edit"><h4>错误现象</h4></div>
-		<div class="panel-body">
-			<code>{$details.error_message}</code>
-		</div>
-	</div>
-
-	<div class="panel panel-default">
-		<div class="panel-heading panel-heading-edit"><h4>原因分析</h4></div>
-		<div class="panel-body">
-			{$details.reason}
-		</div>
-	</div>
-
-	<notempty name="details.comments">
-		<div class="panel panel-default">
-		<div class="panel-heading panel-heading-edit"><h4>备注信息</h4></div>
-		<div class="panel-body">
-			{$details.comments}
-		</div>
-	</div>
-	</notempty>-->
-
-	<!--<div class="panel panel-default" id="deal-record">
-		<div class="panel-heading panel-heading-edit"><h4>处理记录</h4></div>
-		<div class="panel-body">
-			<volist name="details.log" id="vo">
-				<div class="media media-edit">
-					<span class="media-left media-top media-img" href="###">
-						<img class="userface" src="{$vo.face}" width="100" height="100" alt="...">
-					</span>
-					<div class="media-body">
-						<p class="log-info"><kbd>{$vo.log_date}</kbd> {$vo.log_content}</p>
-						<notempty name="vo.picture">
-							<volist name="vo.picture" id="v">
-								<notempty name="v">
-									&lt;!&ndash; 如果图像为空则不输出 &ndash;&gt;
-									<div class="pic-group pull-left">
-										<p class="float-pic">
-											<img class="customer-complaint-img" src="{$v.filepath}" alt="图像加载错误">
-										</p>
-										<span class="pic-info">{$v.filename}</span>
-									</div>
-								</notempty>
-							</volist>
-						</notempty>
-						<div class="clearfix"></div>
-						<notempty name="vo.attachment">
-							<volist name="vo.attachment" id="v">
-								<eq name="v.filetype" value="other">
-									<div class="attachment-box">
-										<div class="attachment-box-dom">
-											<p class="file-name">
-												<span class="file-name-info pull-left"><i class="icon-file-alt"></i> {$v.filename}</span>
-												<form action="__URL__/downloadFile" method="post" class="pull-left">
-													<input type="hidden" name="filepath" value="{$v.filepath}">
-													<input type="submit" class="btn btn-default btn-xs download-file" value="下载">
-												</form>
-											</p>
-										</div>
-									</div>
-								<else/>
-									<neq name="v" value="">&lt;!&ndash; 如果图像为空则不输出 &ndash;&gt;
-										<div class="pic-group pull-left">
-											<p class="float-pic">
-												<img class="customer-complaint-img" src="{$v.filepath}" alt="图像加载错误">
-											</p>
-											<span class="pic-info">{$v.filename}</span>
-										</div>
-									</neq>
-								</eq>
-							</volist>
-						</notempty>
-						<div class="clearfix"></div>
-						<p class="log-time">{$vo.recorder} | {$vo.timestamp}</p>
-					</div>
-				</div>
-			</volist>
-		</div>
-	</div>-->
-	
-	<!-- 新增客诉模态框 -->
-	<div class="modal fade bs-example-modal-lg" id="customer-modal" role="dialog">
-		<div class="modal-dialog modal-lg" id="customer-modal-width">
-			<div class="modal-content">
-				<form class="form-inline" role="form" id="processingRecords">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">
-							<span aria-hidden="true">&times;</span>
-							<span class="sr-only">close</span>
-						</button>
-						<h4 class="modal-title">添加处理记录</h4>
-					</div>
-					<div class="modal-body">
-							<div class="form-group">
-								<label>处理日期&nbsp;</label>
-								<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd" data-link-field="dtp_input2" id="datetimepicker">
-									<input class="form-control" type="text" name="log_date" id="deal-date" readonly placeholder="选择处理日期">
-									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-								</div>
-								<div class="help-block help-block-date help-block-position" id="change-date-remove"></div>
-							</div>
-							<div class="form-group">
-								<label>　　状态&nbsp;</label>
-								<div class="btn-group">
-									<button type="button" class="btn btn-default" id="deal-text">正在处理</button>
-									<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-										<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" role="menu" id="dropdown-list">
-										<li status="1"><a href="javascript:void(0);">正在处理</a></li>
-										<li status="0"><a href="javascript:void(0);">已经处理</a></li>
-										<li status="-1"><a href="javascript:void(0);">无法处理</a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="form-group">
-								<label>　　处理人&nbsp;</label>
-								<input type="text" name="recorder" value="{$Think.session.user.account}" class="form-control" id="recorder">
-								<div class="help-block help-block-recorder help-block-position"></div>
-							</div>
-							<textarea class="form-control block-textarea"  placeholder="输入最新的处理记录" name="log_content" id="log_content"></textarea>
-							<div class="help-block help-block-textarea" id="log-content-error"></div>
-							<div class="form-group form-group-file-upload">
-								<label>附件</label>
-								<p class="help-block" id="help-block-info">已上传 <b id="fileTotal">0</b> 个文件</p>
-								<div id="file"></div>　　
-								<div id="file-preview">
-									<ul id="file-list"></ul>
-								</div>
-							</div>
-							<input type="hidden" name="cc_id" value="{$Think.get.id}" id="cc_id">
-								<input type="hidden" id="dtp_input2" value="" />
-							<input type="hidden" name="status" value="1" id="status">
-							<input type="hidden" name="attachment" value="" id="file-data">
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-						<input type="submit" class="btn btn-primary" value="确定">
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	<!-- 消息提示模态框 -->
-	<div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-body" id="message-modal-text">
-					<p class="customer-message customer-message-success"><i class="icon-ok-sign icon-2x modal-icon-success"></i><span class="message-text">成功后的信息</span></p>
-					<p class="customer-message customer-message-error"><i class="icon-remove-sign icon-2x modal-icon-error"></i><span class="message-text">失败后的信息</span></p>
-					<p class="customer-message customer-message-info"><i class="icon-info-sign icon-2x modal-icon-info"></i><span class="message-text">错误的信息</span></p>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- 图像展示 -->
-	<div id="picturePreview">
-		<div class="pictureContainer"></div>
-		<span class="closePreview" title="关闭"><i class="icon-remove icon-2x"></i></span>
-	</div>
-
-	<!-- 是否转为RMA -->
-	<!--<eq name="details.sale_audit" value="1">
-		<eq name="face.account" value="$details.salesperson">
-			<div class="is_rma_box animated bounceInDown">
-				<div class="rma-solid">RMA</div>
-			</div>
-		</eq>
-	</eq>-->
-
-
-
-
 
 
 	<script>
@@ -596,7 +284,184 @@
 </block>
 
 
+<block name="modals">
 
+	<!-- 图像展示 -->
+	<div id="picturePreview">
+		<div class="pictureContainer"></div>
+		<span class="closePreview" title="关闭"><i class="icon-remove icon-2x"></i></span>
+	</div>
+
+
+	<!-- customer-rma-modal -->
+	<eq name="details.rma_state" value="N"> {//在当前客诉未关闭的情况下才加载}
+		<eq name="details.version" value="new">
+			<in name="Think.session.user.id" value="$details.operation_person"> {//当前用户符合条件才加载}
+				<div class="modal fade" id="customer-rma-modal">
+					<form class="layui-form customer-rma-form">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel">添加处理记录</h4>
+								</div>
+								<div class="modal-body">
+									<div class="layui-inline">
+										<label class="layui-form-label">处理类型</label>
+										<div class="layui-input-inline">
+											<select name="operation_type" lay-filter="operation">
+												<option value="X">添加日志</option>
+												<eq name="details.now_step.transfer" value="Y">
+													<option value="Z">转交</option>
+												</eq>
+												<eq name="details.now_step.fallback" value="Y">
+													<option value="H">回退</option>
+												</eq>
+												<eq name="details.now_step.id" value="3">
+													<option value="N">关闭客诉</option>
+												</eq>
+												<eq name="details.now_step.id" value="$maxStep">
+													<option value="N">关闭客诉</option>
+												</eq>
+												<lt name="details.now_step.id" value="$maxStep">
+													<eq name="details.rma_state" value="N">	{//往下推送的前提是该客诉尚未关闭}
+														<neq name="details.now_step.id" value="4">	{//如果当前步骤在RMA分析报告（QA），则可以选择性的跳过协助处理RMA报告直接到审核并关闭RMA}
+															<option value="{$details.next_step.id}">推送到：Step-{$details.next_step.id} {$details.next_step.step_name}</option>
+															<else/>
+															<volist name="details.next_step" id="value">
+																<option value="{$value.id}">推送到：Step{$value.id}-{$value.step_name}</option>
+															</volist>
+														</neq>
+													</eq>
+												</lt>
+											</select>
+										</div>
+									</div>
+
+									<present name="QAlist">
+										<div class="layui-inline operation-person-select sr-only">
+											<label class="layui-form-label">处理人</label>
+											<div class="layui-input-inline">
+												<select name="operation_person">
+													<volist name="QAlist" id="value">
+														<neq name="value.id" value="$Think.session.user.id">
+															<option value="{$value.id}">{$value.nickname}</option>
+														</neq>
+													</volist>
+												</select>
+											</div>
+										</div>
+									</present>
+
+									<present name="FAElist">
+										<div class="layui-inline fae-person-select sr-only">
+											<label class="layui-form-label">FAE</label>
+											<div class="layui-input-inline">
+												<select name="operation_person">
+													<volist name="FAElist" id="value">
+														<neq name="value.id" value="$Think.session.user.id">
+															<option value="{$value.id}">{$value.nickname}</option>
+														</neq>
+													</volist>
+												</select>
+											</div>
+										</div>
+									</present>
+
+									<present name="fallback">
+										<div class="layui-inline step-select sr-only">
+											<div class="layui-input-inline">
+												<span>回退到：{$fallback.step_name}</span><span>处理人：{$fallback.nickname}</span>
+											</div>
+										</div>
+									</present>
+
+									<present name="closeReason">
+										{//如果当前步骤在销售确认和最后一步时加载关闭客诉原因dom}
+										<if condition="$details['now_step']['id'] eq 3 or $details['now_step']['id'] eq 6">
+											<div class="layui-inline close-reason-select sr-only">
+												<label class="layui-form-label">关闭原因</label>
+												<div class="layui-input-inline">
+													<select name="assoc_close_reason">
+														<volist name="closeReason" id="value">
+															<neq name="value.id" value="$Think.session.user.id">
+																<option value="{$value.id}">{$value.close_reason}</option>
+															</neq>
+														</volist>
+													</select>
+												</div>
+											</div>
+										</if>
+									</present>
+
+									<div class="layui-form-item layui-form-text">
+										<textarea name="log_content" placeholder="请输入处理内容" class="layui-textarea"></textarea>
+									</div>
+									<div class="layui-inline">
+										<div class="layui-input-inline">
+											<input type="file" name="Filedata"  lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf" class="layui-upload-file" multiple>
+										</div>
+									</div>
+									<ul id="attachment-list"></ul>
+								</div>
+								<div class="modal-footer">
+									<input type="hidden" name="recorder" value="{$Think.session.user.account}">
+									<input type="hidden" name="cc_id" value="{$details.id}">
+									<input type="hidden" name="step" value="{$details.now_step.id}">
+									<input type="hidden" name="version" value="{$details.version}">
+									<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+									<button lay-submit lay-filter="rmaCustomer" class="btn btn-primary">确定</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</in>
+			<else/>
+			<div class="modal fade" id="customer-rma-modal">
+				<form class="layui-form customer-rma-form">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title" id="myModalLabel">添加处理记录</h4>
+							</div>
+							<div class="modal-body">
+								<div class="layui-inline">
+									<label class="layui-form-label">处理类型</label>
+									<div class="layui-input-inline">
+										<select name="operation_type" lay-filter="operation">
+											<option value="X">添加日志</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="layui-form-item layui-form-text">
+									<textarea name="log_content" placeholder="请输入处理内容" class="layui-textarea"></textarea>
+								</div>
+								<div class="layui-inline">
+									<div class="layui-input-inline">
+										<input type="file" name="Filedata"  lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf" class="layui-upload-file" multiple>
+									</div>
+								</div>
+								<ul id="attachment-list"></ul>
+							</div>
+							<div class="modal-footer">
+								<input type="hidden" name="recorder" value="{$Think.session.user.account}">
+								<input type="hidden" name="cc_id" value="{$details.id}">
+								<input type="hidden" name="step" value="{$details.now_step.id}">
+								<input type="hidden" name="version" value="{$details.version}">
+								<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+								<button lay-submit lay-filter="rmaCustomer" class="btn btn-primary">确定</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</eq>
+	</eq>
+
+</block>
 
 
 
