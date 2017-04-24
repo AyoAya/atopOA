@@ -1,0 +1,569 @@
+[ 2017-04-24T14:25:00+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='32' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 32 AND `status` = 0 LIMIT 1   [ RunTime:0.0010s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-04-24T14:25:13+08:00 ] 192.168.0.121 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0010s ]
+
+[ 2017-04-24T14:25:30+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='32' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 32 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-04-24T14:25:43+08:00 ] 192.168.0.121 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-24T14:26:00+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='32' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 32 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-04-24T14:26:03+08:00 ] 192.168.0.121 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-24T14:26:05+08:00 ] 192.168.0.121 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-24T14:26:09+08:00 ] 192.168.0.121 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.001000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-24T14:26:16+08:00 ] 192.168.0.121 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-24T14:26:23+08:00 ] 192.168.0.121 /
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001001s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0020s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `lasttime`,`lastip` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 44 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 47 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 50 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 53 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000000s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.019001s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.020002s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.002000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.002000s ]
+
+[ 2017-04-24T14:26:24+08:00 ] 192.168.0.121 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-24T14:26:30+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.001000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='32' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 32 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-04-24T14:27:00+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001001s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001001s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='32' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 32 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-04-24T14:27:30+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='32' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 32 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-04-24T14:27:38+08:00 ] 192.168.0.121 /
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.002000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `lasttime`,`lastip` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 44 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 47 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 50 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 53 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000000s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.009000s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.009000s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-04-24T14:27:38+08:00 ] 192.168.0.121 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-24T14:27:40+08:00 ] 192.168.0.121 /
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `lasttime`,`lastip` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 44 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 47 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 50 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 53 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.001000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.001000s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.017001s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.018001s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-04-24T14:27:41+08:00 ] 192.168.0.121 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.002000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0010s ]
+
+[ 2017-04-24T14:27:44+08:00 ] 192.168.0.121 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.002000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.002000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 41 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+
+[ 2017-04-24T14:27:51+08:00 ] 192.168.0.121 /
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='41' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `lasttime`,`lastip` FROM `atop_user` WHERE `id` = 41 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 44 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 47 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 50 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 53 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.001000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.001000s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.036002s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.036002s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-04-24T14:27:58+08:00 ] 192.168.0.121 /
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002000s ]
+
+[ 2017-04-24T14:27:58+08:00 ] 192.168.0.121 /index.php/Login/index.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000000s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.008000s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.008000s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-04-24T14:28:00+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0000s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='32' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 32 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001001s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001001s ]
+
+[ 2017-04-24T14:28:02+08:00 ] 192.168.0.121 /index.php/Login/index.html
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002000s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000000s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.015001s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.016001s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.002000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.002000s ]
+
+[ 2017-04-24T14:28:09+08:00 ] 192.168.0.121 /index.php/Home/Login/login
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT * FROM `atop_user` WHERE `account` = 'evan' AND `password` = '9f856690a480c74aca70a95a361a642c13c1cd94'  [ RunTime:0.0000s ]
+SQL: UPDATE `atop_user` SET `lasttime`='1493015289',`lastip`='192.168.0.121' WHERE `id` = '30' [ RunTime:0.0010s ]
+
+[ 2017-04-24T14:28:09+08:00 ] 192.168.0.121 /
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SELECT * FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SELECT `lasttime`,`lastip` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 44 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 47 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 50 行.
+NOTIC: [8192] Function ereg() is deprecated E:\work\atopOA\Atop\Home\Common\function.php 第 53 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000000s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000000s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.015001s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.015001s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
+[ 2017-04-24T14:28:10+08:00 ] 192.168.0.121 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.002000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.002001s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002001s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 30 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.002000s ]
+
+[ 2017-04-24T14:28:13+08:00 ] 192.168.0.121 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001000s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.002000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.002000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 30 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0000s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='30' and g.status='1' )  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0010s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','11','12','13','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0010s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 30 AND `status` = 0 LIMIT 1   [ RunTime:0.0010s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.002000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.002000s ]
+
+[ 2017-04-24T14:28:30+08:00 ] 127.0.0.1 /index.php/Home/Notice/getNotice
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000000s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001001s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001000s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001000s ]
+SQL: SHOW COLUMNS FROM `atop_user` [ RunTime:0.0010s ]
+SQL: SELECT `account`,`face`,`theme`,`state`,`department`,`position` FROM `atop_user` WHERE `id` = 32 LIMIT 1   [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_group_access` [ RunTime:0.0010s ]
+SQL: SELECT `uid`,`group_id`,`title`,`rules` FROM atop_auth_group_access a INNER JOIN atop_auth_group g on a.group_id=g.id  WHERE ( a.uid='32' and g.status='1' )  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_auth_rule` [ RunTime:0.0000s ]
+SQL: SELECT `condition`,`name` FROM `atop_auth_rule` WHERE `id` IN ('1','2','4','5','6','7','8','9','10','12','14','15') AND `type` = 1 AND `status` = 1  [ RunTime:0.0000s ]
+SQL: SHOW COLUMNS FROM `atop_notice` [ RunTime:0.0000s ]
+SQL: SELECT COUNT(*) AS tp_count FROM `atop_notice` WHERE `who` = 32 AND `status` = 0 LIMIT 1   [ RunTime:0.0000s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001000s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001000s ]
+
