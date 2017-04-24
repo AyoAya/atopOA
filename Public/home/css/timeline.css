@@ -21,7 +21,7 @@
 .timeline .timeline-heading .timeline-table .timeline-title-box {
     width: 100%;
     position: relative;
-    min-height: 100px;
+    min-height: 60px;
 }
 .timeline .timeline-heading .timeline-table .timeline-title-box td {
     padding: 20px 20px 50px 20px;
@@ -35,33 +35,34 @@
     color: #428bca;
     float: left;
     width: 101px;
-    min-height: 120px;
+    min-height: 80px;
 }
 .timeline .timeline-heading .timeline-table .timeline-title-box .timeline-title .timeline-step {
-    width: 68px;
-    height: 68px;
+    width: 50px;
+    height: 50px;
     border: solid 2px #428bca;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
     position: absolute;
-    right: -34px;
+    right: -25px;
     top: 0;
-    line-height: 60px;
     background: #fff;
+    font-size: 14px;
+    line-height: 45px;
 }
 .timeline .timeline-heading .timeline-table .timeline-title-text {
-    font-size: 20px;
+    font-size: 18px;
     color: #428bca;
     font-weight: bold;
-    padding-left: 50px !important;
-    line-height: 68px;
+    padding-left: 40px !important;
+    line-height: 50px;
 }
 .timeline .timeline-heading .timeline-table .timeline-title-text span {
     cursor: pointer;
 }
 .timeline .timeline-heading .timeline-table tr:hover .timeline-circle {
-    transform: scale(1.4);
+
 }
 .timeline .timeline-heading .timeline-table .timeline-info, .timeline .timeline-heading .timeline-table .timeline-content {
     padding: 0 25px 30px 20px;
@@ -93,11 +94,6 @@
     -moz-border-radius: 50%;
     border-radius: 50%;
     background: #fff;
-    -webkit-transition: all .3s;
-    -moz-transition: all .3s;
-    -ms-transition: all .3s;
-    -o-transition: all .3s;
-    transition: all .3s;
 }
 .timeline .timeline-heading .timeline-table .timeline-info .timeline-circle:before {
     position: absolute;
@@ -115,7 +111,19 @@
 }
 .timeline .timeline-heading .timeline-table .timeline-content {
     width: 800px;
-    padding-left: 25px;
+    padding-left: 40px;
+}
+.timeline .timeline-heading .timeline-table .timeline-content .timeline-user-face {
+    width: 48px;
+    height: 48px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+}
+.timeline .timeline-heading .timeline-table .timeline-content .timeline-content-right {
+    width: 670px;
 }
 .timeline .timeline-heading .timeline-table .timeline-content p {
     line-height: 25px;

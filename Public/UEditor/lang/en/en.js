@@ -21,7 +21,7 @@ UE.I18N['en'] = {
         'insertvideo':'Video', 'help':'Help', 'justifyleft':'JustifyLeft', 'justifyright':'JustifyRight', 'justifycenter':'JustifyCenter',
         'justifyjustify':'Justify', 'forecolor':'FontColor', 'backcolor':'BackColor', 'insertorderedlist':'OL',
         'insertunorderedlist':'UL', 'fullscreen':'FullScreen', 'directionalityltr':'EnterFromLeft', 'directionalityrtl':'EnterFromRight',
-        'rowspacingtop':'RowSpacingTop', 'rowspacingbottom':'RowSpacingBottom', 'pagebreak':'PageBreak', 'insertframe':'Iframe', 'imagenone':'Default',
+        'rowspacingtop':'RowSpacingTop', 'rowspacingbottom':'RowSpacingBottom', 'pagebreak':'PageBreak', 'insertframe':'Iframe', 'imagenone':'Theme',
         'imageleft':'ImageLeft', 'imageright':'ImageRight', 'attachment':'Attachment', 'imagecenter':'ImageCenter', 'wordimage':'WordImage',
         'lineheight':'LineHeight','edittip':'EditTip','customstyle':'CustomStyle', 'scrawl':'Scrawl', 'autotypeset':'AutoTypeset',
         'webapp':'WebAPP', 'touppercase':'UpperCase', 'tolowercase':'LowerCase','template':'Template','background':'Background','inserttable':'InsertTable',
@@ -546,7 +546,7 @@ UE.I18N['en'] = {
             'lang_input_isScroll':'Enable scrollbars：',
             'lang_input_frameborder':'Show frame border：',
             'lang_input_alignMode':'Alignment：',
-            'align':{title:"Alignment", options:["Default", "Left", "Right", "Center"]}
+            'align':{title:"Alignment", options:["Theme", "Left", "Right", "Center"]}
         },
         'enterAddress':'Please enter an address!'
     },

@@ -274,6 +274,29 @@ function cutImage($path,$name,$x,$y,$w,$h){
 }
 
 /**
+ * 根据当前时间，得到问候语
+ * @return string
+ */
+function get_welcome_str (){
+    $t = date ("H");
+
+    if ($t < 6){
+        $time_str = "凌晨好~";
+    }else if ($t < 9){
+        $time_str = "早上好~";
+    }else if ($t < 11){
+        $time_str = "上午好~";
+    }else if ($t < 13){
+        $time_str = "中午好~";
+    }else if ($t < 18){
+        $time_str = "下午好~";
+    }else{
+        $time_str = "晚上好~";
+    }
+    return $time_str;
+}
+
+/**
  * 生成头像缩略图
  * @param $path
  * @param $name
@@ -293,7 +316,7 @@ function thumbFace($path,$name){
  * @return mixed
  */
 function getExtension($file){
-    return end(explode('.',$file));
+    return strtolower(end(explode('.',$file)));
 }
 
 /**
@@ -480,6 +503,40 @@ function mdate($time = NULL) {
 }
 
 /**
+ * 获取指定日期的第一天
+ * @param $date 时间
+ * @return false|string
+ */
+function getCurMonthFirstDay($date) {
+    return date('Y-m-01', strtotime($date));
+}
+
+/**
+ * 获取指定日期的最后一天
+ * @param $date 时间
+ * @return false|string
+ */
+function getCurMonthLastDay($date) {
+    return date('Y-m-d', strtotime(date('Y-m-01', strtotime($date)) . ' +1 month -1 day'));
+}
+
+/**
+ * 对象转数组
+ * @param $array 需要转换成数组的对象
+ * @return array
+ */
+function object_to_array($array) {
+    if(is_object($array)) {
+        $array = (array)$array;
+    } if(is_array($array)) {
+        foreach($array as $key=>$value) {
+            $array[$key] = object_to_array($value);
+        }
+    }
+    return $array;
+}
+
+/**
  * 发送邮件
  * @param $address 收件人邮箱
  * @param $nickname 收件人姓名
@@ -488,6 +545,7 @@ function mdate($time = NULL) {
  */
 function send_Email($address,$nickname='',$subject,$body,$cc=''){
 
+    $http_host = $_SERVER['HTTP_HOST'];
 
     $email_host=C('EMAIL_HOST');
     $email_port=C('EMAIL_PORT');
@@ -496,7 +554,41 @@ function send_Email($address,$nickname='',$subject,$body,$cc=''){
     $email_from_name=C('EMAIL_FROM_NAME');
 
     //设置签名信息
-    $sign = '<div style="margin-top:50px;width: 100%;padding-top: 15px;border-top: solid 1px #ccc;"><div><img src="http://www.atoptechnology.com.cn/images/logo1.jpg" alt="..." style="float:left;"><span style="float:left;margin-left:15px;"><p style="margin:4px 0;">[ 该邮件由程序自动发送，请勿回复 ]</p><p style="margin:4px 0;">华拓光通信OA系统</p></span></div></div>';
+    $sign = <<<SIGN
+<style>
+    .sign {
+        width: 98%;
+        padding: 15px;
+        margin-top: 50px;
+        background: #2a3542;
+        color: #fff;
+    }
+    .sign .logo {
+        height: 40px;
+    }
+    .sign .info {
+    
+    }
+    .sign .info p {
+        margin: 0;
+        padding: 0;
+        line-height: 26px;
+    }
+    .clearfix {
+        clear: both;
+    }
+</style>
+<div class="sign">
+    <div class="logo">
+        <img src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/>
+    </div>
+    <div class="info">
+        <p>该邮件由程序自动发送，请勿回复</p>
+        <p>华拓光通信OA系统&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL：61.139.89.33:8088</p>
+    </div>
+    <div class="clearfix"></div>
+</div>
+SIGN;
 
     vendor('phpmailer.class#phpmailer');
     vendor('phpmailer.class#smtp');

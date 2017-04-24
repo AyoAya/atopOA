@@ -3,7 +3,7 @@
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
 	<link rel="stylesheet" href="__CSS__/fliptimer.css">
-	<link rel="stylesheet" href="__CSS__/home.css">
+	<link rel="stylesheet" href="__CSS__/welcome.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
@@ -18,17 +18,152 @@
 	<ol class="breadcrumb breadcrumb-edit">
 		<li class="active">首页</li>
 	</ol>
-	<!--<div class="btn-group pull-right btn-group-edit" role="group">
-		<a href="__ROOT__/Organization" class="btn btn-primary">
-			<span class="glyphicon glyphicon-th"></span> 组织架构图
-		</a>
-		<a href="__ROOT__/addManage" class="btn btn-primary">
-			<span class="glyphicon glyphicon-plus"></span> 添加用户
-		</a>
-	</div>-->
 </block>
 <!-- 【正文区域】 -->
 <block name="content">
+
+
+	<div class="welconme-container">
+		<div class="welcome-user"><img class="welcome-user-face" src="{$face.face}" width="40" alt=""> {$Think.session.user.nickname}<small>{:get_welcome_str()}</small></div>
+		<div class="welcome-text">欢迎登录华拓光通信OA系统</div>
+		<div>今天是{:date('Y年m月d日')}，{:week()}，本周是今年的第{:date('W')}周</div>
+	</div>
+
+	<div class="wrap">
+		<div class="pull-left" style="width: 39%;">
+			<div class="section">
+				<div class="section-title">服务器信息</div>
+				<div class="section-body">
+					<table class="server-info-table">
+						<tbody>
+							<tr>
+								<td>系统类型：</td>
+								<td>{:php_uname('s')}</td>
+							</tr>
+							<tr>
+								<td>系统版本：</td>
+								<td>{:php_uname('r')}</td>
+							</tr>
+							<tr>
+								<td>PHP版本：</td>
+								<td>{:PHP_VERSION}</td>
+							</tr>
+							<tr>
+								<td>Zend版本：</td>
+								<td>{:Zend_Version()}</td>
+							</tr>
+							<tr>
+								<td>服务器IP：</td>
+								<td>{:$_SERVER['SERVER_NAME']}</td>
+							</tr>
+							<tr>
+								<td>客户端IP：</td>
+								<td>{:$_SERVER['REMOTE_ADDR']}</td>
+							</tr>
+							<tr>
+								<td>Web端口：</td>
+								<td>{:$_SERVER['SERVER_PORT']}</td>
+							</tr>
+							<tr>
+								<td>解译引擎：</td>
+								<td>{:$_SERVER['SERVER_SOFTWARE']}</td>
+							</tr>
+							<tr>
+								<td>服务器语言：</td>
+								<td>{:$_SERVER['HTTP_ACCEPT_LANGUAGE']}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="pull-right" style="width: 60%;">
+			<div class="section">
+				<div class="section-title">OA更新日志</div>
+				<div class="section-body">
+					<table class="oa-update-log">
+						<tbody>
+							<tr>
+								<td>2017/4/21更新</td>
+								<td>
+									1. 调整后台界面（侧边栏、页头、滚动条、操作按钮等），通知栏及用户操作栏调整至右上角，用户栏集成修改资料/修改头像/退出登录，
+										后台首页界面更新，左侧菜单栏二级菜单切换为下拉展开式，首页栏目集成在logo上（返回首页可通过点击logo跳转）。
+									<br><br>
+									2. 新版客诉上线，新版客诉将增加推送功能，提供每个步骤日志更新及回退、转交处理人等操作，旧版客诉将停止维护，如需更新则须通过销售转为新版方可操作。
+									<br><br>
+									3. 未来样品管理功能将重构。
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- 天行joke笑话接口 -->
+	<!--<ul id="joke-api"></ul>
+	<ul id="pic-api"></ul>
+
+	<script>
+
+		$(function(){
+
+
+			$.ajax({
+				url : 'https://api.tianapi.com/txapi/joke/?key=2a05570608f52dd9ab8346e58cc1fbf2&num=10',
+				type : 'get',
+				dataType : 'json',
+				success : function(response){
+					if( response.code == 200 ){
+						var joke_list = '';
+						for( var key in response.newslist ){
+							joke_list += '<li><p class="joke-title">'+ response.newslist[key].title +'</p><p class="joke-content">'+ response.newslist[key].content +'</p></li>';
+						}
+						$('#joke-api').append(joke_list);
+					}
+				}
+			});
+			$.ajax({
+				url : 'https://api.tianapi.com/meinv/?key=2a05570608f52dd9ab8346e58cc1fbf2&num=10',
+				type : 'get',
+				dataType : 'json',
+				success : function(response){
+					if( response.code == 200 ){
+						var pic_list = '';
+						for( var key in response.newslist ){
+							pic_list += '<li><p class="joke-title">'+ response.newslist[key].title +'</p><img class="joke-content" src="'+ response.newslist[key].picUrl +'" width="290"></li>';
+						}
+						$('#pic-api').append(pic_list);
+					}
+					console.log(response);
+				}
+			});
+
+
+		});
+
+
+	</script>-->
+
 
 </block>
 

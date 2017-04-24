@@ -1895,7 +1895,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    echarts.registerPreprocessor(__webpack_require__(95));
 	    echarts.registerLoading('default', __webpack_require__(97));
 
-	    // Default action
+	    // Theme action
 	    echarts.registerAction({
 	        type: 'highlight',
 	        event: 'highlight',
@@ -3369,7 +3369,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var emphasisOpt = opt.emphasis = opt.emphasis || {};
 	            var normalOpt = opt.normal = opt.normal || {};
 
-	            // Default emphasis option from normal
+	            // Theme emphasis option from normal
 	            each(subOpts, function (subOptName) {
 	                var val = zrUtil.retrieve(emphasisOpt[subOptName], normalOpt[subOptName]);
 	                if (val != null) {
@@ -6787,7 +6787,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        // http://blogs.adobe.com/webplatform/2014/02/24/using-blend-modes-in-html-canvas/
 	        // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation
-	        // Default is source-over
+	        // Theme is source-over
 	        blendMode: null,
 
 	        animation: true,
@@ -7484,7 +7484,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            );
 	            zrUtil.merge(option, this.getDefaultOption());
 
-	            // Default label emphasis `position` and `show`
+	            // Theme label emphasis `position` and `show`
 	            // FIXME Set label in mergeOption
 	            modelUtil.defaultEmphasis(option.label, modelUtil.LABEL_OPTIONS);
 
@@ -7513,7 +7513,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        fillDataTextStyle: function (data) {
-	            // Default data label emphasis `position` and `show`
+	            // Theme data label emphasis `position` and `show`
 	            // FIXME Tree structure data ?
 	            // FIXME Performance ?
 	            if (data) {
@@ -7593,7 +7593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        // FIXME
 	        /**
-	         * Default tooltip formatter
+	         * Theme tooltip formatter
 	         *
 	         * @param {number} dataIndex
 	         * @param {boolean} [multipleSeries=false]
@@ -10690,7 +10690,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * @param {number} normalizedValue A float between 0 and 1.
 	     * @param {Array.<string>} colors Color list.
-	     * @param {boolean=} fullOutput Default false.
+	     * @param {boolean=} fullOutput Theme false.
 	     * @return {(string|Object)} Result color. If fullOutput,
 	     *                           return {color: ..., leftIndex: ..., rightIndex: ..., value: ...},
 	     * @memberOf module:zrender/util/color
@@ -11197,7 +11197,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @param {number} position Coordinate, such as x, y
 	     * @param {number} lineWidth Should be nonnegative integer.
-	     * @param {boolean=} positiveOrNegative Default false (negative).
+	     * @param {boolean=} positiveOrNegative Theme false (negative).
 	     * @return {number} Optimized position.
 	     */
 	    graphic.subPixelOptimize = function (position, lineWidth, positiveOrNegative) {
@@ -13055,7 +13055,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                );
 	                x = res.x;
 	                y = res.y;
-	                // Default align and baseline when has textPosition
+	                // Theme align and baseline when has textPosition
 	                align = align || res.textAlign;
 	                baseline = baseline || res.textBaseline;
 	            }
@@ -19381,7 +19381,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         * @param {Event} event
 	         */
 	        touchstart: function (event) {
-	            // Default mouse behaviour should not be disabled here.
+	            // Theme mouse behaviour should not be disabled here.
 	            // For example, page may needs to be slided.
 
 	            event = normalizeEvent(this.dom, event);
@@ -21004,7 +21004,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var colorAccessPath = (seriesModel.visualColorAccessPath || 'itemStyle.normal.color').split('.');
 	            var data = seriesModel.getData();
 	            var color = seriesModel.get(colorAccessPath) // Set in itemStyle
-	                || seriesModel.getColorFromPalette(seriesModel.get('name'));  // Default color
+	                || seriesModel.getColorFromPalette(seriesModel.get('name'));  // Theme color
 
 	            // FIXME Set color function or use the platte color
 	            data.setVisual('color', color);
@@ -21397,7 +21397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    name: dimensionName,
 	                    stackable: false,
 	                    // Type can be 'float', 'int', 'number'
-	                    // Default is number, Precision of float may not enough
+	                    // Theme is number, Precision of float may not enough
 	                    type: 'number'
 	                };
 	            }
@@ -21587,7 +21587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (!dimValueGetter) {
 	            self.hasItemOption = false;
 	        }
-	        // Default dim value getter
+	        // Theme dim value getter
 	        dimValueGetter = dimValueGetter || function (dataItem, dimName, dataIndex, dimIndex) {
 	            var value = modelUtil.getDataItemValue(dataItem);
 	            // If any dataItem is like { value: 10 }
@@ -23023,7 +23023,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Complete the dimensions array guessed from the data structure.
 	     * @param  {Array.<string>} dimensions      Necessary dimensions, like ['x', 'y']
 	     * @param  {Array} data                     Data list. [[1, 2, 3], [2, 3, 4]]
-	     * @param  {Array.<string>} defaultNames    Default names to fill not necessary dimensions, like ['value']
+	     * @param  {Array.<string>} defaultNames    Theme names to fill not necessary dimensions, like ['value']
 	     * @param  {string} extraPrefix             Prefix of name when filling the left dimensions.
 	     * @return {Array.<string>}
 	     */
@@ -24490,7 +24490,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var proxySymbol = symbolBuildProxies[symbolType];
 	            if (shape.symbolType !== 'none') {
 	                if (!proxySymbol) {
-	                    // Default rect
+	                    // Theme rect
 	                    symbolType = 'rect';
 	                    proxySymbol = symbolBuildProxies[symbolType];
 	                }
@@ -25264,7 +25264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Grid is a region which contains at most 4 cartesian systems
 	 *
-	 * TODO Default cartesian
+	 * TODO Theme cartesian
 	 */
 	var factory = exports;
 
@@ -25620,7 +25620,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (axisType === 'x') {
 	                    // Fix position
 	                    if (axisPosition !== 'top' && axisPosition !== 'bottom') {
-	                        // Default bottom of X
+	                        // Theme bottom of X
 	                        axisPosition = 'bottom';
 	                        if (axisPositionUsed[axisPosition]) {
 	                            axisPosition = axisPosition === 'top' ? 'bottom' : 'top';
@@ -25630,7 +25630,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                else {
 	                    // Fix position
 	                    if (axisPosition !== 'left' && axisPosition !== 'right') {
-	                        // Default left of Y
+	                        // Theme left of Y
 	                        axisPosition = 'left';
 	                        if (axisPositionUsed[axisPosition]) {
 	                            axisPosition = axisPosition === 'left' ? 'right' : 'left';
@@ -25951,7 +25951,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    /**
 	     * @param {module:echarts/model/Model} model
-	     * @param {string} [axisType] Default retrieve from model.type
+	     * @param {string} [axisType] Theme retrieve from model.type
 	     * @return {module:echarts/scale/*}
 	     */
 	    axisHelper.createScaleByModel = function(model, axisType) {
@@ -27594,7 +27594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    function getAxisType(axisDim, option) {
-	        // Default axis with data is category axis
+	        // Theme axis with data is category axis
 	        return option.type || (option.data ? 'category' : 'value');
 	    }
 
@@ -27709,8 +27709,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // 文字与轴线距离
 	        nameGap: 15,
 
-	        silent: false, // Default false to support tooltip.
-	        triggerEvent: false, // Default false to avoid legacy user event listener fail.
+	        silent: false, // Theme false to support tooltip.
+	        triggerEvent: false, // Theme false to avoid legacy user event listener fail.
 
 	        tooltip: {
 	            show: false
@@ -27788,7 +27788,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // 坐标轴小标记
 	        axisTick: {
 	            // If tick is align with label when boundaryGap is true
-	            // Default with axisTick
+	            // Theme with axisTick
 	            alignWithLabel: false,
 	            interval: 'auto'
 	        },
@@ -28325,7 +28325,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        this.axisModel = axisModel;
 
-	        // Default value
+	        // Theme value
 	        zrUtil.defaults(
 	            opt,
 	            {
@@ -29952,7 +29952,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        labelLine.ignore = labelLine.normalIgnore = !labelLineModel.get('show');
 	        labelLine.hoverIgnore = !labelLineHoverModel.get('show');
 
-	        // Default use item visual color
+	        // Theme use item visual color
 	        labelLine.setStyle({
 	            stroke: visualColor,
 	            opacity: data.getItemVisual(idx, 'opacity')
@@ -32099,7 +32099,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // 是否开启缩放及漫游模式
 	            // roam: false,
 
-	            // Default on center of map
+	            // Theme on center of map
 	            center: null,
 
 	            zoom: 1,
@@ -35032,7 +35032,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        /**
-	         * @param {boolean} includeSelf Default false.
+	         * @param {boolean} includeSelf Theme false.
 	         * @return {Array.<module:echarts/data/Tree~TreeNode>} order: [root, child, grandchild, ...]
 	         */
 	        getAncestors: function (includeSelf) {
@@ -35047,7 +35047,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 
 	        /**
-	         * @param {string|Array=} [dimension='value'] Default 'value'. can be 0, 1, 2, 3
+	         * @param {string|Array=} [dimension='value'] Theme 'value'. can be 0, 1, 2, 3
 	         * @return {number} Value.
 	         */
 	        getValue: function (dimension) {
@@ -38330,7 +38330,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            coordinateSystem: 'view',
 
-	            // Default option for all coordinate systems
+	            // Theme option for all coordinate systems
 	            // xAxisIndex: 0,
 	            // yAxisIndex: 0,
 	            // polarIndex: 0,
@@ -38384,7 +38384,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            roam: false,
 
-	            // Default on center of graph
+	            // Theme on center of graph
 	            center: null,
 
 	            zoom: 1,
@@ -38959,7 +38959,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var createGraphDataProxyMixin = function (hostName, dataName) {
 	        return {
 	            /**
-	             * @param {string=} [dimension='value'] Default 'value'. can be 'a', 'b', 'c', 'd', 'e'.
+	             * @param {string=} [dimension='value'] Theme 'value'. can be 'a', 'b', 'c', 'd', 'e'.
 	             * @return {number}
 	             */
 	            getValue: function (dimension) {
@@ -41642,7 +41642,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        labelLine.ignore = labelLine.normalIgnore = !labelLineModel.get('show');
 	        labelLine.hoverIgnore = !labelLineHoverModel.get('show');
 
-	        // Default use item visual color
+	        // Theme use item visual color
 	        labelLine.setStyle({
 	            stroke: visualColor
 	        });
@@ -48714,7 +48714,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	         */
 	        toggleSelected: function (name) {
 	            var selected = this.option.selected;
-	            // Default is true
+	            // Theme is true
 	            if (!selected.hasOwnProperty(name)) {
 	                selected[name] = true;
 	            }
@@ -50457,7 +50457,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    // Update html content
 	                    var firstDataIndex = payloadBatch[sampleSeriesIndex].dataIndexInside;
 
-	                    // Default tooltip content
+	                    // Theme tooltip content
 	                    // FIXME
 	                    // (1) shold be the first data which has name?
 	                    // (2) themeRiver, firstDataIndex is array, and first line is unnecessary.
@@ -51493,7 +51493,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 
 	    function getAxisType(axisDim, option) {
-	        // Default axis with data is category axis
+	        // Theme axis with data is category axis
 	        return option.type || (option.data ? 'category' : 'value');
 	    }
 
@@ -51990,7 +51990,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        init: function (option) {
 	            ComponentModel.prototype.init.apply(this, arguments);
 
-	            // Default label emphasis `position` and `show`
+	            // Theme label emphasis `position` and `show`
 	            modelUtil.defaultEmphasis(
 	                option.label, ['position', 'show', 'textStyle', 'distance', 'formatter']
 	            );
@@ -52046,7 +52046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // Map type
 	            map: '',
 
-	            // Default on center of map
+	            // Theme on center of map
 	            center: null,
 
 	            zoom: 1,
@@ -53845,7 +53845,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        defaultOption: {
 	            // inBrush: null,
 	            // outOfBrush: null,
-	            toolbox: null,          // Default value see preprocessor.
+	            toolbox: null,          // Theme value see preprocessor.
 	            brushLink: null,        // Series indices array, broadcast using dataIndex.
 	                                    // or 'all', which means all series. 'none' or null means no series.
 	            seriesIndex: 'all',     // seriesIndex array, specify series controlled by this brush component.
@@ -53853,10 +53853,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            xAxisIndex: null,
 	            yAxisIndex: null,
 
-	            brushType: 'rect',      // Default brushType, see BrushController.
-	            brushMode: 'single',    // Default brushMode, 'single' or 'multiple'
-	            transformable: true,    // Default transformable.
-	            brushStyle: {           // Default brushStyle
+	            brushType: 'rect',      // Theme brushType, see BrushController.
+	            brushMode: 'single',    // Theme brushMode, 'single' or 'multiple'
+	            transformable: true,    // Theme transformable.
+	            brushStyle: {           // Theme brushStyle
 	                borderWidth: 1,
 	                color: 'rgba(120,140,180,0.3)',
 	                borderColor: 'rgba(120,140,180,0.8)',
@@ -54523,7 +54523,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 
 	    __webpack_require__(19).registerSubTypeDefaulter('dataZoom', function (option) {
-	        // Default 'slider' when no type specified.
+	        // Theme 'slider' when no type specified.
 	        return 'slider';
 	    });
 
@@ -54561,9 +54561,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        defaultOption: {
 	            zlevel: 0,
 	            z: 4,                   // Higher than normal component (z: 2).
-	            orient: null,           // Default auto by axisIndex. Possible value: 'horizontal', 'vertical'.
-	            xAxisIndex: null,       // Default the first horizontal category axis.
-	            yAxisIndex: null,       // Default the first vertical category axis.
+	            orient: null,           // Theme auto by axisIndex. Possible value: 'horizontal', 'vertical'.
+	            xAxisIndex: null,       // Theme the first horizontal category axis.
+	            yAxisIndex: null,       // Theme the first vertical category axis.
 
 	            filterMode: 'filter',   // Possible values: 'filter' or 'empty'.
 	                                    // 'filter': data items which are out of window will be removed.
@@ -55650,12 +55650,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // ph => placeholder. Using placehoder here because
 	            // deault value can only be drived in view stage.
-	            right: 'ph',  // Default align to grid rect.
-	            top: 'ph',    // Default align to grid rect.
-	            width: 'ph',  // Default align to grid rect.
-	            height: 'ph', // Default align to grid rect.
-	            left: null,   // Default align to grid rect.
-	            bottom: null, // Default align to grid rect.
+	            right: 'ph',  // Theme align to grid rect.
+	            top: 'ph',    // Theme align to grid rect.
+	            width: 'ph',  // Theme align to grid rect.
+	            height: 'ph', // Theme align to grid rect.
+	            left: null,   // Theme align to grid rect.
+	            bottom: null, // Theme align to grid rect.
 
 	            backgroundColor: 'rgba(47,69,84,0)',    // Background of slider zoom component.
 	            // dataBackgroundColor: '#ddd',         // Background coor of data shadow and border of box,
@@ -55690,7 +55690,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            labelPrecision: null,
 	            labelFormatter: null,
 	            showDetail: true,
-	            showDataShadow: 'auto',                 // Default auto decision.
+	            showDataShadow: 'auto',                 // Theme auto decision.
 	            realtime: true,
 	            zoomLock: false,                        // Whether disable zoom.
 	            textStyle: {
@@ -55878,7 +55878,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // auto-adapt according to target grid.
 	            var coordRect = this._findCoordRect();
 	            var ecSize = {width: api.getWidth(), height: api.getHeight()};
-	            // Default align by coordinate system rect.
+	            // Theme align by coordinate system rect.
 	            var positionInfo = this._orient === HORIZONTAL
 	                ? {
 	                    // Why using 'right', because right should be used in vertical,
@@ -59071,7 +59071,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var visualMapModel = this.visualMapModel;
 	            var visualObj = {};
 
-	            // Default values.
+	            // Theme values.
 	            if (visualCluster === 'symbol') {
 	                visualObj.symbol = visualMapModel.get('itemSymbol');
 	            }
@@ -60127,7 +60127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    }
 	                    if (!markerModel) {
 	                        if (isInit) {
-	                            // Default label emphasis `position` and `show`
+	                            // Theme label emphasis `position` and `show`
 	                            fillLabel(markerOpt);
 	                        }
 	                        zrUtil.each(markerOpt.data, function (item) {
@@ -63276,7 +63276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        icon: 'M4.7,22.9L29.3,45.5L54.7,23.4M4.6,43.6L4.6,58L53.8,58L53.8,43.6M29.2,45.1L29.2,0',
 	        title: '保存为图片',
 	        type: 'png',
-	        // Default use option.backgroundColor
+	        // Theme use option.backgroundColor
 	        // backgroundColor: '#fff',
 	        name: '',
 	        excludeComponents: ['toolbox'],
@@ -63973,7 +63973,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // New created series
 	                // Geuss the series type
 	                newSeriesOptList.push(zrUtil.extend({
-	                    // Default is scatter
+	                    // Theme is scatter
 	                    type: 'scatter'
 	                }, seriesOpt));
 	            }
@@ -65397,7 +65397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                x = res.x;
 	                y = res.y;
 
-	                // Default align and baseline when has textPosition
+	                // Theme align and baseline when has textPosition
 	                align = align || res.textAlign;
 	                baseline = baseline || res.textBaseline;
 	            }

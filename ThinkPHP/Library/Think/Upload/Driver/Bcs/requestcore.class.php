@@ -81,7 +81,7 @@ class BCS_RequestCore {
 	 */
 	public $response_class = 'BCS_ResponseCore';
 	/**
-	 * Default useragent string to use.
+	 * Theme useragent string to use.
 	 */
 	public $useragent = 'BCS_RequestCore/1.4.2';
 	/**
@@ -831,7 +831,7 @@ class BCS_ResponseCore {
 	}
 }
 /**
- * Default BCS_RequestCore Exception.
+ * Theme BCS_RequestCore Exception.
  */
 class BCS_RequestCore_Exception extends \Exception {
 }

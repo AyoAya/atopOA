@@ -3,19 +3,16 @@
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
 	<link rel="stylesheet" href="__CSS__/bootstrap-datetimepicker.min.css">
-	<link rel="stylesheet" href="__CSS__/addCustomer.css">
-	<link rel="stylesheet" href="__CSS__/productFilter.css">
+	<link rel="stylesheet" href="__CSS__/oldcustomer/addCustomer.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
 	<script src="__JS__/jquery.validate.min.js" charset="UTF-8"></script>
-	<script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
 	<script src="__JS__/jquery.form.js" charset="UTF-8"></script>
-	<script src="__JS__/productFilter.js" charset="UTF-8"></script>
 	<script src="__JS__/bootstrap-datetimepicker.js" charset="UTF-8"></script>
 	<script src="__JS__/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
 	<script src="__JS__/jquery.Huploadify.js"></script>
-	<script src="__JS__/customer.js" charset="UTF-8"></script>
+	<script src="__JS__/oldcustomer/customer.js" charset="UTF-8"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -32,90 +29,122 @@
 <block name="content">
 
 	<div class="add-customer">
-
-		<form class="layui-form">
-			<div class="layui-inline">
-				<label class="layui-form-label">客诉日期</label>
-				<div class="layui-input-inline">
-					<input type="text" name="cc_time" readonly class="layui-input form_date" lay-verify="required" placeholder="请选择日期">
+		<form role="form" id="form">
+			<div class="form-group form-group-edit col-lg-6" >
+				<label>客诉日期</label>
+				<div class="input-group date form_date" data-date="" data-date-format="dd MM yyyy" data-link-format="yyyy-mm-dd" data-link-field="dtp_input2" id="datetimepicker2">
+					<input class="form-control" id="cc_time" type="text" readonly name="cc_time" placeholder="请选择日期" />
+					<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 				</div>
+				<input type="hidden" id="dtp_input2" value="" />
 			</div>
-			<div class="layui-inline">
-				<label class="layui-form-label">处理人</label>
-				<div class="layui-input-inline">
-					<select name="operation_person">
-						<volist name="userlist" id="value">
-							<option value="{$value.id}">{$value.nickname}</option>
-						</volist>
-					</select>
+			<label>销售人员</label>
+			<div class="input-group input-group-edit col-lg-6">
+				<input class="form-control" id="salesperson" type="text" name="salesperson" placeholder="请选择销售人员" readonly />
+				<span class="input-group-btn">
+					<button class="btn btn-default" data-toggle="modal" data-target="#sales-modal" type="button">选择</button>
+				</span>
+			</div>
+			<p class="help-block help-block-color help-block-edit" id="salesperson_error"></p>
+			<div class="form-group form-group-edit">
+				<label>客户</label>
+				<input class="form-control" id="customer" type="text" name="customer" placeholder="例如 Orienta" />
+				<p class="help-block help-block-color"></p>
+			</div>
+			<div class="form-group form-group-edit">
+				<label>订单号</label>
+				<input class="form-control" id="sale_order" type="text" name="sale_order" placeholder="例如 188-Orienta-A" />
+				<p class="help-block help-block-color"></p>
+			</div>
+			<div class="form-group form-group-edit">
+				<label>产品信息</label>
+				<div class="input-group col-lg-12">
+					<input class="form-control" id="pn" type="text" name="pn" placeholder="例如 APCSFP43123CDL20" disabled/>
+					<span class="input-group-btn">
+						<button type="button" id="clear-product" class="btn btn-danger" data-dismiss="modal" data-toggle="tooltip" data-placement="top" title="清空" onMouseOver="$(this).tooltip('show')"><i class="icon-remove"></i></button>
+						<button class="btn btn-default" id="select-product-btn" type="button">添加</button>
+					</span>
 				</div>
+				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="layui-form-item layui-form-item-rewrite">
-				<label class="layui-form-label">客户</label>
-				<div class="layui-input-block">
-					<input type="text" name="customer" class="layui-input" placeholder="例如 Orienta">
-				</div>
+			<div class="form-group form-group-edit">
+				<label>设备厂商</label>
+				<input class="form-control" id="vendor" type="text" name="vendor" placeholder="例如 Huawei" />
+				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="layui-form-item">
-				<label class="layui-form-label">订单号</label>
-				<div class="layui-input-block">
-					<input type="text" name="sale_order" class="layui-input" placeholder="例如 188-Orienta-A">
-				</div>
+			<div class="form-group form-group-edit">
+				<label>设备型号</label>
+				<input class="form-control" id="model" type="text" name="model" placeholder="例如 MA5600T" />
+				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="layui-form-item">
-				<label class="layui-form-label">产品</label>
-				<div class="layui-input-block pn-position-relative">
-					<input type="hidden" name="managers" value="">
-					<input type="text" name="pn" readonly class="layui-input product-select" lay-verify="required" placeholder="例如 APCSFP43123CDL20">
-					<button type="button" class="clear-empty" title="清空"><i class="layui-icon">&#x1006;</i></button>
-				</div>
+			<div class="form-group form-group-edit">
+				<label>错误信息</label>
+				<textarea class="form-control" id="error_message" name="error_message" placeholder="输入详细报错信息，包括交换机报错信息、客户反馈的详细信息等等"></textarea>
+				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="layui-form-item">
-				<label class="layui-form-label">设备厂商</label>
-				<div class="layui-input-block">
-					<input type="text" name="vendor" class="layui-input" placeholder="例如 Huawei">
-				</div>
+			<div class="form-group form-group-edit">
+				<label>原因分析</label>
+				<textarea class="form-control" id="reason" name="reason" placeholder="根据客户反馈的信息做出的初步分析原因"></textarea>
+				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="layui-form-item">
-				<label class="layui-form-label">设备型号</label>
-				<div class="layui-input-block">
-					<input type="text" name="model" class="layui-input" placeholder="例如 MA5600T">
-				</div>
+			<div class="form-group form-group-edit">
+				<label>备注</label>
+				<textarea class="form-control" id="comments" name="comments" placeholder="其他补充信息，例如故障产品的数量，序列号等。"></textarea>
+				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="layui-form-item layui-form-text">
-				<label class="layui-form-label">错误信息</label>
-				<div class="layui-input-block">
-					<textarea name="error_message" lay-verify="required" placeholder="输入详细报错信息，包括交换机报错信息、客户反馈的详细信息等等" class="layui-textarea"></textarea>
-				</div>
+			<div class="form-group btn-box form-group-edit">
+				<input type="hidden" name="userAccount" value="" id="userAccount">
+				<button type="reset" class="btn btn-default btn-lg">重置</button>
+				<button type="submit" class="btn btn-primary btn-lg" id="submit-btn">确定</button>
 			</div>
-			<div class="layui-form-item layui-form-text">
-				<label class="layui-form-label">原因分析</label>
-				<div class="layui-input-block">
-					<textarea name="reason" lay-verify="required" placeholder="根据客户反馈的信息做出的初步分析原因" class="layui-textarea"></textarea>
-				</div>
-			</div>
-			<div class="layui-form-item layui-form-text">
-				<label class="layui-form-label">备注</label>
-				<div class="layui-input-block">
-					<textarea name="comments" placeholder="其他补充信息，例如故障产品的数量，序列号等。" class="layui-textarea"></textarea>
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<div class="layui-input-block">
-					<input type="file" name="Filedata" class="layui-upload-file add-customer-upload-file">
-					<ul id="attachment-list"></ul>
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<div class="layui-input-block">
-					<input type="hidden" name="salesperson" value="{$face.account}">
-					<button lay-submit lay-filter="customer" class="layui-btn">提交</button>
-					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
-				</div>
-			</div>
+			<input type="hidden" id="manager-id">
 		</form>
 	</div>
-	
+
+	<script>
+	$('.form_date').datetimepicker({
+        language:  'zh-CN',
+        format:'yyyy-mm-dd',
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		endDate : new Date(),
+		pickerPosition: "bottom-left",
+		startView: 2,
+		minView: 2,
+		forceParse: 0
+    });
+	</script>
+</block>
+
+<block name="modals">
+
+	<!-- 销售人员选择模态框 -->
+	<div class="modal fade bs-example-modal-lg" id="sales-modal" role="dialog">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+						<span class="sr-only">close</span>
+					</button>
+					<h4 class="modal-title">选择销售人员</h4>
+				</div>
+				<div class="modal-body">
+					<ul id="user-list">
+						<volist name="userlist" id="value">
+							<li account="{$value.account}">{$value.nickname}</li>
+						</volist>
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary done-btn" data-dismiss="modal">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- 消息提示模态框 -->
 	<div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
 		<div class="modal-dialog modal-sm">
@@ -129,255 +158,100 @@
 		</div>
 	</div>
 
+	<!-- 消息提示模态框 -->
+	<div class="modal fade bs-example-modal-lg" id="product-modal" role="dialog">
+		<div class="modal-dialog modal-lg modal-dialog-editsize">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					<span class="modal-title">选择产品型号</span>
+				</div>
+				<div class="modal-body filter-body">
+					<ul id="conditon-list"></ul>
+					<div class="filter-col">
+						<span class="label-type">类型</span>
+						<ul class="condition-type">
+							<li onclick="filter('type','SFP')">SFP</li><li onclick="filter('type','SFP BIDI')">SFP BIDI</li><li onclick="filter('type','SFP Copper')">SFP Copper</li><li onclick="filter('type','SFP CWDM')">SFP CWDM</li><li onclick="filter('type','SFP DWDM')">SFP DWDM</li><li onclick="filter('type','CSFP')">CSFP</li>
+							<p></p>
+							<li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+')">SFP+</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ AOC')">SFP+ AOC</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ BIDI')">SFP+ BIDI</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ CWDM')">SFP+ CWDM</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ DAC Active')">SFP+ DAC Active</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ DAC Passive')">SFP+ DAC Passive</li><li style="display: none;" class="default-hide-li" onclick="filter('type','SFP+ DWDM')">SFP+ DWDM</li>
+							<p></p>
+							<li style="display: none;" class="default-hide-li" onclick="filter('type','XFP')">XFP</li><li style="display: none;" class="default-hide-li" onclick="filter('type','XFP BIDI')">XFP BIDI</li><li style="display: none;" class="default-hide-li" onclick="filter('type','XFP CWDM')">XFP CWDM</li><li style="display: none;" class="default-hide-li" onclick="filter('type','XFP DWDM')">XFP DWDM</li>
+							<p></p>
+							<li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+')">QSFP+</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ AOC')">QSFP+ AOC</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ DAC Active')">QSFP+ DAC Active</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ DAC Passive')">QSFP+ DAC Passive</li><li style="display: none;" class="default-hide-li" onclick="filter('type','QSFP+ to 4xSFP+')">QSFP+ to 4xSFP+</li>
+							<p></p>
+							<li style="display: none;" class="default-hide-li" onclick="filter('type','CFP2')">CFP2</li>
+						</ul>
+						<span flag="true" class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>
+					</div>
+					<div class="filter-col">
+						<span class="label-type">波长</span>
+						<ul class="condition-wavelength">
+							<volist name="filter.filterWavelength" id="value">
+								<if condition="strlen($value['wavelength']) lt 12 AND !strpos($value['wavelength'],'.')"><elt name="i" value="9"><li onclick="filter('wavelength','{$value.wavelength}',this);">{$value.wavelength}</li><else/><li style="display:none;" class="default-hide-li" onclick="filter('wavelength','{$value.wavelength}',this);">{$value.wavelength}</li></elt></if>
+							</volist>
+						</ul>
+						<span flag="true" class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>
+					</div>
+					<div class="filter-col">
+						<span class="label-type">距离</span>
+						<ul class="condition-reach">
+							<volist name="filter.filterReach" id="value">
+								<elt name="i" value="7"><li onclick="filter('reach','{$value.reach}');">{$value.reach}</li><else/><li style="display:none;" class="default-hide-li" onclick="filter('reach','{$value.reach}');">{$value.reach}</li></elt>
+							</volist>
+						</ul>
+						<span flag="true" class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>
+					</div>
+					<div class="filter-col">
+						<span class="label-type">接口</span>
+						<ul class="condition-connector">
+							<volist name="filter.filterConnector" id="value">
+								<li onclick="filter('connector','{$value.connector}');">{$value.connector}</li>
+							</volist>
+						</ul>
+						<!--<span class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>-->
+					</div>
+					<div class="filter-col">
+						<span class="label-type">环境</span>
+						<ul class="condition-casetemp">
+							<volist name="filter.filterCasetemp" id="value">
+								<eq name="value.casetemp" value="C"><li value="{$value.casetemp}" onclick="filter('casetemp','{$value.casetemp}');">C档（0-70°）</li><else/><li value="{$value.casetemp}" onclick="filter('casetemp','{$value.casetemp}');">I档（-40°-85°）</li></eq>
+							</volist>
+						</ul>
+						<!--<span class="pull-right label-more"><i class="icon-angle-down">&nbsp;</i><span>更多<span></span>-->
+					</div>
+					<hr>
+					<ul id="product-list">
+						<volist name="filterdata" id="value">
+							<lt name="i" value="18">
+								<li p_id="{$value.pid}" nickname="{$value.nickname}" manager="{$value.manager}" pn="{$value.pn}" type="{$value.type}">{$value.pn}</li>
+								<else/>
+								<li class="sr-only" p_id="{$value.pid}" nickname="{$value.nickname}" manager="{$value.manager}" pn="{$value.pn}" type="{$value.type}">{$value.pn}</li>
+							</lt>
+						</volist>
+					</ul>
+				</div>
+				<div class="modal-footer">
+
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div id="loading">
 		<div class="loading-icon">
 			<i class="icon-spinner icon-spin"></i>
 		</div>
 	</div>
 
-	<!-- 产品筛选 -->
-	<div id="layer-open-content" style="display: none;">
-		<div class="product-filter-box">
-			<div class="filter-search">
-				<form class="layui-form">
-					<div class="filter-search-block">
-						<input type="text" name="search" placeholder="搜索产品型号" class="layui-input">
-						<button lay-submit class="product-search-btn" lay-filter="productSearch"><i class="layui-icon">&#xe615;</i></button>
-					</div>
-				</form>
-			</div>
-			<div class="product-category-box">
-				<div class="filter-category">
-					<div class="filter-name pull-left">类型：</div>
-					<div class="filter-items pull-left">
-						<ul class="filter-items-type">
-							<volist name="productFilter.types" id="value">
-								<if condition="$i gt 6">
-									<li category="type" class="filter-item overflow" title="{$value.type}">{$value.type}</li>
-									<else/>
-									<li category="type" class="filter-item" title="{$value.type}">{$value.type}</li>
-								</if>
-							</volist>
-						</ul>
-					</div>
-					<div class="filter-more pull-left">
-						<if condition="count($productFilter['types']) gt 6">
-							<i class="icon-chevron-down an-more-btn" flag="off"></i>
-						</if>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="filter-category">
-					<div class="filter-name pull-left">波长：</div>
-					<div class="filter-items pull-left">
-						<ul class="filter-items-wavelength">
-							<volist name="productFilter.wavelengths" id="value">
-								<if condition="$i gt 6">
-									<li category="wavelength" class="filter-item overflow" as_name="{$value.wavelength}" title="{$value.wavelength}">{$value.wavelength}</li>
-									<else/>
-									<li category="wavelength" class="filter-item" as_name="{$value.wavelength}" title="{$value.wavelength}">{$value.wavelength}</li>
-								</if>
-							</volist>
-						</ul>
-					</div>
-					<div class="filter-more pull-left">
-						<if condition="count($productFilter['wavelengths']) gt 6">
-							<i class="icon-chevron-down an-more-btn" flag="off"></i>
-						</if>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="filter-category">
-					<div class="filter-name pull-left">距离：</div>
-					<div class="filter-items pull-left">
-						<ul class="filter-items-reach">
-							<volist name="productFilter.reachs" id="value">
-								<if condition="$i gt 6">
-									<li category="reach" class="filter-item overflow" title="{$value.reach}">{$value.reach}</li>
-									<else/>
-									<li category="reach" class="filter-item" title="{$value.reach}">{$value.reach}</li>
-								</if>
-							</volist>
-						</ul>
-					</div>
-					<div class="filter-more pull-left">
-						<if condition="count($productFilter['reachs']) gt 6">
-							<i class="icon-chevron-down an-more-btn" flag="off"></i>
-						</if>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="filter-category">
-					<div class="filter-name pull-left">接口：</div>
-					<div class="filter-items pull-left">
-						<ul class="filter-items-connector">
-							<volist name="productFilter.connectors" id="value">
-								<if condition="$i gt 6">
-									<li category="connector" class="filter-item overflow" title="{$value.connector}">{$value.connector}</li>
-									<else/>
-									<li category="connector" class="filter-item" title="{$value.connector}">{$value.connector}</li>
-								</if>
-							</volist>
-						</ul>
-					</div>
-					<div class="filter-more pull-left">
-						<if condition="count($productFilter['connectors']) gt 6">
-							<i class="icon-chevron-down an-more-btn" flag="off"></i>
-						</if>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-				<div class="filter-category">
-					<div class="filter-name pull-left">环境：</div>
-					<div class="filter-items pull-left">
-						<ul class="filter-items-casetemp">
-							<volist name="productFilter.casetemps" id="value">
-								<if condition="$i gt 6">
-									<li category="casetemp" class="filter-item overflow" as_name="{$value.casetemp}" title="{$value.casetemp_as_name}">{$value.casetemp_as_name}</li>
-									<else/>
-									<li category="casetemp" class="filter-item" as_name="{$value.casetemp}" title="{$value.casetemp_as_name}">{$value.casetemp_as_name}</li>
-								</if>
-							</volist>
-						</ul>
-					</div>
-					<div class="filter-more pull-left">
-						<if condition="count($productFilter['casetemps']) gt 6">
-							<i class="icon-chevron-down an-more-btn" flag="off"></i>
-						</if>
-					</div>
-					<div class="clearfix"></div>
-				</div>
-			</div>
-			<hr>
-			<div class="product-list-box">
-				<ul>
-					<volist name="productFilter.defaultData" id="value">
-						<li pro_id="{$value.id}" manager="{$value.manager}">{$value.pn}</li>
-					</volist>
-				</ul>
-			</div>
-			<form id="filter-map" style="display: none;">
-				<input type="hidden" name="type" value="">
-				<input type="hidden" name="wavelength" value="">
-				<input type="hidden" name="reach" value="">
-				<input type="hidden" name="connector" value="">
-				<input type="hidden" name="casetemp" value="">
-			</form>
-			<div class="reset-filter-box">
-				<div class="pull-right"><button class="layui-btn layui-btn-danger reset-filter-btn">重置筛选</button></div>
-				<div class="clearfix"></div>
-			</div>
-		</div>
-	</div>
-
-
-	
-	<script>
-
-		/**
-		 * 获取当前时间
-		 */
-		function p(s) {
-			return s < 10 ? '0' + s: s;
-		}
-		var myDate = new Date();
-		//获取当前年
-		var year = myDate.getFullYear();
-		//获取当前月
-		var month = myDate.getMonth()+1;
-		//获取当前日
-		var date = myDate.getDate();
-		var now = year+'-'+p(month)+"-"+p(date);
-		$('.form_date').val(now);	//填充当天时间
-
-		//定义初始化数据
-		var filter_content = $('#layer-open-content').html();
-		$('.form_date').datetimepicker({
-			language:  'zh-CN',
-			format:'yyyy-mm-dd',
-			weekStart: 1,
-			todayBtn:  1,
-			autoclose: 1,
-			todayHighlight: 1,
-			endDate : new Date(),
-			pickerPosition: "bottom-right",
-			startView: 2,
-			minView: 2,
-			forceParse: 0
-		});
-
-		$('.clear-empty').click(function(){
-			$(this).prev().val('');
-		});
-
-		layui.use(['layer','form'], function(){
-			var layer = layui.layer,
-					form = layui.form();
-
-			form.on('submit(productSearch)', function(data){
-				$.ajax({
-					url : ThinkPHP['AJAX'] + '/Sample/productSearch',
-					type : 'POST',
-					data : data.field,
-					dataType : 'json',
-					success : function( response ){
-						if( response.flag > 0 ){
-							var pns = '';
-							for( var key in response.data ){	//拼装所有产品型号数据
-								pns += '<li pro_id="'+ response.data[key].id +'">'+ response.data[key].pn +'</li>\r\n';
-							}
-							$('.product-list-box ul').html(pns);
-						}else{
-							layer.msg(response.msg);
-						}
-					}
-				});
-				return false;
-			});
-		});
-
-		//点击选择产品展开筛选器
-		var pro_element = null;
-		$(document).on('click', '.product-select', function(){
-			pro_element = $(this);
-			var filter_dialog = layer.open({
-				type : 1,
-				title : '选择产品',
-				area: ['1200px'],
-				shade: ['0.5','#000'],
-				content: filter_content,
-				cancel : function(index, layero){
-					$('#filter-map input').val('');
-					layer.close(index);
-				}
-			});
-		});
-
-
-		//将产品信息添加到栏位
-		$(document).on('click', '.product-list-box ul li' ,function(){
-			if( pro_element.val() == '' ){
-				pro_element.val($(this).text());
-			}else{
-				pro_element.val( pro_element.val() + ' , ' + $(this).text() );
-			}
-			if( pro_element.prev().val() == '' ){
-				pro_element.prev().val($(this).attr('manager'));
-			}else{
-				pro_element.prev().val( pro_element.prev().val() + ',' + $(this).attr('manager') );
-			}
-			/*pro_element.prev().val($(this).attr('pro_id'));
-			pro_element.prev().prev().val($(this).attr('manager'));*/
-			layer.closeAll();
-			$('#filter-map input').val('');
-		});
-
-
-	</script>
+	<form class="sr-only" id="filterForm">
+		<input type="hidden" name="type">
+		<input type="hidden" name="wavelength">
+		<input type="hidden" name="reach">
+		<input type="hidden" name="connector">
+		<input type="hidden" name="casetemp">
+	</form>
 
 </block>
-
-
 
 
 

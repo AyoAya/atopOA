@@ -138,6 +138,42 @@
 		</div>
 	</div>
 
+
+	<div class="loading-modal sr-only" id="loading">
+		<div class="loading-icon">
+			<p><i class="icon-spinner icon-spin icon-4x"></i></p>
+		</div>
+	</div>
+
+	<form class="sr-only" id="filterForm">
+		<input type="hidden" name="type">
+		<input type="hidden" name="wavelength">
+		<input type="hidden" name="reach">
+		<input type="hidden" name="connector">
+		<input type="hidden" name="casetemp">
+	</form>
+
+	<!--交期事件选择-->
+	<!--<script>
+		$('.input-d-date').datetimepicker({
+			language:  'zh-CN',
+			format:'yyyy/mm/dd',
+			weekStart: 1,
+			todayBtn:  1,
+			autoclose: 1,
+			todayHighlight: 1,
+			startDate : new Date(),
+			pickerPosition: "bottom-left",
+			startView: 2,
+			minView: 2,
+			forceParse: 0
+		});
+	</script>-->
+</block>
+
+
+<block name="modals">
+
 	<!-- 消息提示模态框 -->
 	<div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
 		<div class="modal-dialog modal-sm">
@@ -220,7 +256,7 @@
 						<volist name="filterdata" id="value">
 							<lt name="i" value="18">
 								<li p_id="{$value.pid}" nickname="{$value.nickname}" manager="{$value.manager}" pn="{$value.pn}" type="{$value.type}">{$value.pn}</li>
-							<else/>
+								<else/>
 								<li class="sr-only" p_id="{$value.pid}" nickname="{$value.nickname}" manager="{$value.manager}" pn="{$value.pn}" type="{$value.type}">{$value.pn}</li>
 							</lt>
 						</volist>
@@ -233,38 +269,5 @@
 		</div>
 	</div>
 
-	<div class="loading-modal sr-only" id="loading">
-		<div class="loading-icon">
-			<p><i class="icon-spinner icon-spin icon-4x"></i></p>
-		</div>
-	</div>
-
-	<form class="sr-only" id="filterForm">
-		<input type="hidden" name="type">
-		<input type="hidden" name="wavelength">
-		<input type="hidden" name="reach">
-		<input type="hidden" name="connector">
-		<input type="hidden" name="casetemp">
-	</form>
-
-	<!--交期事件选择-->
-	<!--<script>
-		$('.input-d-date').datetimepicker({
-			language:  'zh-CN',
-			format:'yyyy/mm/dd',
-			weekStart: 1,
-			todayBtn:  1,
-			autoclose: 1,
-			todayHighlight: 1,
-			startDate : new Date(),
-			pickerPosition: "bottom-left",
-			startView: 2,
-			minView: 2,
-			forceParse: 0
-		});
-	</script>-->
 </block>
-
-
-
 

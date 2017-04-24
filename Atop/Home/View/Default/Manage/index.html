@@ -32,13 +32,13 @@
 	<a href="__ROOT__/Manage/abnormal" class="layui-btn layui-btn-primary">
 		<span class="glyphicon glyphicon-user"></span> 离职人员
 	</a>
-	<a href="__ROOT__/Organization" class="layui-btn layui-btn-primary">
+	<a href="__ROOT__/Manage/organization" class="layui-btn layui-btn-primary">
 		<span class="glyphicon glyphicon-th"></span> 组织架构图
 	</a>
-	<a href="__ROOT__/addManage" class="layui-btn layui-btn-primary">
+	<a href="__ROOT__/Manage/addManage" class="layui-btn layui-btn-primary">
 		<span class="glyphicon glyphicon-plus"></span> 添加用户
 	</a>
-	<div class="clearfix" style="margin-bottom: 25px;"></div>
+	<div class="clearfix" style="margin-bottom: 15px;"></div>
 
 
 	<table class="layui-table" id="table">
@@ -74,7 +74,7 @@
 					<td>
 						<neq name="value.id" value="$Think.session.user.id">
 							<div class="btn-group">
-								<a href="__ROOT__/editManage/{$value.id}" class="btn btn-default btn-sm" personid="{$value.id}"><i class="icon-pencil"></i> 编辑</a>
+								<a href="__ROOT__/Manage/edit/id/{$value.id}" class="btn btn-default btn-sm" personid="{$value.id}"><i class="icon-pencil"></i> 编辑</a>
 								<button class="btn btn-default btn-sm delete-user" personid="{$value.id}"><i class="icon-remove"></i> 删除</button>
 							</div>
 						</neq>
@@ -87,7 +87,12 @@
 	
 	<!-- 分页 -->
 	<ul class="pagination pagination-edit">{$pageShow}</ul>
-	
+
+</block>
+
+
+<block name="modals">
+
 	<!-- 删除用户提示模态框 -->
 	<div class="modal fade bs-example-modal-sm" id="deluser-modal" tabindex="-1" role="modal" aria-labelledby="addUserModal" aria-hidden="true">
 		<div class="modal-dialog modal-sm">

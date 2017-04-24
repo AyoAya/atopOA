@@ -48,7 +48,7 @@
                 <volist name="overview" id="value">
                     <tr>
                         <td>{$value.type}</td>
-                        <td><a href="__ROOT__/sampleDetails/{$value.order}">{$value.product}</a></td>
+                        <td><a href="__ROOT__/Sample/details/order/{$value.order}">{$value.product}</a></td>
                         <td>{$value.manager}</td>
                         <td>{$value.number}</td>
                         <td>{$value.customer}</td>
@@ -74,7 +74,7 @@
     <volist name="sample" id="value">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 class="panel-title">产品：<a style="color: #428bca;" href="__ROOT__/sampleDetails/{$value.order}">{$value.product}</a></h4>
+                <h4 class="panel-title">产品：<a style="color: #428bca;" href="__ROOT__/Sample/details/order/{$value.order}">{$value.product}</a></h4>
             </div>
             <div class="panel-body">
                 <ul class="nav nav-pills nav-justified step step-progress">

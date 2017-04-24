@@ -1,0 +1,338 @@
+
+/*** 重写layui表单样式 ***/
+.layui-form .layui-form-label {
+	width: 100px;
+}
+.layui-form .layui-input-block {
+	margin-left: 100px;
+}
+.layui-form .layui-input-inline input {
+	width: 247.5px;
+}
+.layui-form .layui-form-item-rewrite {
+	margin-top: 13px;
+}
+
+.pn-position-relative {
+	position: relative;
+}
+.pn-position-relative button {
+	position: absolute;
+	right: 1px;
+	top: 1px;
+	line-height: 40px;
+	width: 36px;
+	height: 36px;
+	border: none;
+	background: #fff;
+	color: #888;
+}
+.pn-position-relative button:hover i {
+	color: red;
+}
+
+
+
+
+
+
+#attachment-list li {
+	padding: 5px 10px;
+	border: solid 1px #e2e2e2;
+	color: #888;
+	display: inline-block;
+	margin: 10px 5px 0 0;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+.remove-file {
+	cursor: pointer;
+}
+.remove-file:hover {
+	color: #d9534f;
+}
+
+
+
+
+
+
+
+
+
+
+
+#salesperson {
+	background: #fff !important;
+	cursor: pointer !important;
+}
+#pn {
+	background: #fff !important;
+	cursor: pointer !important;
+}
+#form {
+	padding-top: 20px;	
+	padding-bottom: 150px;
+}
+.add-customer {
+	width: 700px;
+}
+.form-group-edit {
+	display: block;
+	margin-bottom: 20px;
+}
+label {
+	clear: both;
+	display: block !important;
+}
+.form-group-edit,.input-group-edit {
+	padding: 0;
+}
+.help-block-edit {
+	margin-top: 5px;	
+	margin-bottom: 15px;	
+}
+.help-block-color {
+	color: red;
+}
+.input-group-edit {
+	padding-top: 0;
+	margin-bottom: 0;
+}
+#reason {
+	max-width: 100%;
+	min-width: 100%;
+	min-height: 100px;
+}
+#comments {
+	max-width: 100%;
+	min-width: 100%;
+	min-height: 60px;
+}
+#error_message {
+	max-width: 100%;
+	min-width: 100%;
+	min-height: 60px;
+}
+#cc_time {
+	background: #fff !important;
+	cursor: pointer !important;
+}
+.btn-box {
+	text-align: right;
+}
+.btn-box button {
+	width: 80px;
+}
+#user-list li {
+	cursor: pointer;
+	padding: 10px 30px;
+	border-radius: 2px;
+	overflow: hidden;
+	display: inline-block;
+	border: solid 1px #ddd;
+	margin: 5px;
+}
+#user-list li.active {
+	border: solid 1px #2e8ded;
+	background: url(../../img/selected.png) right bottom no-repeat;
+}
+
+
+.add-customer-message {
+	text-align: center;
+	font-size: 20px;
+	display: none;
+}
+.add-customer-message .message-text {
+	position: relative;
+	top: -5px;
+	margin-left: 10px;
+}
+.add-customer-message .modal-icon-success {
+	color: #5cb85c;
+}
+.add-customer-message .modal-icon-error {
+	color: #d9534f;
+}
+.add-customer-message .modal-icon-info {
+	color: #428bca;
+}
+
+
+
+
+
+
+/*loading加载层(默认隐藏)*/
+#loading {
+	display: none;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,.7);
+	z-index: 99999;
+}
+#loading .loading-icon {
+	width: 60px;
+	height: 60px;
+	position: absolute;
+	left: 50%;
+	margin-left: -30px;
+	top: 50%;
+	margin-top: -30px;
+	font-size: 60px;
+	color: #fff;
+	text-align: center;
+	line-height: 60px;
+}
+
+
+
+
+
+
+
+#product-modal {
+	font-size: 12px !important;
+}
+.filter-body .filter-col {
+	margin: 3px 0;
+	padding-top: 7px;
+	/*border-bottom: solid 1px #ccc;*/
+}
+.filter-body .filter-col span.label-type,.filter-body .filter-col ul,.filter-body .filter-col ul li {
+	display: inline-block;
+}
+.filter-body .filter-col span.label-type {
+	padding: 2px 5px;
+	background: #555;
+	color: #fff;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	vertical-align: top;
+	position: relative;
+	top: 0px;
+}
+.filter-body .filter-col ul li {
+	cursor: pointer;
+}
+.filter-body .filter-col ul {
+	width: 940px;
+	/*border: solid 1px blue;*/
+}
+.filter-body .filter-col ul li:hover {
+	background: #428bca;
+	border: solid 1px #428bca;
+	color: #fff;
+}
+.filter-body .filter-col .label-more {
+	padding: 2px 5px;
+	cursor: pointer;
+	position: relative;
+	top: -2px;
+}
+.input-d-date {
+	background: #fff !important;
+	cursor: pointer !important;
+}
+
+.condition-type,.condition-wavelength,.condition-reach,.condition-connector,.condition-casetemp {
+	position: relative;
+	top: -4px;
+	left: 5px;
+}
+.condition-type li,.condition-wavelength li,.condition-reach li,.condition-connector li,.condition-casetemp li {
+	width: 130px;
+	height: 24px;
+	border: solid 1px #fff;
+	text-align: left;
+	line-height: 22px;
+	margin: 3px 0px;
+	text-indent: 6px;
+}
+.condition-type li {
+	width: 130px;
+}
+.condition-wavelength li {
+	width: 130px;
+}
+.condition-wavelength li.width-length {
+	width: 180px;
+}
+.condition-reach li {
+	width: 130px;
+}
+.condition-connector li {
+	width: 130px;
+}
+.condition-casetemp li {
+	width: 130px;
+}
+
+#conditon-list li {
+	padding: 2px 5px;
+	border: solid 1px #555;
+	margin-bottom: 8px;
+	margin-right: 8px;
+	display: inline-block;
+}
+#conditon-list li.clear-condition {
+	background: #d9534f;
+	color: #fff;
+	cursor: pointer;
+	border: solid 1px #d9534f;
+	padding: 5px 10px;
+	font-size: 13px;
+	position: relative;
+	top: -5px;
+}
+#conditon-list li span {
+	cursor: pointer;
+	position: relative;
+	top: -1px;
+}
+#conditon-list li span:hover {
+	color: #d9534f;
+}
+#conditon-list li span.clear-condition-text:hover {
+	color: #fff;
+}
+
+
+#product-list li {
+	display: inline-block;
+	width: 15.2%;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	margin: 5px 5px;
+	border: solid 1px #ccc;
+	cursor: pointer;
+}
+#product-list li:hover {
+	background: #428bca;
+	color: #fff;
+	border: solid 1px #428bca;
+}
+
+
+.modal-dialog-editsize {
+	width: 1060px;
+}
+
+
+
+
+
+
+
+
+
+
+
+

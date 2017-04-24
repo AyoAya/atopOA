@@ -98,7 +98,7 @@ vjs.options = {
     'controlBar': {}
   },
 
-  // Default message to show when a video cannot be played.
+  // Theme message to show when a video cannot be played.
   'notSupportedMessage': 'Sorry, no compatible source and playback ' +
       'technology were found for this video. Try using another browser ' +
       'like <a href="http://bit.ly/ccMUEC">Chrome</a> or download the ' +
@@ -1079,7 +1079,7 @@ vjs.el = function(id){
  * @private
  */
 vjs.formatTime = function(seconds, guide) {
-  // Default to using seconds as guide
+  // Theme to using seconds as guide
   guide = guide || seconds;
   var s = Math.floor(seconds % 60),
       m = Math.floor(seconds / 60 % 60),
@@ -2440,7 +2440,7 @@ vjs.Slider.prototype.onClick = function(event){
 vjs.SliderHandle = vjs.Component.extend();
 
 /**
- * Default value of the slider
+ * Theme value of the slider
  *
  * @type {Number}
  * @private
@@ -2897,7 +2897,7 @@ vjs.Player.prototype.createEl = function(){
 
   // Make player findable on elements
   tag['player'] = el['player'] = this;
-  // Default state of video is paused
+  // Theme state of video is paused
   this.addClass('vjs-paused');
 
   // Make box use width/height of tag, or rely on default implementation
@@ -3446,7 +3446,7 @@ vjs.Player.prototype.volume = function(percentAsDecimal){
     return this;
   }
 
-  // Default to 1 when returning current volume.
+  // Theme to 1 when returning current volume.
   vol = parseFloat(this.techGet('volume'));
   return (isNaN(vol)) ? 1 : vol;
 };
@@ -5835,7 +5835,7 @@ vjs.Flash.getEmbedCode = function(swf, flashVars, params, attributes){
     // Add swf to attributes (need both for IE and Others to work)
     'data': swf,
 
-    // Default to 100% width/height
+    // Theme to 100% width/height
     'width': '100%',
     'height': '100%'
 
