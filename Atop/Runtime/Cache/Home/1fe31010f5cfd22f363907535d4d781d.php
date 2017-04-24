@@ -38,15 +38,15 @@
 
 	<script type="text/javascript">
 		var ThinkPHP = {
-				'AJAX' : '/index.php/Home',
-				'ROOT' : '',
-				'IMG' : '/Public/Home/img',
-				'UPLOAD' : '/Uploads',
-				'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
-				'UPLOADIFY' : '/Public/home/uploadify',
-				'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
-				'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
-				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
+			'AJAX' : '/index.php/Home',
+			'ROOT' : '',
+			'IMG' : '/Public/Home/img',
+			'UPLOAD' : '/Uploads',
+			'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
+			'UPLOADIFY' : '/Public/home/uploadify',
+			'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
+			'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
+			'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
 
@@ -188,7 +188,7 @@
                     </div>
                     <?php if(($pagetotal) > "0"): ?><ul class="pagination" id="initiate_page_list">
                             <li><a>当前1/<?php echo ($pagetotal); ?></a></li>
-                            <?php $__FOR_START_25770__=1;$__FOR_END_25770__=$pagetotal+1;for($i=$__FOR_START_25770__;$i < $__FOR_END_25770__;$i+=1){ if(($i) == "1"): ?><li class="active"><a><?php echo ($i); ?></a></li>
+                            <?php $__FOR_START_28497__=1;$__FOR_END_28497__=$pagetotal+1;for($i=$__FOR_START_28497__;$i < $__FOR_END_28497__;$i+=1){ if(($i) == "1"): ?><li class="active"><a><?php echo ($i); ?></a></li>
                                 <?php else: ?>
                                     <li><a><?php echo ($i); ?></a></li><?php endif; } ?>
                         </ul><?php endif; ?>
@@ -219,7 +219,7 @@
                     </div>
                     <?php if(($page_approval_total) > "0"): ?><ul class="pagination" id="approval_page_list">
                             <li><a>当前1/<?php echo ($page_approval_total); ?></a></li>
-                            <?php $__FOR_START_22683__=1;$__FOR_END_22683__=$page_approval_total+1;for($i=$__FOR_START_22683__;$i < $__FOR_END_22683__;$i+=1){ if(($i) == "1"): ?><li class="active"><a><?php echo ($i); ?></a></li>
+                            <?php $__FOR_START_17334__=1;$__FOR_END_17334__=$page_approval_total+1;for($i=$__FOR_START_17334__;$i < $__FOR_END_17334__;$i+=1){ if(($i) == "1"): ?><li class="active"><a><?php echo ($i); ?></a></li>
                                 <?php else: ?>
                                     <li><a><?php echo ($i); ?></a></li><?php endif; } ?>
                         </ul><?php endif; ?>
@@ -285,9 +285,7 @@
 	
 
 	<!-- 回到顶部 -->
-	<div class="footer-operation-bar">
-		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
-	</div>
+	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
 
 	<script>

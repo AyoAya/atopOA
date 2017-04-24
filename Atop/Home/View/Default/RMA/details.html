@@ -250,12 +250,6 @@
 		</div>
 	</div>
 
-	<!-- 图像展示 -->
-	<div id="picturePreview">
-		<div class="pictureContainer"></div>
-		<span class="closePreview" title="关闭"><i class="icon-remove icon-2x"></i></span>
-	</div>
-
 
 	<script>
 		$('.form_date').datetimepicker({
@@ -291,6 +285,13 @@
 
 
 <block name="modals">
+
+	<!-- 图像展示 -->
+	<div id="picturePreview">
+		<div class="pictureContainer"></div>
+		<span class="closePreview" title="关闭"><i class="icon-remove icon-2x"></i></span>
+	</div>
+
 
 	<!-- customer-rma-modal -->
 	<eq name="details.rma_state" value="N"> {//在当前客诉未关闭的情况下才加载}
@@ -373,6 +374,24 @@
 												<span>回退到：{$fallback.step_name}</span><span>处理人：{$fallback.nickname}</span>
 											</div>
 										</div>
+									</present>
+
+									<present name="closeReason">
+										{//如果当前步骤在销售确认和最后一步时加载关闭客诉原因dom}
+										<if condition="$details['now_step']['id'] eq 3 or $details['now_step']['id'] eq 6">
+											<div class="layui-inline close-reason-select sr-only">
+												<label class="layui-form-label">关闭原因</label>
+												<div class="layui-input-inline">
+													<select name="assoc_close_reason">
+														<volist name="closeReason" id="value">
+															<neq name="value.id" value="$Think.session.user.id">
+																<option value="{$value.id}">{$value.close_reason}</option>
+															</neq>
+														</volist>
+													</select>
+												</div>
+											</div>
+										</if>
 									</present>
 
 									<div class="layui-form-item layui-form-text">

@@ -174,7 +174,7 @@
 			<a href="/Customer" class="layui-btn layui-btn-primary">
 				<span class="icon-comments-alt"></span> 旧版客诉
 			</a>
-			<?php if(($face["department"]) == "4"): ?><a href="/RMA/addCustomer" class="layui-btn layui-btn-primary">
+			<?php if(($face["department"]) == "4"): ?><a href="/RMA/add" class="layui-btn layui-btn-primary">
 					<span class="glyphicon glyphicon-plus"></span> 新增客诉
 				</a><?php endif; ?>
 		</div>

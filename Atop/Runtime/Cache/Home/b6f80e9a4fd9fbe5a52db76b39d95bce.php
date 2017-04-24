@@ -279,9 +279,7 @@
 
 
 	<!-- 回到顶部 -->
-	<div class="footer-operation-bar">
-		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
-	</div>
+	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
 
 	<script>

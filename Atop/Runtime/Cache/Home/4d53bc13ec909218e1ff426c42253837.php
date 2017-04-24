@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="/Public/Home/css/jquery.mCustomScrollbar.css">
 	<link rel="stylesheet" href="/Public/Home/css/iconfont.css">
 	<link rel="stylesheet" href="/Public/Home/css/basic.css">
-	<link rel="stylesheet" href="/Public/Home/css/<?php echo ($face["theme"]); ?>/index.css">
+	<link rel="stylesheet" href="/Public/Home/css/Theme/<?php echo ($face["theme"]); ?>.css">
 	<link rel="stylesheet" href="/Public/Home/css/promotion_index.css">
 
 	
@@ -48,15 +48,15 @@
 
 	<script type="text/javascript">
 		var ThinkPHP = {
-				'AJAX' : '/index.php/Home',
-				'ROOT' : '',
-				'IMG' : '/Public/Home/img',
-				'UPLOAD' : '/Uploads',
-				'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
-				'UPLOADIFY' : '/Public/home/uploadify',
-				'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
-				'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
-				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
+			'AJAX' : '/index.php/Home',
+			'ROOT' : '',
+			'IMG' : '/Public/Home/img',
+			'UPLOAD' : '/Uploads',
+			'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
+			'UPLOADIFY' : '/Public/home/uploadify',
+			'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
+			'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
+			'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
 
@@ -517,43 +517,7 @@
             <div class="form-group discuss-submit-box">
                 <input type="hidden" id="cc_list">
                 <button type="button" id="submit-discuss-content" class="btn btn-primary" discuss_id="<?php echo ($getID); ?>">发表</button>
-            </div><!--
-            &lt;!&ndash; 添加抄送人模态框 &ndash;&gt;
-            <div class="modal fade" id="CCpeopleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <p class="modal-title" id="myModalLabel">添加抄送人</p>
-                        </div>
-                        <div class="modal-body">
-                            <form class="layui-form layui-form-pane">
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">部门</label>
-                                    <div class="layui-input-block">
-                                        <select name="select" id="dpmtSelect" lay-filter="change">
-                                            <?php if(is_array($departments)): $i = 0; $__LIST__ = $departments;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><option value="<?php echo ($value["id"]); ?>"><?php echo ($value["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-                                        </select>
-                                    </div>
-                                </div>
-                            </form>
-                            <ul id="cc-person-list">
-                                <?php if(is_array($users)): $i = 0; $__LIST__ = $users;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><li email="<?php echo ($value["email"]); ?>" user-id="<?php echo ($value["id"]); ?>" title="<?php echo ($value["nickname"]); ?>"><?php echo ($value["nickname"]); ?></li><?php endforeach; endif; else: echo "" ;endif; ?>
-                            </ul>
-                            <div class="well well-sm sr-only" id="has-been-box">
-                                <p class="has-been-add">已添加的抄送人员：</p>
-                                <ul id="addList">
-
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="button" class="btn btn-primary" id="done-cc-list">确定</button>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
+            </div>
         </div><?php endif; ?>
 
     <div class="loading-modal sr-only" id="loading">
@@ -649,9 +613,7 @@
 
 
 	<!-- 回到顶部 -->
-	<div class="footer-operation-bar">
-		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
-	</div>
+	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
 
 	<script>

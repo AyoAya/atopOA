@@ -40,15 +40,15 @@
 
 	<script type="text/javascript">
 		var ThinkPHP = {
-				'AJAX' : '/index.php/Home',
-				'ROOT' : '',
-				'IMG' : '/Public/Home/img',
-				'UPLOAD' : '/Uploads',
-				'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
-				'UPLOADIFY' : '/Public/home/uploadify',
-				'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
-				'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
-				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
+			'AJAX' : '/index.php/Home',
+			'ROOT' : '',
+			'IMG' : '/Public/Home/img',
+			'UPLOAD' : '/Uploads',
+			'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
+			'UPLOADIFY' : '/Public/home/uploadify',
+			'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
+			'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
+			'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
 
@@ -303,9 +303,7 @@
 	
 
 	<!-- 回到顶部 -->
-	<div class="footer-operation-bar">
-		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
-	</div>
+	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
 
 	<script>

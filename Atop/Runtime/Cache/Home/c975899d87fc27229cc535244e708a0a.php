@@ -163,18 +163,13 @@
 	<div class="add-customer">
 
 		<form class="layui-form">
+			<div class="title-bar" style="margin: 0 0 20px 0;">
+				<h4>基本信息</h4>
+			</div>
 			<div class="layui-inline">
 				<label class="layui-form-label">客诉日期</label>
 				<div class="layui-input-inline">
 					<input type="text" name="cc_time" readonly class="layui-input form_date" lay-verify="required" placeholder="请选择日期">
-				</div>
-			</div>
-			<div class="layui-inline">
-				<label class="layui-form-label">处理人</label>
-				<div class="layui-input-inline">
-					<select name="operation_person">
-						<?php if(is_array($userlist)): $i = 0; $__LIST__ = $userlist;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><option value="<?php echo ($value["id"]); ?>"><?php echo ($value["nickname"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
-					</select>
 				</div>
 			</div>
 			<div class="layui-form-item layui-form-item-rewrite">
@@ -200,7 +195,10 @@
 			<div class="layui-form-item">
 				<label class="layui-form-label">设备厂商</label>
 				<div class="layui-input-block">
-					<input type="text" name="vendor" class="layui-input" placeholder="例如 Huawei">
+					<!--<input type="text" name="vendor" class="layui-input" placeholder="例如 Huawei">-->
+					<select name="vendor" lay-search>
+						<?php if(is_array($vendorBrand)): $i = 0; $__LIST__ = $vendorBrand;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><option value="<?php echo ($value["brand"]); ?>"><?php echo ($value["brand"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+					</select>
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -233,12 +231,21 @@
 					<ul id="attachment-list"></ul>
 				</div>
 			</div>
-			<div class="layui-form-item">
-				<div class="layui-input-block">
-					<input type="hidden" name="salesperson" value="<?php echo ($face["account"]); ?>">
-					<button lay-submit lay-filter="customer" class="layui-btn">提交</button>
-					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+			<div class="title-bar" style="margin: 0 0 20px 0;">
+				<h4>选择处理人</h4>
+			</div>
+			<div class="layui-inline" style="margin-bottom: 15px;">
+				<label class="layui-form-label">处理人</label>
+				<div class="layui-input-inline">
+					<select name="operation_person">
+						<?php if(is_array($userlist)): $i = 0; $__LIST__ = $userlist;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i;?><option value="<?php echo ($value["id"]); ?>"><?php echo ($value["nickname"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
+					</select>
 				</div>
+			</div>
+			<div class="layui-form-item" style="margin-top: 30px;">
+				<input type="hidden" name="salesperson" value="<?php echo ($face["account"]); ?>">
+				<button lay-submit lay-filter="customer" class="layui-btn">提交</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
 			</div>
 		</form>
 	</div>

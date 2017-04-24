@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="/Public/Home/css/jquery.mCustomScrollbar.css">
 	<link rel="stylesheet" href="/Public/Home/css/iconfont.css">
 	<link rel="stylesheet" href="/Public/Home/css/basic.css">
-	<link rel="stylesheet" href="/Public/Home/css/<?php echo ($face["theme"]); ?>/index.css">
+	<link rel="stylesheet" href="/Public/Home/css/Theme/<?php echo ($face["theme"]); ?>.css">
 	<link rel="stylesheet" href="/Public/Home/css/promotion_index.css">
 
 	
@@ -41,17 +41,18 @@
 
 	<script type="text/javascript">
 		var ThinkPHP = {
-				'AJAX' : '/index.php/Home',
-				'ROOT' : '',
-				'IMG' : '/Public/Home/img',
-				'UPLOAD' : '/Uploads',
-				'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
-				'UPLOADIFY' : '/Public/home/uploadify',
-				'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
-				'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
-				'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
+			'AJAX' : '/index.php/Home',
+			'ROOT' : '',
+			'IMG' : '/Public/Home/img',
+			'UPLOAD' : '/Uploads',
+			'HTTP_HOST' : '<?php echo ($_SERVER['HTTP_HOST']); ?>',
+			'UPLOADIFY' : '/Public/home/uploadify',
+			'UPLOADIFY_CONFIG_FILESIZELIMIT' : '<?php echo (C("UPLOAD_FILESIZELIMIT")); ?>',
+			'UPLOADIFY_CONFIG_UPLOADLIMIT' : '<?php echo (C("UPLOAD_UPLOADLIMIT")); ?>',
+			'UPLOADIFY_CONFIG_FILETYPEEXTS' : '<?php echo (C("UPLOAD_FILETYPEEXTS")); ?>',
 		}
 	</script>
+
 
 	<div id="bodyContainer">
 		
@@ -65,11 +66,11 @@
 					<ul id="nav">
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
-							<ol class="sr-only">
-								<li><a href="/Project"><i class="icon-angle-right"></i>&nbsp;项目管理</a></li>
-								<li><a href="/Sample"><i class="icon-angle-right"></i>&nbsp;样品管理</a></li>
-								<li><a href="/Product"><i class="icon-angle-right"></i>&nbsp;产品管理</a></li>
-								<li><a href="/Compatibility"><i class="icon-angle-right"></i>&nbsp;兼容表</a></li>
+							<ol class="<?php if(in_array((CONTROLLER_NAME), explode(',',"Project,Sample,Product,Compatibility"))): else: ?>sr-only<?php endif; ?>">
+								<li><a href="/Project" class="<?php if((CONTROLLER_NAME) == "Project"): ?>active<?php endif; ?>">&nbsp;&nbsp;项目管理</a></li>
+								<li><a href="/Sample" class="<?php if((CONTROLLER_NAME) == "Sample"): ?>active<?php endif; ?>">&nbsp;&nbsp;样品管理</a></li>
+								<li><a href="/Product" class="<?php if((CONTROLLER_NAME) == "Product"): ?>active<?php endif; ?>">&nbsp;&nbsp;产品管理</a></li>
+								<li><a href="/Compatibility" class="<?php if((CONTROLLER_NAME) == "Compatibility"): ?>active<?php endif; ?>">&nbsp;&nbsp;兼容表</a></li>
 							</ol>
 						</li>
 						<!--<li id="Audit">
@@ -81,22 +82,22 @@
 							</div>
 						</li>-->
 						<li>
-							<a href="/Approval"><i class="icon-legal"></i><span>审批</span></a>
+							<a href="/Approval" class="<?php if((CONTROLLER_NAME) == "Approval"): ?>active<?php endif; ?>"><i class="icon-legal"></i><span>审批</span></a>
 						</li>
 						<li>
-							<a href="/DCC"><i class="icon-print"></i><span>文档中心</span></a>
+							<a href="/DCC" class="<?php if((CONTROLLER_NAME) == "DCC"): ?>active<?php endif; ?>"><i class="icon-print"></i><span>文档中心</span></a>
 						</li>
 						<li>
-							<a href="/Acronym"><i class="icon-book"></i><span>缩略词</span></a>
+							<a href="/Acronym" class="<?php if((CONTROLLER_NAME) == "Acronym"): ?>active<?php endif; ?>"><i class="icon-book"></i><span>缩略词</span></a>
 						</li>
 						<li>
-							<a href="/RMA"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
+							<a href="/RMA" class="<?php if((CONTROLLER_NAME) == "RMA"): ?>active<?php endif; ?>"><i class="icon-comments-alt"></i><span>客诉处理</span></a>
 						</li>
 						<li>
-							<a href="/Manage"><i class="icon-github-alt"></i><span>用户管理</span></a>
+							<a href="/Manage" class="<?php if((CONTROLLER_NAME) == "Manage"): ?>active<?php endif; ?>"><i class="icon-user"></i><span>用户管理</span></a>
 						</li>
 						<?php if(($_SESSION['user']['account']) == "admin"): ?><li>
-								<a href="/System"><i class="icon-cog"></i><span>系统</span></a>
+								<a href="/System" class="<?php if((CONTROLLER_NAME) == "System"): ?>active<?php endif; ?>"><i class="icon-cog"></i><span>系统</span></a>
 							</li><?php endif; ?>
 					</ul>
 
@@ -122,7 +123,7 @@
 
 			<div class="user-operation-box pull-right">
 				<div class="user-operation-item pull-left">
-					<a href="/notice" class="option-name"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
+					<a href="/Notice" class="option-name"><i class="icon-bell"></i>&nbsp;&nbsp;&nbsp;通知</a>
 				</div>
 				<div class="user-operation-item pull-left user-options-btn">
 					<a class="option-name">
@@ -285,45 +286,6 @@
 		</form>
 	</div>
 
-	<!-- 添加用户状态模态框 -->
-	<div class="modal fade bs-example-modal-sm" id="adduser-modal" tabindex="-1" role="modal" aria-labelledby="addUserModal" aria-hidden="true">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-body">
-					<p class="adduser-message adduser-message-success"><i class="icon-ok-sign icon-2x modal-icon-success"></i><span class="message-text">成功后的信息</span></p>
-					<p class="adduser-message adduser-message-error"><i class="icon-remove-sign icon-2x modal-icon-error"></i><span class="message-text">失败后的信息</span></p>
-					<p class="adduser-message adduser-message-info"><i class="icon-info-sign icon-2x modal-icon-info"></i><span class="message-text">错误的信息</span></p>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- 重置密码模态框 -->
-	<div class="modal fade bs-example-modal-sm" id="modal-message" tabindex="-1" role="modal" aria-labelledby="addUserModal" aria-hidden="true">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h4 class="modal-title">提示</h4>
-				</div>
-				<div class="modal-body">
-					<p class="modal-message modal-message-info">
-						<i class="icon-info-sign icon-2x modal-icon-info"></i>
-						<span class="message-text">密码重置成功</span>
-					</p>
-					<p class="modal-message modal-message-new-password">
-						<span class="message-text">新密码为：<b id="newPassword"></b></span>
-					</p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
 	<div class="loading-modal sr-only" id="loading">
 		<div class="loading-icon">
 			<p><i class="icon-spinner icon-spin icon-2x"></i></p>
@@ -374,10 +336,52 @@
 		</div>
 	</div>
 
-	<!-- 回到顶部 -->
-	<div class="footer-operation-bar">
-		<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
+	<!-- Modal集 -->
+	
+
+	<!-- 添加用户状态模态框 -->
+	<div class="modal fade bs-example-modal-sm" id="adduser-modal" tabindex="-1" role="modal" aria-labelledby="addUserModal" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-body">
+					<p class="adduser-message adduser-message-success"><i class="icon-ok-sign icon-2x modal-icon-success"></i><span class="message-text">成功后的信息</span></p>
+					<p class="adduser-message adduser-message-error"><i class="icon-remove-sign icon-2x modal-icon-error"></i><span class="message-text">失败后的信息</span></p>
+					<p class="adduser-message adduser-message-info"><i class="icon-info-sign icon-2x modal-icon-info"></i><span class="message-text">错误的信息</span></p>
+				</div>
+			</div>
+		</div>
 	</div>
+
+	<!-- 重置密码模态框 -->
+	<div class="modal fade bs-example-modal-sm" id="modal-message" tabindex="-1" role="modal" aria-labelledby="addUserModal" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">提示</h4>
+				</div>
+				<div class="modal-body">
+					<p class="modal-message modal-message-info">
+						<i class="icon-info-sign icon-2x modal-icon-info"></i>
+						<span class="message-text">密码重置成功</span>
+					</p>
+					<p class="modal-message modal-message-new-password">
+						<span class="message-text">新密码为：<b id="newPassword"></b></span>
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!-- 回到顶部 -->
+	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
 
 	<script>

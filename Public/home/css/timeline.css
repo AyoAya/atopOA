@@ -121,7 +121,6 @@
     border-radius: 50%;
     overflow: hidden;
     margin-right: 10px;
-    border: solid 1px #ddd;
 }
 .timeline .timeline-heading .timeline-table .timeline-content .timeline-content-right {
     width: 670px;

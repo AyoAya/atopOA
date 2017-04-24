@@ -337,12 +337,6 @@
 		</div>
 	</div>
 
-	<!-- 图像展示 -->
-	<div id="picturePreview">
-		<div class="pictureContainer"></div>
-		<span class="closePreview" title="关闭"><i class="icon-remove icon-2x"></i></span>
-	</div>
-
 
 	<script>
 		$('.form_date').datetimepicker({
@@ -421,6 +415,13 @@
 	<!-- Modal集 -->
 	
 
+	<!-- 图像展示 -->
+	<div id="picturePreview">
+		<div class="pictureContainer"></div>
+		<span class="closePreview" title="关闭"><i class="icon-remove icon-2x"></i></span>
+	</div>
+
+
 	<!-- customer-rma-modal -->
 	<?php if(($details["rma_state"]) == "N"): ?>
 		<?php if(($details["version"]) == "new"): if(in_array(($_SESSION['user']['id']), is_array($details["operation_person"])?$details["operation_person"]:explode(',',$details["operation_person"]))): ?>
@@ -474,6 +475,16 @@
 												<span>回退到：<?php echo ($fallback["step_name"]); ?></span><span>处理人：<?php echo ($fallback["nickname"]); ?></span>
 											</div>
 										</div><?php endif; ?>
+
+									<?php if(isset($closeReason)): ?>
+										<?php if($details['now_step']['id'] == 3 or $details['now_step']['id'] == 6): ?><div class="layui-inline close-reason-select sr-only">
+												<label class="layui-form-label">关闭原因</label>
+												<div class="layui-input-inline">
+													<select name="assoc_close_reason">
+														<?php if(is_array($closeReason)): $i = 0; $__LIST__ = $closeReason;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$value): $mod = ($i % 2 );++$i; if(($value["id"]) != $_SESSION['user']['id']): ?><option value="<?php echo ($value["id"]); ?>"><?php echo ($value["close_reason"]); ?></option><?php endif; endforeach; endif; else: echo "" ;endif; ?>
+													</select>
+												</div>
+											</div><?php endif; endif; ?>
 
 									<div class="layui-form-item layui-form-text">
 										<textarea name="log_content" placeholder="请输入处理内容" class="layui-textarea"></textarea>

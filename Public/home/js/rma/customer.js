@@ -18,7 +18,7 @@ $(function(){
 				_data.attachment = JSON.stringify(attachmentList);
 			}
 			$.ajax({
-				url : ThinkPHP['AJAX'] + '/RMA/addCustomer',
+				url : ThinkPHP['AJAX'] + '/RMA/add',
 				type : 'POST',
 				data : _data,
 				dataType : 'json',
@@ -63,7 +63,31 @@ $(function(){
 			var operation_select_elem = $(elem).parents('.customer-rma-form').find('.operation-person-select');
 			var step_select_elem = $(elem).parents('.customer-rma-form').find('.step-select');
 			var fae_select_elem = $(elem).parents('.customer-rma-form').find('.fae-person-select');
+			var close_reason_elem = $(elem).parents('.customer-rma-form').find('.close-reason-select');
+			if( value == 'X' ){
+				if( !$(operation_select_elem).hasClass('sr-only') ){
+					$(operation_select_elem).addClass('sr-only');
+				}
+				if( !$(step_select_elem).hasClass('sr-only') ){
+					$(step_select_elem).addClass('sr-only');
+				}
+				if( !$(fae_select_elem).hasClass('sr-only') ){
+					$(fae_select_elem).addClass('sr-only');
+				}
+				if( !$(close_reason_elem).hasClass('sr-only') ){
+					$(close_reason_elem).addClass('sr-only');
+				}
+			}
 			if( now_step == 3 || now_step == 4 ){
+				if( now_step == 3 && value == 'N' ){	//如果当前步骤等于3并且选择关闭客诉则显示关闭客诉原因下拉菜单
+					if( $(close_reason_elem).hasClass('sr-only') ){
+						$(close_reason_elem).removeClass('sr-only');
+					}
+				}else{
+					if( !$(close_reason_elem).hasClass('sr-only') ){
+						$(close_reason_elem).addClass('sr-only');
+					}
+				}
 				if( now_step == 3 && value == 4 || now_step == 4 && value == 'Z' ){	//如果当前步骤等于3或者等于4，并且选择推送下一步或者转交则显示qa部门人员选择下拉菜单
 					if( $(operation_select_elem).hasClass('sr-only') ){
 						$(operation_select_elem).removeClass('sr-only');
@@ -75,6 +99,15 @@ $(function(){
 				}
 			}
 			if( now_step == 5 || now_step == 6 ){	//如果步骤可以回退则显示回退步骤下拉菜单
+				if( now_step == 6 && value == 'N' ){	//如果当前步骤等于6并且选择关闭客诉则显示关闭客诉原因下拉菜单
+					if( $(close_reason_elem).hasClass('sr-only') ){
+						$(close_reason_elem).removeClass('sr-only');
+					}
+				}else{
+					if( !$(close_reason_elem).hasClass('sr-only') ){
+						$(close_reason_elem).addClass('sr-only');
+					}
+				}
 				if( value == 'H' ){	//当用户选择回退的时候才显示否则隐藏
 					if( $(step_select_elem).hasClass('sr-only') ){
 						$(step_select_elem).removeClass('sr-only');

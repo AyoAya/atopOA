@@ -1,6 +1,7 @@
 <?php
 namespace Home\Controller;
 
+use Think\Model;
 use Think\Page;
 class RMAController extends AuthController{
     private $str = '';
@@ -222,9 +223,8 @@ class RMAController extends AuthController{
     }
     
     //新增客诉
-    public function addCustomer(){
+    public function add(){
         if(IS_POST){
-            sleep(3);
             $post = I('post.');
             $pattern = array(
                 '/ /',//半角下空格
@@ -298,6 +298,9 @@ class RMAController extends AuthController{
         }else{
             //将用户列表注入模板，（FAE工程师选择）
             $user = M('User');
+            $vendor_brand_model = M('VendorBrand');
+            $vendor_brand_data = $vendor_brand_model->order('brand ASC')->select();
+            $this->assign('vendorBrand',$vendor_brand_data);
             $userlist = $user->field('id,nickname')->where('position=12')->select();
             $this->assign('productFilter',$this->getProductData()); //注入产品筛选数据
             $this->assign('userlist',$userlist);
@@ -354,6 +357,10 @@ class RMAController extends AuthController{
                 $resultData['next_step'] = $oacustomerstep_model->find($now_step+1);
             }
         }
+
+        # 将关闭原因注入模板，但只有用户选择关闭客诉的时候才显示
+        $close_reason = M('Oacustomerclosereason')->select();
+        $this->assign('closeReason',$close_reason);
 
         $resultData['operation_person'] = $now_operation_person;
         //print_r($resultData);
@@ -598,11 +605,14 @@ class RMAController extends AuthController{
 
                 $saveData['id'] = $post['cc_id'];
                 $saveData['rma_state'] = 'Y';   //Y表示当前客诉关闭
+                $saveData['assoc_close_reason'] = $post['assoc_close_reason'];   //记录关闭原因
                 $save_id = $oacustomercomplaint_model->save($saveData);
 
                 if( $add_id_1 && $add_id_2 && $save_id ){
                     M()->commit();
 
+                    $close_reason_text = M('Oacustomerclosereason')->find($post['assoc_close_reason']);
+                    $logDataBak['close_reason_text'] = $close_reason_text['close_reason'];
                     $emails = $this->GetInvolvedIn($post['cc_id']);
                     $this->pushEmail('CUSTOMER_CLOSE',$emails,$logDataBak,$post['cc_id']);
 
@@ -815,7 +825,7 @@ class RMAController extends AuthController{
             $subject = '客诉转RMA';
             $body = <<<HTML
 <p>是否转RMA</p>
-<p>点击链接查看详情：<a target="_blank" href="http://$http_host/customerDetails/$id">http://$http_host/customerDetails/$id</a></p>
+<p>点击链接查看详情：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }elseif( $type == 'ADD_CUSTOMER' ){
             $subject = '[ '.$nickname.' ] 的客户有一条新客诉，请关注！';
@@ -831,7 +841,7 @@ p {
 <p><b>设备厂商：</b>$vendor</p>
 <p><b>设备型号：</b>$model</p>
 <p><b>错误现象：</b>$error_message</p>
-<p><b>详情请点击链接：</b><a href="http://$http_host/customerDetails/$id">http://$http_host/customerDetails/$id</a></p>
+<p><b>详情请点击链接：</b><a href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
 
         }elseif( $type == 'ADD_LOG' ){  //添加日志推送邮件
@@ -852,7 +862,7 @@ p {
 <p>设备厂商：$vendor</p>
 <p>设备型号：$model</p>
 <p>错误现象：$error_message</p><br>
-<p>详情请点击链接：<a target="_blank" href="http://$http_host/customerDetails/$id">http://$http_host/customerDetails/$id</a></p>
+<p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }elseif( $type == 'PUSH_STEP' ){
             $step_result = M('Oacustomerstep')->find($push_step);  //获取到下一个步骤数据
@@ -868,7 +878,7 @@ p {
 <p>Dear $dear,</p>
 <p>[$user_nickname] 将客诉步骤推送到：Step$step_id - $step_name</p>
 <p>备注：$log_content</p>
-<p>详情请点击链接：<a target="_blank" href="http://$http_host/customerDetails/$id">http://$http_host/customerDetails/$id</a></p>
+<p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }elseif( $type == 'CUSTOMER_CLOSE' ){   //如果是关闭客诉
             $subject = '客诉关闭 [ ID:'.$id.' ]';
@@ -880,8 +890,9 @@ p {
 </style>
 <p>Dear All,</p>
 <p>[$user_nickname] 将客诉关闭</p>
+<p>关闭原因：$close_reason_text</p>
 <p>备注：$log_content</p>
-<p>详情请点击链接：<a target="_blank" href="http://$http_host/customerDetails/$id">http://$http_host/customerDetails/$id</a></p>
+<p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }elseif( $type == 'TRANSFER' ){
             $step_result = M('Oacustomerstep')->field('id,step_name')->find($step);
@@ -897,7 +908,7 @@ p {
 <p>Dear All,</p>
 <p>[$user_nickname] 将客诉处理人转交给 [$QA_person_nickname]，当前步骤：Step$step_id - $step_name</p>
 <p>备注：$log_content</p>
-<p>详情请点击链接：<a target="_blank" href="http://$http_host/customerDetails/$id">http://$http_host/customerDetails/$id</a></p>
+<p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }elseif( $type == 'FALLBACK' ){
             $subject = '客诉步骤回退 [ ID:'.$id.' ]';
@@ -910,7 +921,7 @@ p {
 <p>Dear All,</p>
 <p>[$user_nickname] 将步骤回退到：Step$step_id - $step_name</p>
 <p>备注：$log_content</p>
-<p>详情请点击链接：<a target="_blank" href="http://$http_host/customerDetails/$id">http://$http_host/customerDetails/$id</a></p>
+<p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }
         if( empty($cc) ){
@@ -919,7 +930,7 @@ HTML;
                 $this->ajaxReturn( ['falg'=>0,'msg'=>$result] );
             }
         }else{
-            $result = send_Email('vinty_email@163.com','',$subject,$body,$cc);
+            $result = send_Email('vinty_email@163.com','',$subject,$body);  //$cc
             if( $result != 1 ){ //如果邮件发送失败则返回错误信息
                 $this->ajaxReturn( ['falg'=>0,'msg'=>$result] );
             }
