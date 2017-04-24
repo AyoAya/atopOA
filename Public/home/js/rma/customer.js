@@ -249,7 +249,7 @@ $(function(){
 			if( $('#scrollBackTop').hasClass('sr-only') ){
 				$('.addOperationLog').css({bottom : '60px'});
 			}else{
-				$('.addOperationLog').css({bottom : '140px'});
+				$('.addOperationLog').css({bottom : '122px'});
 			}
 		}
 

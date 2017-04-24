@@ -256,15 +256,15 @@
 	bottom: 60px;
 	right: 60px;
 	z-index: 1;
-	width: 70px;
-	height: 70px;
+	width: 56px;
+	height: 56px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
-	font-size: 34px;
+	font-size: 24px;
 	color: #fff;
 	background: #81c0f2;
-	line-height: 65px;
+	line-height: 56px;
 	text-align: center;
 	cursor: pointer;
 }
