@@ -20,7 +20,7 @@ class RMAController extends AuthController{
         if( !empty(I('get.step')) ){
             if( I('get.step') != 'close' ){  //如果提交的进度值为数字类型则表明筛选该步骤id的数据，我、如果不是则为已关闭的类型
                 //$where = 'a.id=b.main_assoc ';
-                $where .= 'AND b.step_assoc="'.I('get.step').'" AND a.rma_state="N" ';    //查询所有等于该步骤的客诉
+                $where .= 'AND a.now_step="'.I('get.step').'" AND a.rma_state="N" ';    //查询所有等于该步骤的客诉
             }else{
                 $where .= 'AND a.rma_state="Y" ';    //查询所有已关闭的客诉
             }
@@ -114,6 +114,7 @@ class RMAController extends AuthController{
             //过滤html标签
             $value['error_message'] = str_replace('<br />','',$value['error_message']);
             $value['reason'] = str_replace('<br />','',$value['reason']);
+            $value['now_step'] = M()->field('b.id,b.step_name')->table('atop_oacustomercomplaint a,atop_oacustomerstep b')->where('a.now_step=b.id AND a.id='.$value['id'])->select()[0];    //将最新步骤信息注入模板
         }
         //print_r($result);
         $this->assign('filter',$condition);
@@ -165,63 +166,6 @@ class RMAController extends AuthController{
             }
         }
     }
-
-    //转RMA
-    public function toRMA(){
-        if( IS_POST ){
-            $post = I('post.','',false);
-            if( $post['is_rma'] == 1 ){
-                $oacustomercomplaint_model = M('Oacustomercomplaint');
-                $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
-                $saveData['id'] = $post['cc_id'];
-                $saveData['is_rma'] = $post['is_rma'];  //将该客诉标志为RMA
-                $saveData['sale_audit'] = 2;    //代表销售已经审核
-                $saveData['step'] = 2;  //推送到下一个步骤
-                $saveData['qa_responsible'] = $post['qa_responsible'];  //QA处理人
-                $saveData['flag'] = 'new';
-
-
-                M()->startTrans();  //开启事务
-                $oacustomercomplaint_model_save_id = $oacustomercomplaint_model->save($saveData);
-
-                $insertData['cc_id'] = $post['cc_id'];
-                $insertData['log_date'] = $post['log_date'];
-                $insertData['log_content'] = '['.$post['recorder'].']将该客诉转为RMA';
-                $insertData['recorder'] = $post['recorder'];
-                $insertData['timestamp'] = date('Y-m-d H:i:s');
-                $insertData['uid'] = $post['uid'];
-                $insertData['step'] = 2;
-                $oacustomercomplaintlog_model_insert_id_1 = $oacustomercomplaintlog_model->add($insertData);
-                if( trim($post['log_content']) != '' || trim($post['attachment']) != '' ){   //检查销售有没有留下备注
-                    if( $post['attachment'] != '' ){    //附件不为空的时候才添加
-                        $insertData['attachment'] = $post['attachment'];
-                    }
-                    $insertData['log_content'] = $post['log_content'];
-                    $oacustomercomplaintlog_model_insert_id_2 = $oacustomercomplaintlog_model->add($insertData);
-                }
-
-                if( isset( $oacustomercomplaintlog_model_insert_id_2 ) && $oacustomercomplaintlog_model_insert_id_2 ){
-                    if( $oacustomercomplaint_model_save_id && $oacustomercomplaintlog_model_insert_id_1 && $oacustomercomplaintlog_model_insert_id_2 ){
-                        M()->commit();
-                        $this->ajaxReturn( ['flag'=>1,'msg'=>'成功'] );
-                    }else{
-                        M()->rollback();
-                        $this->ajaxReturn( ['flag'=>0,'msg'=>'失败'] );
-                    }
-                }else{
-                    if( $oacustomercomplaint_model_save_id && $oacustomercomplaintlog_model_insert_id_1 ){
-                        M()->commit();
-                        $this->ajaxReturn( ['flag'=>1,'msg'=>'成功'] );
-                    }else{
-                        M()->rollback();
-                        $this->ajaxReturn( ['flag'=>0,'msg'=>'失败'] );
-                    }
-                }
-            }else{
-                $this->ajaxReturn( ['flag'=>1,'msg'=>'客诉关闭'] );
-            }
-        }
-    }
     
     //新增客诉
     public function add(){
@@ -247,14 +191,20 @@ class RMAController extends AuthController{
             $data['status'] = 1;
             $data['uid'] = session('user')['id'];
             $data['version'] = 'new';
+            $data['now_step'] = 2;  //当数据新增成功，步骤为2
 
             # 开启事务支持(当添加新客诉时在log表中默认添加一条新数据并记录当前操作者及指定FAE工程师)
-            $complaint = M('Oacustomercomplaint');
-            M()->startTrans();
-            $complaint_addID = $complaint->add($data);
+            // $complaint = M('Oacustomercomplaint');
+
+            $model = new Model();
+
+            $model->startTrans();   //开启事务
+
+            $complaint_addID = $model->table('atop_oacustomercomplaint')->add($data);
 
             //将当前操作人姓名添加至邮件推送内容
             $post['nickname'] = session('user')['nickname'];
+
             # 推送邮件到用户指定FAE工程师
             $fae_user = I('post.operation_person'); //获取到指定fae工程师的id
             $fae_user_info = M('User')->field('email,nickname')->find($fae_user);
@@ -263,37 +213,38 @@ class RMAController extends AuthController{
             # 记录日志
             $log['cc_id'] = $complaint_addID;
             $log['log_date'] = I('post.cc_time');
-            $log['log_content'] = '新客诉。';
+            $log['log_content'] = '['.sesson('user')['nickname'].'] 录入了新客诉。';
             $log['attachment'] = I('post.attachment','',false);
             $log['recorder'] = 'OASystem';
             $log['timestamp'] = date('Y-m-d H:i:s');
             $log['uid'] = session('user')['id'];
             $log['version'] = 'new';
             $complaintlog = M('Oacustomercomplaintlog');
-            $complaintlog_addID = $complaintlog->add($log);
+            $complaintlog_addID = $model->table('atop_oacustomercomplaintlog')->add($log);
 
 
             # 记录步骤操作人
-            $oacustomeroperation_model = M('Oacustomeroperation');
+            // $oacustomeroperation_model = M('Oacustomeroperation');
             $operation['main_assoc'] = $complaint_addID;
             $operation['step_assoc'] = 1;
             $operation['operation_person'] = session('user')['id'];
-            $operation_id_1 = $oacustomeroperation_model->add($operation);  // 记录步骤1
+            $operation_id_1 = $model->table('atop_oacustomeroperation')->add($operation);  // 记录步骤1
+
             $operation['step_assoc'] = 2;
             $operation['operation_person'] = $fae_user;
-            $operation_id_2 = $oacustomeroperation_model->add($operation);  // 记录步骤2
+            $operation_id_2 = $model->table('atop_oacustomeroperation')->add($operation);  // 记录步骤2
 
 
             # 当每一步数据记录成功后返回结果，若其中一步错误则全部回滚
             if( $complaint_addID && $complaintlog_addID && $operation_id_1 && $operation_id_2 ){
-                M()->commit();
+                $model->commit();
 
                 # 给FAE工程师推送邮件
                 $this->pushEmail('ADD_CUSTOMER',$fae_user_info['email'],$post,$complaint_addID);
 
                 $this->ajaxReturn( ['flag'=>1,'msg'=>'数据添加成功','id'=>$complaint_addID] );
             }else{
-                M()->rollback();
+                $model->rollback();
                 $this->ajaxReturn( ['flag'=>0,'msg'=>'数据添加失败'] );
             }
         }else{
@@ -315,9 +266,11 @@ class RMAController extends AuthController{
             $this->error('参数错误');
         };
         $user = M('User');
+
         //获取客诉处理记录并注入模板
         $complaint = M('Oacustomercomplaint');
         $complaintlog = M('Oacustomercomplaintlog');
+
         //获取当前id指定的客诉
         $resultData = $complaint->find(I('get.id'));
 
@@ -347,17 +300,25 @@ class RMAController extends AuthController{
         $oacustomerstep_model = M('Oacustomerstep');
         $oacustomeroperation_model = M('Oacustomeroperation');
 
-        $oacustomerstep_model_result = $oacustomerstep_model->field('a.id,a.step_name,a.fallback,a.transfer')->table('atop_oacustomerstep a,atop_oacustomeroperation b')->where('b.main_assoc='.I('get.id').' AND step_assoc=a.id')->order('a.id ASC')->select();
+        $oacustomerstep_model_result = $oacustomerstep_model->field('a.id,a.step_name,a.fallback,a.transfer')->table('atop_oacustomerstep a,atop_oacustomeroperation b')->where('b.main_assoc='.I('get.id').' AND step_assoc=a.id')->group('b.step_assoc')->order('b.step_assoc ASC')->select();
+
+        //print_r($oacustomerstep_model_result);
 
         $max_step = $oacustomerstep_model->max('id');   //获取到最大步骤
         $this->assign('maxStep',$max_step);
 
         # 获取到当前正在进行的步骤
-        $oacustomeroperation_model_result = $oacustomeroperation_model->where('main_assoc='.I('get.id'))->order('step_assoc DESC')->limit(1)->select();
-        $now_step = $oacustomeroperation_model_result[0]['step_assoc'];
+        $oacustomeroperation_model_result = M()->field('a.now_step,b.operation_person')->table('atop_oacustomercomplaint a,atop_oacustomeroperation b')->where('a.now_step=b.step_assoc AND a.id='.I('get.id'))->order('b.id DESC')->limit(1)->select();
+        /*$oacustomeroperation_model_result = $oacustomeroperation_model->where('main_assoc='.I('get.id'))->order('step_assoc DESC')->limit(1)->select();*/
+
+        $now_step = $oacustomeroperation_model_result[0]['now_step'];
+
         $now_operation_person = $oacustomeroperation_model_result[0]['operation_person'];
 
-        $resultData['now_step'] = $oacustomerstep_model->find($now_step);
+        //print_r($resultData);
+
+        $resultData['now_step_info'] = $oacustomerstep_model->find($now_step);
+
         if( $now_step < $max_step ){
             if( $now_step == 4 ){   //如果步骤进行到RMA分析报告（QA），则将产生两个可选步骤
                 $resultData['next_step'] = $oacustomerstep_model->where('id>4')->select();
@@ -384,6 +345,8 @@ class RMAController extends AuthController{
 
             $prev_step_info = $oacustomeroperation_model->where( ['main_assoc'=>$resultData['id']] )->order('step_assoc DESC')->limit(2)->select();
 
+
+
             //如果当前步骤在可以回退则获取回退步骤列表
             $oacustomeroperation_result = $prev_step_info[1];  //获取到上一个步骤节点
 
@@ -400,6 +363,8 @@ class RMAController extends AuthController{
             }
             $step_info['step_name'] = $oacustomerstep_model->field('step_name')->find( $resultData['now_step']['id']-1 )['step_name'];
 
+
+            //print_r($step_info);
             $this->assign('fallback',$step_info);
             if( $resultData['now_step']['id'] == 6 ){
                 $FAE_list = M('User')->where( 'position=12 AND id<>'.session('user')['id'] )->select(); //获取到同职位且不包含自己的人员列表
@@ -407,12 +372,14 @@ class RMAController extends AuthController{
             }
         }
 
+        //print_r($resultData);
+
         foreach( $oacustomerstep_model_result as $keyy=>&$valuee ){
-            if( $resultData['version'] == 'new' ){
+            /*if( $resultData['version'] == 'new' ){
                 if( $valuee['id'] != $now_step ){
                     $valuee['class'] = 'timeline-hide';
                 }
-            }
+            }*/
             $valuee['log'] = $complaintlog->where( ['step'=>$valuee['id'],'cc_id'=>I('get.id')] )->order('log_date,id ASC')->select();
             foreach($valuee['log'] as $key=>&$value){
                 //为保留原始数据attachment列存入数据为文件名和json数据，为保证数据不冲突判断列数据是否为json格式来区分新版还是老版
@@ -498,9 +465,6 @@ class RMAController extends AuthController{
         $this->assign('details',$resultData);
         $this->assign('nodeData',$oacustomerstep_model_result);
         //print_r($resultData);
-        $sessionArr['session_name'] = session_name();
-        $sessionArr['session_id'] = session_id();
-        $this->assign('sessionArr',$sessionArr);
 
         $this->display();
     }
@@ -609,7 +573,7 @@ class RMAController extends AuthController{
                 $logDataBak = $logData;
 
                 # 记录操作日志
-                $logData['log_content'] = '['.session('user')['nickname'].'] 关闭客诉';
+                $logData['log_content'] = '['.session('user')['nickname'].'] 关闭客诉。';
                 $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
                 $add_id_2 = $oacustomercomplaintlog_model->add($logData);
@@ -651,7 +615,7 @@ class RMAController extends AuthController{
                 $logDataBak['QA_person_nickname'] = $QA_person_data['nickname'];
 
                 # 记录操作日志
-                $logData['log_content'] = '['.session('user')['nickname'].'] 将操作人转交给 ['.$QA_person_data['nickname'].']';
+                $logData['log_content'] = '['.session('user')['nickname'].'] 将操作人转交给 ['.$QA_person_data['nickname'].']。';
                 $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
                 $add_id_2 = $oacustomercomplaintlog_model->add($logData);
@@ -675,9 +639,11 @@ class RMAController extends AuthController{
                 $oacustomerstep_model = M('Oacustomerstep');
 
                 # 开启事务
-                M()->startTrans();
+                $model = new Model();
 
-                $add_id_1 = $oacustomercomplaintlog_model->add($logData);
+                $model->startTrans();
+
+                $add_id_1 = $model->table('atop_oacustomercomplaintlog')->add($logData);
                 //$step_result = $oacustomerstep_model->find($post['step']-1);  //获取到上一个步骤
 
                 $step_result = $oacustomeroperaion_model->field('b.id,b.step_name')
@@ -690,15 +656,18 @@ class RMAController extends AuthController{
                 $logDataBak = $logData;
 
                 # 记录操作日志
-                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤回退到：Step'.$step_result[1]['id'].' - '.$step_result[1]['step_name'];
+                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤回退到：Step'.$step_result[1]['id'].' - '.$step_result[1]['step_name'].'。';
                 $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
-                $add_id_2 = $oacustomercomplaintlog_model->add($logData);
+                $add_id_2 = $model->table('atop_oacustomercomplaintlog')->add($logData);
 
-                $delete_id = $oacustomeroperaion_model->where( ['mian_assoc'=>$post['cc_id'],'step_assoc'=>$post['step']] )->delete();   //删除掉当前步骤即回退到上一个步骤
+                # 修改主表当前步骤
+                $save_id = $model->table('atop_oacustomercomplaint')->save( ['id'=>$post['cc_id'],'now_step'=>$step_result[1]['id']] );
 
-                if( $add_id_1 && $add_id_2 && $delete_id ){
-                    M()->commit();
+                //$delete_id = $model->table('atop_oacustomeroperation')->where( ['mian_assoc'=>$post['cc_id'],'step_assoc'=>$post['step']] )->delete();   //删除掉当前步骤即回退到上一个步骤
+
+                if( $add_id_1 && $add_id_2 && $save_id !== false ){
+                    $model->commit();
 
                     $emails = $this->GetInvolvedIn($post['cc_id']);
                     $logDataBak['step_id'] = $step_result[1]['id'];
@@ -707,7 +676,7 @@ class RMAController extends AuthController{
 
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
                 }else{
-                    M()->rollback();
+                    $model->rollback();
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加失败'] );
                 }
 
@@ -762,18 +731,27 @@ class RMAController extends AuthController{
                 $step_result = M('Oacustomerstep')->find($post['operation_type']);  //获取到下一个步骤
 
                 # 记录操作日志
-                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤推送到：Step'.$step_result['id'].' - '.$step_result['step_name'];
+                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤推送到：Step'.$step_result['id'].' - '.$step_result['step_name'].'。';
                 $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
                 $add_id_2 = $model->table('atop_oacustomercomplaintlog')->add($logData);
 
+                # 修改主表当前步骤
+                $save_id = $model->table('atop_oacustomercomplaint')->save( ['id'=>$post['cc_id'],'now_step'=>$step_result['id']] );
+
                 $operationData['main_assoc'] = $post['cc_id'];
                 $operationData['step_assoc'] = $post['operation_type'];
                 $operationData['operation_person'] = $operation_person_id;
-                $add_id_3 = $model->table('atop_oacustomeroperation')->add($operationData);
 
+                # 为保证操作表步骤唯一，每当推送时始终检查数据库是否存在该客诉的步骤节点信息，如果存在为修改，不存在则新增
+                $unique_operation = $model->table('atop_oacustomeroperation')->where( ['main_assoc'=>$post['cc_id'],'step_assoc'=>$post['operation_type']] )->select();
+                if( empty($unique_operation) ){
+                    $add_id_3 = $model->table('atop_oacustomeroperation')->add($operationData);
+                }else{
+                    $add_id_3 = $model->table('atop_oacustomeroperation')->where( ['main_assoc'=>$post['cc_id'],'step_assoc'=>$post['operation_type']] )->save( ['operation_person'=>$operation_person_id] );
+                }
 
-                if( $add_id_1 && $add_id_2 && $add_id_3 ){
+                if( $add_id_1 && $add_id_2 && $add_id_3 !== false && $save_id !== false ){
                     $model->commit();
 
                     # 如果是添加日志，则获取到当前步骤前的所有步骤处理人员，分别推送邮件

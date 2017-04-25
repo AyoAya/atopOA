@@ -139,11 +139,19 @@
 
 		<!-- 正文区域 -->
 		<div id="content">
-			<div class="container-fluid" id="content-box">
-				<block name="content">
+			<present name="PERMISSION_DENIED">
+				<div class="permission-denied">
+					<div class="permission-denied-icon"><i class="icon-desktop"></i></div>
+					<p class="permission-denied-text-zh">您没有权限访问该页面</p>
+					<p class="permission-denied-text-en">You do not have permission to access the page</p>
+				</div>
+			<else/>
+				<div class="container-fluid" id="content-box">
+					<block name="content">
 
-				</block>
-			</div>
+					</block>
+				</div>
+			</present>
 		</div>
 
 		<!-- 消息提示模态框 -->

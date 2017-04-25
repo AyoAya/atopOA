@@ -94,7 +94,7 @@
 				<td>
                     <eq name="details.version" value="new"> {//如果是新版客诉则显示进度，老版显示状态}
                         <eq name="details.rma_state" value="N">
-                            <span class="label label-primary">Step{$details.now_step.id}-{$details.now_step.step_name}</span>
+                            <span class="label label-primary">Step{$details.now_step_info.id}-{$details.now_step_info.step_name}</span>
                         <else/>
                             <span class="label label-success">客诉已关闭</span>
                         </eq>
@@ -155,21 +155,19 @@
 			<volist name="nodeData" id="value">
 					<div class="timeline-table"><!-- 如果要隐藏子节点列表为该元素添加 timeline-hide {$value.class} -->
 
-						<elt name="value.id" value="$details.now_step.id">
-							<div class="timeline-title-box">
-								<div class="timeline-title pull-left">
-									<div class="timeline-step">Step{$value.id}</div>
-								</div>
-								<div class="timeline-title-text pull-left">
-                                    <eq name="details.version" value="new">
-									    <span>{$value.step_name} <i class="<notempty name='value.class'>icon-caret-down<else/>icon-caret-up</notempty>"></i></span>
-                                    <else/>
-                                        <span>处理记录 <i class="<notempty name='value.class'>icon-caret-up<else/>icon-caret-down</notempty>"></i></span>
-                                    </eq>
-								</div>
-								<div class="clearfix"></div>
+						<div class="timeline-title-box">
+							<div class="timeline-title pull-left">
+								<div class="timeline-step <eq name='value.id' value='$details.now_step'>active</eq>">Step{$value.id}</div>
 							</div>
-						</elt>
+							<div class="timeline-title-text pull-left">
+								<eq name="details.version" value="new">
+									<span>{$value.step_name} <i class="<notempty name='value.class'>icon-caret-down<else/>icon-caret-up</notempty>"></i></span>
+								<else/>
+									<span>处理记录 <i class="<notempty name='value.class'>icon-caret-up<else/>icon-caret-down</notempty>"></i></span>
+								</eq>
+							</div>
+							<div class="clearfix"></div>
+						</div>
 
 						<notempty name="value.log">
 							<table class="timeline-table">
@@ -320,7 +318,7 @@
 												<eq name="details.now_step.transfer" value="Y">
 													<option value="Z">转交</option>
 												</eq>
-												<eq name="details.now_step.fallback" value="Y">
+												<eq name="details.now_step_info.fallback" value="Y">
 													<option value="H">回退</option>
 												</eq>
 												<eq name="details.now_step.id" value="3">

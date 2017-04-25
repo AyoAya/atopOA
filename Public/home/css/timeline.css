@@ -51,6 +51,13 @@
     font-size: 14px;
     line-height: 45px;
 }
+.timeline .timeline-heading .timeline-table .timeline-title-box .timeline-title div.active {
+    background: #428bca;
+    color: #fff;
+}
+/*.timeline .timeline-heading .timeline-table .timeline-title-box .timeline-title-text span.active{
+    color: #5cb85c;
+}*/
 .timeline .timeline-heading .timeline-table .timeline-title-text {
     font-size: 18px;
     color: #428bca;

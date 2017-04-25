@@ -45,8 +45,10 @@ class AuthController extends Controller {
         //检查权限
         $auth = new Auth();
         if(!$auth->check(MODULE_NAME.'/'.CONTROLLER_NAME.'/', session('user')['id'])){
-            echo '<div style="width:170px;height:260px;background:url('.__ROOT__.'/Public/home/img/low_power.png) no-repeat;position:fixed;top:50%;left:50%;margin-left:-73.5px;margin-top:-150px;"><span onclick="history.back();" style="position:absolute;bottom:0;left:50%;width:66px;margin-left:-60px;cursor:pointer;padding:10px 20px;text-align:center;background:#777;color:#fff;border-radius:4px;"> 返回 </span></div>';
-            exit;
+            //echo '<div style="width:170px;height:260px;background:url('.__ROOT__.'/Public/home/img/low_power.png) no-repeat;position:fixed;top:50%;left:50%;margin-left:-73.5px;margin-top:-150px;"><span onclick="history.back();" style="position:absolute;bottom:0;left:50%;width:66px;margin-left:-60px;cursor:pointer;padding:10px 20px;text-align:center;background:#777;color:#fff;border-radius:4px;"> 返回 </span></div>';
+            //exit;
+            # 如果验证失败则将该信息注入模板
+            $this->assign('PERMISSION_DENIED',true);
         }
         
     }

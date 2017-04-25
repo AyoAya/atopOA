@@ -163,7 +163,7 @@
 										</switch>
 									<else/>
 										<eq name="value.rma_state" value="N">
-											<span class="tag-primary">Step{$value.step_id}-{$value.step_name}</span>
+											<span class="tag-primary">Step{$value.now_step.id}-{$value.now_step.step_name}</span>
 										<else/>
 											<span class="tag-success">已关闭</span>
 										</eq>

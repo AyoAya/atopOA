@@ -452,14 +452,14 @@ p.file-name a {
 	cursor: pointer;
 }
 .addOperationLog p {
-	padding-top: 10px;
+	padding-top: 7px;
 }
 .addOperationLog p span {
 	display: block;
+	font-size: 12px;
 }
 .addOperationLog p span:first-child {
 	font-size: 22px;
-	margin-bottom: 5px;
 }
 .addOperationLog:hover {
 	background: #428bca;;

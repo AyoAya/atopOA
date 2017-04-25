@@ -291,6 +291,19 @@
 
 
 
-
-
+/*** 没有权限访问页面 ***/
+.permission-denied {
+	text-align: center;
+	margin: 150px auto 0;
+	color: #888;
+}
+.permission-denied .permission-denied-icon {
+	font-size: 120px;
+}
+.permission-denied .permission-denied-text-zh {
+	font-size: 20px;
+}
+.permission-denied .permission-denied-text-en {
+	font-size: 12px;
+}
 

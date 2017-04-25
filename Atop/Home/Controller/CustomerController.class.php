@@ -384,6 +384,7 @@ class CustomerController extends AuthController{
         if( IS_POST ){
             $post = I('post.');
 
+
             $oacustomercomplaint_model = M('Oacustomercomplaint');
             $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
             $oacustomeroperation_model = M('Oacustomeroperation');
@@ -393,39 +394,41 @@ class CustomerController extends AuthController{
 
             # 转为新版客诉1：将主表上的version字段值改为new
             if( isset($post['vendor']) ){   //如果vendor存在则说明须重写该字段
-                $customercomplaint_save_id = $oacustomercomplaint_model->save( ['id'=>$post['main_assoc'],'version'=>'new','vendor'=>$post['vendor']] );
+                $customercomplaint_save_id = $model->table(C('DB_PREFIX').'oacustomercomplaint')->save( ['id'=>$post['main_assoc'],'version'=>'new','vendor'=>$post['vendor'],'now_step'=>2] );
             }else{
-                $customercomplaint_save_id = $oacustomercomplaint_model->save( ['id'=>$post['main_assoc'],'version'=>'new'] );
+                $customercomplaint_save_id = $model->table(C('DB_PREFIX').'oacustomercomplaint')->save( ['id'=>$post['main_assoc'],'version'=>'new','now_step'=>2] );
             }
 
             # 转为新版客诉2：将从表上的version字段值改为new并且内容等于新客诉的改为步骤1，不为新客诉的改为2
-            $customercomplaintlog_save_id_version = $oacustomercomplaintlog_model->where( 'cc_id='.$post['main_assoc'] )->save( ['version'=>'new'] );
-            $customercomplaintlog_save_id_step = $oacustomercomplaintlog_model->where( 'cc_id='.$post['main_assoc'].' AND log_content<>"新客诉。"' )->save( ['step'=>2] );
+            $customercomplaintlog_save_id_version = $model->table(C('DB_PREFIX').'oacustomercomplaintlog')->where( 'cc_id='.$post['main_assoc'] )->save( ['version'=>'new'] );
+            $customercomplaintlog_save_id_step = $model->table(C('DB_PREFIX').'oacustomercomplaintlog')->where( 'cc_id='.$post['main_assoc'].' AND log_content<>"新客诉。"' )->save( ['step'=>2] );
 
             # 当由旧版客诉转为新版客诉是默认插入一条数据
             $log_data['cc_id'] = $post['main_assoc'];
             $log_data['log_date'] = date('Y-m-d');
-            $log_data['log_content'] = '['.session('user')['nickname'].'] 将该客诉由旧版转入';
+            $log_data['log_content'] = '['.session('user')['nickname'].'] 将该客诉由旧版转入。';
             $log_data['recorder'] = 'OASystem';
             $log_data['timestamp'] = date('Y-m-d H:i:s');
             $log_data['uid'] = session('user')['id'];
             $log_data['step'] = 2;
             $log_data['version'] = 'new';
-            $customercomplaintlog_add_id = $oacustomercomplaintlog_model->add($log_data);
+            $customercomplaintlog_add_id = $model->table(C('DB_PREFIX').'oacustomercomplaintlog')->add($log_data);
 
             # 转为新版客诉3：将步骤信息记录到操作表
                 # 1) 记录销售步骤操作人
             $operation_data['main_assoc'] = $post['main_assoc'];
             $operation_data['step_assoc'] = 1;
             $operation_data['operation_person'] = session('user')['id'];
-            $operation_add_id_sale = $oacustomeroperation_model->add($operation_data);
+            $operation_add_id_sale = $model->table(C('DB_PREFIX').'oacustomeroperation')->add($operation_data);
                 # 1) 记录FAE步骤操作人
             $operation_data['step_assoc'] = 2;
             $operation_data['operation_person'] = $post['operation_person'];
-            $operation_add_id_fae = $oacustomeroperation_model->add($operation_data);
+            $operation_add_id_fae = $model->table(C('DB_PREFIX').'oacustomeroperation')->add($operation_data);
 
             # 当每个环节都成功之后再返回最终结果
             if( $customercomplaint_save_id !== false && $customercomplaintlog_save_id_version !== false && $customercomplaintlog_save_id_step !== false && $customercomplaintlog_add_id && $operation_add_id_sale && $operation_add_id_fae ){
+
+                $model->commit();
 
                 # 当由旧版客诉转为新版客诉时，给fae工程师推送邮件
                 $id = $post['main_assoc'];
@@ -444,7 +447,7 @@ p {
 </style>
 <p>Dear $dear,</p>
 <p>[$user_nickname] 将客诉步骤推送到：Step$step_id - $step_name</p>
-<p>详情请点击链接：<a target="_blank" href="http://$http_host/customerDetails/$id">http://$http_host/customerDetails/$id</a></p>
+<p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
                 $result = send_Email('vinty_email@163.com','',$subject,$body);  //$email
                 if( $result != 1 ){ //如果邮件发送失败则返回错误信息
@@ -452,6 +455,7 @@ HTML;
                 }
                 $this->ajaxReturn( ['flag'=>1,'msg'=>'操作成功','id'=>$post['main_assoc']] );
             }else{
+                $model->rollback();
                 $this->ajaxReturn( ['flag'=>0,'msg'=>'操作失败'] );
             }
         }
