@@ -213,7 +213,7 @@ class RMAController extends AuthController{
             # 记录日志
             $log['cc_id'] = $complaint_addID;
             $log['log_date'] = I('post.cc_time');
-            $log['log_content'] = '['.sesson('user')['nickname'].'] 录入了新客诉。';
+            $log['log_content'] = '['.session('user')['nickname'].'] 录入了新客诉。';
             $log['attachment'] = I('post.attachment','',false);
             $log['recorder'] = 'OASystem';
             $log['timestamp'] = date('Y-m-d H:i:s');
@@ -315,7 +315,7 @@ class RMAController extends AuthController{
 
         $now_operation_person = $oacustomeroperation_model_result[0]['operation_person'];
 
-        //print_r($resultData);
+        print_r($resultData);
 
         $resultData['now_step_info'] = $oacustomerstep_model->find($now_step);
 

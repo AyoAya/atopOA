@@ -139,6 +139,11 @@
 #header .user-operation-box {
 	height: 40px;
 	font-size: 12px;
+	position: relative;
+}
+#header .user-operation-box #red-dot {
+	color: #d9534f;
+	font-size: 10px !important;
 }
 #header .user-operation-box .user-operation-item a {
 	color: #000;
@@ -162,13 +167,6 @@
 }
 #header .user-operation-box .user-options-btn:hover .user-options {
 	display: block;
-}
-#header .user-operation-box .user-options-btn a:hover b {
-	transform:rotate(30deg);
-	-ms-transform:rotate(30deg); /* IE 9 */
-	-moz-transform:rotate(30deg); /* Firefox */
-	-webkit-transform:rotate(30deg); /* Safari and Chrome */
-	-o-transform:rotate(30deg); /* Opera */
 }
 .user-options {
 	width: 100%;
@@ -197,9 +195,6 @@
 }
 .user-options ul li a:hover {
 	background: #efefef;
-}
-#header .user-operation-box .user-operation-item:hover a.option-name {
-	color: #d9534f;
 }
 #header .user-operation-box .user-operation-item img {
 	-webkit-border-radius: 5px;

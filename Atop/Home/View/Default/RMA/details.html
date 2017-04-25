@@ -157,7 +157,7 @@
 
 						<div class="timeline-title-box">
 							<div class="timeline-title pull-left">
-								<div class="timeline-step <eq name='value.id' value='$details.now_step'>active</eq>">Step{$value.id}</div>
+								<div class="timeline-step <neq name='details.rma_state' value='Y'><eq name='value.id' value='$details.now_step'>active</eq></neq>">Step{$value.id}</div>
 							</div>
 							<div class="timeline-title-text pull-left">
 								<eq name="details.version" value="new">
@@ -315,7 +315,7 @@
 										<div class="layui-input-inline">
 											<select name="operation_type" lay-filter="operation">
 												<option value="X">添加日志</option>
-												<eq name="details.now_step.transfer" value="Y">
+												<eq name="details.now_step_info.transfer" value="Y">
 													<option value="Z">转交</option>
 												</eq>
 												<eq name="details.now_step_info.fallback" value="Y">
