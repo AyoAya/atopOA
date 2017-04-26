@@ -315,7 +315,7 @@ class RMAController extends AuthController{
 
         $now_operation_person = $oacustomeroperation_model_result[0]['operation_person'];
 
-        print_r($resultData);
+        //print_r($resultData);
 
         $resultData['now_step_info'] = $oacustomerstep_model->find($now_step);
 

@@ -10,16 +10,15 @@ require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
 //定期推送汇总邮件
 class MailPush {
 
-	//保存数据库资源句柄
-	public $mysqli = null;
-	//结果集资源
-	public $result = null;
-    	//收件人
+    //保存数据库资源句柄
+    public $mysqli = null;
+    //结果集资源
+    public $result = null;
+    //收件人
     public $address = array(
         'yangpeiyun@atoptechnology.com',    //杨培云
         'xiaoaiyou@atoptechnology.com',     //肖艾佑
         'chenshi@atoptechnology.com',   //陈实
-        'chenqichao@atoptechnology.com',    //陈气超
         'haorui@atoptechnology.com',        //郝锐
         'jonas@atoptechnology.com'         //张炜哲
     );
@@ -32,26 +31,26 @@ class MailPush {
         'kent@atoptechnology.com',      //董总
         'jackfan@atoptechnology.com'    //范总
     );
-	
 
-	//自动连接数据库
-	public function __construct(){
-		$this->mysql_init();
-		$this->get_summary_info();
-		$this->send_email($this->address,date('Y').'年第'.date('W').'周样品单状态汇总表',$this->result,$this->cc);
-	}
 
-	//初始化连接数据库
-	public function mysql_init(){
-		$mysqli = mysqli_connect('localhost','root','root','atop');
-		mysqli_set_charset($mysqli,'UTF8');
-		if($mysqli){
-			$this->mysqli = $mysqli;
-		}
-	}
+    //自动连接数据库
+    public function __construct(){
+        $this->mysql_init();
+        $this->get_summary_info();
+        $this->send_email($this->address,date('Y').'年第'.date('W').'周样品单状态汇总表',$this->result,$this->cc);
+    }
 
-	//获取数据汇总信息
-	public function get_summary_info(){
+    //初始化连接数据库
+    public function mysql_init(){
+        $mysqli = mysqli_connect('localhost','root','root','atop');
+        mysqli_set_charset($mysqli,'UTF8');
+        if($mysqli){
+            $this->mysqli = $mysqli;
+        }
+    }
+
+    //获取数据汇总信息
+    public function get_summary_info(){
         $key = 0;
         $result = array();
         //获取到本周周一
@@ -59,8 +58,8 @@ class MailPush {
         //获取到本周周五
         $endDate = mktime(23,59,59,date("m"),date("d")-date("w")+5,date("Y"));
         //获取订单分组
-		$totalorderGroup = "SELECT totalorder,createtime,customer,saleperson FROM atop_sample group by totalorder";
-		$AllTotalorder = mysqli_query($this->mysqli,$totalorderGroup);
+        $totalorderGroup = "SELECT totalorder,createtime,customer,saleperson FROM atop_sample group by totalorder";
+        $AllTotalorder = mysqli_query($this->mysqli,$totalorderGroup);
         while($totalRow = mysqli_fetch_assoc($AllTotalorder)){
             $arr = array();
             //获取订单子数据
@@ -209,7 +208,7 @@ class MailPush {
                     }
                 }
                 if( isset($v['f_status']) && $v['f_status']==1 || isset($v['k_status']) && $v['k_status']==1 ){
-                    
+
                     if( isset($v['f_status']) && $v['f_status']==1 && $v['f_time'] < $startDate || isset($v['k_status']) && $v['k_status']==1 && $v['k_time'] < $startDate ){
                         unset($result[$key]['childData'][$k]);
                         //如果pn为空则将该订单删除
@@ -236,7 +235,7 @@ class MailPush {
         }
         //var_export($result);
         //print_r($result);
-		$body = '<center><h1 style="font-style: normal;font-weight: normal;margin: 20px 0 10px 0;letter-spacing:2px;font-size: 25px;"><span>'.date('Y').'年第'.date('W').'周</span>样品单状态汇总表</h1><table border="0" cellspacing="0" cellpadding="7" width="100%" style="border:solid 1px #ccc;border-bottom:none;font-size:12px;overflow:hidden;">
+        $body = '<center><h1 style="font-style: normal;font-weight: normal;margin: 20px 0 10px 0;letter-spacing:2px;font-size: 25px;"><span>'.date('Y').'年第'.date('W').'周</span>样品单状态汇总表</h1><table border="0" cellspacing="0" cellpadding="7" width="100%" style="border:solid 1px #ccc;border-bottom:none;font-size:12px;overflow:hidden;">
             <thead>
                 <tr style="text-align:center;background-color:#428bca;color: #fff;font-size:13px;">
                     <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">序号</td>
@@ -257,8 +256,8 @@ class MailPush {
             </thead>
 		<tbody>';
         $number = 1;
-		foreach($result as $key=>&$value){
-			$body .= '<tr style="text-align:center;font-size:12px;">
+        foreach($result as $key=>&$value){
+            $body .= '<tr style="text-align:center;font-size:12px;">
             <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;" rowspan="'.count($value['childData']).'">'.($number).'</td>
             <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;" rowspan="'.count($value['childData']).'">
                 <a href="http://61.139.89.33:8088/sampleOverview/'.$value['totalorder'].'" target="_blank" style="color:#337ab7;text-decoration:none;">'.$value['totalorder'].'</a>
@@ -351,61 +350,61 @@ class MailPush {
                         break;
                 }
             }
-		}
-		$body .= '</tbody></table></center><span style="position:relative;top:15px;font-size:14px;">本报表自动生成时间：'.date('Y-m-d H:i:s',time()).'</span>';
-		$sign = '<div style="margin-top:40px;width: 100%;padding-top: 15px;border-top: solid 1px #ccc;"><div><img src="http://www.atoptechnology.com.cn/images/logo1.jpg" alt="..." style="float:left;"><span style="float:left;margin-left:15px;"><p style="margin:4px 0;">[ 该邮件由程序自动发送，请勿回复 ]</p><p style="margin:4px 0;">华拓光通信OA系统</p></span></div></div>';
-		//echo $body.$sign;
-		$this->result = $body.$sign;
-	}
+        }
+        $body .= '</tbody></table></center><span style="position:relative;top:15px;font-size:14px;">本报表自动生成时间：'.date('Y-m-d H:i:s',time()).'</span>';
+        $sign = '<div style="margin-top:40px;width: 100%;padding-top: 15px;border-top: solid 1px #ccc;"><div><img src="http://www.atoptechnology.com.cn/images/logo1.jpg" alt="..." style="float:left;"><span style="float:left;margin-left:15px;"><p style="margin:4px 0;">[ 该邮件由程序自动发送，请勿回复 ]</p><p style="margin:4px 0;">华拓光通信OA系统</p></span></div></div>';
+        //echo $body.$sign;
+        $this->result = $body.$sign;
+    }
 
-	//发送邮件
-	public function send_email($address,$subject,$body,$cc=''){
-		//邮箱配置
-		$email_host = 'smtp.exmail.qq.com';
-		$email_username = 'oa@atoptechnology.com';
-		$email_password = 'Atop123456';
-		$email_from_name = '华拓光通信OA系统';
-		$email_port = '465';
-		//设置签名信息
-    	//$sign = '<div style="margin-top:50px;width: 100%;padding-top: 15px;border-top: solid 1px #ccc;"><div><img src="http://www.atoptechnology.com.cn/images/logo1.jpg" alt="..." style="float:left;"><span style="float:left;margin-left:15px;"><p style="margin:4px 0;">[ 该邮件由程序自动发送，请勿回复 ]</p><p style="margin:4px 0;">华拓光通信OA系统</p></span></div></div>';
-		//实例化PHPMail类
-		$mail = new PHPMailer();
-		$mail->isSMTP();// 使用SMTP服务
-	    $mail->CharSet = "UTF-8";// 编码格式为utf8，不设置编码的话，中文会出现乱码
-	    $mail->Host = $email_host;// 发送方的SMTP服务器地址
-	    $mail->SMTPAuth = true;// 是否使用身份验证
-	    $mail->Username = $email_username;// 发送方的163邮箱用户名
-	    $mail->Password = $email_password;// 发送方的邮箱密码，注意用163邮箱这里填写的是“客户端授权密码”而不是邮箱的登录密码！
-	    $mail->SMTPSecure = "ssl";// 使用ssl协议方式
-	    $mail->Port = $email_port;// 163邮箱的ssl协议方式端口号是465/994
-	    //设置收件人信息及内容
-	    $mail->setFrom($email_username,$email_from_name);// 设置发件人信息，如邮件格式说明中的发件人，这里会显示为Mailer(xxxx@163.com），Mailer是当做名字显示
-	    if(is_array($address)){
-			foreach($address as $addressv){  
-            	$mail->AddAddress($addressv);  
-        	}
-	    }else{
-	    	$mail->AddAddress($address);
-	    }
-	    if($cc!=''){
-                if(is_array($cc)){
-                    foreach($cc as $ccperson){
-                        $mail->addCC($ccperson);
-                    }
-                }else{
-                    $mail->addCC($cc);
-                }
+    //发送邮件
+    public function send_email($address,$subject,$body,$cc=''){
+        //邮箱配置
+        $email_host = 'smtp.exmail.qq.com';
+        $email_username = 'oa@atoptechnology.com';
+        $email_password = 'Atop123456';
+        $email_from_name = '华拓光通信OA系统';
+        $email_port = '465';
+        //设置签名信息
+        //$sign = '<div style="margin-top:50px;width: 100%;padding-top: 15px;border-top: solid 1px #ccc;"><div><img src="http://www.atoptechnology.com.cn/images/logo1.jpg" alt="..." style="float:left;"><span style="float:left;margin-left:15px;"><p style="margin:4px 0;">[ 该邮件由程序自动发送，请勿回复 ]</p><p style="margin:4px 0;">华拓光通信OA系统</p></span></div></div>';
+        //实例化PHPMail类
+        $mail = new PHPMailer();
+        $mail->isSMTP();// 使用SMTP服务
+        $mail->CharSet = "UTF-8";// 编码格式为utf8，不设置编码的话，中文会出现乱码
+        $mail->Host = $email_host;// 发送方的SMTP服务器地址
+        $mail->SMTPAuth = true;// 是否使用身份验证
+        $mail->Username = $email_username;// 发送方的163邮箱用户名
+        $mail->Password = $email_password;// 发送方的邮箱密码，注意用163邮箱这里填写的是“客户端授权密码”而不是邮箱的登录密码！
+        $mail->SMTPSecure = "ssl";// 使用ssl协议方式
+        $mail->Port = $email_port;// 163邮箱的ssl协议方式端口号是465/994
+        //设置收件人信息及内容
+        $mail->setFrom($email_username,$email_from_name);// 设置发件人信息，如邮件格式说明中的发件人，这里会显示为Mailer(xxxx@163.com），Mailer是当做名字显示
+        if(is_array($address)){
+            foreach($address as $addressv){
+                $mail->AddAddress($addressv);
             }
-	    //$mail->addAddress($address);// 设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
-	    $mail->IsHTML(true);
-	    $mail->Subject = $subject;// 邮件标题
-	    $mail->Body = $body;// 邮件正文加签名
-	    $mail->Send();
-	}
+        }else{
+            $mail->AddAddress($address);
+        }
+        if($cc!=''){
+            if(is_array($cc)){
+                foreach($cc as $ccperson){
+                    $mail->addCC($ccperson);
+                }
+            }else{
+                $mail->addCC($cc);
+            }
+        }
+        //$mail->addAddress($address);// 设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+        $mail->IsHTML(true);
+        $mail->Subject = $subject;// 邮件标题
+        $mail->Body = $body;// 邮件正文加签名
+        $mail->Send();
+    }
 
 }
-	//实例化汇总信息推送
-	$mail = new MailPush();
-    //print_r($mail->result);
+//实例化汇总信息推送
+$mail = new MailPush();
+//print_r($mail->result);
 
 ?>
