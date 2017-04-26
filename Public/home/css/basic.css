@@ -187,8 +187,31 @@ input[readonly] {
 }
 
 
-
-
+/*** webuploader插件临时文件显示样式控制 ***/
+/*#upload-file-list .tmp-file-item {
+	padding: 5px 10px;
+	border: solid 1px #fff;
+	margin: 5px 0;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+#upload-file-list .tmp-file-item:hover {
+	border: solid 1px #ccc;
+}
+#upload-file-list .tmp-file-item .pull-left {
+	width: 96%;
+	overflow: hidden; !*自动隐藏文字*!
+	text-overflow: ellipsis;	!*文字隐藏后添加省略号*!
+	white-space: nowrap;	!*强制不换行*!
+}
+#upload-file-list .tmp-file-item .icon-remove {
+	color: #ccc;
+}
+#upload-file-list .tmp-file-item .icon-remove:hover {
+	color: #d9534f;
+	cursor: pointer;
+}*/
 
 
 

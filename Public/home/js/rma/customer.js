@@ -2,6 +2,7 @@
  * customer客诉处理页面js
  */
 
+
 $(function(){
 
 
@@ -227,6 +228,55 @@ $(function(){
 		});
 
 	});
+
+
+	//文件下载
+	$('a.download').click(function(){
+		$(this).parent().submit();
+	});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	$('.filter-btn').click(function(){

@@ -35,7 +35,7 @@ class LoginController extends Controller {
         $map['account'] = I('account');
         $map['password'] = sha1(I('password'));
         $result = $login->where($map)->select();
-        $userData = array('id'=>$result[0]['id'],'account'=>$result[0]['account'],'nickname'=>$result[0]['nickname'],'face'=>$result[0]['face']);
+        $userData = $result[0];
         if($result){
             //如果用户点击了一月免登陆则将登陆信息保存到cookie
             if(I('post.remember')){

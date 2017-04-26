@@ -170,6 +170,7 @@ class RMAController extends AuthController{
     //新增客诉
     public function add(){
         if(IS_POST){
+
             $post = I('post.');
             $pattern = array(
                 '/ /',//半角下空格
@@ -250,6 +251,12 @@ class RMAController extends AuthController{
         }else{
             //将用户列表注入模板，（FAE工程师选择）
             $user = M('User');
+
+            //如果不是销售部门人员访问该页面则提示错误
+            if( session('user')['department'] != 4 ){
+                $this->error('您没有权限访问该页面！');
+            }
+
             $vendor_brand_model = M('VendorBrand');
             $vendor_brand_data = $vendor_brand_model->order('brand ASC')->select();
             $this->assign('vendorBrand',$vendor_brand_data);

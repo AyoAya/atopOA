@@ -201,7 +201,32 @@ function generateOrderNumber($number=2){
 }
 
 /**
- * 文件上传类
+ * 文件上传类[新]
+ * @param $savePath
+ * @param $subName
+ * @return array|bool
+ */
+function UploadFile($savePath,$subName){
+    $upload = new \Think\Upload;
+    // 设置上传路径
+    $upload->savePath = $savePath;
+    // 限制上传文件大小为10mb
+    $upload->maxSize = 10485760;
+    // 开启子目录保存 并以指定参数为子目录
+    $upload->autoSub = true;
+    $upload->subName = $subName;
+    // 保持上传文件名不变
+    $upload->saveName = '';
+    // 存在同名文件是否是覆盖
+    $upload->replace = true;
+    // 上传并返回结果
+    $fileinfo = $upload->upload();
+    return $fileinfo;
+}
+
+
+/**
+ * 文件上传类[旧]
  * @param unknown $savePath
  * $savePath 定义文件上传路径(默认所有文件上传都在Uploads目录下,子目录需自定义)
  */

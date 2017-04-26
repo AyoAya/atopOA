@@ -45,8 +45,6 @@ class AuthController extends Controller {
         //检查权限
         $auth = new Auth();
         if(!$auth->check(MODULE_NAME.'/'.CONTROLLER_NAME.'/', session('user')['id'])){
-            //echo '<div style="width:170px;height:260px;background:url('.__ROOT__.'/Public/home/img/low_power.png) no-repeat;position:fixed;top:50%;left:50%;margin-left:-73.5px;margin-top:-150px;"><span onclick="history.back();" style="position:absolute;bottom:0;left:50%;width:66px;margin-left:-60px;cursor:pointer;padding:10px 20px;text-align:center;background:#777;color:#fff;border-radius:4px;"> 返回 </span></div>';
-            //exit;
             # 如果验证失败则将该信息注入模板
             $this->assign('PERMISSION_DENIED',true);
         }
@@ -175,5 +173,31 @@ class AuthController extends Controller {
 
     }
 
+    /**
+     * 文件下载类
+     */
+    public function download(){
+        if( IS_POST ){
+            //检测文件路径是否包含中文，如果存在中文则转换编码
+            if(preg_match("/[\x7f-\xff]/", '.'.I('post.filepath'))){
+                $filePath = iconv('UTF-8','GB2312', '.'.I('post.filepath'));
+            }else{
+                $filePath = '.'.I('post.filepath');
+            }
+            $fileName = getBasename(I('post.filepath'));
+            if( file_exists( substr($filePath,1) ) ){   //检测文件是否存在
+                //如果文件名包含中文则进行urlencode转码
+                if (preg_match("/[\x7f-\xff]/", $fileName)) {
+                    $fileName = urlencode($fileName);
+                }
+                //实例化thinkphp下载类
+                ob_end_clean();
+                $http = new \Org\Net\Http;
+                $http->download(substr($filePath,1),$fileName);
+            }else{
+                $this->error('文件不存在或已被删除');
+            }
+        }
+    }
 
 }

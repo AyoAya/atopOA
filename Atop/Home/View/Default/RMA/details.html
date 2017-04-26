@@ -204,7 +204,10 @@
 																<div class="attachment-box">
 																	<div class="attachment-box-dom">
 																		<p class="file-name">
-																			<a href="__ROOT__/{$v.filepath}"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
+																			<form action="__ROOT__/Auth/download" method="post">
+																				<input type="hidden" name="filepath" value="{$v.filepath}">
+																				<a class="download" style="cursor: pointer;"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
+																			</form>
 																		</p>
 																	</div>
 																</div>
