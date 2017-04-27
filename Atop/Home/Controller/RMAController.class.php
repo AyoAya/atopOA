@@ -678,7 +678,13 @@ class RMAController extends AuthController{
                                                         ->limit(2)
                                                         ->select();  //获取到上一个步骤*/
 
-                $step_result = $oacustomeroperaion_model->where( ['main_assoc'=>$post['id'],'step_assoc'=>($post['step']-1)] )->select()[0];
+                $step_result = M()->field('b.id,b.step_name')
+                                  ->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'oacustomerstep b')
+                                  ->where( 'a.main_assoc='.$post['cc_id'].' AND a.step_assoc<'.$post['step'].' AND a.step_assoc=b.id' )
+                                  ->group('b.id')
+                                  ->order('a.step_assoc DESC')
+                                  ->limit(1)
+                                  ->select()[0];
 
                 $logDataBak = $logData;
 
@@ -697,8 +703,8 @@ class RMAController extends AuthController{
                     $model->commit();
 
                     $emails = $this->GetInvolvedIn($post['cc_id']);
-                    $logDataBak['step_id'] = $step_result[1]['id'];
-                    $logDataBak['step_name'] = $step_result[1]['step_name'];
+                    $logDataBak['step_id'] = $step_result['id'];
+                    $logDataBak['step_name'] = $step_result['step_name'];
                     $this->pushEmail('FALLBACK',$emails,$logDataBak,$post['cc_id']);
 
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
