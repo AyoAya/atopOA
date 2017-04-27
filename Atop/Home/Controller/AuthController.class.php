@@ -184,7 +184,12 @@ class AuthController extends Controller {
             }else{
                 $filePath = '.'.I('post.filepath');
             }
-            $fileName = getBasename(I('post.filepath'));
+            //如果有提交文件名则用提交的文件名，没有则采用路径提取文件名
+            if( I('post.filename') != '' ){
+                $fileName = I('post.filename');
+            }else{
+                $fileName = getBasename(I('post.filepath'));
+            }
             if( file_exists( substr($filePath,1) ) ){   //检测文件是否存在
                 //如果文件名包含中文则进行urlencode转码
                 if (preg_match("/[\x7f-\xff]/", $fileName)) {

@@ -160,12 +160,6 @@
 		</div>
 	</div>
 
-	<!-- 图像展示 -->
-	<div id="picturePreview">
-		<div class="pictureContainer"></div>
-		<span class="closePreview" title="关闭"><i class="icon-remove icon-2x"></i></span>
-	</div>
-
 	<script>
 	$('.form_date').datetimepicker({
         language:  'zh-CN',
@@ -185,6 +179,14 @@
 </block>
 
 <block name="modals">
+
+
+	<!-- 图像展示 -->
+	<div id="picturePreview">
+		<div class="pictureContainer"></div>
+		<span class="closePreview" title="关闭"><i class="icon-remove icon-2x"></i></span>
+	</div>
+
 
 	<!-- 转为新版客诉模态框 -->
 	<eq name="Think.session.user.account" value="$details.salesperson">

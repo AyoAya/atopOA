@@ -18,6 +18,9 @@ a {
 	outline: none !important;
 	text-decoration: none !important;
 }
+a.download {
+	cursor: pointer;
+}
 p {
 	line-height: 24px;
 }
@@ -188,6 +191,31 @@ input[readonly] {
 
 
 /*** webuploader插件临时文件显示样式控制 ***/
+/*.uploader-file-queue .file-item {
+	padding: 6px 10px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+.uploader-file-queue .file-item .pull-left {
+	width: 95%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.uploader-file-queue .file-item:hover {
+	background: #f5f5f5;
+}
+.uploader-file-queue .file-item i.icon-remove {
+	color: #ccc;
+	cursor: pointer;
+}
+.uploader-file-queue .file-item i.icon-remove:hover {
+	color: #d9534f;
+}*/
+
+
 /*#upload-file-list .tmp-file-item {
 	padding: 5px 10px;
 	border: solid 1px #fff;

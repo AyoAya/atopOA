@@ -281,6 +281,12 @@ class RMAController extends AuthController{
         //获取当前id指定的客诉
         $resultData = $complaint->find(I('get.id'));
 
+        //如果当前访问客诉为老版客诉则直接跳转到老版客诉页面
+        if( $resultData['version'] != 'new' ){
+            $this->redirect(__ROOT__.'/Customer/details/id/'.I('get.id'));
+            exit;
+        }
+
         if( $resultData['rma_state'] == 'Y' && $resultData['assoc_close_reason'] != '' ) {   //如果客诉已关闭并且关闭原因不为空则将关闭原因注入模板
             $this->assign('RMACloseReason',M('Oacustomerclosereason')->find( $resultData['assoc_close_reason'] ) );
         }
@@ -315,6 +321,7 @@ class RMAController extends AuthController{
         $this->assign('maxStep',$max_step);
 
         # 获取到当前正在进行的步骤
+
         $oacustomeroperation_model_result = M()->field('a.now_step,b.operation_person')->table('atop_oacustomercomplaint a,atop_oacustomeroperation b')->where('a.now_step=b.step_assoc AND a.id='.I('get.id'))->order('b.id DESC')->limit(1)->select();
         /*$oacustomeroperation_model_result = $oacustomeroperation_model->where('main_assoc='.I('get.id'))->order('step_assoc DESC')->limit(1)->select();*/
 
@@ -345,17 +352,17 @@ class RMAController extends AuthController{
         //print_r($resultData);
 
         # 如果当前步骤为销售确认是否转RMA则将QA部门(品质部)人员列表注入模板
-        if( $resultData['now_step']['id'] == 3 || $resultData['now_step']['id'] == 4 ){
+        if( $resultData['now_step'] == 3 || $resultData['now_step'] == 4 ){
             $QA_list = M('User')->where( 'department=3 AND id<>'.session('user')['id'] )->select(); //获取到同部门且不包含自己的人员列表
             $this->assign('QAlist',$QA_list);
-        }elseif( $resultData['now_step']['id'] == 5 || $resultData['now_step']['id'] == 6 ){
+        }elseif( $resultData['now_step'] == 5 || $resultData['now_step'] == 6 ){
 
-            $prev_step_info = $oacustomeroperation_model->where( ['main_assoc'=>$resultData['id']] )->order('step_assoc DESC')->limit(2)->select();
+            $prev_step_info = $oacustomeroperation_model->where( ['main_assoc'=>$resultData['id'],'step_assoc'=>($resultData['now_step']-1)] )->select();
 
-
+            //print_r($prev_step_info);
 
             //如果当前步骤在可以回退则获取回退步骤列表
-            $oacustomeroperation_result = $prev_step_info[1];  //获取到上一个步骤节点
+            $oacustomeroperation_result = $prev_step_info[0];  //获取到上一个步骤节点
 
             if( strpos($oacustomeroperation_result['operation_person'],',') ){  //如果操作人id包含逗号说明有多个操作人
                 $in['id'] = ['in',$oacustomeroperation_result['operation_person']];
@@ -475,6 +482,15 @@ class RMAController extends AuthController{
 
         $this->display();
     }
+
+    public function upload(){
+        $subName = I('post.SUB_NAME');
+        // 如果需要按id为子目录则必须填写第二个参数，否则直接保存在当前目录
+        if( $subName != '' ){
+            $result = upload( '/RMA/', $subName );
+            $this->ajaxReturn( $result );
+        }
+    }
     
     //文件上传(客诉处理/客诉详情/添加客诉)
     public function uploadFile(){
@@ -484,7 +500,7 @@ class RMAController extends AuthController{
         }else{
             exit;
         }*/
-        $info = FileUpload('/CustomerComplaintAttachment/',1,1,'RMA_');
+        $info = FileUpload('/CustomerComplaintAttachment/',true,true,'RMA_');
         if( is_array( $info ) && !empty( $info ) ) {
             $oldname = $info['Filedata']['name'];
             $newname = $info['Filedata']['savename'];
@@ -554,6 +570,7 @@ class RMAController extends AuthController{
             if( $post['operation_type'] == 'X' ){ //如果操作类型为0则表示该操作为添加日志，如果不为0则表示推送到该步骤
 
                 $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
+
                 $add_id = $oacustomercomplaintlog_model->add($logData);
 
                 if( $add_id ){
@@ -569,6 +586,7 @@ class RMAController extends AuthController{
             }elseif( $post['operation_type'] == 'N' ){  //如果操作类型为N则表示将该客诉关闭并且不能继续往下推送
 
                 $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
+
                 $oacustomercomplaint_model = M('Oacustomercomplaint');
 
                 # 开启事务
@@ -653,23 +671,25 @@ class RMAController extends AuthController{
                 $add_id_1 = $model->table('atop_oacustomercomplaintlog')->add($logData);
                 //$step_result = $oacustomerstep_model->find($post['step']-1);  //获取到上一个步骤
 
-                $step_result = $oacustomeroperaion_model->field('b.id,b.step_name')
+                /*$step_result = $oacustomeroperaion_model->field('b.id,b.step_name')
                                                         ->table('atop_oacustomeroperation a,atop_oacustomerstep b')
                                                         ->where( 'a.main_assoc='.$post['cc_id'].' AND a.step_assoc=b.id' )
                                                         ->order('a.step_assoc DESC')
                                                         ->limit(2)
-                                                        ->select();  //获取到上一个步骤
+                                                        ->select();  //获取到上一个步骤*/
+
+                $step_result = $oacustomeroperaion_model->where( ['main_assoc'=>$post['id'],'step_assoc'=>($post['step']-1)] )->select()[0];
 
                 $logDataBak = $logData;
 
                 # 记录操作日志
-                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤回退到：Step'.$step_result[1]['id'].' - '.$step_result[1]['step_name'].'。';
+                $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤回退到：Step'.$step_result['id'].' - '.$step_result['step_name'].'。';
                 $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
                 $add_id_2 = $model->table('atop_oacustomercomplaintlog')->add($logData);
 
                 # 修改主表当前步骤
-                $save_id = $model->table('atop_oacustomercomplaint')->save( ['id'=>$post['cc_id'],'now_step'=>$step_result[1]['id']] );
+                $save_id = $model->table('atop_oacustomercomplaint')->save( ['id'=>$post['cc_id'],'now_step'=>$step_result['id']] );
 
                 //$delete_id = $model->table('atop_oacustomeroperation')->where( ['mian_assoc'=>$post['cc_id'],'step_assoc'=>$post['step']] )->delete();   //删除掉当前步骤即回退到上一个步骤
 

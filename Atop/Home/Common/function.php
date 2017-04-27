@@ -206,22 +206,35 @@ function generateOrderNumber($number=2){
  * @param $subName
  * @return array|bool
  */
-function UploadFile($savePath,$subName){
+function upload($savePath,$subName=''){
     $upload = new \Think\Upload;
     // 设置上传路径
     $upload->savePath = $savePath;
     // 限制上传文件大小为10mb
-    $upload->maxSize = 10485760;
+    //$upload->maxSize = 10485760;
     // 开启子目录保存 并以指定参数为子目录
-    $upload->autoSub = true;
-    $upload->subName = $subName;
+    if( $subName != '' ){
+        $upload->autoSub = true;
+        $upload->subName = $subName;
+    }
     // 保持上传文件名不变
     $upload->saveName = '';
     // 存在同名文件是否是覆盖
     $upload->replace = true;
     // 上传并返回结果
     $fileinfo = $upload->upload();
-    return $fileinfo;
+    if( $fileinfo ){
+        $path = './Uploads'.$fileinfo['Filedata']['savepath'].$fileinfo['Filedata']['savename'];
+        $name = $fileinfo['Filedata']['name'];
+        $savename = $fileinfo['Filedata']['savename'];
+        $ext = $fileinfo['Filedata']['ext'];
+        $mime = $fileinfo['Filedata']['type'];
+        $size = $fileinfo['Filedata']['size'];
+        $time = time();
+        return ['flag'=>1,'path'=>$path,'name'=>$name,'savename'=>$savename,'ext'=>$ext,'mime'=>$mime,'size'=>$size,'time'=>$time];
+    }else{
+        return ['flag'=>0,'msg'=>$upload->getError()];
+    }
 }
 
 
@@ -230,12 +243,19 @@ function UploadFile($savePath,$subName){
  * @param unknown $savePath
  * $savePath 定义文件上传路径(默认所有文件上传都在Uploads目录下,子目录需自定义)
  */
-function FileUpload($savePath,$rename=0,$autosub=1,$fix='face_'){
+function FileUpload($savePath,$rename=false,$autosub=true,$fix='face_'){
     $upload = new \Think\Upload;
     //限制上传文件大小为10mb
-    $upload->maxSize = 10485760;
+    //$upload->maxSize = 10485760;
     $upload->savePath = $savePath;
     //$upload->exts = array('','','','','','','');
+    if($rename){
+        //重新命名
+        $upload->saveName = $fix.uniqid().time();
+    }else{
+        //保留原文件名
+        $upload->saveName = '';
+    }
     //是否开启自动生成子目录
     if($autosub){
         $upload->autoSub = true;
@@ -244,13 +264,6 @@ function FileUpload($savePath,$rename=0,$autosub=1,$fix='face_'){
     }
     //存在同名文件是否是覆盖
     $upload->replace = true;
-    if($rename){
-        //重新命名
-        $upload->saveName = $fix.time();
-    }else{
-        //保留原文件名
-        $upload->saveName = '';
-    }
     $fileinfo = $upload->upload();
     if(!$fileinfo){
         return $upload->getError();

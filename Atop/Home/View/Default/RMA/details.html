@@ -205,9 +205,11 @@
 																	<div class="attachment-box-dom">
 																		<p class="file-name">
 																			<form action="__ROOT__/Auth/download" method="post">
+																				<input type="hidden" name="filename" value="{$v.filename}">
 																				<input type="hidden" name="filepath" value="{$v.filepath}">
-																				<a class="download" style="cursor: pointer;"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
+																				<a class="download"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
 																			</form>
+																			<!--<a href="__ROOT__/{$v.filepath}"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>-->
 																		</p>
 																	</div>
 																</div>
@@ -402,7 +404,7 @@
 									</present>
 
 									<div class="layui-form-item layui-form-text">
-										<textarea name="log_content" placeholder="请输入处理内容" class="layui-textarea"></textarea>
+										<textarea name="log_content" placeholder="请输入处理内容" lay-verify="required" class="layui-textarea"></textarea>
 									</div>
 									<div class="layui-inline">
 										<div class="layui-input-inline">
