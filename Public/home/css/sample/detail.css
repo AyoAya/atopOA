@@ -1,0 +1,42 @@
+/*重写layui规则*/
+.layui-colla-title {
+	padding-left: 15px;
+	cursor: default;
+}
+.layui-colla-content {
+	min-height: 63px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+.sample-main-left {
+	padding-right: 5px;
+}
+.sample-main-right {
+	padding-left: 5px;
+}
+/* .file-item {
+	margin-bottom: 10px;
+}
+.file-item:last-child {
+	margin-bottom: 0;
+}; */
+
+/*附件列表*/
+.layui-colla-content .file-item {
+	width: 50%;
+	padding: 0;
+}
+.layui-colla-content .file-item .file-info {
+	padding-right: 15px;
+	white-space: nowrap; 
+	overflow: hidden; 
+	text-overflow: ellipsis;
+}
+.last-row {
+	margin-top: 10px;
+}
+
+
+.step-container {
+	margin-bottom: 25px;
+}

@@ -25,14 +25,15 @@
 		<!--<a href="__ROOT__/sampleChart" class="layui-btn layui-btn-primary">
 			<span class="glyphicon glyphicon-th"></span> 样品统计
 		</a>-->
-		<eq name="department.department" value="4">
-			<a href="__ROOT__/Sample/sample" class="layui-btn layui-btn-primary">
+		<eq name="Think.session.user.department" value="4">
+			<a href="__ROOT__/Sample/add" class="layui-btn layui-btn-primary">
 				<span class="glyphicon glyphicon-plus"></span> 我要下单
 			</a>
 		</eq>
 		<present name="search">
 			<a href="__ROOT__/Sample" class="layui-btn layui-btn-danger clear-condition">清除条件</a>
 		</present>
+
 	</div>
 
 
@@ -47,32 +48,33 @@
 
 
 
-	<volist name="newResult" id="value" empty="$empty">
+	<volist name="sampleResult" id="value" empty="$empty">
+
 		<div class="col-lg-4">
 			<div class="order-box">
 				<present name="value.color">
-					<div class="order-heading" style="background: {$value.color};">
+					<div class="order-heading" style="background:{$value.color};">
 				<else/>
 					<div class="order-heading" style="background: {$value.label};">
 				</present>
 					<span>
-						<a href="__ROOT__/Sample?search={$value.nickname}"><img src="{$value.face}" alt="..." class="saleorder-face"></a>
-						<p>{$value.nickname}</p>
-						<p>{$value.createtime|date="Y-m-d",###}</p>
+						<a href="__ROOT__/Sample?search={$value.nickname}"><img src="{$value.u.0.face}" alt="..." class="saleorder-face"></a>
+						<p>{$value.create_person_name}</p>
+						<p>{$value.create_time|date="Y-m-d",###}</p>
 					</span>
 					<div>
-						<h4><a href="__ROOT__/Sample/overview/order/{$value.totalorder}">{$value.totalorder}</a></h4>
+						<h4><a href="__ROOT__/Sample/overview/id/{$value.id}">{$value.order_num}</a></h4>
 					</div>
 				</div>
 				<div class="order-body">
 					<if condition="$value.total lt 2">
-						<p>{$value.child.0.type} | {$value.child.0.product}</p>
+						<p>{$value.child.0.model} | {$value.child.0.brand}</p>
 					<elseif condition="$value.total elt 2"/>
-						<p>{$value.child.0.type} | {$value.child.0.product}</p>
-						<p>{$value.child.1.type} | {$value.child.1.product}</p>
+						<p>{$value.child.0.model} | {$value.child.0.brand}</p>
+						<p>{$value.child.1.model} | {$value.child.1.brand}</p>
 					<else/>
-						<p>{$value.child.0.type} | {$value.child.0.product}</p>
-						<p>{$value.child.1.type} | {$value.child.1.product}</p>
+						<p>{$value.child.0.model} | {$value.child.0.brand}</p>
+						<p>{$value.child.1.model} | {$value.child.1.brand}</p>
 						<p>等{$value.total}个产品</p>
 					</if>
 				</div>

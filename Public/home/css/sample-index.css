@@ -3,6 +3,7 @@
 .search-box {
 	width: 300px;
 	position: relative;
+	right: 20px;
 }
 .search-box .search-btn {
 	position: absolute;

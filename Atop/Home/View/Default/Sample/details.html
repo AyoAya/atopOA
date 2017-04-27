@@ -130,7 +130,7 @@
                 <tbody>
                 <tr>
 					<td class="<eq name='sample.color' value='0'>do</eq><eq name='sample.color' value='2'>no</eq><eq name='sample.color' value='3'>yes</eq>"><span>{$sample.state}</span></td>
-                    <td><a href="__ROOT__/Sample/overview/order/{$sample.totalorder}">{$sample.totalorder}</a></td>
+                    <td><a href="__ROOT__/sampleOverview/{$sample.totalorder}">{$sample.totalorder}</a></td>
                     <td>{$sample.type}</td>
                     <td>{$sample.product}</td>
                     <td>{$sample.manager}</td>
@@ -555,7 +555,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">最新日志<a href="__ROOT__/Sample/log/order/{$sample.order}" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
+								<h4 class="panel-title">最新日志<a href="__ROOT__/sampleLog/{$sample.order}" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
 							</div>
 							<div class="panel-body panel-body-min-height">
 								<div>
@@ -588,7 +588,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">最新日志<a href="__ROOT__/Sample/log/order/{$sample.order}" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
+								<h4 class="panel-title">最新日志<a href="__ROOT__/sampleLog/{$sample.order}" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
 							</div>
 							<div class="panel-body panel-body-min-height">
 								<div>
@@ -621,7 +621,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">最新日志<a href="__ROOT__/Sample/log/order/{$sample.order}" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
+								<h4 class="panel-title">最新日志<a href="__ROOT__/sampleLog/{$sample.order}" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
 							</div>
 							<div class="panel-body panel-body-min-height">
 								<div>
@@ -654,7 +654,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">最新日志<a href="__ROOT__/Sample/log/order/{$sample.order}" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
+								<h4 class="panel-title">最新日志<a href="__ROOT__/sampleLog/{$sample.order}" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
 							</div>
 							<div class="panel-body panel-body-min-height">
 								<div>
@@ -687,7 +687,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">最新日志<a href="__ROOT__/Sample/log/order/{$sample.order}" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
+								<h4 class="panel-title">最新日志<a href="__ROOT__/sampleLog/{$sample.order}" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
 							</div>
 							<div class="panel-body panel-body-min-height">
 								<div>
@@ -720,7 +720,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">最新日志<a href="__ROOT__/Sample/log/order/{$sample.order}" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
+								<h4 class="panel-title">最新日志<a href="__ROOT__/sampleLog/{$sample.order}" class="pull-right alllog"><i class="icon-bookmark-empty">&nbsp;</i>所有日志</a></h4>
 							</div>
 							<div class="panel-body panel-body-min-height">
 								<div>
@@ -754,7 +754,7 @@
 					<div class="col-lg-6 col-align">
 						<div class="panel panel-default">
 							<div class="panel-heading">
-								<h4 class="panel-title">物流信息<a class="alllog pull-right" href="__ROOT__/Sample/logistics/order/{$sample.order}"><i class="icon-truck">&nbsp;</i>物流状态</a></h4>
+								<h4 class="panel-title">物流信息<a class="alllog pull-right" href="__ROOT__/sampleLogistics/{$sample.order}"><i class="icon-truck">&nbsp;</i>物流状态</a></h4>
 							</div>
 							<div class="panel-body">
 								<p>
@@ -769,7 +769,7 @@
 										<case value="zhongtong">中通速递</case>
 									</switch>
 									<span class="awb">
-										运单号：<a href="__ROOT__/Sample/logistics/order/{$sample.order}">{$sample.awb}</a>
+										运单号：<a href="__ROOT__/sampleLogistics/{$sample.order}">{$sample.awb}</a>
 									</span>
 								</p>
 							</div>
@@ -920,6 +920,481 @@
             </eq>
         </eq>
 
+		<!-- 审核 -->
+		<eq name="sample.aid" value="$Think.session.user.id">
+			<if condition="$sample.s_status eq 0 || $sample.s_status eq '' || $sample.s_status eq 3">
+				<div id="audit" class="auditContainer">
+					<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="audit-modal">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+									<h4 class="modal-title">审核</h4>
+								</div>
+								<div class="modal-body">
+									<form class="sampleAid form-inline" role="form">
+										<div class="form-group">
+											<label>状态</label>
+											<div class="btn-group">
+												<button type="button" class="btn btn-default stateText">通过</button>
+												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu state" role="menu">
+													<li state="1"><a href="javascript:void(0);">通过</a></li>
+													<li state="2"><a href="javascript:void(0);">拒绝</a></li>
+													<li state="3"><a href="javascript:void(0);">添加日志</a></li>
+												</ul>
+											</div>
+											<div class="help-block product-engineer-tip">&nbsp;</div>
+										</div>　
+										<div class="form-group productEngineerContainer">
+											<label>物料准备</label>
+											<div class="input-group">
+												<input type="text" name="approval" value="" class="form-control approval min-approval material-default-value" readonly>
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-default" data-toggle="modal" data-target="#ProductEngineer">选择</button>
+												</span>
+											</div>
+											<div class="help-block product-engineer-tip">&nbsp;</div>
+										</div>　
+										<div class="form-group">
+											<label>预计交期</label>
+											<input type="text" name="e_date" value="<empty name='sample.e_date'>{$sample.d_date}<else/>{$sample.e_date}</empty>" class="form-control e-date" readonly>
+											<div class="help-block product-engineer-tip">&nbsp;</div>
+										</div>
+										<div class="clearfix"></div>
+										<div class="form-group">
+											<textarea class="form-control textarea" name="comment"></textarea>
+										</div>
+										<div class="clearfix"></div>
+										<div class="form-group">
+											<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
+										</div>
+										<input type="hidden" name="status" value="1" class="status">
+										<input type="hidden" name="wid" value="" class="cid material-hidden-value">
+										<input type="hidden" name="assoc" value="{$sample.id}">
+										<input type="hidden" name="total_order" value="{$sample.totalorder}">
+										<input type="hidden" name="product" value="{$sample.product}">
+										<input type="hidden" name="order" value="{$sample.order}">
+										<input type="hidden" name="uid" value="{$sample.uid}">
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--选择计划专员模态框-->
+					<div class="modal fade bs-example-modal-lg" id="ProductEngineer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-lg">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel">选择计划专员</h4>
+								</div>
+								<div class="modal-body">
+									<ul class="user-select-box material-user-list">
+										<volist name="users" id="value">
+											<!--不显示超级管理员-->
+											<if condition="$value.department eq 5">
+												<li index="{$value.id}">{$value.nickname}</li>
+											</if>
+										</volist>
+									</ul>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</if>
+		</eq>
+
+		<!-- 物料准备 -->
+		<eq name="sample.w_id" value="$Think.session.user.id">
+			<if condition="$sample.w_status eq 0 || $sample.w_status eq '' || $sample.w_status eq 3">
+				<div id="audit" class="auditContainer">
+					<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="material-modal">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+									<h4 class="modal-title">物料准备</h4>
+								</div>
+								<div class="modal-body">
+									<form class="sampleWid form-inline" role="form">
+										<div class="form-group">
+											<label>状态</label>
+											<div class="btn-group">
+												<button type="button" class="btn btn-default stateText">已完成</button>
+												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu state" role="menu">
+													<li state="1"><a href="javascript:void(0);">已完成</a></li>
+													<li state="2"><a href="javascript:void(0);">未完成</a></li>
+													<li state="3"><a href="javascript:void(0);">添加日志</a></li>
+												</ul>
+											</div>
+											<div class="help-block product-engineer-tip">&nbsp;</div>
+										</div>　
+										<div class="form-group productEngineerContainer">
+											<label>样品制作</label>
+											<input type="text" name="approval" value="{$sample.a_name}" class="form-control approval min-approval" readonly>
+											<div class="help-block product-engineer-tip">&nbsp;</div>
+										</div>　
+										<div class="form-group">
+											<label>预计交期</label>
+											<input type="text" name="e_date" value="<empty name='sample.e_date'>{$sample.d_date}<else/>{$sample.e_date}</empty>" class="form-control e-date" readonly>
+											<div class="help-block product-engineer-tip">&nbsp;</div>
+										</div>
+										<div class="clearfix"></div>
+										<div class="form-group">
+											<textarea class="form-control textarea" name="comment"></textarea>
+										</div>
+										<div class="clearfix"></div>
+										<div class="form-group">
+											<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
+										</div>
+										<input type="hidden" name="status" value="1" class="status">
+										<input type="hidden" name="cid" value="{$sample.aid}" class="cid">
+										<input type="hidden" name="assoc" value="{$sample.id}">
+										<input type="hidden" name="total_order" value="{$sample.totalorder}">
+										<input type="hidden" name="product" value="{$sample.product}">
+										<input type="hidden" name="order" value="{$sample.order}">
+										<input type="hidden" name="uid" value="{$sample.uid}">
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--选择产品工程师模态框-->
+					<!--<div class="modal fade bs-example-modal-lg" id="ProductEngineer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-lg">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel">选择产品工程师</h4>
+								</div>
+								<div class="modal-body">
+									<ul class="user-select-box">
+										<volist name="users" id="value">
+											&lt;!&ndash;不显示超级管理员&ndash;&gt;
+											<if condition="$value.id eq $_SESSION['user']['id'] || $value.account neq 'admin' && $value.report eq $_SESSION['user']['id']">
+												<li index="{$value.id}">{$value.nickname}</li>
+											</if>
+										</volist>
+									</ul>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+								</div>
+							</div>
+						</div>
+					</div>-->
+				</div>
+			</if>
+		</eq>
+
+		<!-- 样品制作 -->
+		<eq name="sample.c_id" value="$Think.session.user.id">
+			<if condition="$sample.c_status eq 0 || $sample.c_status eq '' || $sample.c_status eq 3">
+				<div id="audit" class="auditContainer">
+					<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="productEngineer-modal">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+									<h4 class="modal-title">样品制作</h4>
+								</div>
+								<div class="modal-body">
+									<form class="sampleCid form-inline" role="form">
+										<div class="form-group">
+											<label>状态</label>
+											<div class="btn-group">
+												<button type="button" class="btn btn-default stateText">已完成</button>
+												<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+													<span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu state" role="menu">
+													<li state="1"><a href="javascript:void(0);">已完成</a></li>
+													<li state="2"><a href="javascript:void(0);">无法完成</a></li>
+													<li state="3"><a href="javascript:void(0);">制作中</a></li>
+												</ul>
+											</div>
+											<div class="help-block product-engineer-tip">&nbsp;</div>
+										</div>　
+										<div class="form-group productEngineerContainer">
+											<label>样品测试</label>
+											<div class="input-group">
+												<input type="text" name="approval" value="" class="form-control approval min-approval" readonly>
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-default" data-toggle="modal" data-target="#ProductEngineer">选择</button>
+												</span>
+											</div>
+											<div class="help-block product-engineer-tip">&nbsp;</div>
+										</div>　
+										<div class="form-group">
+											<label>预计交期</label>
+											<input type="text" name="e_date" value="<empty name='sample.e_date'>{$sample.d_date}<else/>{$sample.e_date}</empty>" class="form-control e-date" readonly>
+											<div class="help-block product-engineer-tip">&nbsp;</div>
+										</div>
+										<div class="clearfix"></div>
+										<div class="form-group">
+											<textarea class="form-control textarea" name="comment"></textarea>
+										</div>
+										<div class="clearfix"></div>
+										<div class="form-group">
+											<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
+										</div>
+										<input type="hidden" name="status" value="1" class="status">
+										<input type="hidden" name="cid" value="" class="cid">
+										<input type="hidden" name="assoc" value="{$sample.id}">
+										<input type="hidden" name="total_order" value="{$sample.totalorder}">
+										<input type="hidden" name="product" value="{$sample.product}">
+										<input type="hidden" name="order" value="{$sample.order}">
+										<input type="hidden" name="uid" value="{$sample.uid}">
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!--选择产品工程师模态框-->
+					<div class="modal fade bs-example-modal-lg" id="ProductEngineer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog modal-lg">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel">测试工程师</h4>
+								</div>
+								<div class="modal-body">
+									<ul class="user-select-box">
+										<volist name="users" id="value">
+											<!--不显示超级管理员及自身-->
+											<if condition="$value.account neq 'admin' && $value.position eq 11">
+												<li index="{$value.id}">{$value.nickname}</li>
+											</if>
+										</volist>
+									</ul>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</if>
+		</eq>
+
+        <!-- 样品测试 -->
+        <eq name="sample.y_id" value="$Think.session.user.id">
+            <if condition="$sample.y_status eq 0 || $sample.y_status eq '' || $sample.y_status eq 3">
+                <div class="auditContainer">
+                    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="testEngineer-modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title">样品测试</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="sampleYid form-inline" role="form">
+                                        <div class="form-group">
+                                            <label>状态</label>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default stateText">通过</button>
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu state" role="menu">
+                                                    <li state="1"><a href="javascript:void(0);">通过</a></li>
+                                                    <li state="2"><a href="javascript:void(0);">未通过</a></li>
+                                                    <li state="3"><a href="javascript:void(0);">添加日志</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="help-block product-engineer-tip">&nbsp;</div>
+                                        </div>　
+										<div class="form-group">
+											<label>预计交期</label>
+											<input type="text" name="e_date" value="<empty name='sample.e_date'>{$sample.d_date}<else/>{$sample.e_date}</empty>" class="form-control e-date" readonly>
+											<div class="help-block product-engineer-tip">&nbsp;</div>
+										</div>　
+                                        <div class="clearfix"></div>
+                                        <div class="form-group textarea-form-group">
+                                            <textarea class="form-control textarea" name="comment"></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <input type="submit" class="btn btn-primary btn-lg doneBtn margin-doneBtn" value="确定">
+                                        </div>
+                                        <input type="hidden" name="status" value="1" class="status">
+                                        <input type="hidden" name="cid" value="{$sample.aid}" class="cid">
+                                        <input type="hidden" name="assoc" value="{$sample.id}">
+                                        <input type="hidden" name="total_order" value="{$sample.totalorder}">
+                                        <input type="hidden" name="product" value="{$sample.product}">
+                                        <input type="hidden" name="order" value="{$sample.order}">
+                                        <input type="hidden" name="uid" value="{$sample.uid}">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </if>
+        </eq>
+
+        <!-- 发货 -->
+        <eq name="sample.f_id" value="$Think.session.user.id">
+            <if condition="$sample.f_status eq 0 || $sample.f_status eq '' || $sample.f_status eq 3">
+                <div class="auditContainer">
+                    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="delivery-modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title">发货</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="sampleFid form-inline" role="form">
+                                        <div class="form-group">
+                                            <label>状态</label>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default stateText">已发货</button>
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu state" role="menu">
+                                                    <li state="1"><a href="javascript:void(0);">已发货</a></li>
+                                                    <li state="2"><a href="javascript:void(0);">未发货</a></li>
+                                                    <li state="3"><a href="javascript:void(0);">添加日志</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="help-block product-engineer-tip">&nbsp;</div>
+                                        </div>　
+                                        <div class="form-group form-group-logistics">
+                                            <label>物流</label>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default logistics-name">顺丰物流</button>
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <ul class="dropdown-menu logistics-list" role="menu">
+                                                    <li logistics="shunfeng"><a href="javascript:void(0);">顺丰物流</a></li>
+                                                    <li logistics="dhl"><a href="javascript:void(0);">DHL</a></li>
+                                                    <li logistics="fedex"><a href="javascript:void(0);">FedEx</a></li>
+                                                    <li logistics="ups"><a href="javascript:void(0);">UPS</a></li>
+                                                    <li logistics="shentong"><a href="javascript:void(0);">申通快递</a></li>
+                                                    <li logistics="yuantong"><a href="javascript:void(0);">圆通速递</a></li>
+                                                    <li logistics="zhongtong"><a href="javascript:void(0);">中通速递</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="help-block logistics-tip">&nbsp;</div>
+                                        </div>　
+                                        <div class="form-group productEngineerContainer">
+                                            <label>运单号</label>
+                                            <input type="text" name="approval" value="" class="form-control approval">
+                                            <div class="help-block product-engineer-tip logistics-tip">&nbsp;</div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="form-group">
+                                            <textarea class="form-control textarea" name="comment"></textarea>
+                                        </div>
+										<div class="clearfix"></div>
+										<div class="form-group form-group-upload-btn">
+											<!--<input type="file" name="testReport[]" id="testReport">-->
+											<div id="testReport"></div>
+											<div class="test-report-file-info"></div>
+										</div>
+										<hr />
+                                        <div class="clearfix"></div>
+                                        <div class="form-group">
+                                            <input type="submit" class="btn btn-primary btn-lg doneBtn margin-doneBtn" value="确定">
+                                        </div>
+                                        <input type="hidden" name="status" value="1" class="status">
+                                        <input type="hidden" name="cid" value="{$sample.uid}" class="cid">
+                                        <input type="hidden" name="logistics" value="shunfeng" class="logistics-code">
+                                        <input type="hidden" name="assoc" value="{$sample.id}">
+                                        <input type="hidden" name="total_order" value="{$sample.totalorder}">
+                                        <input type="hidden" name="product" value="{$sample.product}">
+                                        <input type="hidden" name="order" value="{$sample.order}">
+                                        <input type="hidden" name="uid" value="{$sample.uid}">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </if>
+        </eq>
+
+        <!-- 反馈 -->
+        <eq name="sample.k_id" value="$Think.session.user.id">
+            <if condition="$sample.k_status eq 0 || $sample.k_status eq '' || $sample.k_status eq 3">
+                <div class="auditContainer">
+                    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="feedback-modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title">反馈</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="sampleKid form-inline" role="form">
+                                        <div class="form-group">
+                                            <label>状态</label>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-default stateText">已通过</button>
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu state" role="menu">
+                                                    <li state="1"><a href="javascript:void(0);">已通过</a></li>
+                                                    <li state="2"><a href="javascript:void(0);">未通过</a></li>
+                                                    <li state="3"><a href="javascript:void(0);">添加日志</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="help-block product-engineer-tip">&nbsp;</div>
+                                        </div>　
+                                        <div class="clearfix"></div>
+                                        <div class="form-group">
+                                            <textarea class="form-control textarea" name="comment"></textarea>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="form-group">
+                                            <input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
+                                        </div>
+                                        <input type="hidden" name="status" value="1" class="status">
+                                        <input type="hidden" name="cid" value="{$sample.aid}" class="cid">
+                                        <input type="hidden" name="assoc" value="{$sample.id}">
+                                        <input type="hidden" name="total_order" value="{$sample.totalorder}">
+                                        <input type="hidden" name="product" value="{$sample.product}">
+                                        <input type="hidden" name="order" value="{$sample.order}">
+                                        <input type="hidden" name="uid" value="{$sample.uid}">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </if>
+        </eq>
+
+		<!-- 消息提示模态框 -->
+		<div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-body" id="message-modal-text">
+						<p class="modal-message modal-message-success"><i class="icon-ok-sign icon-2x modal-icon-success"></i><span class="message-text">成功后的信息</span></p>
+						<p class="modal-message modal-message-error"><i class="icon-remove-sign icon-2x modal-icon-error"></i><span class="message-text">失败后的信息</span></p>
+						<p class="modal-message modal-message-info"><i class="icon-info-sign icon-2x modal-icon-info"></i><span class="message-text">错误的信息</span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<!-- loading -->
 		<div class="loading-modal sr-only" id="loading">
 			<div class="loading-icon">
@@ -951,484 +1426,7 @@
 </block>
 
 
-<block name="modals">
 
-	<!-- 审核 -->
-	<eq name="sample.aid" value="$Think.session.user.id">
-		<if condition="$sample.s_status eq 0 || $sample.s_status eq '' || $sample.s_status eq 3">
-			<div id="audit" class="auditContainer">
-				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="audit-modal">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-								<h4 class="modal-title">审核</h4>
-							</div>
-							<div class="modal-body">
-								<form class="sampleAid form-inline" role="form">
-									<div class="form-group">
-										<label>状态</label>
-										<div class="btn-group">
-											<button type="button" class="btn btn-default stateText">通过</button>
-											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-												<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu state" role="menu">
-												<li state="1"><a href="javascript:void(0);">通过</a></li>
-												<li state="2"><a href="javascript:void(0);">拒绝</a></li>
-												<li state="3"><a href="javascript:void(0);">添加日志</a></li>
-											</ul>
-										</div>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>　
-									<div class="form-group productEngineerContainer">
-										<label>物料准备</label>
-										<div class="input-group">
-											<input type="text" name="approval" value="" class="form-control approval min-approval material-default-value" readonly>
-											<span class="input-group-btn">
-													<button type="button" class="btn btn-default" data-toggle="modal" data-target="#ProductEngineer">选择</button>
-												</span>
-										</div>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>　
-									<div class="form-group">
-										<label>预计交期</label>
-										<input type="text" name="e_date" value="<empty name='sample.e_date'>{$sample.d_date}<else/>{$sample.e_date}</empty>" class="form-control e-date" readonly>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<textarea class="form-control textarea" name="comment"></textarea>
-									</div>
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
-									</div>
-									<input type="hidden" name="status" value="1" class="status">
-									<input type="hidden" name="wid" value="" class="cid material-hidden-value">
-									<input type="hidden" name="assoc" value="{$sample.id}">
-									<input type="hidden" name="total_order" value="{$sample.totalorder}">
-									<input type="hidden" name="product" value="{$sample.product}">
-									<input type="hidden" name="order" value="{$sample.order}">
-									<input type="hidden" name="uid" value="{$sample.uid}">
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--选择计划专员模态框-->
-				<div class="modal fade bs-example-modal-lg" id="ProductEngineer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-					<div class="modal-dialog modal-lg">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-								<h4 class="modal-title" id="myModalLabel">选择计划专员</h4>
-							</div>
-							<div class="modal-body">
-								<ul class="user-select-box material-user-list">
-									<volist name="users" id="value">
-										<!--不显示超级管理员-->
-										<if condition="$value.department eq 5">
-											<li index="{$value.id}">{$value.nickname}</li>
-										</if>
-									</volist>
-								</ul>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</if>
-	</eq>
-
-	<!-- 物料准备 -->
-	<eq name="sample.w_id" value="$Think.session.user.id">
-		<if condition="$sample.w_status eq 0 || $sample.w_status eq '' || $sample.w_status eq 3">
-			<div id="audit" class="auditContainer">
-				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="material-modal">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-								<h4 class="modal-title">物料准备</h4>
-							</div>
-							<div class="modal-body">
-								<form class="sampleWid form-inline" role="form">
-									<div class="form-group">
-										<label>状态</label>
-										<div class="btn-group">
-											<button type="button" class="btn btn-default stateText">已完成</button>
-											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-												<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu state" role="menu">
-												<li state="1"><a href="javascript:void(0);">已完成</a></li>
-												<li state="2"><a href="javascript:void(0);">未完成</a></li>
-												<li state="3"><a href="javascript:void(0);">添加日志</a></li>
-											</ul>
-										</div>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>　
-									<div class="form-group productEngineerContainer">
-										<label>样品制作</label>
-										<input type="text" name="approval" value="{$sample.a_name}" class="form-control approval min-approval" readonly>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>　
-									<div class="form-group">
-										<label>预计交期</label>
-										<input type="text" name="e_date" value="<empty name='sample.e_date'>{$sample.d_date}<else/>{$sample.e_date}</empty>" class="form-control e-date" readonly>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<textarea class="form-control textarea" name="comment"></textarea>
-									</div>
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
-									</div>
-									<input type="hidden" name="status" value="1" class="status">
-									<input type="hidden" name="cid" value="{$sample.aid}" class="cid">
-									<input type="hidden" name="assoc" value="{$sample.id}">
-									<input type="hidden" name="total_order" value="{$sample.totalorder}">
-									<input type="hidden" name="product" value="{$sample.product}">
-									<input type="hidden" name="order" value="{$sample.order}">
-									<input type="hidden" name="uid" value="{$sample.uid}">
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--选择产品工程师模态框-->
-				<!--<div class="modal fade bs-example-modal-lg" id="ProductEngineer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="myModalLabel">选择产品工程师</h4>
-                            </div>
-                            <div class="modal-body">
-                                <ul class="user-select-box">
-                                    <volist name="users" id="value">
-                                        &lt;!&ndash;不显示超级管理员&ndash;&gt;
-                                        <if condition="$value.id eq $_SESSION['user']['id'] || $value.account neq 'admin' && $value.report eq $_SESSION['user']['id']">
-                                            <li index="{$value.id}">{$value.nickname}</li>
-                                        </if>
-                                    </volist>
-                                </ul>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
-			</div>
-		</if>
-	</eq>
-
-	<!-- 样品制作 -->
-	<eq name="sample.c_id" value="$Think.session.user.id">
-		<if condition="$sample.c_status eq 0 || $sample.c_status eq '' || $sample.c_status eq 3">
-			<div id="audit" class="auditContainer">
-				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="productEngineer-modal">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-								<h4 class="modal-title">样品制作</h4>
-							</div>
-							<div class="modal-body">
-								<form class="sampleCid form-inline" role="form">
-									<div class="form-group">
-										<label>状态</label>
-										<div class="btn-group">
-											<button type="button" class="btn btn-default stateText">已完成</button>
-											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-												<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu state" role="menu">
-												<li state="1"><a href="javascript:void(0);">已完成</a></li>
-												<li state="2"><a href="javascript:void(0);">无法完成</a></li>
-												<li state="3"><a href="javascript:void(0);">制作中</a></li>
-											</ul>
-										</div>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>　
-									<div class="form-group productEngineerContainer">
-										<label>样品测试</label>
-										<div class="input-group">
-											<input type="text" name="approval" value="" class="form-control approval min-approval" readonly>
-											<span class="input-group-btn">
-													<button type="button" class="btn btn-default" data-toggle="modal" data-target="#ProductEngineer">选择</button>
-												</span>
-										</div>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>　
-									<div class="form-group">
-										<label>预计交期</label>
-										<input type="text" name="e_date" value="<empty name='sample.e_date'>{$sample.d_date}<else/>{$sample.e_date}</empty>" class="form-control e-date" readonly>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<textarea class="form-control textarea" name="comment"></textarea>
-									</div>
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
-									</div>
-									<input type="hidden" name="status" value="1" class="status">
-									<input type="hidden" name="cid" value="" class="cid">
-									<input type="hidden" name="assoc" value="{$sample.id}">
-									<input type="hidden" name="total_order" value="{$sample.totalorder}">
-									<input type="hidden" name="product" value="{$sample.product}">
-									<input type="hidden" name="order" value="{$sample.order}">
-									<input type="hidden" name="uid" value="{$sample.uid}">
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--选择产品工程师模态框-->
-				<div class="modal fade bs-example-modal-lg" id="ProductEngineer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-					<div class="modal-dialog modal-lg">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-								<h4 class="modal-title" id="myModalLabel">测试工程师</h4>
-							</div>
-							<div class="modal-body">
-								<ul class="user-select-box">
-									<volist name="users" id="value">
-										<!--不显示超级管理员及自身-->
-										<if condition="$value.account neq 'admin' && $value.position eq 11">
-											<li index="{$value.id}">{$value.nickname}</li>
-										</if>
-									</volist>
-								</ul>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</if>
-	</eq>
-
-	<!-- 样品测试 -->
-	<eq name="sample.y_id" value="$Think.session.user.id">
-		<if condition="$sample.y_status eq 0 || $sample.y_status eq '' || $sample.y_status eq 3">
-			<div class="auditContainer">
-				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="testEngineer-modal">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-								<h4 class="modal-title">样品测试</h4>
-							</div>
-							<div class="modal-body">
-								<form class="sampleYid form-inline" role="form">
-									<div class="form-group">
-										<label>状态</label>
-										<div class="btn-group">
-											<button type="button" class="btn btn-default stateText">通过</button>
-											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-												<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu state" role="menu">
-												<li state="1"><a href="javascript:void(0);">通过</a></li>
-												<li state="2"><a href="javascript:void(0);">未通过</a></li>
-												<li state="3"><a href="javascript:void(0);">添加日志</a></li>
-											</ul>
-										</div>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>　
-									<div class="form-group">
-										<label>预计交期</label>
-										<input type="text" name="e_date" value="<empty name='sample.e_date'>{$sample.d_date}<else/>{$sample.e_date}</empty>" class="form-control e-date" readonly>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>　
-									<div class="clearfix"></div>
-									<div class="form-group textarea-form-group">
-										<textarea class="form-control textarea" name="comment"></textarea>
-									</div>
-
-									<div class="form-group">
-										<input type="submit" class="btn btn-primary btn-lg doneBtn margin-doneBtn" value="确定">
-									</div>
-									<input type="hidden" name="status" value="1" class="status">
-									<input type="hidden" name="cid" value="{$sample.aid}" class="cid">
-									<input type="hidden" name="assoc" value="{$sample.id}">
-									<input type="hidden" name="total_order" value="{$sample.totalorder}">
-									<input type="hidden" name="product" value="{$sample.product}">
-									<input type="hidden" name="order" value="{$sample.order}">
-									<input type="hidden" name="uid" value="{$sample.uid}">
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</if>
-	</eq>
-
-	<!-- 发货 -->
-	<eq name="sample.f_id" value="$Think.session.user.id">
-		<if condition="$sample.f_status eq 0 || $sample.f_status eq '' || $sample.f_status eq 3">
-			<div class="auditContainer">
-				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="delivery-modal">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-								<h4 class="modal-title">发货</h4>
-							</div>
-							<div class="modal-body">
-								<form class="sampleFid form-inline" role="form">
-									<div class="form-group">
-										<label>状态</label>
-										<div class="btn-group">
-											<button type="button" class="btn btn-default stateText">已发货</button>
-											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-												<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu state" role="menu">
-												<li state="1"><a href="javascript:void(0);">已发货</a></li>
-												<li state="2"><a href="javascript:void(0);">未发货</a></li>
-												<li state="3"><a href="javascript:void(0);">添加日志</a></li>
-											</ul>
-										</div>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>　
-									<div class="form-group form-group-logistics">
-										<label>物流</label>
-										<div class="btn-group">
-											<button type="button" class="btn btn-default logistics-name">顺丰物流</button>
-											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-												<span class="caret"></span>
-												<span class="sr-only">Toggle Dropdown</span>
-											</button>
-											<ul class="dropdown-menu logistics-list" role="menu">
-												<li logistics="shunfeng"><a href="javascript:void(0);">顺丰物流</a></li>
-												<li logistics="dhl"><a href="javascript:void(0);">DHL</a></li>
-												<li logistics="fedex"><a href="javascript:void(0);">FedEx</a></li>
-												<li logistics="ups"><a href="javascript:void(0);">UPS</a></li>
-												<li logistics="shentong"><a href="javascript:void(0);">申通快递</a></li>
-												<li logistics="yuantong"><a href="javascript:void(0);">圆通速递</a></li>
-												<li logistics="zhongtong"><a href="javascript:void(0);">中通速递</a></li>
-											</ul>
-										</div>
-										<div class="help-block logistics-tip">&nbsp;</div>
-									</div>　
-									<div class="form-group productEngineerContainer">
-										<label>运单号</label>
-										<input type="text" name="approval" value="" class="form-control approval">
-										<div class="help-block product-engineer-tip logistics-tip">&nbsp;</div>
-									</div>
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<textarea class="form-control textarea" name="comment"></textarea>
-									</div>
-									<div class="clearfix"></div>
-									<div class="form-group form-group-upload-btn">
-										<!--<input type="file" name="testReport[]" id="testReport">-->
-										<div id="testReport"></div>
-										<div class="test-report-file-info"></div>
-									</div>
-									<hr />
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<input type="submit" class="btn btn-primary btn-lg doneBtn margin-doneBtn" value="确定">
-									</div>
-									<input type="hidden" name="status" value="1" class="status">
-									<input type="hidden" name="cid" value="{$sample.uid}" class="cid">
-									<input type="hidden" name="logistics" value="shunfeng" class="logistics-code">
-									<input type="hidden" name="assoc" value="{$sample.id}">
-									<input type="hidden" name="total_order" value="{$sample.totalorder}">
-									<input type="hidden" name="product" value="{$sample.product}">
-									<input type="hidden" name="order" value="{$sample.order}">
-									<input type="hidden" name="uid" value="{$sample.uid}">
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</if>
-	</eq>
-
-	<!-- 反馈 -->
-	<eq name="sample.k_id" value="$Think.session.user.id">
-		<if condition="$sample.k_status eq 0 || $sample.k_status eq '' || $sample.k_status eq 3">
-			<div class="auditContainer">
-				<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="feedback-modal">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-								<h4 class="modal-title">反馈</h4>
-							</div>
-							<div class="modal-body">
-								<form class="sampleKid form-inline" role="form">
-									<div class="form-group">
-										<label>状态</label>
-										<div class="btn-group">
-											<button type="button" class="btn btn-default stateText">已通过</button>
-											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-												<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu state" role="menu">
-												<li state="1"><a href="javascript:void(0);">已通过</a></li>
-												<li state="2"><a href="javascript:void(0);">未通过</a></li>
-												<li state="3"><a href="javascript:void(0);">添加日志</a></li>
-											</ul>
-										</div>
-										<div class="help-block product-engineer-tip">&nbsp;</div>
-									</div>　
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<textarea class="form-control textarea" name="comment"></textarea>
-									</div>
-									<div class="clearfix"></div>
-									<div class="form-group">
-										<input type="submit" class="btn btn-primary btn-lg doneBtn" value="确定">
-									</div>
-									<input type="hidden" name="status" value="1" class="status">
-									<input type="hidden" name="cid" value="{$sample.aid}" class="cid">
-									<input type="hidden" name="assoc" value="{$sample.id}">
-									<input type="hidden" name="total_order" value="{$sample.totalorder}">
-									<input type="hidden" name="product" value="{$sample.product}">
-									<input type="hidden" name="order" value="{$sample.order}">
-									<input type="hidden" name="uid" value="{$sample.uid}">
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</if>
-	</eq>
-
-	<!-- 消息提示模态框 -->
-	<div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-body" id="message-modal-text">
-					<p class="modal-message modal-message-success"><i class="icon-ok-sign icon-2x modal-icon-success"></i><span class="message-text">成功后的信息</span></p>
-					<p class="modal-message modal-message-error"><i class="icon-remove-sign icon-2x modal-icon-error"></i><span class="message-text">失败后的信息</span></p>
-					<p class="modal-message modal-message-info"><i class="icon-info-sign icon-2x modal-icon-info"></i><span class="message-text">错误的信息</span></p>
-				</div>
-			</div>
-		</div>
-	</div>
-
-</block>
 
 
 

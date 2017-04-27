@@ -17,6 +17,19 @@ $(function(){
         });
     });
 
+/*
+
+    layui.use(['layer','form'],function(){
+        var layer = layui.layer;
+        var form = layui.form();
+        form.on('submit(sample)',function(data){
+            var sample = $('#SearchHiddenForm');
+            var Search = sample.find('#SearchText').val();	//获取到订单号
+        })
+
+    })
+*/
+
 
 
 });

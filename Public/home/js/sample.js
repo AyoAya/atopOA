@@ -3,7 +3,7 @@
  */
 $(function(){
 
-	
+
 	/*//选择审核人员
 	$('#approval').click(function(){
 		//配置dialog弹出层样式配置及内容
@@ -33,9 +33,9 @@ $(function(){
 			content : $('#dialog-content'),
 		});
 	});
-	
-	
-	
+
+
+
 	$('#dialog-content ul li').click(function(){
 		$(this).addClass('active').siblings().removeClass('active');
 	});*/
@@ -620,45 +620,80 @@ $(function(){
 			attachmentJsonStr = '';
 		}
 		//所有验证成功才提交数据
-		if(valid===true){
-			$.ajax({
-				url: ThinkPHP['AJAX'] + '/Sample/add',
-				type: 'post',
-				data: {
-					allorder: jsonStr,
-					attachment: attachmentJsonStr,
-					operation: 'audit',
-				},
-				dataType: 'json',
-				async : false,
-				beforeSend: function () {
-					if ($('#loading').hasClass('sr-only')) {
-						$('#loading').removeClass('sr-only');
-					}
-				},
-				success: function (response) {
-					if (response.flag > 0) {
-						$('#loading').addClass('sr-only');
-						$('.modal-message-success .message-text').text(response.msg);
-						$('.modal-message-success').show();
-						$('#message-modal').modal('show');
-						setTimeout(function () {
-							//$('.modal-message-success').hide();
-							location.href = 'http://' + response.url;
-						}, 1000);
-					} else {
-						$('.modal-message-error .message-text').text(response.msg);
-						$('.modal-message-error').show();
-						$('#message-modal').modal('show');
-						setTimeout(function () {
-							$('#message-modal').modal('hide');
-							$('.modal-message-error').hide();
-						}, 1000);
-					}
-				}
+	/*	if(valid===true){
+		    layui.use(['form','layer'],function(){
+		        var form = layui.form(),
+                    layer = layui.layer;
+                //console.log(form);
+
+                form.on('submit(sample)',function( data ){
+
+                    var json = '{"allData":[';
+
+                    $('.traverse').each(function ( index ) {
+                        var succ = {};
+
+                        succ = {
+                            product_select : $(this).find('input[name = product_select]').val(),
+                            count : $(this).find('input[name = count]').val(),
+                            requirements_date : $(this).find('input[name = requirements_date]').val(),
+                            customer : $(this).find('input[name = customer]').val(),
+                            brand : $(this).find('input[name = brand]').val(),
+                            model : $(this).find('input[name = model]').val(),
+                            note : $(this).find('textarea[name = note]').val(),
+                        }
+						json += '{"product_select":"' + succ.product_select + '","count":"'+ succ.count +'","requirements_date":"'+ succ.requirements_date +'","customer":"'+ succ.customer +'","brand":"'+ succ.brand +'","model":"'+ succ.model +'","note":"'+ succ.note +'",}'
+                    });
+
+                    json = json.substring(0,json.length-1);
+
+                    json += ']}';
+
+                    console.log(json);
+
+                    $.ajax({
+                        url : Thinkphp['AJAX']+'/sample/add',
+                        type : 'POST',
+                        datatype : 'json',
+                        async : false,
+                        data : {
+                            order_num : $('input[name=order_num]').val(),
+                            jsonStr : json
+
+                		},
+
+
+						beforeSend: function () {
+								layer.load(1,{shade:[0.5,'#fff']});
+							},
+
+						success : function( response ){
+								if(response.flag > 0){
+									layer.closeAll();
+									layer.msg(response.msg,{icon:1,time:2000});
+									setTimeout(function () {
+										//$('.modal-message-success').hide();
+										location.href = 'http://' + response.url;
+									}, 1000);
+								}else{
+
+									layer.closeAll();
+									layer.msg('error',{icon:2,time:2000});
+									setTimeout(function () {
+										$('#message-modal').modal('hide');
+										$('.modal-message-error').hide();
+									},1000)
+								}
+						}
+                    })
+				})
+                return false;
 			});
-		}
-	});
+
+		}*/
+
+	//})
+});
 
 
 	//选择审核人员模态框初始化

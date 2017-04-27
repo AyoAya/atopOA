@@ -1,0 +1,174 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/bs-is-fun.css">
+	<link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css">
+    <link rel="stylesheet" href="__CSS__/sample/overview.css">
+	<link rel="stylesheet" href="__CSS__/sample/detail.css">
+	<link rel="stylesheet" href="__CSS__/procedure.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+	<script src="__PUBLIC__/layui/layui.js"></script>
+	<script src="__JS__/sample/detail.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+	<title>添加样品</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+	<ol class="breadcrumb breadcrumb-edit">
+		<li><a href="__ROOT__/Sample">样品管理</a></li>
+		<li><a href="__ROOT__/Sample/overview/id/{$detailResult.0.detail_assoc}">订单总览</a></li>
+		<li class="active">订单详情</li>
+	</ol>
+</block>
+
+<block name="content">
+	
+	<div class="row">
+		<div class="col-lg-12 sample-table-container">
+			<table class="layui-table" lay-skin="line">
+				<thead>
+					<tr>
+						<th>进度</th>
+						<th>样品单号</th>
+						<th>产品类型</th>
+						<th>产品型号</th>
+						<th>产品经理</th>
+						<th>模块数量</th>
+						<th>客户名称</th>
+						<th>设备品牌</th>
+						<th>设备型号</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td></td>
+						<td>{$detailResult.0.order_num}</td>
+						<td>{$detailResult.0.type}</td>
+						<td>{$detailResult.0.pn}</td>
+						<td>{$detailResult.0.nickname}</td>
+						<td>{$detailResult.0.count}</td>
+						<td>{$detailResult.0.customer}</td>
+						<td>{$detailResult.0.brand}</td>
+						<td>{$detailResult.0.model}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+
+	<div class="procedure">
+		<table class="procedure-table">
+			<tr class="procedure-wrap">
+				<td class="active">
+					<div class="procedure-title">下单
+						<i class=" icon-info-sign myTooltip" data-container="body" data-toggle="popover" data-placement="right"
+						   data-content="顶部的 Popover 中的一些内容">
+						</i>
+					</div>
+					<div class="procedure-step"><i class="icon-ok"></i></div>
+					<div class="procedure-info">2017-04-06 14:56</div>
+					<div class="procedure-hollow"></div>
+				</td>
+				<td class="active">
+					<div class="procedure-title">审核</div>
+					<div class="procedure-step"><i class="icon-remove"></i></div>
+					<div class="procedure-info">2017-04-06 14:56</div>
+					<div class="procedure-hollow"></div>
+				</td>
+				<td>
+					<div class="procedure-title">物料</div>
+					<div class="procedure-step">3</div>
+					<div class="procedure-info">2017-04-06 14:56</div>
+					<div class="procedure-hollow"></div>
+				</td>
+				<td>
+					<div class="procedure-title">制作</div>
+					<div class="procedure-step">4</div>
+					<div class="procedure-info">2017-04-06 14:56</div>
+					<div class="procedure-hollow"></div>
+				</td>
+				<td>
+					<div class="procedure-title">测试</div>
+					<div class="procedure-step">5</div>
+					<div class="procedure-info">2017-04-06 14:56</div>
+					<div class="procedure-hollow"></div>
+				</td>
+				<td>
+					<div class="procedure-title">发货</div>
+					<div class="procedure-step">6</div>
+					<div class="procedure-info">2017-04-06 14:56</div>
+					<div class="procedure-hollow"></div>
+				</td>
+				<td>
+					<div class="procedure-title">反馈</div>
+					<div class="procedure-step">7</div>
+					<div class="procedure-info">2017-04-06 14:56</div>
+					<div class="procedure-hollow"></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-6 sample-main-left">
+			<div class="layui-collapse">
+				<div class="layui-colla-item">
+					<h2 class="layui-colla-title">交期</h2>
+					<div class="layui-colla-content layui-show">
+						<span>要求交期：{$detailResult.0.requirements_date}</span>
+						<notempty name="detailResult.0.expect_date">	{//如果存在预计交期则显示}
+							<span>预计交期：{$detailResult.0.expect_date}</span>
+						</notempty>
+						<notempty name="detailResult.0.actual_date">	{//如果存在实际交期则显示}
+							<span>实际交期：{$detailResult.0.actual_date}</span>
+						</notempty>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6 sample-main-right">
+			<div class="layui-collapse">
+				<div class="layui-colla-item">
+					<h2 class="layui-colla-title">日志</h2>
+					<div class="layui-colla-content layui-colla-content-rewrite layui-show">
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row last-row">
+		<div class="col-lg-6 sample-main-left">
+			<div class="layui-collapse">
+				<div class="layui-colla-item">
+					<h2 class="layui-colla-title">附件</h2>
+					<div class="layui-colla-content layui-show">
+						<volist name="attachmentResult" id="value">
+	                        <div class="file-item pull-left">
+	                            <div class="file-info"><i class="icon-file-alt"></i>&nbsp;&nbsp;<a href="__ROOT__{$value.path}" title="{$value.original}">{$value.original}</a></div>
+	                        </div>
+	                    </volist>
+	                    <div class="clearfix"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6 sample-main-right">
+			<div class="layui-collapse">
+				<div class="layui-colla-item">
+					<h2 class="layui-colla-title">备注</h2>
+					<div class="layui-colla-content layui-show">
+						<p>{$detailResult.0.note}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</block>

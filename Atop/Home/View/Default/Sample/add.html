@@ -1,0 +1,248 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+	<link rel="stylesheet" href="__CSS__/Huploadify.css">
+	<link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
+	<link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css">
+	<link rel="stylesheet" href="__CSS__/bootstrap-datetimepicker.min.css">
+	<link rel="stylesheet" href="__CSS__/sample/add.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+	<!--<script src="__PUBLIC__/home/uploadify/jquery.uploadify.min.js"></script>-->
+	<script src="__JS__/jquery.Huploadify.js"></script>
+	<script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
+	<script src="__PUBLIC__/layui/layui.js"></script>
+	<script src="__JS__/bootstrap-datetimepicker.js"></script>
+	<script src="__JS__/bootstrap-datetimepicker.zh-CN.js"></script>
+	<script src="__JS__/sample/add.js"></script>
+	</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+	<title>添加样品</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+	<ol class="breadcrumb breadcrumb-edit">
+		<li><a href="__ROOT__/Sample">样品管理</a></li>
+		<li class="active">添加样品</li>
+	</ol>
+</block>
+
+<block name="content">
+	<div class="sample-container">
+		<form class="layui-form" id="sampleForm">
+			<div class="layui-form-item">
+				<label class="layui-form-label">订单编号</label>
+				<div class="layui-input-block">
+					<input type="text" name="order_num" placeholder="请输入订单编号" autocomplete="off" class="layui-input sample_order_num" lay-verify="required">
+				</div>
+			</div>
+			<!-- 遍历栏位 -->
+			<div id="wrap">
+				<div class="traverse well well-sm">
+					<button type="button" class="layui-btn layui-btn-danger layui-btn-small remove-bar"><i class="layui-icon">&#x1006;</i></button>
+					<div class="layui-inline">
+						<label class="layui-form-label">产品选择</label>
+						<div class="layui-input-inline">
+							<input type="hidden" name="manager_id" class="manager_id">
+							<input type="hidden" name="product_id" class="product_id">
+							<input type="text" name="product_select" readonly placeholder="请选择产品" autocomplete="off" class="layui-input sample_product_select" lay-verify="required">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">模块数量</label>
+						<div class="layui-input-inline">
+							<input type="text" name="count" placeholder="请输入模块数量" autocomplete="off" class="layui-input sample_count" lay-verify="required">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">要求交期</label>
+						<div class="layui-input-inline">
+							<input type="text" name="requirements_date" readonly placeholder="请选择要求交期" autocomplete="off" class="layui-input sample_requirements_date" lay-verify="required">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">客户名称</label>
+						<div class="layui-input-inline">
+							<input type="text" name="customer" placeholder="请输入客户名称" autocomplete="off" class="layui-input sample_customer" lay-verify="required">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">设备品牌</label>
+						<div class="layui-input-inline">
+							<input type="text" name="brand" placeholder="请输入设备品牌" autocomplete="off" class="layui-input sample_brand" lay-verify="required">
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">设备型号</label>
+						<div class="layui-input-inline">
+							<input type="text" name="model" placeholder="请输入设备型号" autocomplete="off" class="layui-input sample_model" lay-verify="required">
+						</div>
+					</div>
+					<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label">备注信息</label>
+						<div class="layui-input-block">
+							<textarea name="note" placeholder="请输入备注信息" class="layui-textarea sample_note" rows="5" lay-verify="required"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- 提交 -->
+			<div class="button-box">
+				<div class="pull-left">
+					<div id="filePicker"><i class="layui-icon">&#xe62f;</i> 上传附件</div>
+				</div>
+				<div class="pull-right">
+					<button type="button" id="addBar" class="layui-btn layui-btn-primary">添加一栏</button>
+					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+					<button lay-submit id="sampleSubmit" lay-filter="sample" class="layui-btn">提交</button>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</form>
+		<div class="file-box">
+			<ul class="file-list"></ul>
+		</div>
+	</div>
+
+	<!-- 产品筛选 -->
+	<div id="layer-open-content" style="display: none;">
+		<div class="product-filter-box">
+			<div class="filter-search">
+				<form class="layui-form">
+					<div class="filter-search-block">
+						<input type="text" name="search" placeholder="搜索产品型号" class="layui-input">
+						<button lay-submit class="product-search-btn" lay-filter="productSearch"><i class="layui-icon">&#xe615;</i></button>
+					</div>
+				</form>
+			</div>
+			<div class="product-category-box">
+				<div class="filter-category">
+					<div class="filter-name pull-left">类型：</div>
+					<div class="filter-items pull-left">
+						<ul class="filter-items-type">
+							<volist name="productFilter.types" id="value">
+								<if condition="$i gt 6">
+									<li category="type" class="filter-item overflow" title="{$value.type}">{$value.type}</li>
+								<else/>
+									<li category="type" class="filter-item" title="{$value.type}">{$value.type}</li>
+								</if>
+							</volist>
+						</ul>
+					</div>
+					<div class="filter-more pull-left">
+						<if condition="count($productFilter['types']) gt 6">
+							<i class="icon-chevron-down an-more-btn" flag="off"></i>
+						</if>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="filter-category">
+					<div class="filter-name pull-left">波长：</div>
+					<div class="filter-items pull-left">
+						<ul class="filter-items-wavelength">
+							<volist name="productFilter.wavelengths" id="value">
+								<if condition="$i gt 6">
+									<li category="wavelength" class="filter-item overflow" as_name="{$value.wavelength}" title="{$value.wavelength}">{$value.wavelength}</li>
+								<else/>
+									<li category="wavelength" class="filter-item" as_name="{$value.wavelength}" title="{$value.wavelength}">{$value.wavelength}</li>
+								</if>
+							</volist>
+						</ul>
+					</div>
+					<div class="filter-more pull-left">
+						<if condition="count($productFilter['wavelengths']) gt 6">
+							<i class="icon-chevron-down an-more-btn" flag="off"></i>
+						</if>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="filter-category">
+					<div class="filter-name pull-left">距离：</div>
+					<div class="filter-items pull-left">
+						<ul class="filter-items-reach">
+							<volist name="productFilter.reachs" id="value">
+								<if condition="$i gt 6">
+									<li category="reach" class="filter-item overflow" title="{$value.reach}">{$value.reach}</li>
+								<else/>
+									<li category="reach" class="filter-item" title="{$value.reach}">{$value.reach}</li>
+								</if>
+							</volist>
+						</ul>
+					</div>
+					<div class="filter-more pull-left">
+						<if condition="count($productFilter['reachs']) gt 6">
+							<i class="icon-chevron-down an-more-btn" flag="off"></i>
+						</if>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="filter-category">
+					<div class="filter-name pull-left">接口：</div>
+					<div class="filter-items pull-left">
+						<ul class="filter-items-connector">
+							<volist name="productFilter.connectors" id="value">
+								<if condition="$i gt 6">
+									<li category="connector" class="filter-item overflow" title="{$value.connector}">{$value.connector}</li>
+								<else/>
+									<li category="connector" class="filter-item" title="{$value.connector}">{$value.connector}</li>
+								</if>
+							</volist>
+						</ul>
+					</div>
+					<div class="filter-more pull-left">
+						<if condition="count($productFilter['connectors']) gt 6">
+							<i class="icon-chevron-down an-more-btn" flag="off"></i>
+						</if>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="filter-category">
+					<div class="filter-name pull-left">环境：</div>
+					<div class="filter-items pull-left">
+						<ul class="filter-items-casetemp">
+							<volist name="productFilter.casetemps" id="value">
+								<if condition="$i gt 6">
+									<li category="casetemp" class="filter-item overflow" as_name="{$value.casetemp}" title="{$value.casetemp_as_name}">{$value.casetemp_as_name}</li>
+								<else/>
+									<li category="casetemp" class="filter-item" as_name="{$value.casetemp}" title="{$value.casetemp_as_name}">{$value.casetemp_as_name}</li>
+								</if>
+							</volist>
+						</ul>
+					</div>
+					<div class="filter-more pull-left">
+						<if condition="count($productFilter['casetemps']) gt 6">
+							<i class="icon-chevron-down an-more-btn" flag="off"></i>
+						</if>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+			<hr>
+			<div class="product-list-box">
+				<ul>
+					<volist name="productFilter.defaultData" id="value">
+						<li pro_id="{$value.id}" manager="{$value.manager}">{$value.pn}</li>
+					</volist>
+				</ul>
+			</div>
+			<form id="filter-map" style="display: none;">
+				<input type="hidden" name="type" value="">
+				<input type="hidden" name="wavelength" value="">
+				<input type="hidden" name="reach" value="">
+				<input type="hidden" name="connector" value="">
+				<input type="hidden" name="casetemp" value="">
+			</form>
+			<div class="reset-filter-box">
+
+				<div class="pull-right"><button class="layui-btn layui-btn-danger reset-filter-btn">重置筛选</button></div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+
+
+
+</block>
