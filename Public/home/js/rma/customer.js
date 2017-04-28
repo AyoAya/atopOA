@@ -5,94 +5,161 @@
 
 $(function(){
 
+
+
 	//定义存放附件的数组
 	var attachmentData = new Array(),
 		attachmentList = new Array();
-/*
 
-	//定义子目录名称及插入附件数据id
-	var SUB_NAME,LOG_ID;
-
-	// uploader参数配置
-	var uploaderOption = {
-		auto: false,
-		server: ThinkPHP['AJAX'] + '/RMA/upload',
-		pick: '#filePicker',
-		fileVal : 'Filedata',
-		accept: {
-			title: 'file',
-			extensions: 'zip,rar,jpg,png,jpeg,doc,docx,xls,xlsx,pdf'
-		},
-		method: 'POST',
-	};
-	// 实例化uploader
-	var uploader = WebUploader.create( uploaderOption );
-	// 上传错误时
-	uploader.on('error', function( code ){
-		var msg = '';
-		switch(code){
-			case 'Q_EXCEED_NUM_LIMIT':
-				msg = '只能上传一个文件';
-				break;
-			case 'Q_EXCEED_SIZE_LIMIT':
-				msg = '文件大小超出限制';
-				break;
-			case 'Q_TYPE_DENIED':
-				msg = '文件格式不允许';
-				break;
-			case 'F_DUPLICATE':
-				msg = '文件已存在';
-				break;
-			default:
-				msg = code;
-		}
-		layer.msg(msg, {icon: 2, time: 2000});
-	});
-	// 添加到队列时
-	uploader.on('fileQueued', function( file ){
-		var fileItem = '<div class="file-item" id="'+ file.id +'">' +
-			'<div class="pull-left"><i class="icon-file-alt"></i>&nbsp;&nbsp;'+ file.name +'</div>' +
-			'<div class="pull-right"><i class="icon-remove" title="移除该文件"></i></div>' +
-			'<div class="clearfix"></div>' +
-			'</div>';
-		$(uploaderOption.pick).next().append(fileItem);
-	});
-	// 上传之前
-	uploader.on('uploadBeforeSend', function( block, data, headers ){
-		data.SUB_NAME = SUB_NAME;
-		data.LOG_ID = LOG_ID;
-	});
-	// 上传成功时
-	uploader.on('uploadSuccess', function( file,response ){
-		if( response.flag > 0 ){
-			var attachmentObject = new Object();
-			attachmentObject.SourceName = response.name;
-			attachmentObject.SaveName = response.savename;
-			attachmentObject.SavePath = response.path;
-			attachmentList.push(attachmentObject);
-		}
-	});
-	// 所有文件上传结束时
-	uploader.on('uploadFinished', function(){
-		console.log( JSON.stringify(attachmentList) );
-	});
-	// 删除队列文件
-	$('.uploader-file-queue').on('click', '.icon-remove', function(){
-		var id = $(this).parent().parent().attr('id');
-		// 删除队列中的文件
-		uploader.removeFile( uploader.getFile(id,true) );
-		// 删除dom节点
-		$(this).parent().parent().remove();
-	});
-*/
-
-
-
-
-		//初始化layui组件
+	//初始化layui组件
 	layui.use(['form','layer','upload'], function(){
 		var form = layui.form(),
 			layer = layui.layer;
+
+
+		/**
+		 * 新增客诉页面附件上传
+		 * 1. 附件采用已id为子目录的形式存储，必须保证数据插入成功之后返回id之后再上传文件
+		 * 2. 实时显示每个步骤当前进度
+		 * 3. 文件上传时已返回的日志id为准，修改附件字段，附件格式为json
+		 */
+
+		//定义子目录名称及插入附件数据id
+		var SUB_NAME,LOG_ID;
+
+		// uploader参数配置
+		var uploaderOption = {
+			auto: false,
+			server: ThinkPHP['AJAX'] + '/RMA/upload',
+			pick: '#filePicker',
+			fileVal : 'Filedata',
+			accept: {
+				title: 'file',
+				extensions: 'zip,rar,jpg,png,jpeg,doc,docx,xls,xlsx,pdf'
+			},
+			method: 'POST',
+		};
+		// 实例化uploader
+		var uploader = WebUploader.create( uploaderOption );
+		// 上传错误时
+		uploader.on('error', function( code ){
+			var msg = '';
+			switch(code){
+				case 'Q_EXCEED_NUM_LIMIT':
+					msg = '只能上传一个文件';
+					break;
+				case 'Q_EXCEED_SIZE_LIMIT':
+					msg = '文件大小超出限制';
+					break;
+				case 'Q_TYPE_DENIED':
+					msg = '文件格式不允许';
+					break;
+				case 'F_DUPLICATE':
+					msg = '文件已存在';
+					break;
+				default:
+					msg = code;
+			}
+			layer.msg(msg, {icon: 2, time: 2000});
+		});
+		// 添加到队列时
+		uploader.on('fileQueued', function( file ){
+			var fileItem = '<div class="file-item" id="'+ file.id +'">' +
+				'<div class="pull-left"><i class="icon-file-alt"></i>&nbsp;&nbsp;'+ file.name +'</div>' +
+				'<div class="pull-right"><i class="icon-remove" title="移除该文件"></i></div>' +
+				'<div class="clearfix"></div>' +
+				'</div>';
+			$(uploaderOption.pick).next().append(fileItem);
+		});
+		// 上传之前
+		uploader.on('uploadBeforeSend', function( block, data, headers ){
+			data.SUB_NAME = SUB_NAME;
+			data.LOG_ID = LOG_ID;
+		});
+		// 上传成功时
+		uploader.on('uploadSuccess', function( file,response ){
+			if( response.flag > 0 ){
+				var attachmentObject = new Object();
+				attachmentObject.SourceName = response.name;
+				attachmentObject.SaveName = response.savename;
+				attachmentObject.SavePath = response.path;
+				attachmentList.push(attachmentObject);
+			}else{
+				layer.closeAll();
+				layer.msg(response.msg, { icon : 2,time : 2000 });
+			}
+		});
+		// 所有文件上传结束时
+		uploader.on('uploadFinished', function(){
+			$.ajax({
+				url : ThinkPHP['AJAX'] + '/RMA/insertAttachment',
+				type : 'POST',
+				data : {
+					logid : LOG_ID,
+					attachments : JSON.stringify(attachmentList)
+				},
+				dataType : 'json',
+				success : function( response ){
+					if( response.flag > 0 ){
+						layer.closeAll();
+						layer.msg(response.msg, { icon : 1,time : 2000 });
+						setTimeout(function(){
+							location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/RMA/details/id/' + SUB_NAME;
+						},2000);
+					}else{
+						layer.closeAll();
+						layer.msg(response.msg, { icon : 2,time : 2000 });
+					}
+				}
+			});
+		});
+		// 删除队列文件
+		$('.uploader-file-queue').on('click', '.icon-remove', function(){
+			var id = $(this).parent().parent().attr('id');
+			// 删除队列中的文件
+			uploader.removeFile( uploader.getFile(id,true) );
+			// 删除dom节点
+			$(this).parent().parent().remove();
+		});
+
+
+		/**
+		 * 客诉详情页文件上传
+		 * 1. 文件支持队列添加/删除
+		 * 2. 日志写入成功后返回日志id再上传文件
+		 * 3. 以返回的日志id为条件修改附件字段
+		 * 4. 解决webuploader在bootstrap框架modal里的兼容性问题
+		 * 		(1). 在modal窗口完全打开时初始化webuploader
+		 * 		(2). 当modal窗口关闭时，销毁webuoloader(样式冲突/问题)
+		 */
+
+		$('#customer-rma-modal').on('shown.bs.modal', function(e){
+			// uploader参数配置
+			var logUploaderOption = {
+				auto: false,
+				server: ThinkPHP['AJAX'] + '/RMA/upload',
+				pick: '#logPick',
+				fileVal : 'Filedata',
+				accept: {
+					title: 'file',
+					extensions: 'zip,rar,jpg,png,jpeg,doc,docx,xls,xlsx,pdf'
+				},
+				method: 'POST',
+			};
+			// 实例化uploader
+			window.loguploader = WebUploader.create( logUploaderOption );
+		});
+
+		// 销毁uploader
+		$('#customer-rma-modal').on('hide.bs.modal', function(e){
+			window.loguploader.destroy();
+		});
+
+
+
+
+
+
 
 		form.on('submit(customer)', function(data){
 			var _data = data.field;
@@ -105,26 +172,37 @@ $(function(){
 				data : _data,
 				dataType : 'json',
 				beforeSend : function(){
-					var loading = layer.load(2, {shade : [0.5,'#fff']});
+					//var loading = layer.load(2, {shade : [0.5,'#fff']});
+					//layer_open('正在写入数据');
+					var prompt_dialog = layer.open({
+						type : 1,
+						title : false,
+						closeBtn : false,
+						area : '200px',
+						shade : 0.5,
+						id : 'LAYER_TMP_PROMPT',
+						resize : false,
+						moveType : 1,
+						content : '<div style="padding: 15px;"><i class="icon-spinner icon-spin"></i>&nbsp;&nbsp;<span class="prompt-msg">正在写入数据</span></div>',
+					});
 				},
 				success : function(response){
 					if( response.flag == 1 ){
-						layer.msg(response.msg, { icon : 1,time : 2000 });
+						$('#LAYER_TMP_PROMPT .prompt-msg').text('正在上传文件...');
 
-						/*SUB_NAME = response.subname;
+						SUB_NAME = response.id;
 						LOG_ID = response.logid;
 						if( uploader.getFiles().length > 0 ){
 							uploader.upload();
 						}else{
-							layer.msg( '队列里没有文件', { icon: 2, time: 2000 } );
-							/!*setTimeout(function(){
-							 location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/RMA/details/id/' + response.id;
-							 },2000);*!/
-						}*/
+							setTimeout(function(){
+								location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/RMA/details/id/' + response.id;
+							},2000);
+						}
 
-						setTimeout(function(){
+						/*setTimeout(function(){
 							location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/RMA/details/id/' + response.id;
-						},2000);
+						},2000);*/
 					}else{
 						layer.closeAll();
 						layer.msg(response.msg, { icon : 2,time : 2000 });
@@ -326,6 +404,22 @@ $(function(){
 		});
 
 	});
+
+	// layer open弹出层
+	function layer_open(msg){
+		layer.open({
+			type : 1,
+			title : false,
+			closeBtn : false,
+			area : '200px',
+			shade : 0.5,
+			id : 'LAYER_TMP_PROMPT',
+			resize : false,
+			moveType : 1,
+			content : '<div style="padding: 15px;"><i class="icon-spinner icon-spin"></i>&nbsp;&nbsp;'+msg+'</div>',
+		});
+	}
+
 
 
 	//文件下载

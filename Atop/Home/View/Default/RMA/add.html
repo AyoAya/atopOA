@@ -102,15 +102,15 @@
 			<div class="layui-form-item">
 				<label class="layui-form-label">其它附件</label>
 				<div class="layui-input-block">
-					<input type="file" name="Filedata" class="layui-upload-file add-customer-upload-file" lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf">
+					<!--<input type="file" name="Filedata" class="layui-upload-file add-customer-upload-file" lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf">-->
 					<!--<div id="uploader-demo">
 						&lt;!&ndash;用来存放item&ndash;&gt;
 						<div id="fileList" class="uploader-list"></div>
 						<div id="filePicker">选择图片</div>
 					</div>-->
-					<!--<div id="filePicker"><i class="icon-arrow-up"></i> 上传文件</div>-->
+					<div id="filePicker"><i class="icon-arrow-up"></i> 上传文件</div>
 
-					<div id="attachment-list"></div>
+					<div class="uploader-file-queue"></div>
 				</div>
 			</div>
 			<div class="title-bar" style="margin: 0 0 20px 0;">
@@ -321,7 +321,7 @@
 
 			form.on('submit(productSearch)', function(data){
 				$.ajax({
-					url : ThinkPHP['AJAX'] + '/Sample/productSearch',
+					url : ThinkPHP['AJAX'] + '/Auth/productSearch',
 					type : 'POST',
 					data : data.field,
 					dataType : 'json',
@@ -367,14 +367,14 @@
 				pro_element.val( pro_element.val() + ' , ' + $(this).text() );
 			}
 			if( pro_element.prev().val() == '' ){
-				pro_element.prev().val($(this).attr('manager'));
-			}else{
-				pro_element.prev().val( pro_element.prev().val() + ',' + $(this).attr('manager') );
-			}
-			/*pro_element.prev().val($(this).attr('pro_id'));
-			pro_element.prev().prev().val($(this).attr('manager'));*/
-			layer.closeAll();
-			$('#filter-map input').val('');
+					pro_element.prev().val($(this).attr('manager'));
+		}else{
+			pro_element.prev().val( pro_element.prev().val() + ',' + $(this).attr('manager') );
+		}
+		/*pro_element.prev().val($(this).attr('pro_id'));
+		 pro_element.prev().prev().val($(this).attr('manager'));*/
+		layer.closeAll();
+		$('#filter-map input').val('');
 		});
 
 

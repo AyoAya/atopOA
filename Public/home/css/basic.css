@@ -194,7 +194,7 @@ input[readonly] {
 
 
 /*** webuploader插件临时文件显示样式控制 ***/
-/*.uploader-file-queue .file-item {
+.uploader-file-queue .file-item {
 	padding: 6px 10px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
@@ -216,7 +216,7 @@ input[readonly] {
 }
 .uploader-file-queue .file-item i.icon-remove:hover {
 	color: #d9534f;
-}*/
+}
 
 
 /*#upload-file-list .tmp-file-item {

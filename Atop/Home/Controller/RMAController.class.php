@@ -243,7 +243,7 @@ class RMAController extends AuthController{
                 # 给FAE工程师推送邮件
                 $this->pushEmail('ADD_CUSTOMER',$fae_user_info['email'],$post,$complaint_addID);
 
-                $this->ajaxReturn( ['flag'=>1,'msg'=>'数据添加成功','id'=>$complaint_addID] );
+                $this->ajaxReturn( ['flag'=>1,'msg'=>'数据添加成功','id'=>$complaint_addID,'logid'=>$complaintlog_addID] );
             }else{
                 $model->rollback();
                 $this->ajaxReturn( ['flag'=>0,'msg'=>'数据添加失败'] );
@@ -264,6 +264,21 @@ class RMAController extends AuthController{
             $this->assign('productFilter',$this->getProductData()); //注入产品筛选数据
             $this->assign('userlist',$userlist);
             $this->display();
+        }
+    }
+
+    //插入附件
+    public function insertAttachment(){
+        if( IS_POST ){
+            if( trim(I('post.logid')) != '' ){
+                $RMA_LOG_MODEL = M('Oacustomercomplaintlog');
+                $save_id = $RMA_LOG_MODEL->save( ['id'=>I('post.logid'),'attachment'=>I('post.attachments','',false)] );
+                if( $save_id ){
+                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
+                }else{
+                    $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
+                }
+            }
         }
     }
     

@@ -409,7 +409,8 @@
 									</div>
 									<div class="layui-inline">
 										<div class="layui-input-inline">
-											<input type="file" name="Filedata"  lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf" class="layui-upload-file" multiple>
+											<!--<input type="file" name="Filedata"  lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf" class="layui-upload-file" multiple>-->
+											<div id="logPick"><i class="icon-arrow-up"></i> 上传文件</div>
 										</div>
 									</div>
 									<ul id="attachment-list"></ul>
@@ -419,8 +420,8 @@
 									<input type="hidden" name="cc_id" value="{$details.id}">
 									<input type="hidden" name="step" value="{$details.now_step.id}">
 									<input type="hidden" name="version" value="{$details.version}">
-									<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-									<button lay-submit lay-filter="rmaCustomer" class="btn btn-primary">确定</button>
+									<button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
+									<button lay-submit lay-filter="rmaCustomer" class="layui-btn">确定</button>
 								</div>
 							</div>
 						</div>

@@ -20,7 +20,7 @@ $(function(){
         });
     });
 
-    //展开筛选
+    //展开
     $(document).on('click', '.an-more-btn', function(){
         var _this = $(this),
             _flag = _this.attr('flag'),
@@ -51,7 +51,7 @@ $(function(){
             $('#filter-map input[name='+ _category +']').val(_value);	//将选中的赋予到筛选表单
         }
         $.ajax({
-            url : ThinkPHP['AJAX'] + '/Sample/productFilter',
+            url : ThinkPHP['AJAX'] + '/Auth/productFilter',
             type : 'POST',
             data : {
                 filter : {
