@@ -26,7 +26,16 @@
 .layui-input-inline {
 	width: 193px;
 }
-
+.sample_order_num{
+	width: 400px;
+}
+.order_charge{
+	padding: 0 0 0 100px;
+	width:500px;
+}
+.ys_no .order_left{
+	width: 300px;
+}
 
 .file-box ul li {
 	padding: 10px;

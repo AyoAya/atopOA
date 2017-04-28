@@ -33,12 +33,24 @@
 <block name="content">
 	<div class="sample-container">
 		<form class="layui-form" id="sampleForm">
-			<div class="layui-form-item">
+			<div class="layui-inline ys_no">
 				<label class="layui-form-label">订单编号</label>
-				<div class="layui-input-block">
+				<div class="layui-input-block order_left">
 					<input type="text" name="order_num" placeholder="请输入订单编号" autocomplete="off" class="layui-input sample_order_num" lay-verify="required">
 				</div>
 			</div>
+
+			<div class="layui-inline order_charge" >
+				<label class="layui-form-label" >是否收费</label>
+				<div class="layui-input-block">
+					<select name="order_charge" autocomplete="off" class="sample_order_charge" lay-verify="required">
+						<option value=""></option>
+						<option value="付费">付费</option>
+						<option value="免费">免费</option>
+					</select>
+				</div>
+			</div>
+
 			<!-- 遍历栏位 -->
 			<div id="wrap">
 				<div class="traverse well well-sm">

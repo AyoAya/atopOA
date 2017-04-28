@@ -20,7 +20,17 @@
 	margin-left: -9px;
 	top: 0;
 }
-
+#span{
+	display: inline-block;
+	float: right;
+	position: relative;
+	line-height: 36px;
+	font-size: 14px;
+	padding: 0 20px 5px 0;
+	margin: 0 0 10px 0;
+	color: #eee;
+	top: -4px;
+}
 
 .col-lg-4 {
 	padding-left: 0;

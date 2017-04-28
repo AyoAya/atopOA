@@ -62,8 +62,8 @@
 						<p>{$value.create_person_name}</p>
 						<p>{$value.create_time|date="Y-m-d",###}</p>
 					</span>
-					<div>
-						<h4><a href="__ROOT__/Sample/overview/id/{$value.id}">{$value.order_num}</a></h4>
+					<div class="sample_order_charge">
+						<h4><a href="__ROOT__/Sample/overview/id/{$value.id}">{$value.order_num}</a><span class="icon-time" id="span"> {$value.order_charge}</span></h4>
 					</div>
 				</div>
 				<div class="order-body">

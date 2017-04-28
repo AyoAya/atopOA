@@ -68,11 +68,16 @@ class SampleController extends AuthController {
             if (I('post.order_num')) {
                 $sample = M('sample');
                 $sample_data['order_num'] = I('post.order_num');
+                $sample_data['order_charge'] = I('post.order_charge');
                 $sample_data['create_time'] = time();
                 $sample_data['create_person_id'] = session('user')['id'];
                 $sample_data['create_person_name'] = session('user')['nickname'];
                 $sample_data['order_state'] = 1;
                 $rel = $sample->where('order_num="'.I('post.order_num').'"')->select(); //订单号是否重复
+
+               // print_r($rel);
+               // exit();
+
                 if(!empty($rel)){
                     $this->ajaxReturn(['flag'=>0,'msg'=>'订单已存在！']);
                 }else{
@@ -144,7 +149,7 @@ class SampleController extends AuthController {
             $model = new Model();
             $sample_detail = M('sampleDetail');
 
-            $child_data = $model->field('a.id,a.pn,a.count,a.detail_assoc,a.customer,a.brand,a.model,a.note,a.requirements_date,a.expect_date,a.actual_date,b.type,b.pn,c.nickname,d.create_time,d.create_person_name,d.order_num')
+            $child_data = $model->field('a.id,a.pn,a.count,a.detail_assoc,a.customer,a.brand,a.model,a.note,a.requirements_date,a.expect_date,a.actual_date,b.type,b.pn,c.nickname,d.create_time,d.create_person_name,d.order_num,d.order_charge')
                 ->table(C('DB_PREFIX') . 'sample_detail a,' . C('DB_PREFIX') . 'productrelationships b,' . C('DB_PREFIX') . 'user c,' . C('DB_PREFIX') . 'sample d')
                 ->where('a.detail_assoc=' . I('get.id') . ' AND a.product_id=b.id AND b.manager=c.id AND a.detail_assoc=d.id')->select();
             if (!empty($child_data)) {
@@ -165,12 +170,24 @@ class SampleController extends AuthController {
 
     //订单详情页
     public function detail(){
+
         if( I('get.id') ){
-            //print_r(i('get.id'));
-            //$sample_detail = M('SampleDetail');
             $detailResult = M()->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c,'.C('DB_PREFIX').'productrelationships d')
                 ->field('a.order_num,b.detail_assoc,b.count,b.customer,b.brand,b.model,b.note,b.requirements_date,b.expect_date,b.actual_date,c.nickname,d.type,d.pn')
                 ->where('a.id=b.detail_assoc AND b.manager=c.id AND b.product_id=d.id AND b.id='.I('get.id'))->select();
+
+
+
+               /* $data['time'] = time();
+                $data['state'] = I('post.state');
+                $data['desc'] = I('post.desc');
+
+                print_r($data);*/
+
+
+
+
+
 
             //print_r($detailResult);
             //获取样品附件列表
