@@ -10,7 +10,8 @@ $(function(){
         var form = layui.form();
 		form.on('submit(sample)', function(data){
 			var sample = $('#sampleForm');
-			var order_num = sample.find('.sample_order_num').val();	//获取到订单号
+            var order_num = sample.find('.sample_order_num').val();	//获取到订单号
+            var order_charge = sample.find('.sample_order_charge').val();	//获取到订单号
 			$('.traverse').each(function(index){
 				var pn = $(this).find('input[name =product_select]').val(),
 					count = $(this).find('input[name =count]').val(),
@@ -29,7 +30,8 @@ $(function(){
 				url: ThinkPHP['AJAX'] + '/Sample/add',
 				type: 'POST',
 				data: {
-					order_num : order_num,
+                    order_num : order_num,
+                    order_charge : order_charge,
                     sample_details : AllData,
 					attachmentData : attachmentData
 				},

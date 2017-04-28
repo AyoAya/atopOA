@@ -33,7 +33,7 @@
     <div class="overview-container">
         <div class="order-info-box">
             <div class="order-info pull-left">
-                <h2 class="order-num"><i class="icon-list-alt"></i>{$childData.0.order_num}</h2>
+                <h2 class="order-num"><i class="icon-list-alt"></i>{$childData.0.order_num}　<span class="icon-time"> {$childData.0.order_charge} </span></h2>
             </div>
             <div class="order-other pull-right">
                 <p>销售人员：{$childData.0.create_person_name}</p>
@@ -69,7 +69,7 @@
                 </volist>
             </tbody>
         </table>
-        <volist name="sampleResult.SampleDetail" id="value">
+<!--        <volist name="sampleResult.SampleDetail" id="value">
             <div class="layui-collapse">
                 <div class="layui-colla-item">
                     <h2 class="layui-colla-title"><a href="__ROOT__/Sample/detail/id/{$value.id}">{$value.product_data.pn}</a></h2>
@@ -111,7 +111,7 @@
                     </div>
                 </div>
             </div>
-        </volist>
+        </volist>-->
 
         <div class="procedure">
             <table class="procedure-table">

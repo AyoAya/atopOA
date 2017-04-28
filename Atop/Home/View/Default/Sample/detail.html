@@ -171,6 +171,67 @@
 		</div>
 	</div>
 
-	<div class=""></div>
+	<button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#myModal">
+		<i class=" icon-legal"></i>
+		<p>审核</p>
+	</button>
+
+
+	<!-------------------------------------进度条-------------------------------------------------------------------->
+
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">订单审核</h4>
+				</div>
+
+
+				<form class="layui-form" action="" id="detail_form">
+					<div class="modal-body">
+							<div class="layui-form-item">
+							<label class="layui-form-label">类型</label>
+							<div class="layui-input-block">
+								<select name="state" lay-verify="required">
+									<option value="3">推送</option>
+									<option value="log" selected>添加日志</option>
+									<option value="0" >终止此单</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="layui-form-item layui-form-text">
+							<label class="layui-form-label">备注</label>
+							<div class="layui-input-block">
+								<textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+							</div>
+						</div>
+							<input type="hidden" name="solo_time" value="" >
+						<div class="layui-form-item">
+							<div class="layui-input-block detail_submit">
+								<button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+								<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+							</div>
+						</div>
+
+					</div>
+
+				</form>
+
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
 
 </block>
