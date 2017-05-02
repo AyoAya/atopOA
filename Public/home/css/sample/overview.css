@@ -1,3 +1,12 @@
+
+a  {
+	color: #428bca;
+}
+a:hover {
+	color: #286090;
+}
+
+
 /*重写layui规则*/
 .layui-colla-title {
 	padding-left: 15px;

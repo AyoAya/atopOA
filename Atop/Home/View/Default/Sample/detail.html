@@ -21,7 +21,7 @@
 <block name="breadcrumb">
 	<ol class="breadcrumb breadcrumb-edit">
 		<li><a href="__ROOT__/Sample">样品管理</a></li>
-		<li><a href="__ROOT__/Sample/overview/id/{$detailResult.0.detail_assoc}">订单总览</a></li>
+		<li><a href="__ROOT__/Sample/overview/id/{$detailResult.detail_assoc}">订单总览</a></li>
 		<li class="active">订单详情</li>
 	</ol>
 </block>
@@ -47,14 +47,14 @@
 				<tbody>
 					<tr>
 						<td></td>
-						<td>{$detailResult.0.order_num}</td>
-						<td>{$detailResult.0.type}</td>
-						<td>{$detailResult.0.pn}</td>
-						<td>{$detailResult.0.nickname}</td>
-						<td>{$detailResult.0.count}</td>
-						<td>{$detailResult.0.customer}</td>
-						<td>{$detailResult.0.brand}</td>
-						<td>{$detailResult.0.model}</td>
+						<td>{$detailResult.order_num}</td>
+						<td>{$detailResult.type}</td>
+						<td>{$detailResult.pn}</td>
+						<td>{$detailResult.nickname}</td>
+						<td>{$detailResult.count}</td>
+						<td>{$detailResult.customer}</td>
+						<td>{$detailResult.brand}</td>
+						<td>{$detailResult.model}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -62,10 +62,12 @@
 	</div>
 
 
+
+
 	<div class="procedure">
 		<table class="procedure-table">
 			<tr class="procedure-wrap">
-				<td class="active">
+				<!--<td class="active">
 					<div class="procedure-title">下单
 						<i class=" icon-info-sign myTooltip" data-container="body" data-toggle="popover" data-placement="right"
 						   data-content="顶部的 Popover 中的一些内容">
@@ -75,42 +77,59 @@
 					<div class="procedure-info">2017-04-06 14:56</div>
 					<div class="procedure-hollow"></div>
 				</td>
-				<td class="active">
-					<div class="procedure-title">审核</div>
-					<div class="procedure-step"><i class="icon-remove"></i></div>
-					<div class="procedure-info">2017-04-06 14:56</div>
-					<div class="procedure-hollow"></div>
-				</td>
-				<td>
-					<div class="procedure-title">物料</div>
-					<div class="procedure-step">3</div>
-					<div class="procedure-info">2017-04-06 14:56</div>
-					<div class="procedure-hollow"></div>
-				</td>
-				<td>
-					<div class="procedure-title">制作</div>
-					<div class="procedure-step">4</div>
-					<div class="procedure-info">2017-04-06 14:56</div>
-					<div class="procedure-hollow"></div>
-				</td>
-				<td>
-					<div class="procedure-title">测试</div>
-					<div class="procedure-step">5</div>
-					<div class="procedure-info">2017-04-06 14:56</div>
-					<div class="procedure-hollow"></div>
-				</td>
-				<td>
-					<div class="procedure-title">发货</div>
-					<div class="procedure-step">6</div>
-					<div class="procedure-info">2017-04-06 14:56</div>
-					<div class="procedure-hollow"></div>
-				</td>
-				<td>
-					<div class="procedure-title">反馈</div>
-					<div class="procedure-step">7</div>
-					<div class="procedure-info">2017-04-06 14:56</div>
-					<div class="procedure-hollow"></div>
-				</td>
+-->
+				<volist name="step" id="value" key="kk">
+
+					<volist name="detailResult.operating" id="vo" key="k">
+						<eq name="value.id" value="$vo.id">
+							{//已完成步骤}
+							<notempty name="vo.op_time">
+								<td class="active">
+									<div class="procedure-title">{$value.name}</div>
+									<div class="procedure-step"><i class="icon-ok"></i></div>
+									<div class="procedure-info">
+										<volist name="detailResult.operating" id="val">
+											<eq name="value.id" value="$val.id">
+												{$val.op_time|date="Y-m-d H:i",###}
+											</eq>
+										</volist>
+									</div>
+									<div class="procedure-hollow"></div>
+								</td>
+							<else/>
+								{//进行中的步骤}
+								<td>
+									<div class="procedure-title">{$value.name}</div>
+									<div class="procedure-step">{$kk}</div>
+									<div class="procedure-info">
+										<volist name="detailResult.operating" id="val">
+											<eq name="value.id" value="$val.id">
+												{$val.op_time|date="Y-m-d H:i",###}
+											</eq>
+										</volist>
+									</div>
+									<div class="procedure-hollow"></div>
+								</td>
+							</notempty>
+						</eq>
+					</volist>
+					<if condition="($value['id']-1) egt count($detailResult['operating'])">
+						{//还未进行的步骤}
+						<td>
+							<div class="procedure-title">{$value.name}</div>
+							<div class="procedure-step">{$kk}</div>
+							<div class="procedure-info">
+								<volist name="detailResult.operating" id="val">
+									<eq name="value.id" value="$val.id">
+										{$val.op_time|date="Y-m-d H:i",###}
+									</eq>
+								</volist>
+							</div>
+							<div class="procedure-hollow"></div>
+						</td>
+					</if>
+				</volist>
+
 			</tr>
 		</table>
 	</div>
@@ -121,12 +140,12 @@
 				<div class="layui-colla-item">
 					<h2 class="layui-colla-title">交期</h2>
 					<div class="layui-colla-content layui-show">
-						<span>要求交期：{$detailResult.0.requirements_date}</span>
+						<span>要求交期：{$detailResult.requirements_date}</span>
 						<notempty name="detailResult.0.expect_date">	{//如果存在预计交期则显示}
-							<span>预计交期：{$detailResult.0.expect_date}</span>
+							<span>预计交期：{$detailResult.expect_date}</span>
 						</notempty>
 						<notempty name="detailResult.0.actual_date">	{//如果存在实际交期则显示}
-							<span>实际交期：{$detailResult.0.actual_date}</span>
+							<span>实际交期：{$detailResult.actual_date}</span>
 						</notempty>
 					</div>
 				</div>
@@ -137,7 +156,9 @@
 				<div class="layui-colla-item">
 					<h2 class="layui-colla-title">日志</h2>
 					<div class="layui-colla-content layui-colla-content-rewrite layui-show">
-						
+						<volist name="newlog" id="value">
+							<eq name="i" value="1"><div>{$value.nickname}  {$value.log_time|date="Y-m-d H:i",###}  {$value.context}</div><else/><div class="sr-only">{$value.nickname}  {$value.log_time|date="Y-m-d H:i",###}  {$value.context}</div></eq>
+						</volist>
 					</div>
 				</div>
 			</div>
@@ -164,74 +185,84 @@
 				<div class="layui-colla-item">
 					<h2 class="layui-colla-title">备注</h2>
 					<div class="layui-colla-content layui-show">
-						<p>{$detailResult.0.note}</p>
+						<p>{$detailResult.note}</p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#myModal">
-		<i class=" icon-legal"></i>
-		<p>审核</p>
-	</button>
+	{//审核按钮【当登录用户满足条件是才显示】}
+	<if condition="$_SESSION['user']['id'] eq $detailResult['operating'][count($detailResult['operating'])-1]['operator']">
+		<button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#myModal">
+			<p>添加</p>
+			<p>处理记录</p>
+		</button>
+	</if>
 
+</block>
+
+<block name="modals">
 
 	<!-------------------------------------进度条-------------------------------------------------------------------->
 
-
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="myModalLabel">订单审核</h4>
-				</div>
-
-
-				<form class="layui-form" action="" id="detail_form">
-					<div class="modal-body">
-							<div class="layui-form-item">
-							<label class="layui-form-label">类型</label>
-							<div class="layui-input-block">
-								<select name="state" lay-verify="required">
-									<option value="3">推送</option>
-									<option value="log" selected>添加日志</option>
-									<option value="0" >终止此单</option>
-								</select>
-							</div>
-						</div>
-
-						<div class="layui-form-item layui-form-text">
-							<label class="layui-form-label">备注</label>
-							<div class="layui-input-block">
-								<textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
-							</div>
-						</div>
-							<input type="hidden" name="solo_time" value="" >
-						<div class="layui-form-item">
-							<div class="layui-input-block detail_submit">
-								<button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-								<button type="reset" class="layui-btn layui-btn-primary">重置</button>
-							</div>
-						</div>
-
+	<if condition="$_SESSION['user']['id'] eq $detailResult['operating'][count($detailResult['operating'])-1]['operator']">
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel" style="font-size: 18px;">订单审核</h4>
 					</div>
 
-				</form>
 
+					<form class="layui-form" action="" id="detail_form">
+						<div class="modal-body">
+							<div class="layui-inline" style="margin-bottom: 10px;">
+								<label class="layui-form-label" style="padding-left: 0;width: 60px;">类型</label>
+								<div class="layui-input-inline">
+									<select class="" name="type" lay-verify="required" lay-filter="operation">
+										<option value="log" selected>添加日志</option>
+										<option value="push">推送</option>
+										<eq name="nowStep.id" value="2">
+											<option value="close" >拒绝</option>
+										</eq>
+									</select>
+								</div>
+							</div>
+
+							<div id="operating-person" class="layui-inline sr-only" style="margin-bottom: 10px;margin-left: 20px;">
+								<label class="layui-form-label" style="padding-left: 2px;width: 60px;">处理人</label>
+								<div class="layui-input-inline">
+									<select class="" name="state" lay-verify="required">
+										<volist name="persons" id="value">
+											<option value="{$value.id}">{$value.nickname}</option>
+										</volist>
+									</select>
+								</div>
+							</div>
+
+							<div class="layui-form-item layui-form-text">
+								<label class="layui-form-label" style="padding-left: 0;width: 60px;">备注</label>
+								<div class="layui-input-block" style="margin-left: 60px;">
+									<textarea name="context" placeholder="请输入内容" class="layui-textarea"></textarea>
+								</div>
+							</div>
+
+						</div>
+
+						<input type="hidden" name="asc_detail" value="{$detailResult.id}">
+
+						<div class="modal-footer">
+							<button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
+							<button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+						</div>
+
+					</form>
+
+				</div>
 			</div>
 		</div>
-	</div>
-
-
-
-
-
-
-
-
-
-
+	</if>
 
 </block>

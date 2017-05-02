@@ -27,7 +27,7 @@
 		</a>-->
 		<eq name="Think.session.user.department" value="4">
 			<a href="__ROOT__/Sample/add" class="layui-btn layui-btn-primary">
-				<span class="glyphicon glyphicon-plus"></span> 我要下单
+				<span class="glyphicon glyphicon-plus"></span>我要下单
 			</a>
 		</eq>
 		<present name="search">
@@ -70,11 +70,11 @@
 					<if condition="$value.total lt 2">
 						<p>{$value.child.0.model} | {$value.child.0.brand}</p>
 					<elseif condition="$value.total elt 2"/>
-						<p>{$value.child.0.model} | {$value.child.0.brand}</p>
-						<p>{$value.child.1.model} | {$value.child.1.brand}</p>
+						<p>{$value.child.0.type} | {$value.child.0.pn}</p>
+						<p>{$value.child.1.type} | {$value.child.1.pn}</p>
 					<else/>
-						<p>{$value.child.0.model} | {$value.child.0.brand}</p>
-						<p>{$value.child.1.model} | {$value.child.1.brand}</p>
+						<p>{$value.child.0.type} | {$value.child.0.pn}</p>
+						<p>{$value.child.1.type} | {$value.child.1.pn}</p>
 						<p>等{$value.total}个产品</p>
 					</if>
 				</div>
