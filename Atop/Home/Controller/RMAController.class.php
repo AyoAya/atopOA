@@ -372,7 +372,14 @@ class RMAController extends AuthController{
             $this->assign('QAlist',$QA_list);
         }elseif( $resultData['now_step'] == 5 || $resultData['now_step'] == 6 ){
 
-            $prev_step_info = $oacustomeroperation_model->where( ['main_assoc'=>$resultData['id'],'step_assoc'=>($resultData['now_step']-1)] )->select();
+
+            # 获取上一个步骤id
+            $step_info_data = M('Oacustomercomplaintlog')->field('step')->where( 'cc_id='.I('get.id').' AND recorder<>"OASystem"' )->order('id DESC')->limit(1)->select();
+
+            $prev_step_info = $oacustomeroperation_model->where( ['main_assoc'=>$resultData['id'],'step_assoc'=>$step_info_data[0]['step']] )->select();
+            //print_r($step_info_data);
+
+            //echo $oacustomeroperation_model->getLastSql();
 
             //print_r($prev_step_info);
 
@@ -390,7 +397,7 @@ class RMAController extends AuthController{
             }else{
                 $step_info['nickname'] = M('user')->field('nickname')->find( $oacustomeroperation_result['operation_person'] )['nickname']; //获取上一个步骤人的姓名
             }
-            $step_info['step_name'] = $oacustomerstep_model->field('step_name')->find( $resultData['now_step']['id']-1 )['step_name'];
+            $step_info['step_name'] = $oacustomerstep_model->field('step_name')->find( $step_info_data[0]['step'] )['step_name'];
 
 
             //print_r($step_info);
@@ -568,6 +575,8 @@ class RMAController extends AuthController{
     //新增RMA处理日志
     public function addRMA_OperationLog(){
         if( IS_POST ){
+
+
             $post = I('post.','',false);
 
             # 记录录入信息
@@ -594,7 +603,7 @@ class RMAController extends AuthController{
                     $emails = $this->GetInvolvedIn($post['cc_id']);
                     $this->pushEmail('ADD_LOG',$emails,$logData,$post['cc_id']);
 
-                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
+                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$post['cc_id'],'logid'=>$add_id] );
                 }else{
                     $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                 }
@@ -631,7 +640,7 @@ class RMAController extends AuthController{
                     $emails = $this->GetInvolvedIn($post['cc_id']);
                     $this->pushEmail('CUSTOMER_CLOSE',$emails,$logDataBak,$post['cc_id']);
 
-                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
+                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$post['cc_id'],'logid'=>$add_id_1] );
                 }else{
                     M()->rollback();
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加失败'] );
@@ -666,7 +675,7 @@ class RMAController extends AuthController{
                     $emails = $this->GetInvolvedIn($post['cc_id']);
                     $this->pushEmail('TRANSFER',$QA_person_data['email'],$logDataBak,$post['cc_id'],$emails);
 
-                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
+                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$post['cc_id'],'logid'=>$add_id_1] );
                 }else{
                     M()->rollback();
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加失败'] );
@@ -722,7 +731,7 @@ class RMAController extends AuthController{
                     $logDataBak['step_name'] = $step_result['step_name'];
                     $this->pushEmail('FALLBACK',$emails,$logDataBak,$post['cc_id']);
 
-                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
+                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$post['cc_id'],'logid'=>$add_id_1] );
                 }else{
                     $model->rollback();
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加失败'] );
@@ -808,7 +817,7 @@ class RMAController extends AuthController{
                     $logDataBak['dear'] = $userInfo['nickname'];
                     $this->pushEmail('PUSH_STEP',$userInfo['email'],$logDataBak,$post['cc_id'],$emails);
 
-                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
+                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$post['cc_id'],'logid'=>$add_id_1] );
                 }else{
                     $model->rollback();
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加失败'] );
@@ -846,6 +855,8 @@ class RMAController extends AuthController{
         $http_host = $_SERVER['HTTP_HOST'];
         $user_nickname = session('user')['nickname'];
         extract($data);
+        $customer_result = M('Oacustomercomplaint')->field('pn,vendor,model,error_message')->find($id); //获取客诉基本信息
+        extract($customer_result);
         if( $type == 'IS_RMA' ){    // 如果是IS_RMA则为通知销售是否转RMA
             $subject = '客诉转RMA';
             $body = <<<HTML
@@ -870,8 +881,6 @@ p {
 HTML;
 
         }elseif( $type == 'ADD_LOG' ){  //添加日志推送邮件
-            $customer_result = M('Oacustomercomplaint')->find($id); //获取客诉基本信息
-            extract($customer_result);
             $subject = '客诉日志更新 [ ID:'.$id.' ]';
             $body = <<<HTML
 <style>
@@ -902,7 +911,12 @@ p {
 </style>
 <p>Dear $dear,</p>
 <p>[$user_nickname] 将客诉步骤推送到：Step$step_id - $step_name</p>
-<p>备注：$log_content</p>
+<p>备注：$log_content</p><br>
+<p><b>客诉基本信息：</b></p>
+<p>产品型号：$pn</p>
+<p>设备厂商：$vendor</p>
+<p>设备型号：$model</p>
+<p>错误现象：$error_message</p><br>
 <p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }elseif( $type == 'CUSTOMER_CLOSE' ){   //如果是关闭客诉
@@ -916,7 +930,12 @@ p {
 <p>Dear All,</p>
 <p>[$user_nickname] 将客诉关闭</p>
 <p>关闭原因：$close_reason_text</p>
-<p>备注：$log_content</p>
+<p>备注：$log_content</p><br>
+<p><b>客诉基本信息：</b></p>
+<p>产品型号：$pn</p>
+<p>设备厂商：$vendor</p>
+<p>设备型号：$model</p>
+<p>错误现象：$error_message</p><br>
 <p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }elseif( $type == 'TRANSFER' ){
@@ -932,7 +951,12 @@ p {
 </style>
 <p>Dear All,</p>
 <p>[$user_nickname] 将客诉处理人转交给 [$QA_person_nickname]，当前步骤：Step$step_id - $step_name</p>
-<p>备注：$log_content</p>
+<p>备注：$log_content</p><br>
+<p><b>客诉基本信息：</b></p>
+<p>产品型号：$pn</p>
+<p>设备厂商：$vendor</p>
+<p>设备型号：$model</p>
+<p>错误现象：$error_message</p><br>
 <p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }elseif( $type == 'FALLBACK' ){
@@ -945,7 +969,12 @@ p {
 </style>
 <p>Dear All,</p>
 <p>[$user_nickname] 将步骤回退到：Step$step_id - $step_name</p>
-<p>备注：$log_content</p>
+<p>备注：$log_content</p><br>
+<p><b>客诉基本信息：</b></p>
+<p>产品型号：$pn</p>
+<p>设备厂商：$vendor</p>
+<p>设备型号：$model</p>
+<p>错误现象：$error_message</p><br>
 <p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }

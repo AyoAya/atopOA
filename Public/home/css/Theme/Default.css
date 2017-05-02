@@ -131,10 +131,12 @@
 	height: 41px;
 	z-index: 2;
 	background: #fff;
-	border-bottom: solid 1px #ccc;
 	padding-left: 30px;
 	padding-right: 30px;
 	overflow: visible;
+	-webkit-box-shadow: 0 0 5px #888;
+	-moz-box-shadow: 0 0 5px #888;
+	box-shadow: 0 0 5px #888;
 }
 #header .user-operation-box {
 	height: 40px;
@@ -173,7 +175,7 @@
 	display: none;
 	position: absolute;
 	right: 0px;
-	top: 40px;
+	top: 41px;
 	z-index: 10;
 	background: #fff;
 }

@@ -5,7 +5,6 @@
 	<link rel="stylesheet" href="__CSS__/Huploadify.css">
 	<link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
 	<link rel="stylesheet" href="__CSS__/animate.css">
-	<link rel="stylesheet" href="__CSS__/jquery.toastmessage.css">
 	<link rel="stylesheet" href="__CSS__/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" href="__CSS__/timeline.css"/>
 	<link rel="stylesheet" href="__CSS__/rma/customer-details.css">
@@ -19,8 +18,8 @@
 	<script src="__JS__/jquery.form.js"></script>
 	<script src="__JS__/bootstrap-datetimepicker.js"></script>
 	<script src="__JS__/bootstrap-datetimepicker.zh-CN.js"></script>
-	<script src="__JS__/jquery.toastmessage.js"></script>
 	<script src="__JS__/rma/customer.js"></script>
+	<script src="__JS__/rma/details.js"></script>
 </block>
 
 <block name="webtitle">
@@ -191,7 +190,7 @@
 														<volist name="val.picture" id="v">
 															<notempty name="v">
 																<div class="pic-group pull-left">
-																	<img class="customer-complaint-img" src="__ROOT__/{$v.filepath}" alt="加载失败">
+																	<a href="__ROOT__/{$v.filepath}" target="_blank"><img class="customer-complaint-img-c" src="__ROOT__/{$v.filepath}" alt="加载失败"></a>
 																	<span class="pic-info">{$v.filename}</span>
 																</div>
 															</notempty>
@@ -205,19 +204,19 @@
 																<div class="attachment-box">
 																	<div class="attachment-box-dom">
 																		<p class="file-name">
-																			<form action="__ROOT__/Auth/download" method="post">
+																			<!--<form action="__ROOT__/Auth/download" method="post">
 																				<input type="hidden" name="filename" value="{$v.filename}">
 																				<input type="hidden" name="filepath" value="{$v.filepath}">
 																				<a class="download"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
-																			</form>
-																			<!--<a href="__ROOT__/{$v.filepath}"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>-->
+																			</form>-->
+																			<a href="__ROOT__/{$v.filepath}"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
 																		</p>
 																	</div>
 																</div>
 															<else/>
 																<neq name="v" value="">
 																	<div class="pic-group pull-left">
-																		<img class="customer-complaint-img" src="__ROOT__/{$v.filepath}" height="120" alt="加载失败">
+																		<a href="__ROOT__/{$v.filepath}" target="_blank"><img class="customer-complaint-img-c" src="__ROOT__/{$v.filepath}" height="200" alt="加载失败"></a>
 																		<span class="pic-info">{$v.filename}</span>
 																	</div>
 																</neq>
@@ -407,13 +406,11 @@
 									<div class="layui-form-item layui-form-text">
 										<textarea name="log_content" placeholder="请输入处理内容" lay-verify="required" class="layui-textarea"></textarea>
 									</div>
-									<div class="layui-inline">
-										<div class="layui-input-inline">
+									<div class="fj-box">
 											<!--<input type="file" name="Filedata"  lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf" class="layui-upload-file" multiple>-->
 											<div id="logPick"><i class="icon-arrow-up"></i> 上传文件</div>
-										</div>
+											<div class="uploader-attachment-queue"></div>
 									</div>
-									<ul id="attachment-list"></ul>
 								</div>
 								<div class="modal-footer">
 									<input type="hidden" name="recorder" value="{$Think.session.user.account}">

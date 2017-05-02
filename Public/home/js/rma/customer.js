@@ -123,37 +123,6 @@ $(function(){
 		});
 
 
-		/**
-		 * 客诉详情页文件上传
-		 * 1. 文件支持队列添加/删除
-		 * 2. 日志写入成功后返回日志id再上传文件
-		 * 3. 以返回的日志id为条件修改附件字段
-		 * 4. 解决webuploader在bootstrap框架modal里的兼容性问题
-		 * 		(1). 在modal窗口完全打开时初始化webuploader
-		 * 		(2). 当modal窗口关闭时，销毁webuoloader(样式冲突/问题)
-		 */
-
-		$('#customer-rma-modal').on('shown.bs.modal', function(e){
-			// uploader参数配置
-			var logUploaderOption = {
-				auto: false,
-				server: ThinkPHP['AJAX'] + '/RMA/upload',
-				pick: '#logPick',
-				fileVal : 'Filedata',
-				accept: {
-					title: 'file',
-					extensions: 'zip,rar,jpg,png,jpeg,doc,docx,xls,xlsx,pdf'
-				},
-				method: 'POST',
-			};
-			// 实例化uploader
-			window.loguploader = WebUploader.create( logUploaderOption );
-		});
-
-		// 销毁uploader
-		$('#customer-rma-modal').on('hide.bs.modal', function(e){
-			window.loguploader.destroy();
-		});
 
 
 
@@ -226,87 +195,6 @@ $(function(){
 			}
 		});
 
-		//监听rma处理类型
-		//如果当前步骤处于销售确认是否转RMA，当用户选择推送到下一步则显示QA部门人员选择框否则隐藏
-		form.on('select(operation)', function( data ){
-			var elem = data.elem;
-			var value = data.value;
-			var now_step = $(elem).parents('.customer-rma-form').find('input[name=step]').val();
-			var operation_select_elem = $(elem).parents('.customer-rma-form').find('.operation-person-select');
-			var step_select_elem = $(elem).parents('.customer-rma-form').find('.step-select');
-			var fae_select_elem = $(elem).parents('.customer-rma-form').find('.fae-person-select');
-			var close_reason_elem = $(elem).parents('.customer-rma-form').find('.close-reason-select');
-			if( value == 'X' ){
-				if( !$(operation_select_elem).hasClass('sr-only') ){
-					$(operation_select_elem).addClass('sr-only');
-				}
-				if( !$(step_select_elem).hasClass('sr-only') ){
-					$(step_select_elem).addClass('sr-only');
-				}
-				if( !$(fae_select_elem).hasClass('sr-only') ){
-					$(fae_select_elem).addClass('sr-only');
-				}
-				if( !$(close_reason_elem).hasClass('sr-only') ){
-					$(close_reason_elem).addClass('sr-only');
-				}
-			}
-			if( now_step == 3 || now_step == 4 ){
-				if( now_step == 3 && value == 'N' ){	//如果当前步骤等于3并且选择关闭客诉则显示关闭客诉原因下拉菜单
-					if( $(close_reason_elem).hasClass('sr-only') ){
-						$(close_reason_elem).removeClass('sr-only');
-					}
-				}else{
-					if( !$(close_reason_elem).hasClass('sr-only') ){
-						$(close_reason_elem).addClass('sr-only');
-					}
-				}
-				if( now_step == 3 && value == 4 || now_step == 4 && value == 'Z' ){	//如果当前步骤等于3或者等于4，并且选择推送下一步或者转交则显示qa部门人员选择下拉菜单
-					if( $(operation_select_elem).hasClass('sr-only') ){
-						$(operation_select_elem).removeClass('sr-only');
-					}
-				}else{
-					if( !$(operation_select_elem).hasClass('sr-only') ){
-						$(operation_select_elem).addClass('sr-only');
-					}
-				}
-			}
-			if( now_step == 5 || now_step == 6 ){	//如果步骤可以回退则显示回退步骤下拉菜单
-				if( now_step == 6 && value == 'N' ){	//如果当前步骤等于6并且选择关闭客诉则显示关闭客诉原因下拉菜单
-					if( $(close_reason_elem).hasClass('sr-only') ){
-						$(close_reason_elem).removeClass('sr-only');
-					}
-				}else{
-					if( !$(close_reason_elem).hasClass('sr-only') ){
-						$(close_reason_elem).addClass('sr-only');
-					}
-				}
-				if( value == 'H' ){	//当用户选择回退的时候才显示否则隐藏
-					if( $(step_select_elem).hasClass('sr-only') ){
-						$(step_select_elem).removeClass('sr-only');
-					}
-					if( !$(fae_select_elem).hasClass('sr-only') ){
-						$(fae_select_elem).addClass('sr-only');
-					}
-				}else{
-					if( !$(step_select_elem).hasClass('sr-only') ){
-						$(step_select_elem).addClass('sr-only');
-					}
-					if( value == 'Z' ){
-						if( $(fae_select_elem).hasClass('sr-only') ){
-							$(fae_select_elem).removeClass('sr-only');
-						}
-						if( !$(step_select_elem).hasClass('sr-only') ){
-							$(step_select_elem).addClass('sr-only');
-						}
-					}else{
-						if( !$(fae_select_elem).hasClass('sr-only') ){
-							$(fae_select_elem).addClass('sr-only');
-						}
-					}
-				}
-			}
-		});
-
 		form.on('submit(rma)', function( data ){
 			var _data = data.field;
 			if( attachmentData.length > 0 ){
@@ -362,45 +250,6 @@ $(function(){
 				$('#attachment-list').append(_html);
 			},
 			unwrap : false
-		});
-
-		//监听rma处理表单
-		form.on('submit(rmaCustomer)', function( data ){
-			var fields = data.field;
-			if( attachmentList.length == 0 ){	//如果附件为空则提交空字符串，如果不为空则转换为json格式数据提交
-				fields.attachments = '';
-			}else{
-				fields.attachments = JSON.stringify(attachmentList);
-			}
-			/*if( fields.operation_type == 'X' && $.trim(fields.log_content) == '' ){
-				layer.msg('请输入点内容吧');
-				$('textarea[name=log_content]').focus();
-				return false;
-			}*/
-			//console.log(fields);
-			$.ajax({
-				url : ThinkPHP['AJAX'] + '/RMA/addRMA_OperationLog',
-				type : 'POST',
-				data : fields,
-				dataType : 'json',
-				beforeSend : function(){
-					layer.load(2,{shade:[0.8,'#fff']});
-				},
-				success : function(response){
-					if( response.flag > 0 ){
-						layer.msg(response.msg,{icon : 1,time : 2000});
-						setTimeout(function(){
-							location.reload();
-						},2000);
-					}else{
-						layer.msg(response.msg,{icon : 2,time : 2000});
-						setTimeout(function(){
-							layer.closeAll();
-						},2000);
-					}
-				}
-			});
-			return false;
 		});
 
 	});
@@ -735,32 +584,24 @@ $(function(){
 		var w = img.width;
 		var h = img.height;
 		if(w>=documentWidth && h>=documentHeight){
-			//当图像展开后禁用滚动条
-			//$('#content-box').mCustomScrollbar('disable');
 			$('.pictureContainer img').css({'max-width':(documentWidth-360)+'px'});
 			setTimeout(function(){
 				var imgHeight = $('.pictureContainer img').height();
 				$('.pictureContainer img').css({'position':'absolute','left':'50%','marginLeft':-(documentWidth-360)/2+'px','top':'50%','marginTop':-(imgHeight/2)+'px'});
 			},50);
 		}else if(w>=documentWidth && h<documentHeight){
-			//当图像展开后禁用滚动条
-			$('#content-box').mCustomScrollbar('disable');
 			$('.pictureContainer img').css({'max-width':(documentWidth-360)+'px'});
 			setTimeout(function(){
 				var imgHeight = $('.pictureContainer img').height();
 				$('.pictureContainer img').css({'position':'absolute','left':'50%','marginLeft':-(documentWidth-360)/2+'px','top':'50%','marginTop':-(imgHeight/2)+'px'});
 			},50);
 		}else if(w<documentWidth && h>=documentHeight){
-			//当图像展开后禁用滚动条
-			$('#content-box').mCustomScrollbar('disable');
 			$('.pictureContainer img').css({'max-height':(documentHeight-120)+'px'});
 			setTimeout(function(){
 				var imgWidth = $('.pictureContainer img').width();
 				$('.pictureContainer img').css({'position':'absolute','left':'50%','marginLeft':-(imgWidth/2)+'px','top':'50%','marginTop':-(documentHeight-120)/2+'px'});
 			},50);
 		}else if(w<documentWidth && h<documentHeight){
-			//当图像展开后禁用滚动条
-			$('#content-box').mCustomScrollbar('disable');
 			setTimeout(function(){
 				var imgWidth = $('.pictureContainer img').width();
 				var imgHeight = $('.pictureContainer img').height();

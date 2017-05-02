@@ -583,7 +583,7 @@ class PHPMailer {
       if ($this->exceptions) {
         throw $e;
       }
-      echo $e->getMessage()."\n";
+      return $e->getMessage()."\n";
       return false;
     }
   }

@@ -194,27 +194,27 @@ input[readonly] {
 
 
 /*** webuploader插件临时文件显示样式控制 ***/
-.uploader-file-queue .file-item {
+.uploader-file-queue .file-item, .uploader-attachment-queue .file-item {
 	padding: 6px 10px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
 }
-.uploader-file-queue .file-item .pull-left {
+.uploader-file-queue .file-item .pull-left,.uploader-attachment-queue .file-item .pull-left {
 	width: 95%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
 	white-space: nowrap;
 }
-.uploader-file-queue .file-item:hover {
+.uploader-file-queue .file-item:hover,.uploader-attachment-queue .file-item:hover {
 	background: #f5f5f5;
 }
-.uploader-file-queue .file-item i.icon-remove {
+.uploader-file-queue .file-item i.icon-remove,.uploader-attachment-queue .file-item i.icon-remove {
 	color: #ccc;
 	cursor: pointer;
 }
-.uploader-file-queue .file-item i.icon-remove:hover {
+.uploader-file-queue .file-item i.icon-remove:hover,.uploader-attachment-queue .file-item i.icon-remove:hover {
 	color: #d9534f;
 }
 
