@@ -319,17 +319,17 @@ function get_welcome_str (){
     $t = date ("H");
 
     if ($t < 6){
-        $time_str = "凌晨好~";
+        $time_str = "凌晨好";
     }else if ($t < 9){
-        $time_str = "早上好~";
+        $time_str = "早上好";
     }else if ($t < 11){
-        $time_str = "上午好~";
+        $time_str = "上午好";
     }else if ($t < 13){
-        $time_str = "中午好~";
+        $time_str = "中午好";
     }else if ($t < 18){
-        $time_str = "下午好~";
+        $time_str = "下午好";
     }else{
-        $time_str = "晚上好~";
+        $time_str = "晚上好";
     }
     return $time_str;
 }

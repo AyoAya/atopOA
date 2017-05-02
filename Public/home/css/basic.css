@@ -247,5 +247,52 @@ input[readonly] {
 
 
 
-
-
+/*** 文件图标 ***/
+i.file-icon {
+	width: 14px;
+	height: 14px;
+	-webkit-background-size: 100%;
+	background-size: 100%;
+	display: inline-block;
+	position: relative;
+	top: 1px;
+}
+i[class^="file-icon-ext-"] {
+	background: url("../img/fileIcon/icon_default.png") center center  no-repeat;
+}
+i.file-icon-ext-xls,i.file-icon-ext-xlsx {
+	background: url("../img/fileIcon/icon_xls.gif") center center  no-repeat;
+}
+i.file-icon-ext-doc,i.file-icon-ext-docx {
+	background: url("../img/fileIcon/icon_doc.gif") center center  no-repeat;
+}
+i.file-icon-ext-pdf {
+	background: url("../img/fileIcon/icon_pdf.gif") center center  no-repeat;
+}
+i.file-icon-ext-ppt {
+	background: url("../img/fileIcon/icon_ppt.gif") center center  no-repeat;
+}
+i.file-icon-ext-mp3 {
+	background: url("../img/fileIcon/icon_mp3.gif") center center  no-repeat;
+}
+i.file-icon-ext-mv {
+	background: url("../img/fileIcon/icon_mv.gif") center center  no-repeat;
+}
+i.file-icon-ext-txt {
+	background: url("../img/fileIcon/icon_txt.gif") center center  no-repeat;
+}
+i.file-icon-ext-psd {
+	background: url("../img/fileIcon/icon_psd.gif") center center  no-repeat;
+}
+i.file-icon-ext-chm {
+	background: url("../img/fileIcon/icon_chm.gif") center center  no-repeat;
+}
+i.file-icon-ext-exe {
+	background: url("../img/fileIcon/icon_exe.gif") center center  no-repeat;
+}
+i.file-icon-ext-jpg,i.file-icon-ext-png,i.file-icon-ext-gif,i.file-icon-ext-jpeg {
+	background: url("../img/fileIcon/icon_jpg.gif") center center  no-repeat;
+}
+i.file-icon-ext-rar,i.file-icon-ext-zip {
+	background: url("../img/fileIcon/icon_rar.gif") center center  no-repeat;
+}

@@ -47,7 +47,7 @@ body {
 }
 .welconme-container .welcome-user small {
     margin-left: 20px;
-    font-size: 60%;
+    font-size: 50%;
 }
 .welconme-container .welcome-text,.welconme-container .welcome-text .layui-icon {
     font-size: 20px;

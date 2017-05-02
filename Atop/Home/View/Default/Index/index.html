@@ -24,9 +24,8 @@
 
 
 	<div class="welconme-container">
-		<div class="welcome-user"><img class="welcome-user-face" src="{$face.face}" width="40" alt=""> {$Think.session.user.nickname}<small>{:get_welcome_str()}</small></div>
-		<div class="welcome-text">欢迎登录华拓光通信OA系统</div>
-		<div>今天是{:date('Y年m月d日')}，{:week()}，本周是今年的第{:date('W')}周</div>
+		<div class="welcome-user"><img class="welcome-user-face" src="{$face.face}" width="40" alt=""> {$Think.session.user.nickname}<small>{:get_welcome_str()}，欢迎登录华拓光通信OA系统！</small></div>
+		<div>今天是{:date('Y年m月d日')}，{:week()}，本周是今年的第{:date('W')}周。</div>
 	</div>
 
 	<div class="wrap">

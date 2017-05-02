@@ -209,7 +209,7 @@
 																				<input type="hidden" name="filepath" value="{$v.filepath}">
 																				<a class="download"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
 																			</form>-->
-																			<a href="__ROOT__/{$v.filepath}"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
+																			<a href="__ROOT__/{$v.filepath}"><i class="file-icon file-icon-ext-{:getExtension($v['filename'])}"></i> {$v.filename}</a>
 																		</p>
 																	</div>
 																</div>
