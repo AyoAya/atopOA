@@ -247,7 +247,7 @@
                                             <div class="timeline-circle"></div>
                                         </td>
                                         <td class="timeline-content">
-                                            <p style="font-size: 14px;color: #888;">等待{$details.operation_person_name}处理中...</p>
+                                            <p style="font-size: 14px;color: #888;">等待 [{$details.operation_person_name}] 处理中...</p>
                                         </td>
                                     </tr>
                                 </table>
@@ -415,7 +415,7 @@
 								<div class="modal-footer">
 									<input type="hidden" name="recorder" value="{$Think.session.user.account}">
 									<input type="hidden" name="cc_id" value="{$details.id}">
-									<input type="hidden" name="step" value="{$details.now_step.id}">
+									<input type="hidden" name="step" value="{$details.now_step}">
 									<input type="hidden" name="version" value="{$details.version}">
 									<button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
 									<button lay-submit lay-filter="rmaCustomer" class="layui-btn">确定</button>

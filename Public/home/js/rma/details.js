@@ -223,12 +223,13 @@ $(function(){
             }else{
                 fields.attachments = JSON.stringify(attachmentList);
             }
-            /*if( fields.operation_type == 'X' && $.trim(fields.log_content) == '' ){
-             layer.msg('请输入点内容吧');
-             $('textarea[name=log_content]').focus();
-             return false;
-             }*/
-            //console.log(fields);
+
+            //console.log(data.field);
+            if( data.field.step == 4 && data.field.operation_type == 6 && window.loguploader.getFiles().length <= 0 ){
+                layer.msg('请先上传分析报告',{ icon:2, time:2000 });
+                return false;
+            }
+
             $.ajax({
                 url : ThinkPHP['AJAX'] + '/RMA/addRMA_OperationLog',
                 type : 'POST',

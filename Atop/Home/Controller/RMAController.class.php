@@ -330,7 +330,7 @@ class RMAController extends AuthController{
 
         $oacustomerstep_model_result = $oacustomerstep_model->field('a.id,a.step_name,a.fallback,a.transfer')->table('atop_oacustomerstep a,atop_oacustomeroperation b')->where('b.main_assoc='.I('get.id').' AND step_assoc=a.id')->group('b.step_assoc')->order('b.step_assoc ASC')->select();
 
-        //print_r($oacustomerstep_model_result);
+        //print_r($resultData);
 
         $max_step = $oacustomerstep_model->max('id');   //获取到最大步骤
         $this->assign('maxStep',$max_step);
@@ -340,6 +340,8 @@ class RMAController extends AuthController{
 
         # 获取到当前正在进行的步骤
         $now_step = $resultData['now_step'];
+
+        //$this->assign();
 
         $now_step_person_data = $oacustomeroperation_model->where( ['main_assoc'=>I('get.id'),'step_assoc'=>$now_step] )->select()[0];
 
@@ -602,6 +604,9 @@ class RMAController extends AuthController{
 
                     # 如果是添加日志，则获取到当前步骤前的所有步骤处理人员，分别推送邮件
                     $emails = $this->GetInvolvedIn($post['cc_id']);
+
+                    array_push($emails,session('user')['email']);   //将当前用户邮箱添加到邮件推送列表
+
                     $this->pushEmail('ADD_LOG',$emails,$logData,$post['cc_id']);
 
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$post['cc_id'],'logid'=>$add_id] );
@@ -730,6 +735,9 @@ class RMAController extends AuthController{
                     $emails = $this->GetInvolvedIn($post['cc_id']);
                     $logDataBak['step_id'] = $step_result['id'];
                     $logDataBak['step_name'] = $step_result['step_name'];
+
+                    array_push($emails,session('user')['email']);
+
                     $this->pushEmail('FALLBACK',$emails,$logDataBak,$post['cc_id']);
 
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$post['cc_id'],'logid'=>$add_id_1] );
