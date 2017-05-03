@@ -35,7 +35,9 @@
     </div>-->
 
     <div class="project-container">
-        <h2 class="page-header">{$param.title}</h2>
+        <div class="title-bar" style="margin: 30px 0 30px 0;">
+            <h4>{$param.title}</h4>
+        </div>
         <form role="form" id="projectForm">
             <table class="table">
                 <tbody>
@@ -103,7 +105,9 @@
                     </tr>
                 </tbody>
             </table>
-            <h2 class="page-header project-plan">项目计划</h2>
+            <div class="title-bar" style="margin: 30px 0 30px 0;">
+                <h4>项目计划</h4>
+            </div>
             <div class="plan-box">
                 <table class="table" id="plan-table">
                     <tbody>
@@ -134,8 +138,8 @@
             <div class="form-group">
                 <input type="hidden" name="pj_child" value="{$param.pj_child}">
                 <input type="hidden" name="pj_belong" value="{$param.pj_belong}">
-                <button type="submit" class="btn btn-primary" id="submit">提交</button>
-                <button type="reset" class="btn btn-default">重置</button>
+                <button type="submit" class="layui-btn " id="submit">提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
             </div>
         </form>
     </div>

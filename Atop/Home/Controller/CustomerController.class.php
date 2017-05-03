@@ -248,8 +248,12 @@ class CustomerController extends AuthController{
         $complaintlog = M('Oacustomercomplaintlog');
         //获取当前id指定的客诉
         $resultData = $complaint->find(I('get.id'));
+        //print_r($resultData);
 
-        $productModel = $resultData['model'];
+        $productModel = $resultData['vendor'];
+
+        //print_r($productModel);
+
         $vendor_brand = M('VendorBrand');
         $is_exists = $vendor_brand->where( ['brand'=>$productModel] )->select();
 
@@ -382,12 +386,16 @@ class CustomerController extends AuthController{
     # 转为新版客诉
     public function changeNewVersion(){
         if( IS_POST ){
+
             $post = I('post.');
 
-
             $oacustomercomplaint_model = M('Oacustomercomplaint');
-            $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
-            $oacustomeroperation_model = M('Oacustomeroperation');
+            //$oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
+            //$oacustomeroperation_model = M('Oacustomeroperation');
+
+            $customer_basic_info = $oacustomercomplaint_model->field('pn,vendor,model eq_model,error_message')->find( $post['main_assoc'] );
+
+            extract($customer_basic_info);
 
             $model = new Model();   //准备事务开启模型
             $model->startTrans();   //开启事务
@@ -446,7 +454,13 @@ p {
 }
 </style>
 <p>Dear $dear,</p>
-<p>[$user_nickname] 将客诉步骤推送到：Step$step_id - $step_name</p>
+<p>[$user_nickname] 将客诉步骤推送到：Step$step_id - $step_name</p><br>
+<p><b>客诉基本信息：</b></p>
+<p>产品型号：$pn</p>
+<p>设备厂商：$vendor</p>
+<p>设备型号：$eq_model</p>
+<p>错误现象：$error_message</p><br>
+<p style="color: #d9534f;;">* 该客诉由旧版客诉转入</p>
 <p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
                 $result = send_Email('vinty_email@163.com','',$subject,$body);  //$email

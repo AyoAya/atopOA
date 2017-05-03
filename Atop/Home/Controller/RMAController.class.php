@@ -335,16 +335,17 @@ class RMAController extends AuthController{
         $max_step = $oacustomerstep_model->max('id');   //获取到最大步骤
         $this->assign('maxStep',$max_step);
 
-        # 获取到当前正在进行的步骤
-
-        $oacustomeroperation_model_result = M()->field('a.now_step,b.operation_person')->table('atop_oacustomercomplaint a,atop_oacustomeroperation b')->where('a.now_step=b.step_assoc AND a.id='.I('get.id'))->order('b.id DESC')->limit(1)->select();
+        //$oacustomeroperation_model_result = M()->field('a.now_step,b.operation_person')->table('atop_oacustomercomplaint a,atop_oacustomeroperation b')->where('a.now_step=b.step_assoc AND a.id='.I('get.id'))->order('b.id DESC')->limit(1)->select();
         /*$oacustomeroperation_model_result = $oacustomeroperation_model->where('main_assoc='.I('get.id'))->order('step_assoc DESC')->limit(1)->select();*/
 
-        $now_step = $oacustomeroperation_model_result[0]['now_step'];
+        # 获取到当前正在进行的步骤
+        $now_step = $resultData['now_step'];
 
-        $now_operation_person = $oacustomeroperation_model_result[0]['operation_person'];
+        $now_step_person_data = $oacustomeroperation_model->where( ['main_assoc'=>I('get.id'),'step_assoc'=>$now_step] )->select()[0];
 
-        //print_r($resultData);
+        $now_operation_person = $now_step_person_data['operation_person'];
+
+        //print_r($now_operation_person);
 
         $resultData['now_step_info'] = $oacustomerstep_model->find($now_step);
 
@@ -374,7 +375,7 @@ class RMAController extends AuthController{
 
 
             # 获取上一个步骤id
-            $step_info_data = M('Oacustomercomplaintlog')->field('step')->where( 'cc_id='.I('get.id').' AND recorder<>"OASystem"' )->order('id DESC')->limit(1)->select();
+            $step_info_data = M('Oacustomercomplaintlog')->field('step')->where( 'cc_id='.I('get.id').' AND recorder<>"OASystem" AND step<'.$now_step )->order('id DESC')->limit(1)->select();
 
             $prev_step_info = $oacustomeroperation_model->where( ['main_assoc'=>$resultData['id'],'step_assoc'=>$step_info_data[0]['step']] )->select();
             //print_r($step_info_data);

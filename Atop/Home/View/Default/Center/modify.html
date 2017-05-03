@@ -2,10 +2,12 @@
 <extend name="layout/default"/>
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/Huploadify.css">
     <link rel="stylesheet" href="__CSS__/center-modify.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
+    <script src="__JS__/jquery.Huploadify.js"></script>
     <script src="__JS__/jquery.validate.min.js"></script>
     <script src="__JS__/jquery.form.js"></script>
     <script src="__JS__/center.js"></script>
@@ -22,9 +24,9 @@
 </block>
 <!-- 【正文区域】 -->
 <block name="content">
-    <div class="col-lg-6 col-lg-offset-3 modify-container">
-        <div class="page-header">
-            <h2>基本信息</h2>
+    <div class="modify-container" style="width: 700px;">
+        <div class="title-bar" style="margin: 30px 0 30px 0;">
+            <h4>基本信息</h4>
         </div>
         <form role="form" id="basicForm">
             <div class="form-group">
@@ -45,8 +47,8 @@
                 <input type="submit" class="btn btn-primary btn-lg btn-lg-edit" value="保存">
             </div>
         </form>
-        <div class="page-header">
-            <h2>修改密码</h2>
+        <div class="title-bar" style="margin: 30px 0 30px 0;">
+            <h4>修改密码</h4>
         </div>
         <form role="form" id="passwordForm">
             <div class="form-group">
