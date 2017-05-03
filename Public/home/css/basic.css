@@ -269,7 +269,7 @@ i.file-icon-ext-doc,i.file-icon-ext-docx {
 i.file-icon-ext-pdf {
 	background: url("../img/fileIcon/icon_pdf.gif") center center  no-repeat;
 }
-i.file-icon-ext-ppt {
+i.file-icon-ext-ppt,i.file-icon-ext-pptx {
 	background: url("../img/fileIcon/icon_ppt.gif") center center  no-repeat;
 }
 i.file-icon-ext-mp3 {

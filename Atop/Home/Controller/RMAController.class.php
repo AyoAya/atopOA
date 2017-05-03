@@ -980,12 +980,12 @@ p {
 HTML;
         }
         if( empty($cc) ){
-            $result = send_Email('vinty_email@163.com','',$subject,$body);
+            $result = send_Email($emails,'',$subject,$body);
             if( $result != 1 ){ //如果邮件发送失败则返回错误信息
                 $this->ajaxReturn( ['falg'=>0,'msg'=>$result] );
             }
         }else{
-            $result = send_Email('vinty_email@163.com','',$subject,$body);  //$cc
+            $result = send_Email($emails,'',$subject,$body,$cc);  //$cc
             if( $result != 1 ){ //如果邮件发送失败则返回错误信息
                 $this->ajaxReturn( ['falg'=>0,'msg'=>$result] );
             }

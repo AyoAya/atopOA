@@ -463,7 +463,7 @@ p {
 <p style="color: #d9534f;;">* 该客诉由旧版客诉转入</p>
 <p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
-                $result = send_Email('vinty_email@163.com','',$subject,$body);  //$email
+                $result = send_Email($email,'',$subject,$body);  //$email
                 if( $result != 1 ){ //如果邮件发送失败则返回错误信息
                     $this->ajaxReturn( ['falg'=>0,'msg'=>$result] );exit;
                 }
