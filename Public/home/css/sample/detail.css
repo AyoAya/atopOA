@@ -40,3 +40,66 @@
 .step-container {
 	margin-bottom: 25px;
 }
+.type_style{
+    width: 210px;
+
+}
+.type_dsp{
+    position: relative;
+    right: -165px;
+    top:-38px;
+}
+
+a {
+	color: #428bca;
+}
+
+
+
+
+
+
+
+
+
+/*** 审核按钮 ***/
+.solo_order{
+	background:#81c0f2;
+	width: 56px;
+	height: 56px;
+	position: fixed;
+	bottom: 60px;
+	right: 60px;
+	z-index: 1;
+	border-radius: 2px;
+	text-align: center;
+	cursor: pointer;
+	color: #fff;
+	font-size: 20px;
+	border: 0;
+	padding: 3px 0 0 0;
+}
+.solo_order p {
+	text-align: center;
+	font-size: 22px;
+}
+.solo_order p:last-child {
+	font-size: 12px;
+}
+.solo_order:hover{
+	background:#428bca;
+	color: #fff;
+}
+
+.solo_box #solo_pass{
+	width:500px;
+	height: 500px;
+	position: fixed;
+	z-index: 999;
+	top: 200px;
+	background: #efefef;
+	left: 40%;
+}
+.solo_box #solo_pass .detai_pass{
+	width: 300px;
+}
