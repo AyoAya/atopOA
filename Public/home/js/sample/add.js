@@ -1,9 +1,9 @@
 $(function(){
 
 	//存放附件数据
-	//var attachmentData = new Array();
-	var filter_content =$('#layer-open-content').html()
-	var AllData = '{"sample_detail":[';	//定义空对象用于存放订单内容
+	var jsonObj = new Array();
+	var filter_content =$('#layer-open-content').html();
+	//var AllData = '{"sample_detail":[';	//定义空对象用于存放订单内容
 	// 初始化layui组件
     layui.use(['layer','form'], function(){
         var layer = layui.layer;
@@ -13,6 +13,7 @@ $(function(){
             var order_num = sample.find('.sample_order_num').val();	//获取到订单号
             var order_charge = sample.find('.sample_order_charge').val();	//获取到订单号
 			$('.traverse').each(function(index){
+				var tmpObj = new Object();
 				var pn = $(this).find('input[name =product_select]').val(),
 					count = $(this).find('input[name =count]').val(),
                     requirements_date = $(this).find('input[name =requirements_date]').val(),
@@ -22,17 +23,28 @@ $(function(){
                     manager = $(this).find('input[name =manager_id]').val(),
                     product_id = $(this).find('input[name =product_id]').val(),
 					note = $(this).find('.sample_note').val();
-				AllData += '{"pn":"'+ pn +'","count":"'+ count +'","requirements_date":"'+ requirements_date +'","customer":"'+ customer +'","brand":"'+ brand +'","product_id":"'+ product_id +'","model":"'+ model +'","note":"'+ note +'","manager":"'+ manager +'"},';
+				// 拼装产品对象
+				tmpObj.pn = pn;
+				tmpObj.count = count;
+				tmpObj.requirements_date = requirements_date;
+				tmpObj.customer = customer;
+				tmpObj.brand = brand;
+				tmpObj.model = model;
+				tmpObj.manager = manager;
+				tmpObj.product_id = product_id;
+				tmpObj.note = note;
+                jsonObj.push(tmpObj);
+				//AllData += '{"pn":"'+ pn +'","count":"'+ count +'","requirements_date":"'+ requirements_date +'","customer":"'+ customer +'","brand":"'+ brand +'","product_id":"'+ product_id +'","model":"'+ model +'","note":"'+ note +'","manager":"'+ manager +'"},';
 			});
-			AllData = AllData.substring(0,AllData.length-1);
-			AllData += ']}';
+			//AllData = AllData.substring(0,AllData.length-1);
+			//AllData += ']}';
 			$.ajax({
 				url: ThinkPHP['AJAX'] + '/Sample/add',
 				type: 'POST',
 				data: {
                     order_num : order_num,
                     order_charge : order_charge,
-                    sample_details : AllData,
+                    sample_details : jsonObj,
 					attachmentData : attachmentData
 				},
 
@@ -40,7 +52,6 @@ $(function(){
 				success: function(response){
 					if( response.flag > 0 ){
 						layer.msg(response.msg,{icon:1});
-
                         location.href = 'http://'+ThinkPHP['HTTP_HOST']+'/Sample/overview/id/'+response.id;
                     }else{
 						AllData = '{"sample_detail":[';

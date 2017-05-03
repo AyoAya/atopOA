@@ -55,11 +55,53 @@ a {
 }
 
 
-
-
-
-
-
+.procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip {
+	color: #f0ad4e;
+	position: relative;
+	cursor: default;
+}
+.procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip .popover-box {
+	position: absolute;
+	width: 400px;
+	left: 50%;
+	top: 29px;
+	margin-left: -200px;
+	background: #fff;
+	z-index: 999;
+	border: solid 1px #ccc;
+	padding: 10px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+}
+.procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip .popover-box:after {
+	content: '';
+	width: 14px;
+	height: 14px;
+	position: absolute;
+	top: -14px;
+	left: 50%;
+	margin-left: -7px;
+	background: url("../../img/arrow_up_border_ccc.png") center center no-repeat;
+	-webkit-background-size: 100%;
+	background-size: 100%;
+}
+.procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip .popover-box .log-box {
+	text-align: left;
+	color: #3c7673;
+	font-size: 12px;
+	padding: 0 0 10px 0;
+	margin-bottom: 10px;
+	border-bottom: solid 1px #eee;
+}
+.procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip .popover-box .log-box .log-box-time {
+	margin-right: 15px;
+}
+.procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip .popover-box .log-box:last-child {
+	padding-bottom: 0;
+	margin-bottom: 0;
+	border-bottom: none;
+}
 
 
 /*** 审核按钮 ***/
@@ -103,3 +145,33 @@ a {
 .solo_box #solo_pass .detai_pass{
 	width: 300px;
 }
+
+
+
+
+/*** 定义tag样式 ***/
+span.tag {
+	padding: 2px 5px;
+	color: #fff;
+	background: #428bca;
+	border-radius: 2px;
+}
+span.tag-primary {
+	background: #428bca;
+}
+
+span.tag-danger {
+	background: #d9534f;
+}
+
+
+
+
+
+
+
+
+
+
+
+

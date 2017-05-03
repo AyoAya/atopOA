@@ -71,20 +71,17 @@ class SampleController extends AuthController {
 
         if(IS_POST) {
             if (I('post.order_num')) {
+
                 $sample = M('sample');
-                $sample_detail = M('sample_detail');
                 $sample_data['order_num'] = I('post.order_num');
                 $sample_data['order_charge'] = I('post.order_charge');
                 $sample_data['create_time'] = time();
                 $sample_data['create_person_id'] = session('user')['id'];
                 $sample_data['create_person_name'] = session('user')['nickname'];
                 $sample_data['order_state'] = 1;
-                $rel = $sample->where('order_num="'.I('post.order_num').'"')->select(); //订单号是否重复
 
-                //echo $sample->getLastSql($rel);
-
-                //print_r($rel);
-                //exit();
+                # 订单号是否重复
+                $rel = $sample->where('order_num="'.I('post.order_num').'"')->select();
 
                 if(!empty($rel)){
                     $this->ajaxReturn(['flag'=>0,'msg'=>'订单已存在！']);
@@ -92,15 +89,17 @@ class SampleController extends AuthController {
                     $sample_model = new Model();
                     $sample_model->startTrans();
                     $sample_id = $sample_model->table(C('DB_PREFIX').'sample')->add($sample_data);
-                    $jsonStr = I('post.sample_details','',false);
-                    $arr = json_decode($jsonStr,true);
-                    //arr(arr(),arr()) 循环详情表数据
-                    foreach ($arr['sample_detail'] as $key=>&$value){
-                        # print_r($value);
+                    $product_data = I('post.sample_details','',false);
+                    foreach ($product_data as $key=>&$value){
+
+                        # 将步骤和主表id注入产品详情表
                         $value['detail_assoc'] = $sample_id;
                         $value['now_step'] = 2;
+                        $value['note'] = replaceEnterWithBr($value['note']);    // 保留复制换行符
                         $tmp_detail_id = $sample_model->table(C('DB_PREFIX').'sample_detail')->add($value);
+
                         if( $tmp_detail_id ){
+
                             # 步骤一数据
                             $tmp_op_data[0]['asc_step'] = 1;
                             $tmp_op_data[0]['asc_detail'] = $tmp_detail_id;
@@ -112,7 +111,9 @@ class SampleController extends AuthController {
                             $tmp_op_data[1]['operator'] = $value['manager'];
                             $tmp_op_data[1]['op_time'] = '';    //当用户操作成功后重写此字段
 
+                            # 写入步骤数据
                             $tmp_op_id = $sample_model->table(C('DB_PREFIX').'sample_operating')->addAll($tmp_op_data);
+
                             if( !$tmp_op_id ){
                                 $sample_model->rollback();
                                 $this->ajaxReturn(['flag'=>0,'msg'=>'添加订单失败！']);
@@ -124,19 +125,9 @@ class SampleController extends AuthController {
                             exit;
                         }
                     }
+
                     $sample_model->commit();
                     $this->ajaxReturn(['flag'=>1,'msg'=>'添加订单成功！','id'=>$sample_id]);
-                    //$adds = $sample_model->table('atop_sample_detail')->addAll($arr['sample_detail']);
-                    /*print_r($value);
-                    exit();
-                    //echo $sample_model->getLastSql($rel);
-                    if($adds && $sample_id){
-                        $sample_model->commit();
-                        $this->ajaxReturn(['flag'=>1,'msg'=>'添加订单成功！','id'=>$sample_id]);
-                    }else{
-                        $sample_model->rollback();
-                        $this->ajaxReturn(['flag'=>0,'msg'=>'添加订单失败！']);
-                    }*/
                 }
             }
         } else {
@@ -212,21 +203,27 @@ class SampleController extends AuthController {
 
             //print_r( $_SERVER );
 
-            $detailResult = M()->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c,'.C('DB_PREFIX').'productrelationships d')
-                               ->field('b.id,a.order_num,b.detail_assoc,b.count,b.customer,b.brand,b.model,b.note,b.requirements_date,b.expect_date,b.actual_date,c.nickname,d.type,d.pn')
-                               ->where('a.id=b.detail_assoc AND b.manager=c.id AND b.product_id=d.id AND b.id='.I('get.id'))
+            $detailResult = M()->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c,'.C('DB_PREFIX').'productrelationships d,'.C('DB_PREFIX').'sample_step e')
+                               ->field('b.id,a.order_num,b.detail_assoc,b.count,b.customer,b.brand,b.model,b.note,b.requirements_date,b.expect_date,b.actual_date,b.manager,b.now_step,c.nickname,d.type,d.pn,e.name')
+                               ->where('a.id=b.detail_assoc AND b.manager=c.id AND b.product_id=d.id AND b.id='.I('get.id').' AND b.now_step=e.id')
                                ->select();
-            /*M()->field('')->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'sample_operating c')
-                ->where('')->select();*/
 
             $stepResult = M('SampleStep')->select();
 
             $this->assign('step',$stepResult);
 
-            $detailResult[0]['operating'] = M('SampleOperating')->field('a.operator,a.op_time,b.id,b.name,b.transfer,b.rollback,b.termination')
-                                                                ->table(C('DB_PREFIX').'sample_operating a,'.C('DB_PREFIX').'sample_step b')
-                                                                ->where( 'a.asc_detail='.I('get.id').' AND a.asc_step=b.id' )
+            # 步骤表数据
+            $detailResult[0]['operating'] = M('SampleOperating')->field('a.operator,a.op_time,a.asc_detail,b.id,b.name,b.transfer,b.rollback,b.termination,c.nickname')
+                                                                ->table(C('DB_PREFIX').'sample_operating a,'.C('DB_PREFIX').'sample_step b,'.C('DB_PREFIX').'user c')
+                                                                ->where( 'a.asc_detail='.I('get.id').' AND a.asc_step=b.id AND a.operator=c.id' )
                                                                 ->select();
+
+
+            $sample_log_model = M('SampleLog');
+
+            foreach( $detailResult[0]['operating'] as $key=>&$value ){
+                $value['log'] = $sample_log_model->where( ['asc_detail'=>$value['asc_detail'],'log_step'=>$value['id']] )->order('log_time ASC')->select();
+            }
 
             //print_r($detailResult[0]);
 
@@ -249,7 +246,8 @@ class SampleController extends AuthController {
                     $this->assign('persons',$persons);
                     break;
                 case 3:
-
+                    $persons = M('user')->where( ['position'=>6] )->select();
+                    $this->assign('persons',$persons);
                     break;
             }
 
@@ -270,36 +268,41 @@ class SampleController extends AuthController {
         if(IS_POST){
 
             $post = I('post.');
-            
+
+            # 获取当前步骤
+            $pushOper = M('SampleDetail')->find($post['asc_detail']);
+
+            # 获取推送人员的邮件
+            $push_person_info = M()->field('b.nickname,b.email')
+                ->table(C('DB_PREFIX').'sample_operating a,'.C('DB_PREFIX').'user b')
+                ->where('a.operator=b.id AND asc_detail='.$post['asc_detail'].' AND a.operator<>'.session('user')['id'])
+                ->select();
+
+            # 获取产品基本信息
+            $orderData = M()->field('a.order_num,a.create_person_name,b.id detail_id,b.pn,b.count,b.customer,b.brand,b.model,b.note,b.requirements_date')
+                ->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b')
+                ->where( 'a.id=b.detail_assoc AND b.id='.$post['asc_detail'] )
+                ->select();
+
+            # 拼装推送人员邮箱
+            foreach( $push_person_info as $key=>&$value ){
+                $emails[] = $value['email'];
+            }
+
+            # 判断用户选择的操作类型
             switch( $post['type'] ){
                 case 'log':
                     $logData['asc_detail'] = $post['asc_detail'];
                     $logData['context'] = strip_tags($post['context']);
                     $logData['log_time'] = time();
                     $logData['person'] = session('user')['id'];
+                    $logData['log_step'] = $pushOper['now_step'];
 
                     $model = new Model();
 
                     $model->startTrans();   //开启事物
 
                     $add_log_id = $model->table(C('DB_PREFIX').'sample_log')->add( $logData );
-
-                    $push_person_info = M()->field('b.nickname,b.email')
-                                           ->table(C('DB_PREFIX').'sample_operating a,'.C('DB_PREFIX').'user b')
-                                           ->where('a.operator=b.id AND asc_detail='.$post['asc_detail'].' AND a.operator<>'.session('user')['id'])
-                                           ->select();
-
-                    //获取推送人员邮箱
-                    foreach( $push_person_info as $key=>&$value ){
-                        $emails[] = $value['email'];
-                    }
-
-                    $orderData = M()->field('a.order_num,a.create_person_name,b.id detail_id,b.pn,b.count,b.customer,b.brand,b.model,b.note,b.requirements_date')
-                                    ->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b')
-                                    ->where( 'a.id=b.detail_assoc AND b.id='.$post['asc_detail'] )
-                                    ->select();
-
-
 
                     $orderData[0]['context'] = strip_tags($post['context']);
 
@@ -313,11 +316,65 @@ class SampleController extends AuthController {
 
                     }else{
                         $model->rollback();
+
+                        $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                     }
 
-
                     break;
+
+                # 推送操作
                 case 'push':
+
+                    $pushOperRel = $pushOper['now_step'];
+
+                    $step_rel = M('SampleStep')->where( ['id'=>['in',[$pushOperRel,$pushOperRel+1]]] )->order('id asc')->select();
+
+                    $now_stepStr ='Step'.$step_rel[0]['id'].'-'.$step_rel[0]['name'];
+                    $next_stepStr ='Step'.$step_rel[1]['id'].'-'.$step_rel[1]['name'];
+
+                    $orderData[0]['now_step'] = $now_stepStr;
+                    $orderData[0]['next_step'] = $next_stepStr;
+
+                    # 推送下一步的数据
+                    $pushOperating['operator'] = $post['operator'];
+                    $pushOperating['asc_detail'] = $post['asc_detail'];
+                    $pushOperating['asc_step'] = $pushOperRel+1;
+                    # 推送时产生的日志
+                    $pushData['context'] = strip_tags($post['context']);
+                    $pushData['log_time'] = time();
+                    $pushData['person'] = session('user')['id'];
+                    $pushData['asc_detail'] = $post['asc_detail'];
+                    $pushData['log_step'] = $pushOper['now_step'];
+
+
+                    $model = new Model();
+
+                    $model->startTrans();   //开启事物
+
+                    $add_push_id = $model->table(C('DB_PREFIX').'sample_operating')->add($pushOperating);
+                    $add_push_log_id = $model->table(C('DB_PREFIX').'sample_log')->add($pushData);
+
+                    # 完成当前步骤的时间
+                    $savar_now_row = M('SampleOperating')->where('asc_step ='.$pushOperRel.' AND asc_detail ='.$post['asc_detail'])->save(['op_time'=>time()]);
+
+                    # 修改主表步骤
+                    $save_detail_row = M('SampleDetail')->save(['id'=>$post['asc_detail'],'now_step'=>$pushOperRel+1]);
+
+                    if( $savar_now_row &&  $add_push_log_id && $add_push_id && $save_detail_row){
+
+                        $model->commit();
+
+                        $this->pushEmail('PUSH', $emails, $orderData[0]);
+
+                        $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
+
+
+                    }else{
+                        $model->rollback();
+
+                        $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
+                    }
+
 
                     break;
                 case 'close':
@@ -358,6 +415,26 @@ HTML;
 
                 break;
             case 'PUSH':
+
+                $user = session('user')['nickname'];
+
+                $subject = '样品订单 '.$order_num.' 步骤更新';
+                $body = <<<HTML
+<p>Dear All,</p>
+<p>样品订单 <b>$order_num</b> 步骤更新  </p>
+<p>由 [$user] 将 $now_step 推送到 $next_step</p>
+<p>更新内容：$context</p><br>
+<p><b>订单基本信息</b></p>
+<p>销售人员：$create_person_name</p>
+<p>产品型号：$pn</p>
+<p>模块数量：$count</p>
+<p>客户名称：$customer</p>
+<p>设备品牌：$brand</p>
+<p>设备型号：$model</p>
+<p>备注：$note</p>
+<p>要求交期：$requirements_date</p><br>
+<p>详情请点击链接：<a href="http://$http_host/Sample/detail/id/$detail_id" target="_blank">http://$http_host/Sample/detail/id/$detail_id</a></p>
+HTML;
 
                 break;
             case 'CLOSE':

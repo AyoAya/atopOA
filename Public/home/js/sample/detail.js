@@ -2,21 +2,15 @@ $(function(){
 
     //如果有留言就显示
     $('.myTooltip').hover(function(){
-        $("[data-toggle='popover']").popover('show');
-    },function()
-    {
-        $("[data-toggle='popover']").popover('hide');
+        $(this).find('.popover-box').removeClass('sr-only');
+    },function(){
+        $(this).find('.popover-box').addClass('sr-only');
     });
 
-
-
-
+    //
     layui.use(['layer','form'], function() {
         var layer = layui.layer;
         var form = layui.form();
-        var AllData = '{"sample_detail":[';	//定义空对象用于存放订单内容
-
-
         form.on('select(operation)', function( data ){
             var _value = data.value;    //获取到当前选中value
 
@@ -31,9 +25,6 @@ $(function(){
             }
 
         });
-
-
-
 
 
 
