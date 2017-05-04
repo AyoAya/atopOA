@@ -138,9 +138,9 @@ class SampleController extends AuthController {
     }
 
 
-    //上传附件
+    # 上传附件
     public function upload(){
-        $info = FileUpload('/SampleAttachment/',1,0,'sample_attachment_');
+        /*$info = FileUpload('/SampleAttachment/',1,0,'sample_attachment_');
         if( is_array($info) ){  //检测文件上传是否成功，如果返回的结果为数组表示成功，否则为失败
             $return_data['flag'] = 1;
             $return_data['source'] = $info['Attachment']['name'];
@@ -154,44 +154,81 @@ class SampleController extends AuthController {
             $return_data['msg'] = $info;
             $this->ajaxReturn($return_data);
             exit;
+        }*/
+
+        $subName = I('post.SUB_NAME');
+        // 如果需要按id为子目录则必须填写第二个参数，否则直接保存在当前目录
+        if( $subName != '' ){
+            $result = upload( I('post.DIR'), $subName );
+            $this->ajaxReturn( $result );
         }
+
     }
 
-    //删除附件
-    public function removeFile(){
-        if( IS_POST && I('post.filepath') ){
-            if( file_exists( '.'.I('post.filepath') ) ){
-                if( unlink('.'.I('post.filepath')) ){
-                    $this->ajaxReturn( ['flag'=>1,'msg'=>'删除成功'] );
+    # 写入附件数据
+    public function insertAttachment(){
+        if( IS_POST ){
+            if( trim(I('post.SUB_NAME')) != '' ){
+                $SAMPLE_MODEL = M('Sample');
+                $save_id = $SAMPLE_MODEL->save( ['id'=>I('post.SUB_NAME'),'attachment'=>I('post.attachments','',false)] );
+                if( $save_id ){
+                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
                 }else{
-                    $this->ajaxReturn( ['flag'=>0,'msg'=>'删除失败'] );
+                    $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                 }
-            }else{
-                $this->ajaxReturn( ['flag'=>0,'msg'=>'文件不存在'] );
             }
         }
     }
+
 
     //样品单总览
     public function overview(){
-        if (I('get.id')) {
+        if( I('get.id') ){
+
             $model = new Model();
-            $sample_detail = M('sampleDetail');
 
-            $child_data = $model->field('a.id,a.pn,a.count,a.detail_assoc,a.customer,a.brand,a.model,a.note,a.requirements_date,a.expect_date,a.actual_date,b.type,b.pn,c.nickname,d.create_time,d.create_person_name,d.order_num,d.order_charge')
-                ->table(C('DB_PREFIX') . 'sample_detail a,' . C('DB_PREFIX') . 'productrelationships b,' . C('DB_PREFIX') . 'user c,' . C('DB_PREFIX') . 'sample d')
-                ->where('a.detail_assoc=' . I('get.id') . ' AND a.product_id=b.id AND b.manager=c.id AND a.detail_assoc=d.id')->select();
-            if (!empty($child_data)) {
-                $this->assign('childData', $child_data);
+            # 获取订单产品基本数据
+            $child_data = $model->field('a.id,a.pn,a.count,a.detail_assoc,a.customer,a.brand,a.model,a.note,a.requirements_date,a.expect_date,a.actual_date,a.now_step,b.type,b.pn,c.nickname,d.create_time,d.create_person_name,d.order_num,d.order_charge,e.name step_name')
+                                ->table(C('DB_PREFIX') . 'sample_detail a,' . C('DB_PREFIX') . 'productrelationships b,' . C('DB_PREFIX') . 'user c,' . C('DB_PREFIX') . 'sample d,'.C('DB_PREFIX').'sample_step e')
+                                ->where('a.detail_assoc=' . I('get.id') . ' AND a.product_id=b.id AND b.manager=c.id AND a.detail_assoc=d.id AND a.now_step=e.id')
+                                ->select();
 
-                //获取样品附件列表
+            $step_data = $model->table(C('DB_PREFIX').'sample_step')->select();
+
+            $this->assign('stepData', $step_data);
+
+            $sample_log_model = M('SampleLog');
+            $sample_operating_model = M('SampleOperating');
+
+            foreach( $child_data as $key=>&$value ){
+
+                # 步骤表数据
+                $value['operating'] = $sample_operating_model->field('a.operator,a.op_time,a.asc_detail,b.id,b.name,b.transfer,b.rollback,b.termination,c.nickname')
+                                                             ->table(C('DB_PREFIX').'sample_operating a,'.C('DB_PREFIX').'sample_step b,'.C('DB_PREFIX').'user c')
+                                                             ->where( 'a.asc_detail='.$value['id'].' AND a.asc_step=b.id AND a.operator=c.id' )
+                                                             ->select();
+
+                # 获取当前步骤产生的日志
+                foreach( $value['operating'] as $k=>&$v ){
+                    $v['log'] = $sample_log_model->where( ['asc_detail'=>$v['asc_detail'],'log_step'=>$v['id']] )->order('log_time ASC')->select();
+                }
+
             }
-                //print_r($child_data);
-                //$attachment = M('SampleAttachment');
-                //$map['attachment_assoc'] = I('get.id');
-                //$attachmentResult = $attachment->where($map)->select();
-                //$this->assign('attachmentResult', $attachmentResult);
-                $this->display();
+
+            # 获取订单基本信息及附件/测试报告
+            $order_data = $model->table(C('DB_PREFIX').'sample')->find(I('get.id'));
+
+            $order_data['attachment'] = json_decode($order_data['attachment'], true);
+
+            //print_r($child_data);
+
+            $this->assign('orderData',$order_data);
+
+            $this->assign('progress', $child_data);
+
+            # print_r($child_data);
+
+            $this->display();
         }
     }
 
@@ -204,7 +241,7 @@ class SampleController extends AuthController {
             //print_r( $_SERVER );
 
             $detailResult = M()->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c,'.C('DB_PREFIX').'productrelationships d,'.C('DB_PREFIX').'sample_step e')
-                               ->field('b.id,a.order_num,b.detail_assoc,b.count,b.customer,b.brand,b.model,b.note,b.requirements_date,b.expect_date,b.actual_date,b.manager,b.now_step,c.nickname,d.type,d.pn,e.name')
+                               ->field('a.id sample_id,b.id,a.order_num,b.detail_assoc,b.count,b.customer,b.brand,b.model,b.note,b.requirements_date,b.expect_date,b.actual_date,b.manager,b.now_step,c.nickname,d.type,d.pn,e.name')
                                ->where('a.id=b.detail_assoc AND b.manager=c.id AND b.product_id=d.id AND b.id='.I('get.id').' AND b.now_step=e.id')
                                ->select();
 
@@ -227,8 +264,21 @@ class SampleController extends AuthController {
 
             //print_r($detailResult[0]);
 
+            # 获取订单基本信息及附件/测试报告
+            $order_data = M('Sample')->find( $detailResult[0]['sample_id'] );
+
+            $order_data['attachment'] = json_decode($order_data['attachment'], true);
+
+            //print_r($child_data);
+
+            $this->assign('orderData',$order_data);
+
             # 获取最新日志
-            $new_log = M()->field('a.context,a.log_time,b.nickname,b.face,b.account')->table(C('DB_PREFIX').'sample_log a,'.C('DB_PREFIX').'user b')->where( 'a.person=b.id' )->order('log_time DESC')->select();
+            $new_log = M()->field('a.context,a.log_time,b.nickname,b.face,b.account,c.name')
+                          ->table(C('DB_PREFIX').'sample_log a,'.C('DB_PREFIX').'user b,'.C('DB_PREFIX').'sample_step c')
+                          ->where( 'a.person=b.id AND a.asc_detail='.I('get.id').' AND a.log_step=c.id' )
+                          ->order('log_time DESC')
+                          ->select();
 
             $this->assign('newlog',$new_log);
 

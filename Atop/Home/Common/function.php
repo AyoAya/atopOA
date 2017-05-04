@@ -223,6 +223,7 @@ function upload($savePath,$subName=''){
     $upload->replace = true;
     // 上传并返回结果
     $fileinfo = $upload->upload();
+
     if( $fileinfo ){
         $path = './Uploads'.$fileinfo['Filedata']['savepath'].$fileinfo['Filedata']['savename'];
         $name = $fileinfo['Filedata']['name'];

@@ -45,7 +45,7 @@ $(function(){
             // 添加到队列时
             window.loguploader.on('fileQueued', function( file ){
                 var fileItem = '<div class="file-item" id="'+ file.id +'">' +
-                    '<div class="pull-left"><i class="icon-file-alt"></i>&nbsp;&nbsp;'+ file.name +'</div>' +
+                    '<div class="pull-left"><i class="file-icon file-icon-ext-'+ file.ext +'"></i> '+ file.name +'</div>' +
                     '<div class="pull-right"><i class="icon-remove" title="移除该文件"></i></div>' +
                     '<div class="clearfix"></div>' +
                     '</div>';
@@ -143,6 +143,8 @@ $(function(){
             var step_select_elem = $(elem).parents('.customer-rma-form').find('.step-select');
             var fae_select_elem = $(elem).parents('.customer-rma-form').find('.fae-person-select');
             var close_reason_elem = $(elem).parents('.customer-rma-form').find('.close-reason-select');
+            var push_person_select = $(elem).parents('.customer-rma-form').find('.push-person-select');
+            var push_person_x_select = $(elem).parents('.customer-rma-form').find('.push-person-x-select');
             if( value == 'X' ){
                 if( !$(operation_select_elem).hasClass('sr-only') ){
                     $(operation_select_elem).addClass('sr-only');
@@ -155,6 +157,26 @@ $(function(){
                 }
                 if( !$(close_reason_elem).hasClass('sr-only') ){
                     $(close_reason_elem).addClass('sr-only');
+                }
+            }
+            if( now_step == 2 || now_step == 4 || now_step == 5 ){
+                if( value == 6 || value == 3 ){
+                    if( $(push_person_select).hasClass('sr-only') ){
+                        $(push_person_select).removeClass('sr-only')
+                    }
+                }else{
+                    if( !$(push_person_select).hasClass('sr-only') ){
+                        $(push_person_select).addClass('sr-only')
+                    }
+                }
+                if( value == 5 ){
+                    if( $(push_person_x_select).hasClass('sr-only') ){
+                        $(push_person_x_select).removeClass('sr-only')
+                    }
+                }else{
+                    if( !$(push_person_x_select).hasClass('sr-only') ){
+                        $(push_person_x_select).addClass('sr-only')
+                    }
                 }
             }
             if( now_step == 3 || now_step == 4 ){
@@ -174,6 +196,17 @@ $(function(){
                 }else{
                     if( !$(operation_select_elem).hasClass('sr-only') ){
                         $(operation_select_elem).addClass('sr-only');
+                    }
+                }
+            }
+            if( now_step == 2 ){
+                if( value == 'Z' ){
+                    if( $(fae_select_elem).hasClass('sr-only') ){
+                        $(fae_select_elem).removeClass('sr-only');
+                    }
+                }else{
+                    if( !$(fae_select_elem).hasClass('sr-only') ){
+                        $(fae_select_elem).addClass('sr-only');
                     }
                 }
             }
@@ -225,7 +258,7 @@ $(function(){
             }
 
             //console.log(data.field);
-            if( data.field.step == 4 && data.field.operation_type == 6 && window.loguploader.getFiles().length <= 0 ){
+            if( data.field.step == 4 && data.field.operation_type == 6 || data.field.operation_type == 5 && window.loguploader.getFiles().length <= 0 ){
                 layer.msg('请先上传分析报告',{ icon:2, time:2000 });
                 return false;
             }

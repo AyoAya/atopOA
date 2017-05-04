@@ -33,15 +33,15 @@
     <div class="overview-container">
         <div class="order-info-box">
             <div class="order-info pull-left">
-                <h2 class="order-num"><i class="icon-list-alt"></i>{$childData.0.order_num}　<span class="icon-time"> {$childData.0.order_charge} </span></h2>
+                <h2 class="order-num"><i class="icon-list-alt"></i>{$orderData.order_num} <span class="tag tag-warning">{$orderData.order_charge} </span></h2>
             </div>
             <div class="order-other pull-right">
-                <p>销售人员：{$childData.0.create_person_name}</p>
-                <p>创建时间：{$childData.0.create_time|date="Y-m-d",###}</p>
+                <p>销售人员：{$orderData.create_person_name}</p>
+                <p>创建时间：{$orderData.create_time|date="Y-m-d",###}</p>
             </div>
             <div class="clearfix"></div>
         </div>
-        <table class="layui-table">
+        <table class="layui-table" style="margin-bottom: 20px;">
             <thead>
                 <tr>
                     <th>产品类型</th>
@@ -51,11 +51,11 @@
                     <th>客户名称</th>
                     <th>设备品牌</th>
                     <th>设备型号</th>
-                    <th>进度</th>
+                    <th width="100">进度</th>
                 </tr>
             </thead>
             <tbody>
-                <volist name="childData" id="value">
+                <volist name="progress" id="value">
                    <tr>
                         <td>{$value.type}</td>
                         <td><a href="__ROOT__/Sample/detail/id/{$value.id}">{$value.pn}</a></td>
@@ -64,117 +64,103 @@
                         <td>{$value.customer}</td>
                         <td>{$value.brand}</td>
                         <td>{$value.model}</td>
-                        <td></td>
+                        <td><span class="tag tag-primary">{$value.step_name}</span></td>
                     </tr>
                 </volist>
             </tbody>
         </table>
-<!--        <volist name="sampleResult.SampleDetail" id="value">
+
+
+        <volist name="progress" id="value" key="ONE_KEY">
             <div class="layui-collapse">
                 <div class="layui-colla-item">
-                    <h2 class="layui-colla-title"><a href="__ROOT__/Sample/detail/id/{$value.id}">{$value.product_data.pn}</a></h2>
-                    <div class="layui-colla-content layui-colla-content-rewrite layui-show">
-                        <ul class="nav nav-pills nav-justified step step-square">
-                            <li class="active">
-                                <a>下单</a>
-                                <div class="dispose-info">
-                                    <div class="dispose-user-face pull-left">
-                                        <img src="__IMG__/face/face_19.png" width="36" alt="">
-                                    </div>
-                                    <div class="dispose-user-info pull-left">
-                                        <p>张三</p>
-                                        <p>2017-03-27</p>
-                                    </div>
-                                    <div class="arrow_up_icon"></div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </li>
-                            <volist name="stepResult" id="val">
-                                <li>
-                                    <a>{$val.name}</a>
-                                    <div class="dispose-info">
-                                        <div class="dispose-center">
-                                            <div class="dispose-user-face pull-left">
-                                                <img src="__IMG__/face/face_19.png" width="36" alt="">
-                                            </div>
-                                            <div class="dispose-user-info pull-left">
-                                                <p>张三丰</p>
-                                                <p>2017-03-27</p>
-                                            </div>
-                                            <div class="arrow_up_icon"></div>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </volist>
-                        </ul>
+                    <h2 class="layui-colla-title"><a href="__ROOT__/Sample/detail/id/{$value.id}">{$value.pn}</a></h2>
+                    <div class="layui-colla-content layui-show">
+                        <div class="procedure">
+                            <table class="procedure-table">
+                                <tr class="procedure-wrap">
+
+                                    <volist name="stepData" id="val" key="TWO_KEY">
+                                        <volist name="value.operating" id="vo">
+                                            <eq name="val.id" value="$vo.id">
+                                                <notempty name="vo.op_time">
+                                                    <td class="active">
+                                                        <div class="procedure-title">{$val.name}
+                                                            <notempty name="vo.log">
+                                                                <i class=" icon-info-sign myTooltip">
+                                                                    <div class="sr-only popover-box">
+                                                                        <foreach name="vo.log" item="v">
+                                                                            <div class="log-box">
+                                                                                <span class="log-box-time">{$v.log_time|date="Y-m-d H:i",###}</span>
+                                                                                <span class="log-box-context">{$v.context}</span>
+                                                                            </div>
+                                                                        </foreach>
+                                                                    </div>
+                                                                </i>
+                                                            </notempty>
+                                                        </div>
+                                                        <div class="procedure-step"><i class="icon-ok"></i></div>
+                                                        <div class="procedure-info">
+                                                            {$vo.nickname}<br>
+                                                            {$vo.op_time|date="Y-m-d H:i",###}
+                                                        </div>
+                                                        <div class="procedure-hollow"></div>
+                                                    </td>
+                                                <else/>
+                                                    <td>
+                                                        <div class="procedure-title">{$val.name}</div>
+                                                        <div class="procedure-step">{$TWO_KEY}</div>
+                                                        <div class="procedure-info"></div>
+                                                        <div class="procedure-hollow"></div>
+                                                    </td>
+                                                </notempty>
+                                            </eq>
+                                        </volist>
+                                        <if condition="($val['id']-1) egt count($value['operating'])">
+                                            {//还未进行的步骤}
+                                            <td>
+                                                <div class="procedure-title">{$val.name}</div>
+                                                <div class="procedure-step">{$TWO_KEY}</div>
+                                                <div class="procedure-info">
+                                                    <volist name="detailResult.operating" id="val">
+                                                        <eq name="value.id" value="$val.id">
+                                                            {$val.op_time|date="Y-m-d H:i",###}
+                                                        </eq>
+                                                    </volist>
+                                                </div>
+                                                <div class="procedure-hollow"></div>
+                                            </td>
+                                        </if>
+                                    </volist>
+
+                                </tr>
+                            </table>
+                        </div>
+
                     </div>
                 </div>
             </div>
-        </volist>-->
+        </volist>
 
-        <div class="procedure">
-            <table class="procedure-table">
-                <tr class="procedure-wrap">
-                    <td class="active">
-                        <div class="procedure-title">下单</div>
-                        <div class="procedure-step"><i class="icon-ok"></i></div>
-                        <div class="procedure-info">2017-04-06 14:56</div>
-                        <div class="procedure-hollow"></div>
-                    </td>
-                    <td class="active">
-                        <div class="procedure-title">审核</div>
-                        <div class="procedure-step"><i class="icon-remove"></i></div>
-                        <div class="procedure-info">2017-04-06 14:56</div>
-                        <div class="procedure-hollow"></div>
-                    </td>
-                    <td>
-                        <div class="procedure-title">物料</div>
-                        <div class="procedure-step">3</div>
-                        <div class="procedure-info">2017-04-06 14:56</div>
-                        <div class="procedure-hollow"></div>
-                    </td>
-                    <td>
-                        <div class="procedure-title">制作</div>
-                        <div class="procedure-step">4</div>
-                        <div class="procedure-info">2017-04-06 14:56</div>
-                        <div class="procedure-hollow"></div>
-                    </td>
-                    <td>
-                        <div class="procedure-title">测试</div>
-                        <div class="procedure-step">5</div>
-                        <div class="procedure-info">2017-04-06 14:56</div>
-                        <div class="procedure-hollow"></div>
-                    </td>
-                    <td>
-                        <div class="procedure-title">发货</div>
-                        <div class="procedure-step">6</div>
-                        <div class="procedure-info">2017-04-06 14:56</div>
-                        <div class="procedure-hollow"></div>
-                    </td>
-                    <td>
-                        <div class="procedure-title">反馈</div>
-                        <div class="procedure-step">7</div>
-                        <div class="procedure-info">2017-04-06 14:56</div>
-                        <div class="procedure-hollow"></div>
-                    </td>
-                </tr>
-            </table>
-        </div>
 
 
         <div class="layui-collapse">
             <div class="layui-colla-item">
                 <h2 class="layui-colla-title">附件列表</h2>
                 <div class="layui-colla-content layui-show">
-                    <volist name="attachmentResult" id="value">
-                        <div class="file-item">
-                            <div class="file-info"><i class="icon-file-alt"></i>&nbsp;&nbsp;<a href="__ROOT__{$value.path}" title="{$value.original}">{$value.original}</a></div>
-                        </div>
-                    </volist>
+                    <notempty name="orderData.attachment">
+                        <volist name="orderData.attachment" id="value">
+                            <div class="file-item">
+                                <div class="file-info"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" title="{$value.savename}">{$value.savename}</a></div>
+                            </div>
+                        </volist>
+                    <else/>
+                        <i class="icon-exclamation-sign"></i> 没有附件
+                    </notempty>
                 </div>
             </div>
         </div>
+
     </div>
 
 </block>

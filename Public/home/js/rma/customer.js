@@ -11,6 +11,8 @@ $(function(){
 	var attachmentData = new Array(),
 		attachmentList = new Array();
 
+	var SUB_NAME;
+
 	//初始化layui组件
 	layui.use(['form','layer','upload'], function(){
 		var form = layui.form(),
@@ -65,7 +67,7 @@ $(function(){
 		// 添加到队列时
 		uploader.on('fileQueued', function( file ){
 			var fileItem = '<div class="file-item" id="'+ file.id +'">' +
-				'<div class="pull-left"><i class="icon-file-alt"></i>&nbsp;&nbsp;'+ file.name +'</div>' +
+				'<div class="pull-left"><i class="file-icon file-icon-ext-'+ file.ext +'"></i> '+ file.name +'</div>' +
 				'<div class="pull-right"><i class="icon-remove" title="移除该文件"></i></div>' +
 				'<div class="clearfix"></div>' +
 				'</div>';
@@ -74,7 +76,6 @@ $(function(){
 		// 上传之前
 		uploader.on('uploadBeforeSend', function( block, data, headers ){
 			data.SUB_NAME = SUB_NAME;
-			data.LOG_ID = LOG_ID;
 		});
 		// 上传成功时
 		uploader.on('uploadSuccess', function( file,response ){
@@ -157,7 +158,7 @@ $(function(){
 				},
 				success : function(response){
 					if( response.flag == 1 ){
-						$('#LAYER_TMP_PROMPT .prompt-msg').text('正在上传文件...');
+						$('#LAYER_TMP_PROMPT .prompt-msg').text('正在上传文件');
 
 						SUB_NAME = response.id;
 						LOG_ID = response.logid;

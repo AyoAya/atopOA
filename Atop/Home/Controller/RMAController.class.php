@@ -369,11 +369,54 @@ class RMAController extends AuthController{
 
         //print_r($resultData);
 
+        # 如果当前步骤在2、4、5则将下一步的推送人注入模板
+        if( $resultData['now_step'] == 2 || $resultData['now_step'] == 4 || $resultData['now_step'] == 5 ){
+            if( $resultData['now_step'] == 2 ){
+                $push_person_data = M()->field('b.id,b.nickname')->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'user b')->where( 'a.main_assoc='.I('get.id').' AND a.step_assoc=1 AND a.operation_person=b.id' )->select()[0];
+                $this->assign('pushPerson',$push_person_data['nickname']);
+            }elseif( $resultData['now_step'] == 4 ){
+                $productrelationships_model = M('Productrelationships');
+                $oacustomercomplaint_model = M('Oacustomercomplaint');
+                $oacustomercomplaint_result = $oacustomercomplaint_model->field('pn')->find( I('get.id') );  //获取到该客诉产品列表
+
+                if( $oacustomercomplaint_result ) {
+                    if (strpos($oacustomercomplaint_result['pn'], ',') !== false) {   //检测产品集中是否包含,号，如果包含则说明该客诉存在多个产品
+                        $pns = explode(',', $oacustomercomplaint_result['pn']);
+                        foreach ($pns as $key => &$value) {
+                            $value = trim($value);  //去掉前后空格
+                        }
+                        $_map['pn'] = ['in', $pns]; //根据pn号查询数据
+                        $productrelationships_result = $productrelationships_model->field('manager')->where($_map)->select();  //获取pn对应的产品经理
+                        $operation_person_ids = [];
+                        foreach ($productrelationships_result as $key => &$value) {   //拼装产品经理id
+                            $operation_person_ids[] = $value['manager'];
+                        }
+                        $operation_person_ids = array_unique($operation_person_ids);  //未避免出现重复的产品经理，当id一致时保留唯一
+                        $push_person_data = M('User')->field('nickname')->where( ['id'=>['in',$operation_person_ids]] )->select();
+                        $person_str = '';
+                        foreach( $push_person_data as $key=>&$value ){
+                            $person_str .= $value['nickname'].'/';
+                        }
+                        $person_str = substr($person_str,0,-1);
+                        $this->assign('pushPersonX',$person_str);
+                    } else {
+                        $push_person_data = M()->field('nickname')->table(C('DB_PREFIX').'productrelationships a,'.C('DB_PREFIX').'user b')->where( 'a.pn="'.trim($oacustomercomplaint_result['pn']).'" AND a.manager=b.id' )->select()[0];
+                        $this->assign('pushPersonX',$push_person_data['nickname']);
+                    }
+                }
+                $push_person_data_2 = M()->field('b.id,b.nickname')->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'user b')->where( 'a.main_assoc='.I('get.id').' AND a.step_assoc=2 AND a.operation_person=b.id' )->select()[0];
+                $this->assign('pushPerson',$push_person_data_2['nickname']);
+            }elseif( $resultData['now_step'] == 5 ){
+                $push_person_data = M()->field('b.id,b.nickname')->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'user b')->where( 'a.main_assoc='.I('get.id').' AND a.step_assoc=2 AND a.operation_person=b.id' )->select()[0];
+                $this->assign('pushPerson',$push_person_data['nickname']);
+            }
+        }
+
         # 如果当前步骤为销售确认是否转RMA则将QA部门(品质部)人员列表注入模板
         if( $resultData['now_step'] == 3 || $resultData['now_step'] == 4 ){
             $QA_list = M('User')->where( 'department=3 AND id<>'.session('user')['id'] )->select(); //获取到同部门且不包含自己的人员列表
             $this->assign('QAlist',$QA_list);
-        }elseif( $resultData['now_step'] == 5 || $resultData['now_step'] == 6 ){
+        }elseif( $resultData['now_step'] == 5 || $resultData['now_step'] == 6 || $resultData['now_step'] == 2 ){
 
 
             # 获取上一个步骤id
@@ -400,12 +443,16 @@ class RMAController extends AuthController{
             }else{
                 $step_info['nickname'] = M('user')->field('nickname')->find( $oacustomeroperation_result['operation_person'] )['nickname']; //获取上一个步骤人的姓名
             }
-            $step_info['step_name'] = $oacustomerstep_model->field('step_name')->find( $step_info_data[0]['step'] )['step_name'];
+            $tmp_step_data = $oacustomerstep_model->field('id,step_name')->find( $step_info_data[0]['step'] );
+
+            $step_info['step_name'] = $tmp_step_data['step_name'];
+
+            $step_info['step_id'] = $tmp_step_data['id'];
 
 
             //print_r($step_info);
             $this->assign('fallback',$step_info);
-            if( $resultData['now_step']['id'] == 6 ){
+            if( $resultData['now_step'] == 6 || $resultData['now_step'] == 2 ){
                 $FAE_list = M('User')->where( 'position=12 AND id<>'.session('user')['id'] )->select(); //获取到同职位且不包含自己的人员列表
                 $this->assign('FAElist',$FAE_list);
             }
@@ -651,7 +698,7 @@ class RMAController extends AuthController{
                     M()->rollback();
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加失败'] );
                 }
-            }elseif( $post['operation_type'] == 'Z' ){   //如果操作类型为transfer，则说明用户将该步骤操作人更换为其他QA部门人选
+            }elseif( $post['operation_type'] == 'Z' ){   //如果操作类型为transfer，则说明用户将该步骤操作人更换为其他人选
 
                 $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
                 $oacustomeroperaion_model = M('Oacustomeroperation');

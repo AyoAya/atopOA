@@ -247,6 +247,29 @@ input[readonly] {
 
 
 
+/*** 定义tag样式 ***/
+span.tag {
+	padding: 2px 5px;
+	color: #fff;
+	background: #428bca;
+	border-radius: 2px;
+}
+span.tag-primary {
+	background: #428bca;
+}
+span.tag-warning {
+	background: #f0ad4e;
+}
+span.tag-info {
+	background: #5bc0de;
+}
+span.tag-danger {
+	background: #d9534f;
+}
+
+
+
+
 /*** 文件图标 ***/
 i.file-icon {
 	width: 14px;

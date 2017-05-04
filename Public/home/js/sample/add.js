@@ -8,6 +8,119 @@ $(function(){
     layui.use(['layer','form'], function(){
         var layer = layui.layer;
         var form = layui.form();
+
+		var SUB_NAME;
+
+		var attachmentData = new Array();	//定义存放附件的对象
+
+		// 定义webuploader配置
+		var webuploader_option = {
+			auto: false,
+			server: ThinkPHP['AJAX'] + '/Sample/upload',
+			pick: '#filePicker',
+			fileVal : 'Filedata',
+			accept: {
+				title: 'file',
+				extensions: 'zip,rar,jpg,png,jpeg,doc,xls,xlsx,docx,pdf'
+			},
+			method: 'POST',
+		};
+
+		// 实例化webuploader
+		var uploader = WebUploader.create(webuploader_option);
+
+		// 添加到队列时
+		uploader.on('fileQueued', function( file ){
+			var fileItem = '<div class="file-item" id="'+ file.id +'">' +
+				'<div class="pull-left"><i class="file-icon file-icon-ext-'+ file.ext +'"></i> '+ file.name +'</div>' +
+				'<div class="pull-right"><i class="icon-remove" title="移除该文件"></i></div>' +
+				'<div class="clearfix"></div>' +
+				'</div>';
+			$(webuploader_option.pick).next().append(fileItem);
+		});
+
+		// 上传之前
+		uploader.on('uploadBeforeSend', function( block, data, headers ){
+			data.SUB_NAME = SUB_NAME;
+			data.DIR = '/Sample/';
+		});
+
+		//上传成功时
+		uploader.on('uploadSuccess', function(file, response){	//文件了上传成功后触发
+			if( response.flag > 0 ){
+				//当文件上传成功后添加到attachmentData
+				var attachmentObject = new Object();
+				attachmentObject.savename = response.savename;
+				attachmentObject.ext = response.ext;
+				attachmentObject.path = response.path;
+				attachmentData.push(attachmentObject);
+			}else{
+				layer.closeAll();
+				layer.msg(response.msg,{icon:2,time:2000});
+			}
+		});
+
+		// 所有文件上传结束时
+		uploader.on('uploadFinished', function(){
+			$.ajax({
+				url : ThinkPHP['AJAX'] + '/Sample/insertAttachment',
+				type : 'POST',
+				data : {
+					SUB_NAME : SUB_NAME,
+					attachments : JSON.stringify(attachmentData)
+				},
+				dataType : 'json',
+				success : function( response ){
+					if( response.flag > 0 ){
+						layer.closeAll();
+						layer.msg(response.msg, { icon : 1,time : 2000 });
+						setTimeout(function(){
+							location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Sample/overview/id/' + SUB_NAME;
+						},2000);
+					}else{
+						layer.closeAll();
+						layer.msg(response.msg, { icon : 2,time : 2000 });
+					}
+				}
+			});
+		});
+
+		// 上传错误时
+		uploader.on('error', function( code ){
+			var msg = '';
+			switch(code){
+				case 'Q_EXCEED_NUM_LIMIT':
+					msg = '只能上传一个文件';
+					break;
+				case 'Q_EXCEED_SIZE_LIMIT':
+					msg = '文件大小超出限制';
+					break;
+				case 'Q_TYPE_DENIED':
+					msg = '文件格式不允许';
+					break;
+				case 'F_DUPLICATE':
+					msg = '文件已存在';
+					break;
+				default:
+					msg = code;
+			}
+			layer.msg(msg, {icon: 2, time: 2000});
+		});
+
+		// 删除队列文件
+		$('.uploader-file-queue').on('click', '.icon-remove', function(){
+			var id = $(this).parent().parent().attr('id');
+			// 删除队列中的文件
+			uploader.removeFile( uploader.getFile(id,true) );
+			// 删除dom节点
+			$(this).parent().parent().remove();
+		});
+
+
+
+
+
+
 		form.on('submit(sample)', function(data){
 			var sample = $('#sampleForm');
             var order_num = sample.find('.sample_order_num').val();	//获取到订单号
@@ -49,10 +162,30 @@ $(function(){
 				},
 
 				dataType: 'json',
+				beforeSend : function(){
+					var prompt_dialog = layer.open({
+						type : 1,
+						title : false,
+						closeBtn : false,
+						area : '200px',
+						shade : 0.5,
+						id : 'LAYER_TMP_PROMPT',
+						resize : false,
+						moveType : 1,
+						content : '<div style="padding: 15px;"><i class="icon-spinner icon-spin"></i>&nbsp;&nbsp;<span class="prompt-msg">正在写入数据</span></div>',
+					});
+				},
 				success: function(response){
 					if( response.flag > 0 ){
-						layer.msg(response.msg,{icon:1});
-                        location.href = 'http://'+ThinkPHP['HTTP_HOST']+'/Sample/overview/id/'+response.id;
+						$('#LAYER_TMP_PROMPT .prompt-msg').text('正在上传文件');
+
+						SUB_NAME = response.id;
+
+						if( uploader.getFiles().length > 0 ){
+							uploader.upload();
+						}else{
+							location.href = 'http://'+ThinkPHP['HTTP_HOST']+'/Sample/overview/id/'+response.id;
+						}
                     }else{
 						AllData = '{"sample_detail":[';
 						layer.msg(response.msg,{icon:2});
@@ -62,6 +195,8 @@ $(function(){
 			});
 			return false; //阻止表单跳转。
 		});
+
+
 		form.on('submit(productSearch)', function(data){
 			$.ajax({
 				url : ThinkPHP['AJAX'] + '/Sample/productSearch',
@@ -82,6 +217,13 @@ $(function(){
 			});
 			return false;
 		});
+
+
+
+
+
+
+
     });
 
 
@@ -252,56 +394,6 @@ $(function(){
 			},400);
 		}
     });
-
-	// 定义webuploader配置
-	var attachmentData = new Array();	//定义存放附件的对象
-	var webuploader_option = {
-		auto: true,
-		server: ThinkPHP['AJAX'] + '/Sample/upload',
-		pick: '#filePicker',
-		fileVal : 'Attachment',
-		accept: {
-			title: 'file',
-			extensions: 'zip,rar,jpg,png,jpeg,doc,xls,xlsx,docx,pdf',
-			mimeTypes: 'image/*,file/*',
-		},
-		method: 'POST',
-	};
-	// 实例化webuploader
-	var uploader = WebUploader.create(webuploader_option);
-	uploader.on('uploadSuccess', function(file, response){	//文件了上传成功后触发
-		if( response.flag > 0 ){
-			//当文件上传成功后添加到attachmentData
-			var attachmentObject = new Object();
-			attachmentObject.original = response.source;
-			attachmentObject.newname = response.newname;
-			attachmentObject.path = response.savepath;
-			attachmentObject.ext = response.ext;
-			attachmentObject.size = response.size;
-			attachmentData.push(attachmentObject);
-			var _html = '<li><span class="pull-left file-name layui-elip"><i class="layui-icon">&#xe621;</i>&nbsp;'+ response.source +'</span><button class="pull-right layui-btn layui-btn-danger layui-btn-mini remove-file-btn" file-path="'+ response.savepath +'" title="删除"><i class="layui-icon">&#x1006;</i></button><div class="clearfix"></div></li>';
-			$('.file-list').append(_html);
-		}else{
-			layer.alert(response.msg, {
-				title: '提示'
-			});
-		}
-	});
-	uploader.on('error', function( code ){	//文件上传出错时触发
-		var msg = '';
-		switch(code){
-			case 'Q_EXCEED_NUM_LIMIT':
-				msg = '只能上传一个文件';
-			break;
-			case 'Q_EXCEED_SIZE_LIMIT':
-				msg = '文件大小超出限制';
-			break;
-			case 'Q_TYPE_DENIED':
-				msg = '文件格式不允许';
-			break;
-		}
-		layer.msg(msg, {icon:2});
-	});
 
 	//删除文件
 	$(document).on('click', '.remove-file-btn', function(){

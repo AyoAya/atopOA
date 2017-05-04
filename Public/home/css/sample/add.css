@@ -1,7 +1,6 @@
 .sample-container {
 	width: 900px;
-	margin: 0 auto;
-	padding-bottom: 300px; 
+	margin: 15px auto 0;
 }
 .traverse {
 	padding-top: 25px;
@@ -51,6 +50,14 @@
 	display: block;
 	width: 90%;
 }
+
+
+
+
+#filePicker {
+	width: 500px;
+}
+
 
 
 .product-filter-box {

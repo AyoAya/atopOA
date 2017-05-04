@@ -315,9 +315,9 @@
 									<h4 class="modal-title" id="myModalLabel">添加处理记录</h4>
 								</div>
 								<div class="modal-body">
-									<div class="layui-inline">
+									<div class="layui-inline operation-type-box">
 										<label class="layui-form-label">处理类型</label>
-										<div class="layui-input-inline">
+										<div class="layui-input-inline ">
 											<select name="operation_type" lay-filter="operation">
 												<option value="X">添加日志</option>
 												<eq name="details.now_step_info.transfer" value="Y">
@@ -335,8 +335,8 @@
 												<lt name="details.now_step.id" value="$maxStep">
 													<eq name="details.rma_state" value="N">	{//往下推送的前提是该客诉尚未关闭}
 														<neq name="details.now_step.id" value="4">	{//如果当前步骤在RMA分析报告（QA），则可以选择性的跳过协助处理RMA报告直接到审核并关闭RMA}
-															<option value="{$details.next_step.id}">推送到：Step-{$details.next_step.id} {$details.next_step.step_name}</option>
-															<else/>
+															<option value="{$details.next_step.id}">推送到：Step{$details.next_step.id}-{$details.next_step.step_name}</option>
+														<else/>
 															<volist name="details.next_step" id="value">
 																<option value="{$value.id}">推送到：Step{$value.id}-{$value.step_name}</option>
 															</volist>
@@ -346,6 +346,28 @@
 											</select>
 										</div>
 									</div>
+
+									<present name="pushPerson">
+										<div class="layui-inline push-person-select sr-only">
+											<label class="layui-form-label">处理人</label>
+											<div class="layui-input-inline">
+												<select>
+													<option value="0" selected>{$pushPerson}</option>
+												</select>
+											</div>
+										</div>
+									</present>
+
+									<present name="pushPersonX">
+										<div class="layui-inline push-person-x-select sr-only">
+											<label class="layui-form-label">处理人</label>
+											<div class="layui-input-inline">
+												<select>
+													<option value="0" selected>{$pushPersonX}</option>
+												</select>
+											</div>
+										</div>
+									</present>
 
 									<present name="QAlist">
 										<div class="layui-inline operation-person-select sr-only">
@@ -380,7 +402,7 @@
 									<present name="fallback">
 										<div class="layui-inline step-select sr-only">
 											<div class="layui-input-inline">
-												<span>回退到：{$fallback.step_name}</span><span>处理人：{$fallback.nickname}</span>
+												<span>回退到：Step{$fallback.step_id}-{$fallback.step_name}</span><span>处理人：{$fallback.nickname}</span>
 											</div>
 										</div>
 									</present>

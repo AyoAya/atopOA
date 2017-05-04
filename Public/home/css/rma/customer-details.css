@@ -334,7 +334,10 @@ code {
 	margin-top: 10px;
 }
 .customer-rma-form .layui-form-select {
-	width: 201.5px;
+	width: 163px;
+}
+.customer-rma-form .operation-type-box .layui-form-select {
+	width: 240px;
 }
 .customer-rma-form .step-select span {
 	color: #888;

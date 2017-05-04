@@ -44,9 +44,8 @@
 				<label class="layui-form-label" >是否收费</label>
 				<div class="layui-input-block">
 					<select name="order_charge" autocomplete="off" class="sample_order_charge" lay-verify="required">
-						<option value=""></option>
+						<option value="免费" selected>免费</option>
 						<option value="付费">付费</option>
-						<option value="免费">免费</option>
 					</select>
 				</div>
 			</div>
@@ -104,7 +103,8 @@
 			<!-- 提交 -->
 			<div class="button-box">
 				<div class="pull-left">
-					<div id="filePicker"><i class="layui-icon">&#xe62f;</i> 上传附件</div>
+					<div id="filePicker"><i class="icon-arrow-up"></i> 上传附件</div>
+					<div class="uploader-file-queue"></div>
 				</div>
 				<div class="pull-right">
 					<button type="button" id="addBar" class="layui-btn layui-btn-primary">添加一栏</button>
