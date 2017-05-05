@@ -43,9 +43,9 @@ class SampleController extends AuthController {
                                 ->select();
             //订单状态颜色
             //print_r($value['order_state'].'----');
-            if ($value['order_state'] >= 1 && $value['order_state'] < 6) {
+            if ($value['order_state'] == 'N') {
                 $value['color'] = '#428bca';
-            } elseif ($value['order_state'] >= 6) {
+            } elseif ($value['order_state'] == 'Y') {
                 $value['color'] = '#5cb85c';
             } else {
                 $value['color'] = '#d9534f';
@@ -258,6 +258,8 @@ class SampleController extends AuthController {
 
             $sample_log_model = M('SampleLog');
 
+            //print_r($detailResult[0]['operating']);
+
             foreach( $detailResult[0]['operating'] as $key=>&$value ){
                 $value['log'] = $sample_log_model->where( ['asc_detail'=>$value['asc_detail'],'log_step'=>$value['id']] )->order('log_time ASC')->select();
             }
@@ -296,6 +298,14 @@ class SampleController extends AuthController {
                     $this->assign('persons',$persons);
                     break;
                 case 3:
+                    $persons = M('user')->where( ['position'=>6] )->select();
+                    $this->assign('persons',$persons);
+                    break;
+                case 4:
+                    $persons = M('user')->where( ['position'=>11] )->select();
+                    $this->assign('persons',$persons);
+                    break;
+                case 5:
                     $persons = M('user')->where( ['position'=>6] )->select();
                     $this->assign('persons',$persons);
                     break;
@@ -389,6 +399,11 @@ class SampleController extends AuthController {
                     $pushOperating['operator'] = $post['operator'];
                     $pushOperating['asc_detail'] = $post['asc_detail'];
                     $pushOperating['asc_step'] = $pushOperRel+1;
+
+
+                    //print_r($pushOperating);
+
+
                     # 推送时产生的日志
                     $pushData['context'] = strip_tags($post['context']);
                     $pushData['log_time'] = time();
@@ -494,7 +509,7 @@ HTML;
 
         }
 
-        $result = send_Email( 'vinty_email@163.com', '', $subject, $body );
+        $result = send_Email( 'm18581898939@163.com', '', $subject, $body );
         if( $result != 1 ){
             $this->ajaxReturn( ['flag'=>0,'msg'=>'邮件发送失败'] );
             exit;
