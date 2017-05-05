@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="__CSS__/animate.css">
 	<link rel="stylesheet" href="__CSS__/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" href="__CSS__/timeline.css"/>
-	<link rel="stylesheet" href="__CSS__/rma/customer-details.css">
+	<link rel="stylesheet" href="__CSS__/rma/details.css">
 </block>
 
 <block name="linkjs">
@@ -86,7 +86,7 @@
 			<tr>
 				<td>{$details.id}</td>
 				<td>{$details.cc_time}</td>
-				<td>{$details.nickname}</td>
+				<td>{$details.actual_name}</td>
 				<td>{$details.customer}</td>
 				<td>{$details.sale_order}</td>
 				<td>{$details.pn}</td>
@@ -427,6 +427,28 @@
 
 									<div class="layui-form-item layui-form-text">
 										<textarea name="log_content" placeholder="请输入处理内容" lay-verify="required" class="layui-textarea"></textarea>
+									</div>
+									<div class="layui-form-item" style="margin-bottom: 0;">
+										<label class="layui-form-label" style="width: 55px;vertical-align: middle;">抄送</label>
+										<div class="layui-input-block" style="margin-left: 55px;">
+											<input type="checkbox" lay-filter="cc" name="cc" value="Y" title="" lay-skin="primary">
+										</div>
+									</div>
+									<div id="all-cc-list" class="sr-only"></div>
+									<div class="sr-only" id="ccBox">
+										<div class="cc-box-department">
+											<select name="department" lay-filter="department">
+												<option value="">选择部门</option>
+												<volist name="ccList.departments" id="value">
+													<option value="{$value.id}">{$value.name}</option>
+												</volist>
+											</select>
+										</div>
+										<div class="cc-box-list">
+											<volist name="ccList.users" id="value">
+												<input type="checkbox" lay-filter="user" department="{$value.department}" name="cc[]" title="{$value.nickname}" value="{$value.id}">
+											</volist>
+										</div>
 									</div>
 									<div class="fj-box">
 											<!--<input type="file" name="Filedata"  lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf" class="layui-upload-file" multiple>-->

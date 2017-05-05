@@ -1,13 +1,7 @@
 .compatible-container {
     padding-top: 15px;
     width: 600px;
-    margin: 0 auto;
     padding-bottom: 200px;
-}
-.compatible-container .compatible-form textarea[name=comment] {
-    max-width: 600px;
-    min-width: 600px;
-    min-height: 100px;
 }
 .compatible-container .compatible-form .btn-submit,.compatible-container .compatible-form .btn-reset {
     width: 100px;
@@ -16,6 +10,16 @@
 .compatible-container .compatible-form .btn-submit {
     margin-left: 15px;
 }
+
+
+.compatible-container .compatible-form .layui-form-label {
+    width: 110px;
+    padding-left: 0;
+    padding-right: 30px;
+}
+
+
+
 
 #stateText {
     width: 90px;

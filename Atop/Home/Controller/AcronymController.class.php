@@ -34,7 +34,9 @@ class AcronymController extends AuthController {
             $postData['add_person'] = session('user')['id'];
             $id = M('Acronym')->add($postData);
             if( $id ){
-                echo $id; exit;
+                $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$id] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
             }
         }else{
             $this->display();

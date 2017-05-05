@@ -1,0 +1,7 @@
+.thumb-container {
+    width: 600px;
+}
+.thumb-container .layui-form-label {
+    width: 90px;
+    padding-left: 0;
+}

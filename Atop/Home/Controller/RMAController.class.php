@@ -316,13 +316,17 @@ class RMAController extends AuthController{
             if($key=='salesperson'){
                 $condition['account'] = $value;
                 $nickname = $user->field('nickname')->where($condition)->select();
+                //print_r($nickname);
                 if($nickname){
-                    $resultData['nickname'] = $nickname[0]['nickname'];
+                    $resultData['actual_name'] = $nickname[0]['nickname'];
+                    $resultData['act_name'] = $nickname[0]['nickname'];
                 }else{
-                    $resultData['nickname'] = $value;
+                    $resultData['actual_name'] = $value;
+                    $resultData['act_name'] = $value;
                 }
             }
         }
+
 
         # 获取步骤数据
         $oacustomerstep_model = M('Oacustomerstep');
@@ -414,7 +418,7 @@ class RMAController extends AuthController{
 
         # 如果当前步骤为销售确认是否转RMA则将QA部门(品质部)人员列表注入模板
         if( $resultData['now_step'] == 3 || $resultData['now_step'] == 4 ){
-            $QA_list = M('User')->where( 'department=3 AND id<>'.session('user')['id'] )->select(); //获取到同部门且不包含自己的人员列表
+            $QA_list = $user->where( 'department=3 AND id<>'.session('user')['id'] )->select(); //获取到同部门且不包含自己的人员列表
             $this->assign('QAlist',$QA_list);
         }elseif( $resultData['now_step'] == 5 || $resultData['now_step'] == 6 || $resultData['now_step'] == 2 ){
 
@@ -434,7 +438,7 @@ class RMAController extends AuthController{
 
             if( strpos($oacustomeroperation_result['operation_person'],',') ){  //如果操作人id包含逗号说明有多个操作人
                 $in['id'] = ['in',$oacustomeroperation_result['operation_person']];
-                $step_person_list = M('user')->field('nickname')->where( $in )->select(); //查询在id集中的人员数据并获取姓名
+                $step_person_list = $user->field('nickname')->where( $in )->select(); //查询在id集中的人员数据并获取姓名
                 $names = '';
                 foreach($step_person_list as $key=>$value){
                     $names .= $value['nickname'].'/';   //为方便模板展示，将id集中的人员拼装为字符串再输出到模板
@@ -545,6 +549,8 @@ class RMAController extends AuthController{
             }
         }
         //print_r($oacustomerstep_model_result);
+        //print_r($this->getDepartmentsAndUsers());
+        $this->assign('ccList',$this->getDepartmentsAndUsers());
 
         $QA_list = M('User')->where(['department'=>'3'])->select();  //获取QA（品质部）人员
         $this->assign('QAlist',$QA_list);
@@ -553,6 +559,12 @@ class RMAController extends AuthController{
         //print_r($resultData);
 
         $this->display();
+    }
+
+    private function getDepartmentsAndUsers(){
+        $result['departments'] = M('Department')->select();
+        $result['users'] = M('User')->where('id<>1 AND state=1')->select();
+        return $result;
     }
 
     public function upload(){

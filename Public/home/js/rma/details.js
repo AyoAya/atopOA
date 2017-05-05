@@ -10,7 +10,7 @@ $(function(){
 
 
     //初始化layui组件
-    layui.use(['form','layer','upload'], function(){
+    layui.use(['form','layer','upload','element'], function(){
         var form = layui.form(),
             layer = layui.layer;
 
@@ -129,6 +129,44 @@ $(function(){
             window.loguploader.removeFile( window.loguploader.getFile(id,true) );
             // 删除dom节点
             $(this).parent().parent().remove();
+        });
+
+        //监听用户是否开启抄送功能
+        form.on('checkbox(cc)', function( data ){
+            if( $(data.elem).is(':checked') == true ){
+                $('#all-cc-list').removeClass('sr-only');
+                $('#ccBox').removeClass('sr-only');
+            }else{
+                $('#all-cc-list').addClass('sr-only');
+                $('#ccBox').addClass('sr-only');
+            }
+        });
+
+        //默认隐藏所有的抄送人列表，当用户选择部门的时候显示对应的部门人员
+        $('.cc-box-list .layui-form-checkbox').css({display:'none'});
+
+        form.on('select(department)', function( data ){
+            var _value = data.value;
+            $('#ccBox .cc-box-list .layui-form-checkbox').css({display:'none'});
+            $('#ccBox .cc-box-list input[department='+_value+']').next().css({display:'inline-block'});
+        });
+
+        //监听用户选择抄送人
+        form.on('checkbox(user)', function( data ){
+            if( $(data.elem).is(':checked') ){
+                var _tmpDom = '';
+                $(data.elem).attr('checked',true);
+                _tmpDom += '<div class="cc-list-item" value="'+$(this).attr('value')+'">'+$(this).attr('title')+' <i class="icon-remove"></i></div>\r\n';
+                $('#all-cc-list').append(_tmpDom);
+            }else{
+                $(data.elem).attr('checked',false);
+            }
+           /* var _tmpDom = '';
+            $('#ccBox input[type=checkbox]').each(function(){
+                if( $(this).is(':checked') ){
+                }
+            });
+            console.log(_tmpDom);*/
         });
 
 

@@ -3,6 +3,35 @@
  */
 $(function(){
 
+    layui.use(['form','layer'], function(){
+        var form = layui.form(),
+            layer = layui.layer;
+
+        form.on('submit(acronym)', function( data ){
+            //console.log(data);
+
+            $.ajax({
+                url : ThinkPHP['AJAX'] + '/Acronym/add',
+                type : 'POST',
+                data : data.field,
+                dataType : 'json',
+                success : function(response){
+                    if( response.flag > 0 ){
+                        layer.msg(response.msg,{icon:1,time:2000});
+                        setTimeout(function(){
+                            location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Acronym/details/id/' + response.id;
+                        },2000);
+                    }else{
+                        layer.msg(response.msg,{icon:2,time:2000});
+                    }
+                }
+            });
+
+            return false;
+        });
+
+    });
+
     //提交缩略词添加
     $('#submit-btn').click(function(){
         if( $.trim($('#acronym').val())=='' ){

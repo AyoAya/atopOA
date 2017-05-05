@@ -100,19 +100,10 @@ class CompatibilityController extends AuthController {
     //加载添加页面视图
     public function add(){
         //获取产品筛选数据
-        $Productrelationships = M('Productrelationships');
-        $filterArr = array();
-        $filterArr['filterType'] = $Productrelationships->distinct(true)->field('type')->order('type')->select();
-        $filterArr['filterWavelength'] = $Productrelationships->distinct(true)->field('wavelength')->order('wavelength')->select();
-        $filterArr['filterConnector'] = $Productrelationships->distinct(true)->field('connector')->select();
-        $filterArr['filterCasetemp'] = $Productrelationships->distinct(true)->field('casetemp')->select();
-        $filterArr['filterReach'] = $Productrelationships->distinct(true)->field('reach')->select();
-        $filterData = $Productrelationships->field('p.pn,p.id pid,u.nickname,p.wavelength,p.reach,p.connector,p.casetemp,p.type,u.id uid,p.manager')->table('__USER__ u,__PRODUCTRELATIONSHIPS__ p')->where('p.manager=u.id')->select();
         $vendorBrand = M('VendorBrand');
         $verdorResult = $vendorBrand->order('brand ASC')->select();
         $this->assign('vendor',$verdorResult);
-        $this->assign('filter',$filterArr);
-        $this->assign('filterdata',$filterData);
+        $this->assign('productFilter', $this->getProductData());
         $this->display();
     }
 
@@ -124,7 +115,9 @@ class CompatibilityController extends AuthController {
             $postData['person'] = session('user')['nickname'];
             $id = M('Compatibility')->add($postData);
             if( $id ){
-                echo $id; exit;
+                $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$id] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
             }
         }
     }
