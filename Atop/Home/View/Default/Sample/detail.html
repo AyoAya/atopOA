@@ -2,14 +2,16 @@
 <extend name="layout/default"/>
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
-    <link rel="stylesheet" href="__CSS__/bs-is-fun.css">
-	<link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css">
+	<link rel="stylesheet" href="__CSS__/bootstrap-datetimepicker.min.css">
+	<link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
 	<link rel="stylesheet" href="__CSS__/sample/detail.css">
 	<link rel="stylesheet" href="__CSS__/procedure.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
-	<script src="__PUBLIC__/layui/layui.js"></script>
+	<script src="__JS__/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+	<script src="__JS__/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+	<script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
 	<script src="__JS__/sample/detail.js"></script>
 </block>
 <!-- 【页面标题】 -->
@@ -40,7 +42,7 @@
 						<th>客户名称</th>
 						<th>设备品牌</th>
 						<th>设备型号</th>
-						<th width="100px">进度</th>
+						<th width="100px">当前进度</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -53,7 +55,17 @@
 						<td>{$detailResult.customer}</td>
 						<td>{$detailResult.brand}</td>
 						<td>{$detailResult.model}</td>
-						<td><span class="tag tag-primary">{$detailResult.name}</span></td>
+						<td>
+							<eq name="detailResult.state" value="N">
+								<eq name="detailResult.now_step" value="$detailResult.max_step">
+									<span class="tag tag-success">已完成</span>
+								<else/>
+									<span class="tag tag-primary">{$detailResult.name}</span>
+								</eq>
+							<else/>
+								<span class="tag tag-danger">终止</span>
+							</eq>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -100,8 +112,21 @@
 								</td>
 							<else/>
 								{//进行中的步骤}
-								<td>
-									<div class="procedure-title">{$value.name}</div>
+								<td class="<eq name='detailResult.state' value='Y'>error</eq>">
+									<div class="procedure-title">{$value.name}
+										<notempty name="vo.log">
+											<i class=" icon-info-sign myTooltip">
+												<div class="sr-only popover-box">
+													<volist name="vo.log" id="v">
+														<div class="log-box">
+															<span class="log-box-time">{$v.log_time|date="Y-m-d H:i",###}</span>
+															<span class="log-box-context">{$v.context}</span>
+														</div>
+													</volist>
+												</div>
+											</i>
+										</notempty>
+									</div>
 									<div class="procedure-step">{$kk}</div>
 									<div class="procedure-info"></div>
 									<div class="procedure-hollow"></div>
@@ -130,37 +155,77 @@
 		</table>
 	</div>
 
+	{//交期}
 	<div class="layui-collapse">
 		<div class="layui-colla-item">
-			<h2 class="layui-colla-title">交期</h2>
-			<div class="layui-colla-content layui-show">
-				<span>要求交期：{$detailResult.requirements_date}</span>
-				<notempty name="detailResult.0.expect_date">	{//如果存在预计交期则显示}
-					<span>预计交期：{$detailResult.expect_date}</span>
+			<div class="layui-colla-title">交期&nbsp;&nbsp;
+				<notempty name="detailResult.actual_date">
+					<if condition="strtotime($detailResult['actual_date']) elt strtotime($detailResult['requirements_date'])">
+						<span class="tag tag-success">正常</span>
+					<else/>
+						<span class="tag tag-danger">延期</span>
+					</if>
 				</notempty>
-				<notempty name="detailResult.0.actual_date">	{//如果存在实际交期则显示}
-					<span>实际交期：{$detailResult.actual_date}</span>
+			</div>
+			<div class="layui-colla-content layui-show">
+				<span class="due-time">要求交期：{$detailResult.requirements_date}</span>
+				{//如果存在预计交期则显示}
+				<notempty name="detailResult.expect_date">
+					<span class="due-time">预计交期：{$detailResult.expect_date}</span>
+				</notempty>
+				{//如果存在实际交期则显示}
+				<notempty name="detailResult.actual_date">
+					<span class="due-time">实际交期：{$detailResult.actual_date}</span>
 				</notempty>
 			</div>
 		</div>
 	</div>
 
+	{//物流}
+	<if condition="!empty($detailResult['logistics']) and !empty($detailResult['waybill'])">
+		<div class="layui-collapse">
+			<div class="layui-colla-item">
+				<div class="layui-colla-title">物流</div>
+				<div class="layui-colla-content layui-show">
+					<span class="logistics-item">物流公司：{$detailResult.logistics_data.logistics_name}</span>
+					<span class="logistics-item">运单号：{$detailResult.waybill}</span>
+				</div>
+			</div>
+		</div>
+	</if>
+
+	{//备注}
 	<div class="layui-collapse">
 		<div class="layui-colla-item">
-			<h2 class="layui-colla-title">日志</h2>
+			<div class="layui-colla-title">备注</div>
+			<div class="layui-colla-content layui-show">
+				<p>{$detailResult.note}</p>
+			</div>
+		</div>
+	</div>
+
+	{//日志}
+	<div class="layui-collapse">
+		<div class="layui-colla-item">
+			<div class="layui-colla-title">日志</div>
 			<div class="layui-colla-content layui-colla-content-rewrite layui-show">
 				<table class="log-table">
 					<tbody>
 
+						{/*
+						1. 检查是否存在日志记录
+						2. 最新日志前面加上new标志
+						*/}
+
 						<notempty name="newlog">
 							<volist name="newlog" id="value">
-								<eq name="i" value="1">
+								<eq name="i" value="1"> 	{// i=1 表示最新的日志记录}
 									<tr>
 										<eq name="value.new" value="$value.new">
 											<td><img src="{$value.face}" alt="" width="40"></td>
 											<td>
-												<p><span class="tag tag-primary">{$value.name}</span> <span class="tag tag-warning">new</span> {$value.context}</p>
-												<p>{$value.nickname}　|　{$value.log_time|date="Y-m-d H:i",###}</p>
+												<p>{$value.context} <img src="__IMG__/new.gif" alt="" style="position: relative;top: -3px;"></p>
+												<p>{$value.nickname}　|　{$value.name}　|　{$value.log_time|date="Y-m-d H:i",###}</p>
 											</td>
 										</eq>
 									</tr>
@@ -169,14 +234,15 @@
 										<eq name="value.new" value="$value.new">
 											<td><img src="{$value.face}" alt="" width="40"></td>
 											<td>
-												<p><span class="tag tag-primary">{$value.name}</span> {$value.context}</p>
-												<p>{$value.nickname}　|　{$value.log_time|date="Y-m-d H:i",###}</p>
+												<p>{$value.context}</p>
+												<p>{$value.nickname}　|　{$value.name}　|　{$value.log_time|date="Y-m-d H:i",###}</p>
 											</td>
 										</eq>
 									</tr>
 								</eq>
 							</volist>
 						<else/>
+							{//日志为空则显示没有日志}
 							<i class="icon-exclamation-sign"></i> 没有日志
 						</notempty>
 					</tbody>
@@ -185,23 +251,15 @@
 		</div>
 	</div>
 
+	{//附件列表}
 	<div class="layui-collapse">
 		<div class="layui-colla-item">
-			<h2 class="layui-colla-title">备注</h2>
+			<div class="layui-colla-title">附件列表</div>
 			<div class="layui-colla-content layui-show">
-				<p>{$detailResult.note}</p>
-			</div>
-		</div>
-	</div>
-
-	<div class="layui-collapse">
-		<div class="layui-colla-item">
-			<h2 class="layui-colla-title">附件列表</h2>
-			<div class="layui-colla-content layui-show">
-				<notempty name="orderData.attachment">
-					<volist name="orderData.attachment" id="value">
+				<notempty name="detailResult.attachment">
+					<volist name="detailResult.attachment" id="value">
 						<div class="file-item">
-							<div class="file-info"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" title="{$value.savename}">{$value.savename}</a></div>
+							<div class="file-info"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" target="_blank" title="{$value.savename}">{$value.savename}</a></div>
 						</div>
 					</volist>
 					<else/>
@@ -211,77 +269,200 @@
 		</div>
 	</div>
 
-	{//审核按钮【当登录用户满足条件是才显示】}
-	<if condition="$_SESSION['user']['id'] eq $detailResult['operating'][count($detailResult['operating'])-1]['operator']">
-		<button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#myModal">
-			<p>添加</p>
-			<p>处理记录</p>
-		</button>
-	</if>
+	{//测试报告：不为空才显示}
+	<notempty name="detailResult.test_report">
+		<div class="layui-collapse">
+			<div class="layui-colla-item">
+				<div class="layui-colla-title">测试报告</div>
+				<div class="layui-colla-content layui-show">
+					<volist name="detailResult.test_report" id="value">
+						<div class="file-item">
+							<div class="file-info"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" target="_blank" title="{$value.savename}">{$value.savename}</a></div>
+						</div>
+					</volist>
+				</div>
+			</div>
+		</div>
+	</notempty>
+
+	{//当该产品处于未终止的情况才加载}
+	{//当前用户符合条件才加载}
+	<eq name="detailResult.state" value="N">
+		<if condition="$_SESSION['user']['id'] eq $detailResult['operating'][count($detailResult['operating'])-1]['operator']">
+			<button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#myModal">
+				<p>添加</p>
+				<p>处理记录</p>
+			</button>
+		</if>
+	</eq>
+
+	<input type="hidden" name="sample_id" id="detailID" value="{$detailResult.sample_id}">
 
 </block>
 
 <block name="modals">
 
-	<!-------------------------------------模态框-------------------------------------------------------------------->
+	{//添加处理记录模态框}
+	{//当该产品处于未终止的情况才加载}
+	<eq name="detailResult.state" value="N">
+		{//当前用户符合条件才加载}
+		<if condition="$_SESSION['user']['id'] eq $detailResult['operating'][count($detailResult['operating'])-1]['operator']">
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="myModalLabel" style="font-size: 18px;">添加处理记录</h4>
+						</div>
 
-	<if condition="$_SESSION['user']['id'] eq $detailResult['operating'][count($detailResult['operating'])-1]['operator']">
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="myModalLabel" style="font-size: 18px;">订单审核</h4>
+
+						<form class="layui-form" action="" id="detail_form">
+							<div class="modal-body">
+								<div class="layui-inline operation-type" style="margin-bottom: 10px;">
+									<label class="layui-form-label" style="padding-left: 0;width: 60px;">类型</label>
+									<div class="layui-input-inline">
+										<select class="" name="type" lay-verify="required" lay-filter="operation">
+											<option value="log" selected>添加日志</option>
+											<lt name="detailResult.now_step" value="$detailResult.max_step">
+												<option value="push">推送到：Step{$detailResult.next_step.id}-{$detailResult.next_step.name}</option>
+											</lt>
+											{//检查步骤可用的标志开启对应的操作}
+											<eq name="detailResult.termination" value="Y">
+												<option value="termination">拒绝</option>
+											</eq>
+											<eq name="detailResult.rollback" value="Y">
+												<option value="rollback" >回退到：Step{$detailResult.prev_step.id}-{$detailResult.prev_step.name}</option>
+											</eq>
+											<eq name="detailResult.transfer" value="Y">
+												<option value="transfer" >转交</option>
+											</eq>
+										</select>
+									</div>
+								</div>
+
+								{//将每个步骤作用于下一步的操作遍历到下拉菜单}
+								<div id="operating-person" class="layui-inline" style="margin-bottom: 10px;margin-left: 4px;display: none;">
+									<label class="layui-form-label" style="padding-left: 2px;width: 60px;">处理人</label>
+									<div class="layui-input-inline">
+										<select class="" name="operator" lay-verify="required">
+											<volist name="persons" id="value">
+												<option value="{$value.id}" <eq name="value.id" value="$detailResult.manager">selected</eq>>{$value.nickname}</option>
+											</volist>
+										</select>
+									</div>
+								</div>
+
+								{//如果当前步骤可以转交则加载当前人员列表}
+								<present name="transfer">
+									<div id="transfer-person" class="layui-inline" style="margin-bottom: 10px;margin-left: 4px;display: none">
+										<label class="layui-form-label" style="padding-left: 2px;width: 60px;">处理人</label>
+										<div class="layui-input-inline">
+											<select class="" name="transfer" lay-verify="required">
+												<volist name="transfer" id="value">
+													<option value="{$value.id}" <eq name="value.id" value="$detailResult.manager">selected</eq>>{$value.nickname}</option>
+												</volist>
+											</select>
+										</div>
+									</div>
+								</present>
+
+								{//如果当前步骤可以回退则加载当前人员列表}
+								<present name="rollback">
+									<div id="rollback-person" class="layui-inline" style="margin-bottom: 10px;margin-left: 4px;display: none">
+										<label class="layui-form-label" style="padding-left: 2px;width: 60px;">处理人</label>
+										<div class="layui-input-inline">
+											<select class="" name="rollback" lay-verify="required">
+												<volist name="rollback" id="value">
+													<option value="{$value.id}" <eq name="value.id" value="$detailResult.manager">selected</eq>>{$value.nickname}</option>
+												</volist>
+											</select>
+										</div>
+									</div>
+								</present>
+
+								<div class="layui-form-item layui-form-text">
+									<label class="layui-form-label" style="padding-left: 0;width: 60px;">备注</label>
+									<div class="layui-input-block" style="margin-left: 60px;">
+										<textarea name="context" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
+									</div>
+								</div>
+
+								{//如果当前步骤等于发货则加载物流信息记录操作}
+								<eq name="detailResult.now_step" value="6">
+									<div class="layui-inline logistics" style="margin-bottom: 10px;display: none;">
+										<label class="layui-form-label" style="padding-left: 2px;width: 60px;">物流</label>
+										<div class="layui-input-inline">
+											<select name="logistics" lay-search>
+												<volist name="logistics" id="value">
+													<option value="{$value.id}">{$value.logistics_name}</option>
+												</volist>
+											</select>
+										</div>
+									</div>
+								</eq>
+
+								{//如果当前步骤等于发货则加载物流信息记录操作}
+								<eq name="detailResult.now_step" value="6">
+									<div class="layui-inline logistics" style="margin-bottom: 10px;display: none;">
+										<label class="layui-form-label" style="padding-left: 2px;width: 60px;">运单号</label>
+										<div class="layui-input-inline">
+											<input type="text" name="waybill" placeholder="运单号" class="layui-input" style="width: 264px;">
+										</div>
+									</div>
+								</eq>
+
+								{//如果当前步骤等于发货则加载上传附件操作}
+								<eq name="detailResult.now_step" value="6">
+									<div class="layui-inline" id="TestReport" style="margin-bottom: 0; display: none;">
+										<label class="layui-form-label" style="padding-left: 2px;width: 60px;">报告</label>
+										<div class="layui-input-inline">
+											<div id="testReportPick"><i class="icon-arrow-up"></i> 上传测试报告</div>
+											<div class="uploader-attachment-queue" style="width: 508px !important;"></div>
+										</div>
+									</div>
+								</eq>
+
+
+								{//检测步骤是否可以修改预计交期，如果可以则显示修改交期操作栏}
+								<eq name="detailResult.extension" value="Y">
+									<div class="layui-inline">
+										<label class="layui-form-label" style="padding-left: 2px;width: 60px;">交期</label>
+										<div class="layui-input-inline">
+											<input type="text" class="layui-input expect_date" readonly name="expect_date" value="<notempty name='detailResult.expect_date'>{$detailResult.expect_date}<else/>{$detailResult.requirements_date}</notempty>">
+											<script>
+												$('.expect_date').datetimepicker({
+													language:  'zh-CN',
+													format:'yyyy-mm-dd',
+													weekStart: 1,
+													todayBtn:  1,
+													autoclose: 1,
+													todayHighlight: 1,
+													startDate : new Date(),
+													pickerPosition: "bottom-right",
+													startView: 2,
+													minView: 2,
+													forceParse: 0
+												});
+											</script>
+										</div>
+									</div>
+								</eq>
+
+							</div>
+
+							<input type="hidden" name="asc_detail" value="{$detailResult.id}">
+
+							<div class="modal-footer">
+								<button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
+								<button class="layui-btn" lay-submit lay-filter="processingRecord">立即提交</button>
+							</div>
+
+						</form>
+
 					</div>
-
-
-					<form class="layui-form" action="" id="detail_form">
-						<div class="modal-body">
-							<div class="layui-inline" style="margin-bottom: 10px;">
-								<label class="layui-form-label" style="padding-left: 0;width: 60px;">类型</label>
-								<div class="layui-input-inline">
-									<select class="" name="type" lay-verify="required" lay-filter="operation">
-										<option value="log" selected>添加日志</option>
-										<option value="push">推送</option>
-										<eq name="nowStep.id" value="2">
-											<option value="close" >拒绝</option>
-										</eq>
-									</select>
-								</div>
-							</div>
-
-							<div id="operating-person" class="layui-inline sr-only" style="margin-bottom: 10px;margin-left: 4px;">
-								<label class="layui-form-label" style="padding-left: 2px;width: 60px;">处理人</label>
-								<div class="layui-input-inline" style="width: 228px;">
-									<select class="" name="operator" lay-verify="required">
-										<volist name="persons" id="value">
-											<option value="{$value.id}" <eq name="value.id" value="$detailResult.manager">selected</eq>>{$value.nickname}</option>
-										</volist>
-									</select>
-								</div>
-							</div>
-
-							<div class="layui-form-item layui-form-text">
-								<label class="layui-form-label" style="padding-left: 0;width: 60px;">备注</label>
-								<div class="layui-input-block" style="margin-left: 60px;">
-									<textarea name="context" placeholder="请输入内容" class="layui-textarea"></textarea>
-								</div>
-							</div>
-
-						</div>
-
-						<input type="hidden" name="asc_detail" value="{$detailResult.id}">
-
-						<div class="modal-footer">
-							<button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
-							<button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
-						</div>
-
-					</form>
-
 				</div>
 			</div>
-		</div>
-	</if>
+		</if>
+	</eq>
 
 </block>

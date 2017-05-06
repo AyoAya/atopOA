@@ -1,5 +1,8 @@
 $(function(){
 
+    //定义存放附件的数组
+    var attachmentList = new Array();
+
     //如果有留言就显示
     $('.myTooltip').hover(function(){
         $(this).find('.popover-box').removeClass('sr-only');
@@ -21,31 +24,197 @@ $(function(){
 
     });
 
+    // 删除队列文件
+    $('.uploader-attachment-queue').on('click', '.icon-remove', function(){
+        var id = $(this).parent().parent().attr('id');
+        // 删除队列中的文件
+        window.uploader.removeFile( window.uploader.getFile(id,true) );
+        // 删除dom节点
+        $(this).parent().parent().remove();
+    });
 
-    //
-    layui.use(['layer','form'], function() {
-        var layer = layui.layer;
-        var form = layui.form();
+
+
+    //初始化layui组件
+    layui.use(['form','layer'], function() {
+        var layer = layui.layer,
+            form = layui.form();
+
+        //监听操作类型，如果是push则显示推送人列表
         form.on('select(operation)', function( data ){
             var _value = data.value;    //获取到当前选中value
 
-            if( _value == 'push' ){
-                if( $('#operating-person').hasClass('sr-only') ){
-                    $('#operating-person').removeClass('sr-only');
+            //根据当前操作类型显示对应的处理人列表
+            if( _value == 'push' || _value == 'transfer' || _value == 'rollback' ){
+                if( _value == 'push' ){
+                    $('#operating-person').css({display:'inline-block'});
+                    $('.logistics').css({display:'inline-block'})
+                    $('#transfer-person').css({display:'none'});
+                    $('#rollback-person').css({display:'none'});
+                    $('#TestReport').css({display:'block'});
+                    //当用户选择推送时，检查上传附件dom元素是否存在，如果存在则实例化webuploader
+                    //为避免重复生成实例，当window.uploader类型为object时不创建实例
+                    if( typeof(window.uploader) != "object"  ){
+                        // uploader参数配置
+                        var logUploaderOption = {
+                            auto: false,
+                            server: ThinkPHP['AJAX'] + '/Sample/upload',
+                            pick: '#testReportPick',
+                            fileVal : 'Filedata',
+                            accept: {
+                                title: 'file',
+                                extensions: 'zip,rar,jpg,png,jpeg,doc,docx,xls,xlsx,pdf'
+                            },
+                            method: 'POST',
+                        };
+                        // 实例化uploader
+                        window.uploader = WebUploader.create( logUploaderOption );
+                        // 添加到队列时
+                        window.uploader.on('fileQueued', function( file ){
+                            var fileItem = '<div class="file-item" id="'+ file.id +'" style="width: 508px !important;">' +
+                                '<div class="pull-left"><i class="file-icon file-icon-ext-'+ file.ext +'"></i> '+ file.name +'</div>' +
+                                '<div class="pull-right"><i class="icon-remove" title="移除该文件"></i></div>' +
+                                '<div class="clearfix"></div>' +
+                                '</div>';
+                            $(logUploaderOption.pick).next().append(fileItem);
+                        });
+                        // 上传错误时
+                        window.uploader.on('error', function( code ){
+                            var msg = '';
+                            switch(code){
+                                case 'Q_EXCEED_NUM_LIMIT':
+                                    msg = '只能上传一个文件';
+                                    break;
+                                case 'Q_EXCEED_SIZE_LIMIT':
+                                    msg = '文件大小超出限制';
+                                    break;
+                                case 'Q_TYPE_DENIED':
+                                    msg = '文件格式不允许';
+                                    break;
+                                case 'F_DUPLICATE':
+                                    msg = '文件已存在';
+                                    break;
+                                default:
+                                    msg = code;
+                            }
+                            layer.msg(msg, {icon: 2, time: 2000});
+                        });
+                        // 上传之前
+                        window.uploader.on('uploadBeforeSend', function( block, data, headers ){
+                            data.SUB_NAME = $('#detailID').val();
+                            data.DIR = '/Sample/TestReport/';
+                        });
+                        // 上传成功时
+                        window.uploader.on('uploadSuccess', function( file,response ){
+                            if( response.flag > 0 ){
+                                var attachmentObject = new Object();
+                                attachmentObject.ext = response.ext;
+                                attachmentObject.savename = response.savename;
+                                attachmentObject.path = response.path;
+                                attachmentList.push(attachmentObject);
+                            }else{
+                                layer.closeAll();
+                                layer.msg(response.msg, { icon : 2,time : 2000 });
+                            }
+                        });
+                        // 所有文件上传结束时
+                        window.uploader.on('uploadFinished', function(){
+                            $.ajax({
+                                url : ThinkPHP['AJAX'] + '/Sample/insertTestReport',
+                                type : 'POST',
+                                data : {
+                                    SUB_NAME : $('#detailID').val(),
+                                    attachments : JSON.stringify(attachmentList)
+                                },
+                                dataType : 'json',
+                                success : function( response ){
+                                    if( response.flag > 0 ){
+                                        layer.msg(response.msg, { icon : 1,time : 2000 });
+                                        setTimeout(function(){
+                                            location.reload();
+                                        },2000);
+                                    }else{
+                                        layer.closeAll();
+                                        layer.msg(response.msg, { icon : 2,time : 2000 });
+                                    }
+                                }
+                            });
+                        });
+                    }
+                }
+                if( _value == 'transfer' ){
+                    $('#operating-person').css({display:'none'});
+                    $('#rollback-person').css({display:'none'});
+                    $('.logistics').css({display:'none'});
+                    $('#transfer-person').css({display:'inline-block'});
+                    $('#TestReport').css({display:'none'});
+                    //兼容bootstrap和webuploader样式，当用户选择非推送的步骤时销毁webuploader实例
+                    if( window.uploader ){
+                        //销毁webuploader
+                        window.uploader.destroy();
+                        //webuploader被销毁后指定window.uploader值为undefined
+                        window.uploader = undefined;
+                        //销毁webuploader实例后清空队列里存在的附件dom元素
+                        $('.uploader-attachment-queue').html('');
+                    }
+                }
+                if( _value == 'rollback' ){
+                    $('#operating-person').css({display:'none'});
+                    $('#rollback-person').css({display:'inline-block'});
+                    $('.logistics').css({display:'none'});
+                    $('#transfer-person').css({display:'none'});
+                    $('#TestReport').css({display:'none'});
+                    //兼容bootstrap和webuploader样式，当用户选择非推送的步骤时销毁webuploader实例
+                    if( window.uploader ){
+                        //销毁webuploader
+                        window.uploader.destroy();
+                        //webuploader被销毁后指定window.uploader值为undefined
+                        window.uploader = undefined;
+                        //销毁webuploader实例后清空队列里存在的附件dom元素
+                        $('.uploader-attachment-queue').html('');
+                    }
                 }
             }else{
-                if( !$('#operating-person').hasClass('sr-only') ){
-                    $('#operating-person').addClass('sr-only');
+                $('#operating-person').css({display:'none'});
+                $('.logistics').css({display:'none'});
+                $('#transfer-person').css({display:'none'});
+                $('#rollback-person').css({display:'none'});
+                $('#TestReport').css({display:'none'});
+                //兼容bootstrap和webuploader样式，当用户选择非推送的步骤时销毁webuploader实例
+                if( window.uploader ){
+                    //销毁webuploader
+                    window.uploader.destroy();
+                    //webuploader被销毁后指定window.uploader值为undefined
+                    window.uploader = undefined;
+                    //销毁webuploader实例后清空队列里存在的附件dom元素
+                    $('.uploader-attachment-queue').html('');
                 }
             }
 
         });
 
 
+        //添加处理记录
+        form.on('submit(processingRecord)',function( data ){
 
+            if( data.field.waybill && $.trim(data.field.waybill) == '' ){
+                layer.msg('请输入运单号');
+                return false;
+            }
 
+            if( window.uploader ){
+                //如果uoloader存在并且队列里存在文件则上传
+                if( window.uploader.getFiles().length <= 0 ){
+                    layer.msg('请上传测试报告');
+                    return false;
+                }
+            }
 
-        form.on('submit(formDemo)',function( data ){
+            //如果当前推送步骤没有物流数据则删除相应数据
+            if( $('.logistics').css('display') == 'none' ){
+                delete data.field.logistics;
+                delete data.field.waybill;
+            }
 
             $.ajax({
                 url : ThinkPHP['AJAX'] + '/Sample/addSampleLog',
@@ -57,22 +226,32 @@ $(function(){
                 },
                 success : function( response ){
                     if (response.flag > 0){
-                        layer.msg( response.msg, { icon : 1, time : 2000 } );
-                        setTimeout(function(){
-                            location.reload();
-                        },2000);
-                    }else{
 
+                        //数据插入成功后检查uploader是否存在
+                        if( window.uploader ){
+                            //如果uoloader存在并且队列里存在文件则上传
+                            if( window.uploader.getFiles().length > 0 ){
+                                window.uploader.upload();
+                            }
+                        }else{
+                            layer.msg( response.msg, { icon : 1, time : 2000 } );
+                            setTimeout(function(){
+                                location.reload();
+                            },2000);
+                        }
+
+                    }else{
+                        layer.msg( response.msg, { icon : 2, time : 2000 } );
                     }
                 }
-            })
+            });
 
 
             return false; //阻止表单跳转。
-        })
+        });
 
 
-    })
+    });
 
 
 });

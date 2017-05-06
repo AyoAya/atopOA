@@ -32,6 +32,9 @@
 .procedure .procedure-table .procedure-wrap td.active .procedure-title {
     color: #428bca;
 }
+.procedure .procedure-table .procedure-wrap td.error .procedure-title {
+    color: #d9534f;
+}
 .procedure .procedure-table .procedure-wrap td .procedure-hollow {
     position: absolute;
     width: 100%;
@@ -54,6 +57,16 @@
     width: 100%;
     height: 3px;
     background: #428bca;
+    display: block;
+    margin-top: 3px;
+    position: absolute;
+    z-index: 2;
+}
+.procedure .procedure-table .procedure-wrap td.error .procedure-hollow:before {
+    content: '';
+    width: 100%;
+    height: 3px;
+    background: #d9534f;
     display: block;
     margin-top: 3px;
     position: absolute;
@@ -107,6 +120,9 @@
 }
 .procedure .procedure-table .procedure-wrap td.active .procedure-step:before {
     background: #428bca;
+}
+.procedure .procedure-table .procedure-wrap td.error .procedure-step:before {
+    background: #d9534f;
 }
 
 

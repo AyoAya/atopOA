@@ -266,6 +266,9 @@ span.tag-info {
 span.tag-danger {
 	background: #d9534f;
 }
+span.tag-success {
+	background: #5cb85c;
+}
 
 
 

@@ -2,15 +2,12 @@
 <extend name="layout/default"/>
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
-    <link rel="stylesheet" href="__CSS__/bs-is-fun.css">
-    <link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css">
     <link rel="stylesheet" href="__CSS__/sample/overview.css">
     <link rel="stylesheet" href="__CSS__/procedure.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
     <script src="__JS__/jquery.Huploadify.js"></script>
-    <script src="__PUBLIC__/layui/layui.js"></script>
     <script src="__JS__/bootstrap-datetimepicker.js"></script>
     <script src="__JS__/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="__JS__/jquery.validate.min.js"></script>
@@ -74,7 +71,7 @@
         <volist name="progress" id="value" key="ONE_KEY">
             <div class="layui-collapse">
                 <div class="layui-colla-item">
-                    <h2 class="layui-colla-title"><a href="__ROOT__/Sample/detail/id/{$value.id}">{$value.pn}</a></h2>
+                    <div class="layui-colla-title"><a href="__ROOT__/Sample/detail/id/{$value.id}">{$value.pn}</a></div>
                     <div class="layui-colla-content layui-show">
                         <div class="procedure">
                             <table class="procedure-table">
@@ -107,8 +104,21 @@
                                                         <div class="procedure-hollow"></div>
                                                     </td>
                                                 <else/>
-                                                    <td>
-                                                        <div class="procedure-title">{$val.name}</div>
+                                                    <td  class="<eq name='value.state' value='Y'>error</eq>">
+                                                        <div class="procedure-title">{$val.name}
+                                                            <notempty name="vo.log">
+                                                                <i class=" icon-info-sign myTooltip">
+                                                                    <div class="sr-only popover-box">
+                                                                        <foreach name="vo.log" item="v">
+                                                                            <div class="log-box">
+                                                                                <span class="log-box-time">{$v.log_time|date="Y-m-d H:i",###}</span>
+                                                                                <span class="log-box-context">{$v.context}</span>
+                                                                            </div>
+                                                                        </foreach>
+                                                                    </div>
+                                                                </i>
+                                                            </notempty>
+                                                        </div>
                                                         <div class="procedure-step">{$TWO_KEY}</div>
                                                         <div class="procedure-info"></div>
                                                         <div class="procedure-hollow"></div>
@@ -146,7 +156,7 @@
 
         <div class="layui-collapse">
             <div class="layui-colla-item">
-                <h2 class="layui-colla-title">附件列表</h2>
+                <div class="layui-colla-title">附件列表</div>
                 <div class="layui-colla-content layui-show">
                     <notempty name="orderData.attachment">
                         <volist name="orderData.attachment" id="value">
