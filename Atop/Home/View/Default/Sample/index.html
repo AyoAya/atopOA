@@ -2,7 +2,7 @@
 <extend name="layout/default"/>
 
 <block name="linkcss">
-	<link rel="stylesheet" href="__CSS__/sample-index.css">
+	<link rel="stylesheet" href="__CSS__/sample/index.css">
 </block>
 
 <block name="linkjs">
@@ -22,12 +22,12 @@
 <block name="content">
 
 	<div class="pull-left">
-		<!--<a href="__ROOT__/sampleChart" class="layui-btn layui-btn-primary">
-			<span class="glyphicon glyphicon-th"></span> 样品统计
-		</a>-->
+		<a href="__ROOT__/Sample/summary" class="layui-btn layui-btn-primary">
+			<i class="icon-list"></i> 样品汇总
+		</a>
 		<eq name="Think.session.user.department" value="4">
 			<a href="__ROOT__/Sample/add" class="layui-btn layui-btn-primary">
-				<span class="glyphicon glyphicon-plus"></span> 我要下单
+				<i class="icon-plus"></i> 我要下单
 			</a>
 		</eq>
 		<present name="search">
@@ -52,35 +52,33 @@
 
 		<div class="col-lg-4">
 			<div class="order-box">
-				<present name="value.color">
-					<div class="order-heading" style="background:{$value.color};">
-				<else/>
-					<div class="order-heading" style="background: {$value.label};">
-				</present>
-					<span>
-						<a href="__ROOT__/Sample?search={$value.nickname}"><img src="{$value.u.0.face}" alt="..." class="saleorder-face"></a>
-						<p>{$value.create_person_name}</p>
-						<p>{$value.create_time|date="Y-m-d",###}</p>
+				<div class="order-heading {$value.state}">
+					<span class="sales-info">
+						<a href="__ROOT__/Sample?search={$value.create_person_name}" style="display: block; margin-bottom: 6px;">
+							<img src="{$value.face}" alt="..." class="saleorder-face">
+						</a>
+						<p style="line-height: 16px;">{$value.create_person_name}</p>
+						<p style="line-height: 16px;">{$value.create_time|date="Y-m-d",###}</p>
 					</span>
 					<div class="sample_order_charge">
-						<h4><a href="__ROOT__/Sample/overview/id/{$value.id}">{$value.order_num}</a><span class="icon-time" id="span"> {$value.order_charge}</span></h4>
+						<h4>
+							<a href="__ROOT__/Sample/overview/id/{$value.id}">{$value.order_num}</a>
+							<span class="paid-sign">{$value.order_charge}</span>
+						</h4>
 					</div>
 				</div>
 				<div class="order-body">
-					<if condition="$value.total lt 2">
+					<if condition="count($value['child']) lt 2">
 						<p>{$value.child.0.model} | {$value.child.0.brand}</p>
-					<elseif condition="$value.total elt 2"/>
+					<elseif condition="count($value['child']) eq 2"/>
 						<p>{$value.child.0.type} | {$value.child.0.pn}</p>
 						<p>{$value.child.1.type} | {$value.child.1.pn}</p>
 					<else/>
 						<p>{$value.child.0.type} | {$value.child.0.pn}</p>
 						<p>{$value.child.1.type} | {$value.child.1.pn}</p>
-						<p>等{$value.total}个产品</p>
+						<p>等{:count($value.child)}个产品</p>
 					</if>
 				</div>
-				<!--<div class="order-footer">
-					<p><i class="icon-user">&nbsp;</i>销售：{$value.nickname}　　　<i class="icon-time">&nbsp;</i>订单创建时间：{$value.createtime|date="Y-m-d H:i:s",###}</p>
-				</div>-->
 			</div>
 		</div>
 	</volist>

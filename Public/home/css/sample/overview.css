@@ -27,6 +27,9 @@ a:hover {
 	-moz-border-radius: 2px;
 	border-radius: 2px;
 }
+.procedure .procedure-table .procedure-wrap td:last-child .procedure-title .myTooltip .popover-box {
+	left: -90px;
+}
 .procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip .popover-box:after {
 	content: '';
 	width: 14px;
@@ -38,6 +41,9 @@ a:hover {
 	background: url("../../img/arrow_up_border_ccc.png") center center no-repeat;
 	-webkit-background-size: 100%;
 	background-size: 100%;
+}
+.procedure .procedure-table .procedure-wrap td:last-child .procedure-title .myTooltip .popover-box:after {
+	left: 296px;
 }
 .procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip .popover-box .log-box {
 	text-align: left;

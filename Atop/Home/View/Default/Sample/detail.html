@@ -58,12 +58,12 @@
 						<td>
 							<eq name="detailResult.state" value="N">
 								<eq name="detailResult.now_step" value="$detailResult.max_step">
-									<span class="tag tag-success">已完成</span>
+									<span class="tag tag-success">{$detailResult.name}</span>
 								<else/>
 									<span class="tag tag-primary">{$detailResult.name}</span>
 								</eq>
 							<else/>
-								<span class="tag tag-danger">终止</span>
+								<span class="tag tag-danger">{$detailResult.name}</span>
 							</eq>
 						</td>
 					</tr>
@@ -73,7 +73,7 @@
 	</div>
 
 
-	{//-----------------------进度条---------------------------}
+	{//产品进度}
 
 	<div class="procedure">
 		<table class="procedure-table">

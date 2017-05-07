@@ -1,0 +1,106 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/sample/summary.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/sample/summary.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>系统</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Sample">样品管理</a></li>
+        <li class="active">样品汇总</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <table class="layui-table">
+
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>订单号</th>
+                <th>销售</th>
+                <th>产品类型</th>
+                <th>产品型号</th>
+                <th width="500">备注</th>
+                <th>设备厂商</th>
+                <th>设备型号</th>
+                <th width="87">当前进度</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <volist name="summary" id="value" key="ONE_KEY">
+                <volist name="value.detail" id="vo" key="TWO_KEY">
+                    <eq name="TWO_KEY" value="1">
+                        <tr>
+                            <td rowspan="{:count($value['detail'])}">{$ONE_KEY}</td>
+                            <td rowspan="{:count($value['detail'])}">{$value.order_num}</td>
+                            <td rowspan="{:count($value['detail'])}">{$value.create_person_name}</td>
+                            <td>{$vo.type}</td>
+                            <td>{$vo.pn}</td>
+                            <td>{$vo.note}</td>
+                            <td>{$vo.brand}</td>
+                            <td>{$vo.model}</td>
+                            <td>{$vo.step_name}</td>
+                        </tr>
+                    <else/>
+                        <tr>
+                            <td>{$vo.type}</td>
+                            <td>{$vo.pn}</td>
+                            <td>{$vo.note}</td>
+                            <td>{$vo.brand}</td>
+                            <td>{$vo.model}</td>
+                            <td>{$vo.step_name}</td>
+                        </tr>
+                    </eq>
+                </volist>
+            </volist>
+
+        </tbody>
+
+    </table>
+
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

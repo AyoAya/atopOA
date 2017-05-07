@@ -5,71 +5,82 @@ use Think\Page;
 
 class SampleController extends AuthController {
 
-    //初始化样品管理首页
+    # 初始化样品管理首页
     public function index(){
+
         $person = M('Sample');
-        //是否有查询
+
+        # 是否有查询
         if(I('get.search')){
             $count = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%"')->count();
             $this->assign( 'search' , I('get.search') );
-            //print_r($count);
         }else{
             $count = $person->count();
         }
-        //数据分页
+
+        # 数据分页
         $page = new Page($count,15);
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
         $page->setConfig('next','<span aria-hidden="true">下一页</span>');
         $page->setConfig('first','<span aria-hidden="true">首页</span>');
         $page->setConfig('last','<span aria-hidden="true">尾页</span>');
+
         if(C('PAGE_STATUS_INFO')){
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
-        //是否需要显示查询结果
+
+        # 根据条件筛选数据
         if(I('get.search')){
             $sampleResult = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%"')->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
         }else{
             $sampleResult = $person->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
         }
+
         $pageShow = $page->show();
+
         $sample_detail = M('Sample_detail');
+
         $user = M('user');
+
         foreach ($sampleResult as $key=>&$value) {
-            //与订单详情表对接
-            $value['child'] = $sample_detail
-                                ->field('a.id,a.pn,a.detail_assoc,a.product_id,a.count,a.brand,a.model,a.note,a.requirements_date,a.expect_date,a.actual_date,a.manager,a.state,a.now_step,b.type')
-                                ->table(C('DB_PREFIX').'sample_detail a,'.C('DB_PREFIX').'productrelationships b')
-                                ->where('a.detail_assoc="' . $value['id'] . '" AND a.product_id=b.id')
-                                ->select();
-            //订单状态颜色
-            //print_r($value['order_state'].'----');
-            if ($value['order_state'] == 'N') {
-                $value['color'] = '#428bca';
-            } elseif ($value['order_state'] == 'Y') {
-                $value['color'] = '#5cb85c';
-            } else {
-                $value['color'] = '#d9534f';
+
+            # 获取销售头像
+            $value['face'] = $user->field('face')->find( $value['create_person_id'] )['face'];
+
+            $num = 0;
+
+            # 与订单详情表对接
+            $value['child'] = $sample_detail->field('a.id,a.pn,a.detail_assoc,a.product_id,a.count,a.brand,a.model,a.note,a.requirements_date,a.expect_date,a.actual_date,a.manager,a.state,a.now_step,b.type')
+                                            ->table(C('DB_PREFIX').'sample_detail a,'.C('DB_PREFIX').'productrelationships b')
+                                            ->where('a.detail_assoc="' . $value['id'] . '" AND a.product_id=b.id')
+                                            ->select();
+
+            foreach( $value['child'] as $k=>&$v ){
+
+                # 如果产品步骤大于6则说明该单已经完成
+                if( $v['now_step'] > 6 ) $num++;
+
             }
-            //统计子数据条数
-            foreach ($value['child'] as $name => $id) {
-                $value['total'] = $sample_detail->where('detail_assoc="' . $value['id'] . '"')->count();
+
+            # 如果该单的产品数量和产品完成数量一致则说明该单完成
+            if( count( $value['child'] ) == $num ){
+                $value['state'] = 'success';
+            }else{
+                $value['state'] = 'processing';
             }
-            //与user表对接
-            $value['u'] = $user->where('id="' . $value['create_person_id'] . '"')->select();
-            foreach ($value['u'] as $name=>$id) {
-            }
+
         }
-        $this->assign('personList',$sampleResult);
+
         $this->assign('page',$pageShow);
         $this->assign('sampleResult',$sampleResult);
-        //print_r($sampleResult);
         $this->display();
     }
 
-    //初始化添加页面及添加入库
+    # 初始化添加页面及添加入库
     public function add(){
 
         if(IS_POST) {
+
             if (I('post.order_num')) {
 
                 $sample = M('sample');
@@ -95,7 +106,7 @@ class SampleController extends AuthController {
                         # 将步骤和主表id注入产品详情表
                         $value['detail_assoc'] = $sample_id;
                         $value['now_step'] = 2;
-                        $value['note'] = replaceEnterWithBr($value['note']);    // 保留复制换行符
+                        $value['note'] = replaceEnterWithBr($value['note']);    #  保留复制换行符
                         $tmp_detail_id = $sample_model->table(C('DB_PREFIX').'sample_detail')->add($value);
 
                         if( $tmp_detail_id ){
@@ -109,7 +120,7 @@ class SampleController extends AuthController {
                             $tmp_op_data[1]['asc_step'] = 2;
                             $tmp_op_data[1]['asc_detail'] = $tmp_detail_id;
                             $tmp_op_data[1]['operator'] = $value['manager'];
-                            $tmp_op_data[1]['op_time'] = '';    //当用户操作成功后重写此字段
+                            $tmp_op_data[1]['op_time'] = '';    # 当用户操作成功后重写此字段
 
                             # 写入步骤数据
                             $tmp_op_id = $sample_model->table(C('DB_PREFIX').'sample_operating')->addAll($tmp_op_data);
@@ -131,6 +142,12 @@ class SampleController extends AuthController {
                 }
             }
         } else {
+
+            # 检测访问该页面的用户是否所属销售部门
+            if( session('user')['department'] != 4 ){
+                $this->error('你没有权限访问该页面');
+            }
+
             $this->assign('productFilter', $this->getProductData());
             $this->display();
         }
@@ -140,8 +157,10 @@ class SampleController extends AuthController {
 
     # 上传附件
     public function upload(){
+
         $subName = I('post.SUB_NAME');
-        // 如果需要按id为子目录则必须填写第二个参数，否则直接保存在当前目录
+
+        #  如果需要按id为子目录则必须填写第二个参数，否则直接保存在当前目录
         if( $subName != '' ){
             $result = upload( I('post.DIR'), $subName );
             $this->ajaxReturn( $result );
@@ -180,8 +199,9 @@ class SampleController extends AuthController {
     }
 
 
-    //样品单总览
+    # 样品单总览
     public function overview(){
+
         if( I('get.id') ){
 
             $model = new Model();
@@ -201,6 +221,8 @@ class SampleController extends AuthController {
 
             foreach( $child_data as $key=>&$value ){
 
+                $value['max_step'] = $step_data[count($step_data)-1]['id'];
+
                 # 步骤表数据
                 $value['operating'] = $sample_operating_model->field('a.operator,a.op_time,a.asc_detail,b.id,b.name,b.transfer,b.rollback,b.termination,c.nickname')
                                                              ->table(C('DB_PREFIX').'sample_operating a,'.C('DB_PREFIX').'sample_step b,'.C('DB_PREFIX').'user c')
@@ -219,22 +241,55 @@ class SampleController extends AuthController {
 
             $order_data['attachment'] = json_decode($order_data['attachment'], true);
 
-            //print_r($child_data);
-
             $this->assign('orderData',$order_data);
 
             $this->assign('progress', $child_data);
 
-            //print_r($child_data);
-
             $this->display();
         }
+
     }
 
+    # 样品汇总
+    public function summary(){
 
+        $model = new Model();
 
-    //订单详情页
+        $summary = $model->table(C('DB_PREFIX').'sample')->select();
+
+        foreach( $summary as $key=>&$value ){
+
+            # 获取订单产品基本数据
+            $value['detail'] = $model->field('a.id,a.pn,a.count,a.detail_assoc,a.customer,a.brand,a.model,a.note,a.requirements_date,a.expect_date,a.actual_date,a.now_step,a.state,b.type,b.pn,c.nickname,d.create_time,d.create_person_name,d.order_num,d.order_charge,e.name step_name')
+                ->table(C('DB_PREFIX') . 'sample_detail a,' . C('DB_PREFIX') . 'productrelationships b,' . C('DB_PREFIX') . 'user c,' . C('DB_PREFIX') . 'sample d,'.C('DB_PREFIX').'sample_step e')
+                ->where('a.detail_assoc=' . $value['id'] . ' AND a.product_id=b.id AND b.manager=c.id AND a.detail_assoc=d.id AND a.now_step=e.id')
+                ->select();
+
+        }
+
+        //print_r($summary);
+
+        $sample_log_model = M('SampleLog');
+        $sample_operating_model = M('SampleOperating');
+
+        /*foreach( $summary as $key=>&$value ){
+
+            # 步骤表数据
+            $value['operating'] = $sample_operating_model->field('a.operator,a.op_time,a.asc_detail,b.id,b.name,b.transfer,b.rollback,b.termination,c.nickname')
+                ->table(C('DB_PREFIX').'sample_operating a,'.C('DB_PREFIX').'sample_step b,'.C('DB_PREFIX').'user c')
+                ->where( 'a.asc_detail='.$value['id'].' AND a.asc_step=b.id AND a.operator=c.id' )
+                ->select();
+
+        }*/
+
+        $this->assign('summary',$summary);
+        $this->display();
+
+    }
+
+    # 订单详情页
     public function detail(){
+
         if( I('get.id') ){
 
             # 获取产品基本信息
@@ -275,8 +330,6 @@ class SampleController extends AuthController {
                 ->select();
 
             $this->assign('newlog',$log_data);
-
-            //print_r($log_data);
 
             # 获取日志数据
             foreach( $detailResult[0]['operating'] as $key=>&$value ){
@@ -360,16 +413,15 @@ class SampleController extends AuthController {
                     break;
             }
 
-            //print_r($detailResult[0]);
-
             $this->assign('detailResult',$detailResult[0]);
             $this->display();
         }
 
     }
 
-
+    # 添加记录日志
     public function addSampleLog(){
+
         if(IS_POST){
 
             $post = I('post.');
@@ -414,9 +466,9 @@ class SampleController extends AuthController {
             # 判断用户选择的操作类型
             switch( $post['type'] ){
 
-                case 'log':     //添加日志
+                case 'log':     # 添加日志
 
-                    $model->startTrans();   //开启事物
+                    $model->startTrans();   # 开启事物
 
                     # 记录日志
                     $add_log_id = $model->table(C('DB_PREFIX').'sample_log')->add( $logData );
@@ -437,7 +489,7 @@ class SampleController extends AuthController {
 
                     break;
 
-                case 'push':    //推送
+                case 'push':    # 推送
 
                     $now_step_id = $orderData[0]['now_step'];
 
@@ -538,7 +590,7 @@ class SampleController extends AuthController {
 
                     break;
 
-                case 'termination':     //终止
+                case 'termination':     # 终止
 
                     # 修改产品状态
                     $state_save_result = $model->table(C('DB_PREFIX').'sample_detail')->save( ['id'=>$post['asc_detail'],'state'=>'Y'] );
@@ -562,7 +614,7 @@ class SampleController extends AuthController {
 
                     break;
 
-                case 'transfer':    //转交
+                case 'transfer':    # 转交
 
                     # 记录转交时产生的日志
                     $add_transfer_log_id = $model->table(C('DB_PREFIX').'sample_log')->add($logData);
@@ -590,7 +642,7 @@ class SampleController extends AuthController {
 
                     break;
 
-                case 'rollback':    //回退
+                case 'rollback':    # 回退
 
                     # 产品表当前步骤-1
                     $detail_now_step_save = $model->table(C('DB_PREFIX').'sample_detail')->save( ['id'=>$post['asc_detail'],'now_step'=>($orderData[0]['now_step']-1)] );
@@ -633,11 +685,10 @@ class SampleController extends AuthController {
 
                     break;
 
-                default:
-
             }
 
         }
+
     }
 
     # 邮件推送
@@ -647,6 +698,7 @@ class SampleController extends AuthController {
 
         extract($data);
 
+        # 如果是单人则显示收件人姓名否则群发显示All
         if( isset($recipient_name) ){
             $call = $recipient_name;
         }else{
@@ -664,7 +716,7 @@ class SampleController extends AuthController {
 <p>设备型号：$model</p>
 <p>备注：$note</p>
 <p>要求交期：$requirements_date</p><br>
-<p>详情请点击链接：<a href="http://$http_host/Sample/detail/id/$detail_id" target="_blank">http://$http_host/Sample/detail/id/$detail_id</a></p>
+<p>详情请点击链接：<a href="http:# $http_host/Sample/detail/id/$detail_id" target="_blank">http:# $http_host/Sample/detail/id/$detail_id</a></p>
 BASIC;
 
 
@@ -755,17 +807,17 @@ HTML;
 HTML;
 
                 break;
-            default:
 
         }
 
+        # 检查邮件发送结果
         if( $cc == '' ){
             $result = send_Email( 'vinty_email@163.com', '', $subject, $body.$order_basic );
             if( $result != 1 ){
                 $this->ajaxReturn( ['flag'=>0,'msg'=>'邮件发送失败'] );
             }
         }else{
-            $result = send_Email( 'vinty_email@163.com', '', $subject, $body.$order_basic, '2737583968@qq.com' );   //$cc
+            $result = send_Email( 'vinty_email@163.com', '', $subject, $body.$order_basic, '2737583968@qq.com' );   # $cc
             if( $result != 1 ){
                 $this->ajaxReturn( ['flag'=>0,'msg'=>'邮件发送失败'] );
             }

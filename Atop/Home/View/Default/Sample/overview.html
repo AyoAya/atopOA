@@ -48,7 +48,7 @@
                     <th>客户名称</th>
                     <th>设备品牌</th>
                     <th>设备型号</th>
-                    <th width="100">进度</th>
+                    <th width="100">当前进度</th>
                 </tr>
             </thead>
             <tbody>
@@ -61,7 +61,17 @@
                         <td>{$value.customer}</td>
                         <td>{$value.brand}</td>
                         <td>{$value.model}</td>
-                        <td><span class="tag tag-primary">{$value.step_name}</span></td>
+                        <td>
+                            <eq name="value.state" value="N">
+                                <eq name="value.now_step" value="$value.max_step">
+                                    <span class="tag tag-success">{$value.step_name}</span>
+                                <else/>
+                                    <span class="tag tag-primary">{$value.step_name}</span>
+                                </eq>
+                            <else/>
+                                <span class="tag tag-danger">{$value.step_name}</span>
+                            </eq>
+                        </td>
                     </tr>
                 </volist>
             </tbody>
@@ -161,7 +171,7 @@
                     <notempty name="orderData.attachment">
                         <volist name="orderData.attachment" id="value">
                             <div class="file-item">
-                                <div class="file-info"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" title="{$value.savename}">{$value.savename}</a></div>
+                                <div class="file-info"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" target="_blank" title="{$value.savename}">{$value.savename}</a></div>
                             </div>
                         </volist>
                     <else/>
