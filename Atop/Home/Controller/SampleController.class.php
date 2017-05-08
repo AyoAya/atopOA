@@ -48,6 +48,7 @@ class SampleController extends AuthController {
             $value['face'] = $user->field('face')->find( $value['create_person_id'] )['face'];
 
             $num = 0;
+            $_num = 0;
 
             # 与订单详情表对接
             $value['child'] = $sample_detail->field('a.id,a.pn,a.detail_assoc,a.product_id,a.count,a.brand,a.model,a.note,a.requirements_date,a.expect_date,a.actual_date,a.manager,a.state,a.now_step,b.type')
@@ -59,17 +60,22 @@ class SampleController extends AuthController {
 
                 # 如果产品步骤大于6则说明该单已经完成
                 if( $v['now_step'] > 6 ) $num++;
+                if( $v['state'] == 'Y' ) $_num++;
 
             }
 
             # 如果该单的产品数量和产品完成数量一致则说明该单完成
             if( count( $value['child'] ) == $num ){
                 $value['state'] = 'success';
+            }elseif( count( $value['child'] ) == $_num ){
+                $value['state'] = 'undone';
             }else{
                 $value['state'] = 'processing';
             }
 
         }
+
+        //print_r($sampleResult);
 
         $this->assign('page',$pageShow);
         $this->assign('sampleResult',$sampleResult);
@@ -157,7 +163,6 @@ class SampleController extends AuthController {
 
     # 上传附件
     public function upload(){
-
         $subName = I('post.SUB_NAME');
 
         #  如果需要按id为子目录则必须填写第二个参数，否则直接保存在当前目录
@@ -174,7 +179,7 @@ class SampleController extends AuthController {
             if( trim(I('post.SUB_NAME')) != '' ){
                 $SAMPLE_MODEL = M('Sample');
                 $save_id = $SAMPLE_MODEL->save( ['id'=>I('post.SUB_NAME'),'attachment'=>I('post.attachments','',false)] );
-                if( $save_id ){
+                if( $save_id !== false ){
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
                 }else{
                     $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
@@ -189,7 +194,7 @@ class SampleController extends AuthController {
             if( trim(I('post.SUB_NAME')) != '' ){
                 $SAMPLE_MODEL = M('Sample');
                 $save_id = $SAMPLE_MODEL->save( ['id'=>I('post.SUB_NAME'),'test_report'=>I('post.attachments','',false)] );
-                if( $save_id ){
+                if( $save_id !== false ){
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
                 }else{
                     $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
@@ -255,7 +260,27 @@ class SampleController extends AuthController {
 
         $model = new Model();
 
-        $summary = $model->table(C('DB_PREFIX').'sample')->select();
+        $count = $model->table(C('DB_PREFIX').'sample')->count();
+
+        # 数据分页
+        $page = new Page($count,3);//C('LIMIT_SIZE')
+        $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
+        $page->setConfig('next','<span aria-hidden="true">下一页</span>');
+        $page->setConfig('first','<span aria-hidden="true">首页</span>');
+        $page->setConfig('last','<span aria-hidden="true">尾页</span>');
+
+        if(I('get.p')){
+            $this->assign('pagenumber',I('get.p')-1);
+        }
+        $this->assign('limitsize',3);
+        if(C('PAGE_STATUS_INFO')){
+            $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
+        }
+
+        $summary = $model->table(C('DB_PREFIX').'sample')->limit($page->firstRow.','.$page->listRows)->select();
+        //$sampleResult = $model->table(C('DB_PREFIX').'sample')->limit($page->firstRow.','.$page->listRows)->select();
+
+        $pageShow = $page->show();
 
         foreach( $summary as $key=>&$value ){
 
@@ -264,28 +289,14 @@ class SampleController extends AuthController {
                 ->table(C('DB_PREFIX') . 'sample_detail a,' . C('DB_PREFIX') . 'productrelationships b,' . C('DB_PREFIX') . 'user c,' . C('DB_PREFIX') . 'sample d,'.C('DB_PREFIX').'sample_step e')
                 ->where('a.detail_assoc=' . $value['id'] . ' AND a.product_id=b.id AND b.manager=c.id AND a.detail_assoc=d.id AND a.now_step=e.id')
                 ->select();
-
         }
 
-        //print_r($summary);
-
-        $sample_log_model = M('SampleLog');
-        $sample_operating_model = M('SampleOperating');
-
-        /*foreach( $summary as $key=>&$value ){
-
-            # 步骤表数据
-            $value['operating'] = $sample_operating_model->field('a.operator,a.op_time,a.asc_detail,b.id,b.name,b.transfer,b.rollback,b.termination,c.nickname')
-                ->table(C('DB_PREFIX').'sample_operating a,'.C('DB_PREFIX').'sample_step b,'.C('DB_PREFIX').'user c')
-                ->where( 'a.asc_detail='.$value['id'].' AND a.asc_step=b.id AND a.operator=c.id' )
-                ->select();
-
-        }*/
-
+        $this->assign('page',$pageShow);
         $this->assign('summary',$summary);
         $this->display();
 
     }
+
 
     # 订单详情页
     public function detail(){
@@ -490,7 +501,6 @@ class SampleController extends AuthController {
                     break;
 
                 case 'push':    # 推送
-
                     $now_step_id = $orderData[0]['now_step'];
 
                     $step_rel = M('SampleStep')->where( ['id'=>['in',[$now_step_id,$now_step_id+1]]] )->order('id ASC')->select();
@@ -535,26 +545,9 @@ class SampleController extends AuthController {
                     # 修改主表步骤
                     $save_detail_row = $model->table(C('DB_PREFIX').'sample_detail')->save( ['id'=>$post['asc_detail'],'now_step'=>$now_step_id+1] );
 
-                    if( isset($logistics_save) ){
+                    if( isset($logistics_save) && isset($actual_date_save) ){
 
-                        if( $op_time_save &&  $add_push_log_id && $add_push_id && $save_detail_row && $logistics_save ){
-
-                            $model->commit();
-
-                            $this->pushEmail('PUSH', $emails, $orderData[0]);
-
-                            $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
-
-
-                        }else{
-                            $model->rollback();
-
-                            $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
-                        }
-
-                    }elseif( isset($actual_date_save) ){
-
-                        if( $op_time_save &&  $add_push_log_id && $add_push_id && $save_detail_row && $actual_date_save ){
+                        if( $op_time_save !== false &&  $add_push_log_id && $add_push_id && $save_detail_row !== false && $logistics_save !== false && $actual_date_save !== false ){
 
                             $model->commit();
 
@@ -812,12 +805,12 @@ HTML;
 
         # 检查邮件发送结果
         if( $cc == '' ){
-            $result = send_Email( 'vinty_email@163.com', '', $subject, $body.$order_basic );
+            $result = send_Email( 'm18581898939@163.com', '', $subject, $body.$order_basic );
             if( $result != 1 ){
                 $this->ajaxReturn( ['flag'=>0,'msg'=>'邮件发送失败'] );
             }
         }else{
-            $result = send_Email( 'vinty_email@163.com', '', $subject, $body.$order_basic, '2737583968@qq.com' );   # $cc
+            $result = send_Email( 'm18581898939@163.com', '', $subject, $body.$order_basic, '2737583968@qq.com' );   # $cc
             if( $result != 1 ){
                 $this->ajaxReturn( ['flag'=>0,'msg'=>'邮件发送失败'] );
             }

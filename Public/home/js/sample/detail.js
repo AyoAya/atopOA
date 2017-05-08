@@ -54,92 +54,95 @@ $(function(){
                     $('#TestReport').css({display:'block'});
                     //当用户选择推送时，检查上传附件dom元素是否存在，如果存在则实例化webuploader
                     //为避免重复生成实例，当window.uploader类型为object时不创建实例
-                    if( typeof(window.uploader) != "object"  ){
-                        // uploader参数配置
-                        var logUploaderOption = {
-                            auto: false,
-                            server: ThinkPHP['AJAX'] + '/Sample/upload',
-                            pick: '#testReportPick',
-                            fileVal : 'Filedata',
-                            accept: {
-                                title: 'file',
-                                extensions: 'zip,rar,jpg,png,jpeg,doc,docx,xls,xlsx,pdf'
-                            },
-                            method: 'POST',
-                        };
-                        // 实例化uploader
-                        window.uploader = WebUploader.create( logUploaderOption );
-                        // 添加到队列时
-                        window.uploader.on('fileQueued', function( file ){
-                            var fileItem = '<div class="file-item" id="'+ file.id +'" style="width: 508px !important;">' +
-                                '<div class="pull-left"><i class="file-icon file-icon-ext-'+ file.ext +'"></i> '+ file.name +'</div>' +
-                                '<div class="pull-right"><i class="icon-remove" title="移除该文件"></i></div>' +
-                                '<div class="clearfix"></div>' +
-                                '</div>';
-                            $(logUploaderOption.pick).next().append(fileItem);
-                        });
-                        // 上传错误时
-                        window.uploader.on('error', function( code ){
-                            var msg = '';
-                            switch(code){
-                                case 'Q_EXCEED_NUM_LIMIT':
-                                    msg = '只能上传一个文件';
-                                    break;
-                                case 'Q_EXCEED_SIZE_LIMIT':
-                                    msg = '文件大小超出限制';
-                                    break;
-                                case 'Q_TYPE_DENIED':
-                                    msg = '文件格式不允许';
-                                    break;
-                                case 'F_DUPLICATE':
-                                    msg = '文件已存在';
-                                    break;
-                                default:
-                                    msg = code;
-                            }
-                            layer.msg(msg, {icon: 2, time: 2000});
-                        });
-                        // 上传之前
-                        window.uploader.on('uploadBeforeSend', function( block, data, headers ){
-                            data.SUB_NAME = $('#detailID').val();
-                            data.DIR = '/Sample/TestReport/';
-                        });
-                        // 上传成功时
-                        window.uploader.on('uploadSuccess', function( file,response ){
-                            if( response.flag > 0 ){
-                                var attachmentObject = new Object();
-                                attachmentObject.ext = response.ext;
-                                attachmentObject.savename = response.savename;
-                                attachmentObject.path = response.path;
-                                attachmentList.push(attachmentObject);
-                            }else{
-                                layer.closeAll();
-                                layer.msg(response.msg, { icon : 2,time : 2000 });
-                            }
-                        });
-                        // 所有文件上传结束时
-                        window.uploader.on('uploadFinished', function(){
-                            $.ajax({
-                                url : ThinkPHP['AJAX'] + '/Sample/insertTestReport',
-                                type : 'POST',
-                                data : {
-                                    SUB_NAME : $('#detailID').val(),
-                                    attachments : JSON.stringify(attachmentList)
+                    if( $('#testReportPick').length > 0 ){
+
+                        if( typeof(window.uploader) != "object"  ){
+                            // uploader参数配置
+                            var logUploaderOption = {
+                                auto: false,
+                                server: ThinkPHP['AJAX'] + '/Sample/upload',
+                                pick: '#testReportPick',
+                                fileVal : 'Filedata',
+                                accept: {
+                                    title: 'file',
+                                    extensions: 'zip,rar,jpg,gif,png,jpeg,doc,docx,xls,xlsx,pdf'
                                 },
-                                dataType : 'json',
-                                success : function( response ){
-                                    if( response.flag > 0 ){
-                                        layer.msg(response.msg, { icon : 1,time : 2000 });
-                                        setTimeout(function(){
-                                            location.reload();
-                                        },2000);
-                                    }else{
-                                        layer.closeAll();
-                                        layer.msg(response.msg, { icon : 2,time : 2000 });
-                                    }
+                                method: 'POST',
+                            };
+                            // 实例化uploader
+                            window.uploader = WebUploader.create( logUploaderOption );
+                            // 添加到队列时
+                            window.uploader.on('fileQueued', function( file ){
+                                var fileItem = '<div class="file-item" id="'+ file.id +'" style="width: 508px !important;">' +
+                                    '<div class="pull-left"><i class="file-icon file-icon-ext-'+ file.ext +'"></i> '+ file.name +'</div>' +
+                                    '<div class="pull-right"><i class="icon-remove" title="移除该文件"></i></div>' +
+                                    '<div class="clearfix"></div>' +
+                                    '</div>';
+                                $(logUploaderOption.pick).next().append(fileItem);
+                            });
+                            // 上传错误时
+                            window.uploader.on('error', function( code ){
+                                var msg = '';
+                                switch(code){
+                                    case 'Q_EXCEED_NUM_LIMIT':
+                                        msg = '只能上传一个文件';
+                                        break;
+                                    case 'Q_EXCEED_SIZE_LIMIT':
+                                        msg = '文件大小超出限制';
+                                        break;
+                                    case 'Q_TYPE_DENIED':
+                                        msg = '文件格式不允许';
+                                        break;
+                                    case 'F_DUPLICATE':
+                                        msg = '文件已存在';
+                                        break;
+                                    default:
+                                        msg = code;
+                                }
+                                layer.msg(msg, {icon: 2, time: 2000});
+                            });
+                            // 上传之前
+                            window.uploader.on('uploadBeforeSend', function( block, data, headers ){
+                                data.SUB_NAME = $('#detailID').val();
+                                data.DIR = '/Sample/TestReport/';
+                            });
+                            // 上传成功时
+                            window.uploader.on('uploadSuccess', function( file,response ){
+                                if( response.flag > 0 ){
+                                    var attachmentObject = new Object();
+                                    attachmentObject.ext = response.ext;
+                                    attachmentObject.savename = response.savename;
+                                    attachmentObject.path = response.path;
+                                    attachmentList.push(attachmentObject);
+                                }else{
+                                    layer.closeAll();
+                                    layer.msg(response.msg, { icon : 2,time : 2000 });
                                 }
                             });
-                        });
+                            // 所有文件上传结束时
+                            window.uploader.on('uploadFinished', function(){
+                                $.ajax({
+                                    url : ThinkPHP['AJAX'] + '/Sample/insertTestReport',
+                                    type : 'POST',
+                                    data : {
+                                        SUB_NAME : $('#detailID').val(),
+                                        attachments : JSON.stringify(attachmentList)
+                                    },
+                                    dataType : 'json',
+                                    success : function( response ){
+                                        if( response.flag > 0 ){
+                                            layer.msg(response.msg, { icon : 1,time : 2000 });
+                                            setTimeout(function(){
+                                                location.reload();
+                                            },2000);
+                                        }else{
+                                            layer.closeAll();
+                                            layer.msg(response.msg, { icon : 2,time : 2000 });
+                                        }
+                                    }
+                                });
+                            });
+                        }
                     }
                 }
                 if( _value == 'transfer' ){
@@ -216,6 +219,8 @@ $(function(){
                 delete data.field.waybill;
             }
 
+
+
             $.ajax({
                 url : ThinkPHP['AJAX'] + '/Sample/addSampleLog',
                 type : 'post',
@@ -225,10 +230,11 @@ $(function(){
                     layer.load(2, { shade : [0.5,'#fff'] });
                 },
                 success : function( response ){
+
                     if (response.flag > 0){
 
                         //数据插入成功后检查uploader是否存在
-                        if( window.uploader ){
+                        if( typeof (window.uploader) == 'object' ){
                             //如果uoloader存在并且队列里存在文件则上传
                             if( window.uploader.getFiles().length > 0 ){
                                 window.uploader.upload();

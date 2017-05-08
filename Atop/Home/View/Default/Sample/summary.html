@@ -44,7 +44,11 @@
                 <volist name="value.detail" id="vo" key="TWO_KEY">
                     <eq name="TWO_KEY" value="1">
                         <tr>
-                            <td rowspan="{:count($value['detail'])}">{$ONE_KEY}</td>
+                            <td rowspan="{:count($value['detail'])}"><if condition="$Think.get.p AND $Think.get.p neq 1">
+                                {$pagenumber*$limitsize+$ONE_KEY}
+                                <else/>
+                                {$ONE_KEY}
+                            </if></td>
                             <td rowspan="{:count($value['detail'])}">{$value.order_num}</td>
                             <td rowspan="{:count($value['detail'])}">{$value.create_person_name}</td>
                             <td>{$vo.type}</td>
@@ -72,6 +76,9 @@
     </table>
 
 
+    <div class="clearfix"></div>
+    <!-- 分页 -->
+    <ul class="pagination pagination-edit">{$page}</ul>
 </block>
 
 
