@@ -145,6 +145,7 @@ $(function(){
         //默认隐藏所有的抄送人列表，当用户选择部门的时候显示对应的部门人员
         $('.cc-box-list .layui-form-checkbox').css({display:'none'});
 
+        //监听用户选择所属部门显示对应对应部门人员
         form.on('select(department)', function( data ){
             var _value = data.value;
             $('#ccBox .cc-box-list .layui-form-checkbox').css({display:'none'});
@@ -156,19 +157,23 @@ $(function(){
             if( $(data.elem).is(':checked') ){
                 var _tmpDom = '';
                 $(data.elem).attr('checked',true);
+                //如果选中当前人员则将该人员添加到展示列表
                 _tmpDom += '<div class="cc-list-item" value="'+$(this).attr('value')+'">'+$(this).attr('title')+' <i class="icon-remove"></i></div>\r\n';
                 $('#all-cc-list').append(_tmpDom);
             }else{
                 $(data.elem).attr('checked',false);
+                //如果选中之后取消则将对应展示列表里的人员删除
+                $('#all-cc-list div[value='+$(this).attr('value')+']').remove();
             }
-           /* var _tmpDom = '';
-            $('#ccBox input[type=checkbox]').each(function(){
-                if( $(this).is(':checked') ){
-                }
-            });
-            console.log(_tmpDom);*/
         });
 
+        //删除展示列表里面的抄送人
+        $('#all-cc-list').on('click', '.cc-list-item', function(){
+            var value = $(this).attr('value');
+            $('#ccBox .cc-box-list input[value='+ value +']').attr('checked',false);
+            $('#ccBox .cc-box-list input[value='+ value +']').next().removeClass('layui-form-checked');
+            $(this).remove();
+        });
 
 
         //监听rma处理类型
@@ -299,6 +304,20 @@ $(function(){
             if( data.field.step == 4 && data.field.operation_type == 6 || data.field.operation_type == 5 && window.loguploader.getFiles().length <= 0 ){
                 layer.msg('请先上传分析报告',{ icon:2, time:2000 });
                 return false;
+            }
+
+            //检查用户是否开启抄送
+            if( data.field.cc_on && data.field.cc_on == 'Y' ){
+                var emails = new Array();
+                //如果开启则收集选中的人员
+                $('#ccBox .cc-box-list input:checked').each(function(){
+                    emails.push($(this).attr('email'));
+                });
+                if( emails.length <= 0 ){
+                    layer.msg('你没有选择抄送人喔');
+                    return false;
+                }
+                data.field.cc_email_list = emails;
             }
 
             $.ajax({

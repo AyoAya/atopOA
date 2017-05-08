@@ -4,9 +4,11 @@ namespace Home\Controller;
 use Think\Model;
 use Think\Page;
 class RMAController extends AuthController{
+
     private $str = '';
     private $in = array();
     private $filter = array();
+
     //客诉处理
     public function index(){
 
@@ -125,10 +127,6 @@ class RMAController extends AuthController{
         $this->assign('customer',$result);
         //当数据为空显示图片
         $this->assign('empty','<div class="empty-box"><span class="empty-pic"></span></div>');
-        $this->display();
-    }
-
-    public function newdetail(){
         $this->display();
     }
 
@@ -561,12 +559,21 @@ class RMAController extends AuthController{
         $this->display();
     }
 
+    /**
+     * 获取部门和人员
+     * @return mixed
+     */
     private function getDepartmentsAndUsers(){
         $result['departments'] = M('Department')->select();
         $result['users'] = M('User')->where('id<>1 AND state=1')->select();
         return $result;
     }
 
+    /**
+     * 文件上传
+     * 1. js端指定上传路径
+     * 2. js端指定子目录生成名称
+     */
     public function upload(){
         $subName = I('post.SUB_NAME');
         // 如果需要按id为子目录则必须填写第二个参数，否则直接保存在当前目录
@@ -578,12 +585,6 @@ class RMAController extends AuthController{
     
     //文件上传(客诉处理/客诉详情/添加客诉)
     public function uploadFile(){
-        //$sessionid = I('post.PHPSESSID');
-        /*if($sessionid){
-            session_id(I('post.PHPSESSID'));
-        }else{
-            exit;
-        }*/
         $info = FileUpload('/CustomerComplaintAttachment/',true,true,'RMA_');
         if( is_array( $info ) && !empty( $info ) ) {
             $oldname = $info['Filedata']['name'];
@@ -608,7 +609,7 @@ class RMAController extends AuthController{
      * @param $customer_id  客诉id号
      * @return array
      */
-    public function GetInvolvedIn($customer_id){
+    private function GetInvolvedIn($customer_id){
         $oacustomeroperation_model = M('Oacustomeroperation');
         $now_step = $oacustomeroperation_model->where('main_assoc='.$customer_id)->max('step_assoc'); //获取当前步骤
         $involed = $oacustomeroperation_model->field('operation_person')->where('main_assoc='.$customer_id.' AND step_assoc < '.$now_step)->select();  //获取到参与当前客诉的有关人员
@@ -638,7 +639,6 @@ class RMAController extends AuthController{
     public function addRMA_OperationLog(){
         if( IS_POST ){
 
-
             $post = I('post.','',false);
 
             # 记录录入信息
@@ -666,7 +666,12 @@ class RMAController extends AuthController{
 
                     array_push($emails,session('user')['email']);   //将当前用户邮箱添加到邮件推送列表
 
-                    $this->pushEmail('ADD_LOG',$emails,$logData,$post['cc_id']);
+                    # 检查用户是否开启抄送功能，如果开启则将被选中的抄送人添加至发送列表
+                    if( isset($post['cc_on']) && $post['cc_on'] == 'Y' ){
+                        $this->pushEmail('ADD_LOG',$emails,$logData,$post['cc_id'],$post['cc_email_list']);
+                    }else{
+                        $this->pushEmail('ADD_LOG',$emails,$logData,$post['cc_id']);
+                    }
 
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$post['cc_id'],'logid'=>$add_id] );
                 }else{
@@ -702,28 +707,32 @@ class RMAController extends AuthController{
 
                     $close_reason_text = M('Oacustomerclosereason')->find($post['assoc_close_reason']);
                     $logDataBak['close_reason_text'] = $close_reason_text['close_reason'];
+
                     $emails = $this->GetInvolvedIn($post['cc_id']);
-                    $this->pushEmail('CUSTOMER_CLOSE',$emails,$logDataBak,$post['cc_id']);
+
+                    # 检查用户是否开启抄送功能，如果开启则将被选中的抄送人添加至发送列表
+                    if( isset($post['cc_on']) && $post['cc_on'] == 'Y' ) {
+                        $this->pushEmail('CUSTOMER_CLOSE', $emails, $logDataBak, $post['cc_id'],$post['cc_email_list']);
+                    }else{
+                        $this->pushEmail('CUSTOMER_CLOSE', $emails, $logDataBak, $post['cc_id']);
+                    }
 
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$post['cc_id'],'logid'=>$add_id_1] );
                 }else{
                     M()->rollback();
-                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加失败'] );
+                    $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                 }
             }elseif( $post['operation_type'] == 'Z' ){   //如果操作类型为transfer，则说明用户将该步骤操作人更换为其他人选
 
-                $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
-                $oacustomeroperaion_model = M('Oacustomeroperation');
-
                 # 开启事务
-                M()->startTrans();
+                $model = new Model();
+                $model->startTrans();
 
-                $add_id_1 = $oacustomercomplaintlog_model->add($logData);
-                //$step_result = M('Oacustomerstep')->find($post['step']+1);  //获取到下一个步骤
+                $add_id_1 = $model->table(C('DB_PREFIX').'oacustomercomplaintlog')->add($logData);
 
                 # 获取转交人的数据
                 $QA_person_data = M('User')->field('id,nickname,email')->find( $post['operation_person'] );
-                $save_id = $oacustomeroperaion_model->where( ['main_assoc'=>$post['cc_id'],'step_assoc'=>$post['step']] )->save( ['operation_person'=>$post['operation_person']] );
+                $save_id = $model->table(C('DB_PREFIX').'oacustomeroperation')->where( ['main_assoc'=>$post['cc_id'],'step_assoc'=>$post['step']] )->save( ['operation_person'=>$post['operation_person']] );
 
                 $logDataBak = $logData;
                 $logDataBak['QA_person_nickname'] = $QA_person_data['nickname'];
@@ -732,25 +741,28 @@ class RMAController extends AuthController{
                 $logData['log_content'] = '['.session('user')['nickname'].'] 将操作人转交给 ['.$QA_person_data['nickname'].']。';
                 $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
-                $add_id_2 = $oacustomercomplaintlog_model->add($logData);
+                $add_id_2 = $model->table(C('DB_PREFIX').'oacustomercomplaintlog')->add($logData);
 
                 if( $add_id_1 && $add_id_2 && $save_id ){
-                    M()->commit();
+                    $model->commit();
 
                     $emails = $this->GetInvolvedIn($post['cc_id']);
-                    $this->pushEmail('TRANSFER',$QA_person_data['email'],$logDataBak,$post['cc_id'],$emails);
+
+                    # 检查用户是否开启抄送功能，如果开启则将被选中的抄送人添加至发送列表
+                    # 如果已经存在抄送人则将已存在的和用户选择的合并
+                    if( isset($post['cc_on']) && $post['cc_on'] == 'Y' ) {
+                        $this->pushEmail('TRANSFER', $QA_person_data['email'], $logDataBak, $post['cc_id'], array_merge( $emails, $post['cc_email_list'] ) );
+                    }else{
+                        $this->pushEmail('TRANSFER', $QA_person_data['email'], $logDataBak, $post['cc_id'], $emails);
+                    }
 
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$post['cc_id'],'logid'=>$add_id_1] );
                 }else{
-                    M()->rollback();
-                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加失败'] );
+                    $model->rollback();
+                    $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                 }
 
             }elseif( $post['operation_type'] == 'H' ){  //如果操作类型为H，则说明用户需要将步骤回退到指定的步骤
-
-                $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
-                $oacustomeroperaion_model = M('Oacustomeroperation');
-                $oacustomerstep_model = M('Oacustomerstep');
 
                 # 开启事务
                 $model = new Model();
@@ -758,14 +770,6 @@ class RMAController extends AuthController{
                 $model->startTrans();
 
                 $add_id_1 = $model->table('atop_oacustomercomplaintlog')->add($logData);
-                //$step_result = $oacustomerstep_model->find($post['step']-1);  //获取到上一个步骤
-
-                /*$step_result = $oacustomeroperaion_model->field('b.id,b.step_name')
-                                                        ->table('atop_oacustomeroperation a,atop_oacustomerstep b')
-                                                        ->where( 'a.main_assoc='.$post['cc_id'].' AND a.step_assoc=b.id' )
-                                                        ->order('a.step_assoc DESC')
-                                                        ->limit(2)
-                                                        ->select();  //获取到上一个步骤*/
 
                 $step_result = M()->field('b.id,b.step_name')
                                   ->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'oacustomerstep b')
@@ -786,9 +790,8 @@ class RMAController extends AuthController{
                 # 修改主表当前步骤
                 $save_id = $model->table('atop_oacustomercomplaint')->save( ['id'=>$post['cc_id'],'now_step'=>$step_result['id']] );
 
-                //$delete_id = $model->table('atop_oacustomeroperation')->where( ['mian_assoc'=>$post['cc_id'],'step_assoc'=>$post['step']] )->delete();   //删除掉当前步骤即回退到上一个步骤
-
                 if( $add_id_1 && $add_id_2 && $save_id !== false ){
+
                     $model->commit();
 
                     $emails = $this->GetInvolvedIn($post['cc_id']);
@@ -797,12 +800,17 @@ class RMAController extends AuthController{
 
                     array_push($emails,session('user')['email']);
 
-                    $this->pushEmail('FALLBACK',$emails,$logDataBak,$post['cc_id']);
+                    # 检查用户是否开启抄送功能，如果开启则将被选中的抄送人添加至发送列表
+                    if( isset($post['cc_on']) && $post['cc_on'] == 'Y' ) {
+                        $this->pushEmail('FALLBACK', $emails, $logDataBak, $post['cc_id'],$post['cc_email_list']);
+                    }else{
+                        $this->pushEmail('FALLBACK', $emails, $logDataBak, $post['cc_id']);
+                    }
 
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$post['cc_id'],'logid'=>$add_id_1] );
                 }else{
                     $model->rollback();
-                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加失败'] );
+                    $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                 }
 
             }else{
@@ -870,6 +878,7 @@ class RMAController extends AuthController{
 
                 # 为保证操作表步骤唯一，每当推送时始终检查数据库是否存在该客诉的步骤节点信息，如果存在为修改，不存在则新增
                 $unique_operation = $model->table('atop_oacustomeroperation')->where( ['main_assoc'=>$post['cc_id'],'step_assoc'=>$post['operation_type']] )->select();
+
                 if( empty($unique_operation) ){
                     $add_id_3 = $model->table('atop_oacustomeroperation')->add($operationData);
                 }else{
@@ -883,15 +892,28 @@ class RMAController extends AuthController{
                     $userInfo = $userEmail = $this->GetPushPerson($operation_person_id);   //获取收件人信息
                     $emails = $this->GetInvolvedIn($post['cc_id']);     //获取抄送人
                     $logDataBak['dear'] = $userInfo['nickname'];
-                    $this->pushEmail('PUSH_STEP',$userInfo['email'],$logDataBak,$post['cc_id'],$emails);
+
+                    # 检查用户是否开启抄送功能，如果开启则将被选中的抄送人添加至发送列表
+                    # 如果已经存在抄送人则将已存在的和用户选择的合并
+                    if( isset($post['cc_on']) && $post['cc_on'] == 'Y' ) {
+                        $this->pushEmail('PUSH_STEP', $userInfo['email'], $logDataBak, $post['cc_id'], array_merge( $emails, $post['cc_email_list'] ) );
+                    }else{
+                        $this->pushEmail('PUSH_STEP', $userInfo['email'], $logDataBak, $post['cc_id'], $emails);
+                    }
 
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功','id'=>$post['cc_id'],'logid'=>$add_id_1] );
                 }else{
+
                     $model->rollback();
-                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加失败'] );
+
+                    $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
+
                 }
+
             }
+
         }
+
     }
 
 
@@ -900,7 +922,7 @@ class RMAController extends AuthController{
      * @param $userid 用户id
      * @return array
      */
-    public function GetPushPerson($userid){
+    private function GetPushPerson($userid){
         $user_model = M('User');
         $map['id'] = ['in',$userid];
         $user_result = $user_model->field('email,nickname')->where($map)->select();
@@ -915,11 +937,41 @@ class RMAController extends AuthController{
         return $userInfo;
     }
 
-
+    # 检测收件人信息
+    private function checkEmailOnly( $emails ){
+        $call = '';
+        if( is_array( $emails ) ){
+            $emails_num = count( $emails );
+            if( $emails_num <= 1 ){
+                $users = M('User')->field('nickname')->where('email="'.$emails_num[0].'"')->select();
+                if( count( $users ) == 1 ){
+                    $call = $users[0]['nickname'];
+                }else{
+                    foreach( $users as $key=>&$value ){
+                        $call .= $value['nickname'].'&';
+                    }
+                    $call = substr($call,0,-1);
+                }
+            }else{
+                $call = 'All';
+            }
+        }else{
+            $users = M('User')->field('nickname')->where('email="'.$emails.'"')->select();
+            if( count( $users ) == 1 ){
+                $call = $users[0]['nickname'];
+            }else{
+                foreach( $users as $key=>&$value ){
+                    $call .= $value['nickname'].'&';
+                }
+                $call = substr($call,0,-1);
+            }
+        }
+        return $call;
+    }
 
 
     //推送邮件
-    public function pushEmail( $type,$emails,$data,$id='',$cc=[] ){
+    private function pushEmail( $type,$emails,$data,$id='',$cc=[] ){
         $http_host = $_SERVER['HTTP_HOST'];
         $user_nickname = session('user')['nickname'];
         extract($data);
@@ -949,6 +1001,7 @@ p {
 HTML;
 
         }elseif( $type == 'ADD_LOG' ){  //添加日志推送邮件
+            $call = $this->checkEmailOnly( $emails );
             $subject = '客诉日志更新 [ ID:'.$id.' ]';
             $body = <<<HTML
 <style>
@@ -956,7 +1009,7 @@ p {
     line-height: 25px;
 }
 </style>
-<p>Dear All,</p>
+<p>Dear $call,</p>
 <p>[$user_nickname] 更新了客诉日志，内容如下：</p>
 <p>$log_content</p><br>
 <p><b>客诉基本信息：</b></p>
@@ -988,6 +1041,7 @@ p {
 <p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }elseif( $type == 'CUSTOMER_CLOSE' ){   //如果是关闭客诉
+            $call = $this->checkEmailOnly( $emails );
             $subject = '客诉关闭 [ ID:'.$id.' ]';
             $body = <<<HTML
 <style>
@@ -995,7 +1049,7 @@ p {
     line-height: 25px;
 }
 </style>
-<p>Dear All,</p>
+<p>Dear $call,</p>
 <p>[$user_nickname] 将客诉关闭</p>
 <p>关闭原因：$close_reason_text</p>
 <p>备注：$log_content</p><br>
@@ -1007,6 +1061,7 @@ p {
 <p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }elseif( $type == 'TRANSFER' ){
+            $call = $this->checkEmailOnly( $emails );
             $step_result = M('Oacustomerstep')->field('id,step_name')->find($step);
             $step_name = $step_result['step_name'];
             $step_id = $step_result['id'];
@@ -1017,7 +1072,7 @@ p {
     line-height: 25px;
 }
 </style>
-<p>Dear All,</p>
+<p>Dear $call,</p>
 <p>[$user_nickname] 将客诉处理人转交给 [$QA_person_nickname]，当前步骤：Step$step_id - $step_name</p>
 <p>备注：$log_content</p><br>
 <p><b>客诉基本信息：</b></p>
@@ -1028,6 +1083,7 @@ p {
 <p>详情请点击链接：<a target="_blank" href="http://$http_host/RMA/details/id/$id">http://$http_host/RMA/details/id/$id</a></p>
 HTML;
         }elseif( $type == 'FALLBACK' ){
+            $call = $this->checkEmailOnly( $emails );
             $subject = '客诉步骤回退 [ ID:'.$id.' ]';
             $body = <<<HTML
 <style>
@@ -1035,7 +1091,7 @@ p {
     line-height: 25px;
 }
 </style>
-<p>Dear All,</p>
+<p>Dear $call,</p>
 <p>[$user_nickname] 将步骤回退到：Step$step_id - $step_name</p>
 <p>备注：$log_content</p><br>
 <p><b>客诉基本信息：</b></p>
@@ -1158,12 +1214,45 @@ HTML;
 
     //统计
     public function chart(){
-        $status = array();
-        $customer = M('Oacustomercomplaint');
-        $status['y'] = $customer->where('status=0')->count();
-        $status['n'] = $customer->where('status=-1')->count();
-        $status['d'] = $customer->where('status=1')->count();
-        $this->assign('status',$status);
+
+        # 获取到当前月份
+        /*$now_month = (int)date('m');
+
+        $model = new Model();
+
+        $StackingArea = [];
+
+        for( $i = 1; $i <= $now_month; $i++ ){
+
+            # 准备指定月份时间
+            $time_str = '2017-0'.$i.'-01';
+
+            # 获取月份第一天
+            $BeginDate = date( 'Y-m-01', strtotime( $time_str ) );
+
+            # 获取月份最后一天
+            $EndDate = date( 'Y-m-d', strtotime("$BeginDate +1 month -1 day") );
+
+            $StackingArea[] = $model->table( C('DB_PREFIX').'oacustomercomplaint' )->where( 'UNIX_TIMESTAMP(cc_time) > '.strtotime( $BeginDate ).' AND UNIX_TIMESTAMP(cc_time) < '.strtotime( $EndDate ) )->order('cc_time ASC')->select();
+
+        }
+
+        $StackingAreaMonth = [];
+
+        foreach( $StackingArea as $key=>&$value ){
+            array_push( $StackingAreaMonth, ($key+1).'月' );
+        }*/
+
+        //echo json_encode($StackingAreaMonth);
+
+        //print_r($StackingArea);
+
+        //$timestamp = strtotime('2017-01-01 00:00:00');
+
+        //echo date('Y-m-d H:i:s',$timestamp);
+
+        //$this->assign('StackingArea',$StackingArea);
+
         $this->display();
     }
     

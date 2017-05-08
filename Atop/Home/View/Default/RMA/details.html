@@ -116,25 +116,25 @@
 		<tbody>
 			<tr>
 				<td>设备厂商：</td>
-				<td><p>{$details.vendor}</p></td>
+				<td>{$details.vendor}</td>
 			</tr>
 			<tr>
 				<td>设备型号：</td>
-				<td><p>{$details.model}</p></td>
+				<td>{$details.model}</td>
 			</tr>
 			<tr>
 				<td>错误现象：</td>
-				<td><p>{$details.error_message}</p></td>
+				<td>{$details.error_message}</td>
 			</tr>
 			<tr>
 				<td>备注信息：</td>
-				<td><p>
+				<td>
 					<notempty name="details.comments">
 						{$details.comments}
 					<else/>
 						无
 					</notempty>
-				</p></td>
+				</td>
 			</tr>
 		</tbody>
 	</table>
@@ -431,14 +431,14 @@
 									<div class="layui-form-item" style="margin-bottom: 0;">
 										<label class="layui-form-label" style="width: 55px;vertical-align: middle;">抄送</label>
 										<div class="layui-input-block" style="margin-left: 55px;">
-											<input type="checkbox" lay-filter="cc" name="cc" value="Y" title="" lay-skin="primary">
+											<input type="checkbox" lay-filter="cc" name="cc_on" value="Y" title="" lay-skin="primary">
 										</div>
 									</div>
 									<div id="all-cc-list" class="sr-only"></div>
 									<div class="sr-only" id="ccBox">
 										<div class="cc-box-department">
 											<select name="department" lay-filter="department">
-												<option value="">选择部门</option>
+												<option value="0">选择部门</option>
 												<volist name="ccList.departments" id="value">
 													<option value="{$value.id}">{$value.name}</option>
 												</volist>
@@ -446,7 +446,7 @@
 										</div>
 										<div class="cc-box-list">
 											<volist name="ccList.users" id="value">
-												<input type="checkbox" lay-filter="user" department="{$value.department}" name="cc[]" title="{$value.nickname}" value="{$value.id}">
+												<input type="checkbox" lay-filter="user" department="{$value.department}" email="{$value.email}" name="cc_list[]" title="{$value.nickname}" value="{$value.id}">
 											</volist>
 										</div>
 									</div>
