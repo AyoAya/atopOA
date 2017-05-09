@@ -9,7 +9,7 @@ class NoticeController extends AuthController {
     
     //初始化页面
     public function index(){
-        $notice = M('Notice');
+/*        $notice = M('Notice');
         $map['who'] = session('user')['id'];
         $map['status'] = 0;
         $newMessage = $notice->where($map)->order('id DESC')->select();
@@ -26,7 +26,7 @@ class NoticeController extends AuthController {
         }
         $this->assign('newMessage',$newMessage);
         $this->assign('oldMessage',$oldMessage);
-        $this->assign('empty','<div class="empty-box"><i class="icon-info-sign"></i><p class="first">没有数据</p><p class="last">There is no data</p></div>');
+        $this->assign('empty','<div class="empty-box"><i class="icon-info-sign"></i><p class="first">没有数据</p><p class="last">There is no data</p></div>');*/
         $this->display();
     }
     

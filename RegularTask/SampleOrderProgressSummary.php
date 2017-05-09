@@ -14,6 +14,8 @@ class PushEmail {
     private $db_user = 'root';
     private $db_pwd = 'root';
     private $db_name = 'atop';
+    static $address = ['vinty_email@163.com','m18581898939@163.com'];
+    static $cc = ['1055363766@qq.com','underfinedvar@qq.com'];
 
     # 定义数据库资源句柄
     static $mysqli;
@@ -136,9 +138,9 @@ span.danger {
 </style>
 STYLE;
 
-    $html = '<div class="title">华拓'.date('Y',time()).'年第'.date('W',time()).'周样品订单进度汇总</div>';
+        $html = '<div class="title">华拓'.date('Y',time()).'年第'.date('W',time()).'周样品订单进度汇总</div>';
 
-    $html .= "\r\n<table class='table' cellpadding='0' cellspacing='0'>
+        $html .= "\r\n<table class='table' cellpadding='0' cellspacing='0'>
     <thead>
         <tr>
             <th>序号</th>
@@ -254,13 +256,111 @@ STYLE;
 
         }
 
+        $subject = '华拓'.date('Y',time()).'年第'.date('W',time()).'周样品订单进度汇总';
+
         $html .= "\t</tbody>\r\n</table>";
 
-        echo $style.$html;
-
-        //print_r($data);
+        //echo $style.$html;
+        self::push_eml($style.$html,$subject);
 
     }
+
+
+    /**
+     * 发送邮件
+     */
+    private static function push_eml($body,$subject){
+
+        $http_host = $_SERVER['HTTP_HOST'];
+
+        //设置签名信息
+        $sign = <<<SIGN
+<style>
+    .sign {
+        width: 98%;
+        padding: 15px;
+        margin-top: 50px;
+        background: #2a3542;
+        color: #fff;
+    }
+    .sign .logo {
+        height: 40px;
+    }
+    .sign .info {
+    
+    }
+    .sign .info p {
+        margin: 0;
+        padding: 0;
+        line-height: 26px;
+    }
+    .clearfix {
+        clear: both;
+    }
+</style>
+<div class="sign">
+    <div class="logo">
+        <img src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/>
+    </div>
+    <div class="info">
+        <p>该邮件由程序自动发送，请勿回复</p>
+        <p>华拓光通信OA系统&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL：61.139.89.33:8088</p>
+    </div>
+    <div class="clearfix"></div>
+</div>
+SIGN;
+
+        //导入PHPMail邮件类
+        require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
+        require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
+
+        $mail = new \PHPMailer();
+
+        $mail->isSMTP();// 使用SMTP服务
+        $mail->CharSet = "UTF-8";// 编码格式为utf8，不设置编码的话，中文会出现乱码
+        $mail->Host = 'smtp.exmail.qq.com';// 发送方的SMTP服务器地址
+        $mail->SMTPAuth = true;// 是否使用身份验证
+        $mail->Username = 'oa@atoptechnology.com';// 发送方的163邮箱用户名
+        $mail->Password = 'Atop123456';// 发送方的邮箱密码，注意用163邮箱这里填写的是“客户端授权密码”而不是邮箱的登录密码！
+        $mail->SMTPSecure = "ssl";// 使用ssl协议方式
+        $mail->Port = '465';// 163邮箱的ssl协议方式端口号是465/994
+        $mail->setFrom('oa@atoptechnology.com','华拓光通信OA系统');// 设置发件人信息，如邮件格式说明中的发件人，这里会显示为Mailer(xxxx@163.com），Mailer是当做名字显示
+        //$mail->addAddress($address,$nickname);// 设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+        if( is_array(self::$address) ){
+            foreach(self::$address as $value){
+                $mail->addAddress($value);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+            }
+        }else{
+            $mail->addAddress(self::$address);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+        }
+        if( self::$cc!='' ){
+            if(is_array(self::$cc)){
+                foreach(self::$cc as $ccperson){
+                    $mail->addCC($ccperson);
+                }
+            }else{
+                $mail->addCC(self::$cc);
+            }
+        }
+        //$mail->addReplyTo("oa@atoptechnology.com","华拓光通信股份有限公司");// 设置回复人信息，指的是收件人收到邮件后，如果要回复，回复邮件将发送到的邮箱地址
+        //$mail->addCC("");// 设置邮件抄送人，可以只写地址，上述的设置也可以只写地址
+        //$mail->addBCC("");// 设置秘密抄送人
+        //$mail->addAttachment("test.jpg");// 添加附件
+
+        $mail->IsHTML(true);
+        $mail->Subject = $subject;// 邮件标题
+        $mail->Body = '<div style="color: #000;padding: 0 20px;">'.$body.$sign.'</div>';// 邮件正文加签名
+        //$mail->AltBody = "This is the plain text纯文本";// 这个是设置纯文本方式显示的正文内容，如果不支持Html方式，就会用到这个，基本无用
+        if($mail->Send()){
+            return 1;
+        }else{
+            return $mail->ErrorInfo;
+        }
+    }
+
+
+
+
 
     /**
      * 查询数据模型

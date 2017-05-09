@@ -12,8 +12,9 @@ class SampleController extends AuthController {
 
         # 是否有查询
         if(I('get.search')){
-            $count = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%"')->count();
+            $count = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%" OR order_charge LIKE "%'.I('get.search').'%"')->count();
             $this->assign( 'search' , I('get.search') );
+
         }else{
             $count = $person->count();
         }
@@ -31,7 +32,7 @@ class SampleController extends AuthController {
 
         # 根据条件筛选数据
         if(I('get.search')){
-            $sampleResult = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%"')->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
+            $sampleResult = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%" OR order_charge LIKE "%'.I('get.search').'%"')->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
         }else{
             $sampleResult = $person->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
         }
@@ -217,6 +218,7 @@ class SampleController extends AuthController {
                                 ->where('a.detail_assoc=' . I('get.id') . ' AND a.product_id=b.id AND b.manager=c.id AND a.detail_assoc=d.id AND a.now_step=e.id')
                                 ->select();
 
+
             $step_data = $model->table(C('DB_PREFIX').'sample_step')->select();
 
             $this->assign('stepData', $step_data);
@@ -241,6 +243,7 @@ class SampleController extends AuthController {
 
             }
 
+
             # 获取订单基本信息及附件/测试报告
             $order_data = $model->table(C('DB_PREFIX').'sample')->find(I('get.id'));
 
@@ -263,7 +266,7 @@ class SampleController extends AuthController {
         $count = $model->table(C('DB_PREFIX').'sample')->count();
 
         # 数据分页
-        $page = new Page($count,3);//C('LIMIT_SIZE')
+        $page = new Page($count,10);//C('LIMIT_SIZE')
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
         $page->setConfig('next','<span aria-hidden="true">下一页</span>');
         $page->setConfig('first','<span aria-hidden="true">首页</span>');
@@ -289,9 +292,15 @@ class SampleController extends AuthController {
                 ->table(C('DB_PREFIX') . 'sample_detail a,' . C('DB_PREFIX') . 'productrelationships b,' . C('DB_PREFIX') . 'user c,' . C('DB_PREFIX') . 'sample d,'.C('DB_PREFIX').'sample_step e')
                 ->where('a.detail_assoc=' . $value['id'] . ' AND a.product_id=b.id AND b.manager=c.id AND a.detail_assoc=d.id AND a.now_step=e.id')
                 ->select();
+
         }
 
+        $max_step = $model->table(C('DB_PREFIX').'sample_step')->field('id')->max('id');
+        //print_r($max_step);
+
+//print_r($summary);
         $this->assign('page',$pageShow);
+        $this->assign('max_step',$max_step);
         $this->assign('summary',$summary);
         $this->display();
 

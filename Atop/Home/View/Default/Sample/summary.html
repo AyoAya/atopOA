@@ -34,7 +34,7 @@
                 <th width="500">备注</th>
                 <th>设备厂商</th>
                 <th>设备型号</th>
-                <th width="87">当前进度</th>
+                <th width="100">当前进度</th>
             </tr>
         </thead>
 
@@ -56,7 +56,17 @@
                             <td>{$vo.note}</td>
                             <td>{$vo.brand}</td>
                             <td>{$vo.model}</td>
-                            <td>{$vo.step_name}</td>
+                            <td>
+                                <eq name="vo.state" value="N">
+                                    <eq name="vo.now_step" value="$max_step">
+                                        <span class="tag tag-success">{$vo.step_name}</span>
+                                    <else/>
+                                        <span class="tag tag-primary">{$vo.step_name}</span>
+                                    </eq>
+                                <else/>
+                                    <span class="tag tag-danger">{$vo.step_name}</span>
+                                </eq>
+                            </td>
                         </tr>
                     <else/>
                         <tr>
@@ -65,7 +75,17 @@
                             <td>{$vo.note}</td>
                             <td>{$vo.brand}</td>
                             <td>{$vo.model}</td>
-                            <td>{$vo.step_name}</td>
+                            <td>
+                                <eq name="vo.state" value="N">
+                                    <eq name="vo.now_step" value="$max_step">
+                                        <span class="tag tag-success">{$vo.step_name}</span>
+                                        <else/>
+                                        <span class="tag tag-primary">{$vo.step_name}</span>
+                                    </eq>
+                                <else/>
+                                    <span class="tag tag-danger">{$vo.step_name}</span>
+                                </eq>
+                            </td>
                         </tr>
                     </eq>
                 </volist>
