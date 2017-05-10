@@ -193,7 +193,7 @@ class SampleController extends AuthController {
     public function insertTestReport(){
         if( IS_POST ){
             if( trim(I('post.SUB_NAME')) != '' ){
-                $SAMPLE_MODEL = M('Sample');
+                $SAMPLE_MODEL = M('SampleDetail');
                 $save_id = $SAMPLE_MODEL->save( ['id'=>I('post.SUB_NAME'),'test_report'=>I('post.attachments','',false)] );
                 if( $save_id !== false ){
                     $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
@@ -314,7 +314,7 @@ class SampleController extends AuthController {
 
             # 获取产品基本信息
             $detailResult = M()->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c,'.C('DB_PREFIX').'productrelationships d,'.C('DB_PREFIX').'sample_step e')
-                               ->field('a.id sample_id,a.attachment,a.test_report,a.create_person_id sales_id,a.create_person_name sales_name,b.id,a.order_num,b.detail_assoc,b.count,b.customer,b.brand,b.model,b.note,b.requirements_date,b.expect_date,b.actual_date,b.manager,b.now_step,b.state,b.logistics,b.waybill,c.nickname,d.type,d.pn,e.name,e.transfer,e.rollback,e.termination,e.extension')
+                               ->field('a.id sample_id,a.attachment,b.test_report,a.create_person_id sales_id,a.create_person_name sales_name,b.id,a.order_num,b.detail_assoc,b.count,b.customer,b.brand,b.model,b.note,b.requirements_date,b.expect_date,b.actual_date,b.manager,b.now_step,b.state,b.logistics,b.waybill,c.nickname,d.type,d.pn,e.name,e.transfer,e.rollback,e.termination,e.extension')
                                ->where('a.id=b.detail_assoc AND b.manager=c.id AND b.product_id=d.id AND b.id='.I('get.id').' AND b.now_step=e.id')
                                ->select();
 

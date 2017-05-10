@@ -69,7 +69,7 @@
 				</div>
 				<div class="order-body">
 					<if condition="count($value['child']) lt 2">
-						<p>{$value.child.0.model} | {$value.child.0.brand}</p>
+						<p>{$value.child.0.type} | {$value.child.0.pn}</p>
 					<elseif condition="count($value['child']) eq 2"/>
 						<p>{$value.child.0.type} | {$value.child.0.pn}</p>
 						<p>{$value.child.1.type} | {$value.child.1.pn}</p>
