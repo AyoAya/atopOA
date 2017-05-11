@@ -63,7 +63,10 @@
 					<div class="sample_order_charge">
 						<h4>
 							<a href="__ROOT__/Sample/overview/id/{$value.id}">{$value.order_num}</a>
-							<span class="paid-sign">{$value.order_charge}</span>
+							<notempty name="value.order_charge">
+								<span class="paid-sign">{$value.order_charge}</span>
+							</notempty>
+
 						</h4>
 					</div>
 				</div>

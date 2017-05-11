@@ -30,7 +30,7 @@
     <div class="overview-container">
         <div class="order-info-box">
             <div class="order-info pull-left">
-                <h2 class="order-num"><i class="icon-list-alt"></i>{$orderData.order_num} <span class="tag tag-warning">{$orderData.order_charge} </span></h2>
+                <h2 class="order-num"><i class="icon-list-alt"></i>{$orderData.order_num} <notempty name="orderData.order_charge"><span class="tag tag-warning">{$orderData.order_charge} </span></notempty> </h2>
             </div>
             <div class="order-other pull-right">
                 <p>销售人员：{$orderData.create_person_name}</p>
