@@ -23,17 +23,18 @@
 	bottom: 0;
 	background: #2a3542;
 	z-index: 1;
-	overflow: hidden;
+	overflow-x: hidden;
 }
 #sidebar .sidebar-inset {
 	position: absolute;
 	left: 0;
 	top: 0;
 	bottom: 0;
-	width: 215px;
+	width: 220px;
 	height: auto;
 	overflow-y: auto;
 	padding-bottom: 200px;
+	overflow-x: hidden;
 }
 #sidebar .sidebar-inset .logo {
 	display: block;
@@ -52,11 +53,6 @@
 	margin-top: 50px;
 	text-align: center;
 	line-height: 22px;
-}
-#container-box {
-	background: #f5f5f5 !important;
-	width: 100%;
-	height: 60px;
 }
 
 
@@ -96,7 +92,7 @@
 	border-left: solid 5px #2a3542;
 }
 #nav li a i {
-	font-size: 18px;
+	font-size: 20px;
 }
 #nav li .secondary-menu {
 	cursor: pointer;
@@ -229,7 +225,11 @@
 #content-box {
 	padding: 20px 30px 150px;
 }
-
+#container-box {
+	background: #f5f5f5 !important;
+	width: 100%;
+	height: 60px;
+}
 
 
 
