@@ -157,6 +157,28 @@ h2 a {
 	padding: 15px;
 }
 
+.section-primary {
+	width: 100%;
+	border: 1px solid #D0DFED;
+	margin-top: 15px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	overflow: hidden;
+}
+.section-primary .section-title {
+	width: auto;
+	padding: 10px 15px;
+	border-bottom: 1px solid #D0DFED;
+	font-size: 18px;
+	color: #859FBE;
+	font-size: 18px;
+	background: #EDF3F8;
+}
+.section-primary .section-body {
+	padding: 15px;
+}
+
 
 
 .commingSoon {

@@ -277,13 +277,13 @@
                     <volist name="samples" id="value">
                         <tr>
                             <td>{$i}</td>
-                            <td><a href="http://{:$_SERVER['HTTP_HOST']}/sampleDetails/{$value.order}">{$value.totalorder}</a></td>
-                            <td>{$value.product}</td>
-                            <td>{$value.saleperson}</td>
+                            <td><a href="http://{:$_SERVER['HTTP_HOST']}/sample/detail/id/{$value.id}">{$value.order_num}</a></td>
+                            <td>{$value.pn}</td>
+                            <td>{$value.create_person_name}</td>
                             <td>{$value.customer}</td>
                             <td>{$value.brand}</td>
                             <td>{$value.model}</td>
-                            <td>{$value.number}</td>
+                            <td>{$value.count}</td>
                         </tr>
                     </volist>
                 </tbody>

@@ -660,13 +660,22 @@ HTML;
                 if( strpos($standard['pj_standard_name'],'/') ){    // 检测标准品名中是否包含‘/’符号，如果包含则根据该符号分割
                     $standard['pj_standard_name'] = explode('/',$standard['pj_standard_name']);
                     foreach($standard['pj_standard_name'] as $key=>&$value){    // 根据分割后的标准品名获取属于该品名的样品订单信息
-                        $result = $sample->field('totalorder,product,order,saleperson,number,customer,brand,model')->where('product="'.trim($value).'"')->group('totalorder')->select();
+                        $result = $sample->field('a.order_num,a.create_person_name,b.id,b.pn,b.count,b.customer,b.brand,b.model')
+                                         ->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b')
+                                         ->where('b.pn="'.trim($value).'" AND a.id=b.detail_assoc')
+                                         ->order('a.id DESC')
+                                         ->select();
                         if( !empty($result) ){  // 如果没有该品名的订单信息则不注入模板
                             $samples[] = $result;
                         }
                     }
                 }else{
-                    $samples = $sample->field('totalorder,product,order,saleperson,number,customer,brand,model')->where('product="'.$standard['pj_standard_name'].'"')->group('totalorder')->select();
+                    //$samples = $sample->field('totalorder,product,order,saleperson,number,customer,brand,model')->where('product="'.$standard['pj_standard_name'].'"')->group('totalorder')->select();
+                    $samples = $sample->field('a.order_num,a.create_person_name,b.id,b.pn,b.count,b.customer,b.brand,b.model')
+                        ->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b')
+                        ->where('b.pn="'.trim($standard['pj_standard_name']).'" AND a.id=b.detail_assoc')
+                        ->order('a.id DESC')
+                        ->select();
                 }
                 # print_r($samples);
                 $this->assign('samples',$samples);
