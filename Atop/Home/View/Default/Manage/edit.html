@@ -3,13 +3,13 @@
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
 	<link rel="stylesheet" href="__CSS__/bootstrap-theme.min.css">
-	<link rel="stylesheet" href="__CSS__/editPerson.css">
+	<link rel="stylesheet" href="__CSS__/manage/edit.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
 	<script src="__JS__/jquery.validate.min.js"></script>
 	<script src="__JS__/jquery.form.js"></script>
-	<script src="__JS__/editPerson.js"></script>
+	<script src="__JS__/manage/edit.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -25,21 +25,21 @@
 <!-- 【正文区域】 -->
 <block name="content">
 	
-	<div class="col-lg-6 col-lg-offset-3 wrap">
+	<div class="wrap" style="margin: 0 auto;width: 700px;">
 		<form id="addForm" role="form">
-			<div class="page-header"><h2>基本信息</h2></div>
+
+			<div class="title-bar" style="margin: 0 0 15px 0;">
+				<h4>基本信息</h4>
+			</div>
+
 			<div class="form-group">
 				<label for="account">账号</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="icon-user"></i></span>
-					<input type="text" class="form-control" name="account" id="account" placeholder="请输入账号" value="{$personData.account}" readonly>
-				</div>
+				<input type="text" class="form-control" name="account" id="account" placeholder="请输入账号" value="{$personData.account}" readonly>
 				<p class="help-block help-block-color"></p>
 			</div>
 			<div class="form-group">
 				<label for="password">密码</label>
 				<div class="input-group">
-					<span class="input-group-addon"><i class="icon-lock"></i></span>
 					<input type="password" class="form-control" name="password" id="password" placeholder="请输入密码" value="{$personData.password}" readonly>
 					<span class="input-group-btn">
 						<button type="button" class="btn btn-default" id="resetPassword" nowUser="{$Think.get.id}">重置密码</button>
@@ -49,21 +49,19 @@
 			</div>
 			<div class="form-group">
 				<label for="nickname">用户姓名</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="icon-user"></i></span>
-					<input type="text" class="form-control" name="nickname" id="nickname" placeholder="请输入用户姓名" value="{$personData.nickname}">
-				</div>
+				<input type="text" class="form-control" name="nickname" id="nickname" placeholder="请输入用户姓名" value="{$personData.nickname}">
 				<p class="help-block help-block-color"></p>
 			</div>
 			<div class="form-group">
 				<label for="email">电子邮箱</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="icon-envelope"></i></span>
-					<input type="text" class="form-control" name="email" id="email" placeholder="请输入电子邮箱" value="{$personData.email}">
-				</div>
+				<input type="text" class="form-control" name="email" id="email" placeholder="请输入电子邮箱" value="{$personData.email}">
 				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="page-header"><h2>部门职位</h2></div>
+
+			<div class="title-bar" style="margin: 20px 0 30px 0;">
+				<h4>部门职位</h4>
+			</div>
+
 			<div class="form-group form-group-edit">
 				<label>部门&nbsp;</label>
 				<div class="btn-group">
@@ -115,7 +113,11 @@
 				</div>
 				<p class="help-block"></p>
 			</div>
-			<div class="page-header"><h2>汇报关系 <small class="small-font-size"></small></h2></div>
+
+			<div class="title-bar" style="margin: 20px 0 30px 0;">
+				<h4>汇报关系</h4>
+			</div>
+
 			<div class="form-group" id="report">
 				<volist name="departmentList" id="value">
 				<div class="page-header page-header-department"><h4><kbd>{$value.name}:</kbd></h4></div>
@@ -134,7 +136,11 @@
 					</volist>
 				</volist>
 			</div>
-			<div class="page-header"><h2>状态 <small class="small-font-size"></small></h2></div>
+
+			<div class="title-bar" style="margin: 20px 0 20px 0;">
+				<h4>状态</h4>
+			</div>
+
 			<div class="btn-group">
 				<button class="btn btn-default" type="button" id="state-value">
 					<switch name="personData.state">
@@ -152,13 +158,15 @@
 					<li index="3" state="3"><a href="javascript:;">离职</a></li>
 				</ul>
 			</div>
-			<div class="page-header page-header-edit">
-				<h2>权限配置 <small class="small-font-size">[ 配置可访问的功能模块 ]</small></h2>
+
+			<div class="title-bar page-header-edit" style="margin: 20px 0 20px 0;position: relative;">
+				<h4>权限配置 <small class="small-font-size">[ 配置可访问的功能模块 ]</small></h4>
 				<div class="btn-group btn-group-edit pull-right">
 					<button class="btn btn-default btn-sm" id="checked-all" type="button">全选</button>
 					<button class="btn btn-default btn-sm" id="checked-rev" type="button">反选</button>
 				</div>
 			</div>
+
 			<div class="checkbox checkbox-edit">
 				<volist name="authrule" id="value">
 					<label>

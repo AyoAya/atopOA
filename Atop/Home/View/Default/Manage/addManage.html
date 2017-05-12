@@ -3,13 +3,13 @@
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
 	<link rel="stylesheet" href="__CSS__/bootstrap-theme.min.css">
-	<link rel="stylesheet" href="__CSS__/addPerson.css">
+	<link rel="stylesheet" href="__CSS__/manage/add.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
 	<script src="__JS__/jquery.validate.min.js"></script>
 	<script src="__JS__/jquery.form.js"></script>
-	<script src="__JS__/person.js"></script>
+	<script src="__JS__/manage/index.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -25,21 +25,23 @@
 <!-- 【正文区域】 -->
 <block name="content">
 	
-	<div class="col-lg-6 col-lg-offset-3 wrap">
+	<div class="wrap" style="margin: 0 auto;width: 700px;">
+
 		<form id="addForm" role="form">
-			<div class="page-header"><h2>基本信息</h2></div>
+
+			<div class="title-bar" style="margin: 0 0 20px 0;">
+				<h4>基本信息</h4>
+			</div>
+
 			<div class="form-group">
 				<label for="account">账号</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="icon-user"></i></span>
-					<input type="text" class="form-control" name="account" id="account" placeholder="请输入账号">
-				</div>
+				<input type="text" class="form-control" name="account" id="account" placeholder="请输入账号">
 				<p class="help-block help-block-color"></p>
 			</div>
+
 			<div class="form-group">
 				<label for="password">密码</label>
 				<div class="input-group">
-					<span class="input-group-addon"><i class="icon-lock"></i></span>
 					<input type="text" class="form-control" name="password" id="password" placeholder="请输入密码">
 					<span class="input-group-btn">
 						<button type="button" class="btn btn-default" id="random">随机</button>
@@ -47,23 +49,23 @@
 				</div>
 				<p class="help-block help-block-color"></p>
 			</div>
+
 			<div class="form-group">
 				<label for="nickname">用户姓名</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="icon-user"></i></span>
-					<input type="text" class="form-control" name="nickname" id="nickname" placeholder="请输入用户姓名">
-				</div>
+				<input type="text" class="form-control" name="nickname" id="nickname" placeholder="请输入用户姓名">
 				<p class="help-block help-block-color"></p>
 			</div>
+
 			<div class="form-group">
 				<label for="email">电子邮箱</label>
-				<div class="input-group">
-					<span class="input-group-addon"><i class="icon-envelope"></i></span>
-					<input type="text" class="form-control" name="email" id="email" placeholder="请输入电子邮箱">
-				</div>
+				<input type="text" class="form-control" name="email" id="email" placeholder="请输入电子邮箱">
 				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="page-header"><h2>部门职位</h2></div>
+
+			<div class="title-bar" style="margin: 30px 0 30px 0;">
+				<h4>部门职位</h4>
+			</div>
+
 			<div class="form-group form-group-edit">
 				<label>部门&nbsp;</label>
 				<div class="btn-group">
@@ -79,6 +81,7 @@
 				</div>
 				<p class="help-block help-block-color"></p>
 			</div>
+
 			<div class="form-group form-group-edit">
 				<label>级别 </label>
 				<div class="btn-group">
@@ -94,6 +97,7 @@
 				</div>
 				<p class="help-block"></p>
 			</div>
+
 			<div class="form-group form-group-edit form-group-edit-last">
 				<label>职位&nbsp;</label>
 				<div class="btn-group">
@@ -109,24 +113,30 @@
 				</div>
 				<p class="help-block"></p>
 			</div>
-			<div class="page-header"><h2>汇报关系 <small class="small-font-size">[ 无需汇报则不选 ]</small></h2></div>
+
+			<div class="title-bar" style="margin: 30px 0 30px 0;">
+				<h4>汇报关系 <small class="small-font-size">[ 无需汇报则不选 ]</small></h4>
+			</div>
+
 			<div class="form-group" id="report">
 				<volist name="departmentList" id="value">
 					<div class="page-header page-header-department"><h4><kbd>{$value.name}:</kbd></h4></div>
 					<volist name="alluser" id="vo">
-							<eq name="vo.department" value="$value.id">
-								<span class="name-box" index="{$vo.id}">{$vo.nickname}</span>
-							</eq>
+						<eq name="vo.department" value="$value.id">
+							<span class="name-box" index="{$vo.id}">{$vo.nickname}</span>
+						</eq>
 					</volist>
 				</volist>
 			</div>
-			<div class="page-header page-header-edit">
-				<h2>权限配置 <small class="small-font-size">[ 配置可访问的功能模块 ]</small></h2>
-				<div class="btn-group btn-group-edit pull-right">
+
+			<div class="title-bar page-header-edit" style="margin: 30px 0 10px 0;position: relative;">
+				<h4>权限配置 <small class="small-font-size">[ 配置可访问的功能模块 ]</small></h4>
+				<div class="btn-group btn-group-edit">
 					<button class="btn btn-default btn-sm" id="checked-all" type="button">全选</button>
 					<button class="btn btn-default btn-sm" id="checked-rev" type="button">反选</button>
 				</div>
 			</div>
+
 			<div class="checkbox checkbox-edit">
 				<volist name="authrule" id="value">
 					<label>
@@ -139,6 +149,7 @@
 					</label>
 				</volist>
 			</div>
+
 			<div class="form-group form-group-submit">
 				<input type="hidden" name="department" value="1" id="department-id">
 				<input type="hidden" name="position" value="1" id="position-id">

@@ -2,13 +2,13 @@
 <extend name="layout/default"/>
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
-	<link rel="stylesheet" href="__CSS__/system.css">
+	<link rel="stylesheet" href="__CSS__/system/index.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
 	<script src="__JS__/jquery.validate.min.js"></script>
 	<script src="__JS__/jquery.form.js"></script>
-	<script src="__JS__/system.js"></script>
+	<script src="__JS__/system/index.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -97,7 +97,7 @@
 		<div class="config-page-box">
 			<form role="form" id="cookieConfigForm">
 				<div class="input-group input-group-cookie">
-					<input type="text" class="form-control" name="cookieKey" value="{$Think.config.MD5_KEY}" data-toggle="tooltip" data-placement="left" title="cookie加密唯一标识" onMouseOver="$(this).tooltip('show')">
+					<input type="text" class="form-control" name="cookieKey" value="{$Think.config.MD5_KEY}" data-toggle="tooltip" data-placement="top" title="cookie加密唯一标识" onMouseOver="$(this).tooltip('show')">
 					<span class="input-group-btn">
 						<button type="submit" class="btn btn-default">确定</button>
 					</span>

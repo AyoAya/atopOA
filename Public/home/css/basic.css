@@ -101,9 +101,6 @@ h2 a {
 .breadcrumb-edit {
 	display: inline-block !important;
 }
-.btn-group-edit {
-	margin: 7px 30px 0 0 !important;
-}
 #table th,#table tr {
 	text-align: center;
 }

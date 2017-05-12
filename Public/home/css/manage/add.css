@@ -20,6 +20,9 @@
 }
 .btn-group-edit {
 	margin-bottom: 5px !important;
+	position: absolute;
+	right: 15px;
+	top: 4px;
 }
 .form-group-edit {
 	display: inline-block;
@@ -57,7 +60,7 @@
 #report span.active {
 	border: solid 1px #428bca;
 	color: #428bca;
-	background: url(../img/report_selected.png) right bottom no-repeat;
+	background: url("../../img/report_selected.png") right bottom no-repeat;
 }
 #report .name-box {
 	border-radius: 4px;

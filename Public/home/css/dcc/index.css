@@ -13,7 +13,7 @@ hr {
     display: inline-block;
 }
 .department-btn a.active {
-    background: url("../img/sanjiao-selected.png") right bottom no-repeat;
+    background: url("../../img/sanjiao-selected.png") right bottom no-repeat;
     background-size: 15%;
 }
 .col-box {
@@ -33,27 +33,27 @@ hr {
     height: 60px;
 }
 .col-box .sales-icon {
-    background: #428bca url("../img/sales.png") center center no-repeat;
+    background: #428bca url("../../img/sales.png") center center no-repeat;
     background-size: 60%;
 }
 .col-box .production-icon {
-    background: #f0ad4e url("../img/production.png") center center no-repeat;
+    background: #f0ad4e url("../../img/production.png") center center no-repeat;
     background-size: 60%;
 }
 .col-box .development-icon {
-    background: #d9534f url("../img/Development.png") center center no-repeat;
+    background: #d9534f url("../../img/Development.png") center center no-repeat;
     background-size: 60%;
 }
 .col-box .personnel-icon {
-    background: #5cb85c url("../img/quality-ability.png") center center no-repeat;
+    background: #5cb85c url("../../img/quality-ability.png") center center no-repeat;
     background-size: 60%;
 }
 .col-box .plan-icon {
-    background: #c84bc4 url("../img/plan.png") center center no-repeat;
+    background: #c84bc4 url("../../img/plan.png") center center no-repeat;
     background-size: 60%;
 }
 .col-box .administration-icon {
-    background: #38bbd7 url("../img/administration.png") center center no-repeat;
+    background: #38bbd7 url("../../img/administration.png") center center no-repeat;
     background-size: 60%;
 }
 .col-box .department-name {
@@ -189,32 +189,32 @@ hr {
 .content-body .file-box .folders-list li i.z-icon-doc {
     position: relative;
     top: 2px;
-    background: url("../img/icon-doc.png") no-repeat;
+    background: url("../../img/icon-doc.png") no-repeat;
 }
 .content-body .file-box .folders-list li i.z-icon-pdf {
     position: relative;
     top: 1px;
-    background: url("../img/icon-pdf.png") no-repeat;
+    background: url("../../img/icon-pdf.png") no-repeat;
 }
 .content-body .file-box .folders-list li i.z-icon-file {
     position: relative;
     top: 2px;
-    background: url("../img/icon-file.png") no-repeat;
+    background: url("../../img/icon-file.png") no-repeat;
 }
 .content-body .file-box .folders-list li i.z-icon-xls {
     position: relative;
     top: 2px;
-    background: url("../img/icon-xls.png") no-repeat;
+    background: url("../../img/icon-xls.png") no-repeat;
 }
 .content-body .file-box .folders-list li i.z-icon-zip {
     position: relative;
     top: 2px;
-    background: url("../img/icon-zip.png") no-repeat;
+    background: url("../../img/icon-zip.png") no-repeat;
 }
 .content-body .file-box .folders-list li i.z-icon-img {
     position: relative;
     top: 2px;
-    background: url("../img/icon-image.png") no-repeat;
+    background: url("../../img/icon-image.png") no-repeat;
 }
 
 

@@ -1,39 +1,27 @@
 <!-- 【模板继承】 -->
 <extend name="layout/default"/>
+
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
     <link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css">
     <link rel="stylesheet" href="__CSS__/project/index.css">
 </block>
+
 <!-- 【引入javascript文件】 -->
-<block name="linkjs">
-    <style>
-        .table {
-            border: solid 1px #ddd !important;
-        }
-        .table thead {
-            background: #eee;
-        }
-        .empty-tip-info {
-            margin-top: 100px;
-            color: #888;
-            text-align: center;
-        }
-        .empty-tip-info p:first-child {
-            font-size: 90px;
-        }
-    </style>
-</block>
+<block name="linkjs"></block>
+
 <!-- 【页面标题】 -->
 <block name="webtitle">
     <title>项目管理</title>
 </block>
+
 <!-- 【路径导航】 -->
 <block name="breadcrumb">
     <ol class="breadcrumb breadcrumb-edit">
         <li class="active">项目管理</li>
     </ol>
 </block>
+
 <!-- 【正文区域】 -->
 <block name="content">
     <!--<div class="commingSoon">

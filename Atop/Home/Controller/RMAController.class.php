@@ -256,7 +256,7 @@ class RMAController extends AuthController{
             }
 
             $vendor_brand_model = M('VendorBrand');
-            $vendor_brand_data = $vendor_brand_model->order('brand ASC')->select();
+            $vendor_brand_data = $vendor_brand_model->order('id ASC')->select();
             $this->assign('vendorBrand',$vendor_brand_data);
             $userlist = $user->field('id,nickname')->where('position=12')->select();
             $this->assign('productFilter',$this->getProductData()); //注入产品筛选数据

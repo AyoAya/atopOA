@@ -101,7 +101,7 @@ class CompatibilityController extends AuthController {
     public function add(){
         //获取产品筛选数据
         $vendorBrand = M('VendorBrand');
-        $verdorResult = $vendorBrand->order('brand ASC')->select();
+        $verdorResult = $vendorBrand->order('id ASC')->select();
         $this->assign('vendor',$verdorResult);
         $this->assign('productFilter', $this->getProductData());
         $this->display();

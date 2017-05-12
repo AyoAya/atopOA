@@ -3,13 +3,13 @@
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
     <link rel="stylesheet" href="__CSS__/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="__CSS__/person.css">
+    <link rel="stylesheet" href="__CSS__/manage/index.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
     <script src="__JS__/jquery.validate.min.js"></script>
     <script src="__JS__/jquery.form.js"></script>
-    <script src="__JS__/person.js"></script>
+    <script src="__JS__/manage/index.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -44,7 +44,7 @@
                         <td>
                             <if condition="$Think.get.p AND $Think.get.p neq 1">
                                 {$pagenumber*$limitsize+$i}
-                                <else/>
+                            <else/>
                                 {$i}
                             </if>
                         </td>
@@ -58,7 +58,7 @@
                         <td>
                             <neq name="value.id" value="$Think.session.user.id">
                                 <div class="btn-group">
-                                    <a href="__ROOT__/editManage/{$value.id}" class="btn btn-default btn-sm" personid="{$value.id}"><i class="icon-pencil"></i> 编辑</a>
+                                    <a href="__ROOT__/Manage/edit/id/{$value.id}" class="btn btn-default btn-sm" personid="{$value.id}"><i class="icon-pencil"></i> 编辑</a>
                                     <button class="btn btn-default btn-sm delete-user" personid="{$value.id}"><i class="icon-remove"></i> 删除</button>
                                 </div>
                             </neq>

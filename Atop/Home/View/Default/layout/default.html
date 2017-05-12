@@ -3,11 +3,9 @@
 <head>
 
 	<meta charset="UTF-8">
-	<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">-->
 	<link href="__IMG__/favicon.ico" rel="shortcut icon">
-
-	<block name="webtitle"></block><!-- 网站标题 -->
+	{//网站标题}
+	<block name="webtitle"></block>
 	<link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css">
 	<link rel="stylesheet" href="__CSS__/bootstrap.min.css">
 	<link rel="stylesheet" href="__CSS__/font-awesome.min.css">
@@ -15,14 +13,14 @@
 	<link rel="stylesheet" href="__CSS__/basic.css">
 	<link rel="stylesheet" href="__CSS__/Theme/{$face.theme}.css">
 	<link rel="stylesheet" href="__CSS__/promotion_index.css">
-
-	<block name="linkcss"></block><!-- 引入css文件 -->
+	{//引入css文件}
+	<block name="linkcss"></block>
 	<script src="__JS__/jquery.min.js"></script>
 	<script src="__JS__/bootstrap.min.js"></script>
 	<script src="__PUBLIC__/layui/layui.js"></script>
 	<script src="__JS__/index.js"></script>
-
-	<block name="linkjs"></block><!-- 引入js文件 -->
+	{//引入js文件}
+	<block name="linkjs"></block>
 	
 </head>
 <body>
@@ -47,10 +45,10 @@
 			<div id="sidebar">
 				<div class="sidebar-inset">
 
-					<!-- Logo区 -->
+					{//Logo区}
 					<a href="__ROOT__/Index" class="logo"></a>
 
-					<!-- 导航区 -->
+					{//导航区}
 					<ul id="nav">
 						<li>
 							<a class="secondary-menu"><i class="icon-wrench"></i><span>研发管理&nbsp;&nbsp;</span></a>
@@ -91,7 +89,7 @@
 						</eq>
 					</ul>
 
-					<!-- 版权信息 -->
+					{//版权信息}
 					<div class="copyright-info">
 						<p>ATOP Corporation</p>
 						<p>Copyright &copy; 2016</p>
@@ -101,9 +99,9 @@
 			</div>
 		</block>
 
-		<!-- 二级导航及用户信息/常用操作区 -->
+		{//二级导航及用户信息/常用操作区}
 		<div id="header">
-			<!-- 面包屑导航 -->
+			{//面包屑导航}
 			<block name="breadcrumb"></block>
 
 			<div class="user-operation-box pull-right">
@@ -114,7 +112,7 @@
 					<a class="option-name">
 						<i class="layui-icon">&#xe612;</i>&nbsp;&nbsp;&nbsp;{$Think.session.user.nickname}&nbsp;&nbsp;&nbsp;<i class="icon-caret-down"></i>
 					</a>
-					<!-- 用户选项 -->
+					{//用户选项}
 					<div class="user-options">
 						<ul>
 							<li><a href="__ROOT__/Center/modify"><i class="icon-pencil"></i>&nbsp;&nbsp;修改资料</a></li>
@@ -124,17 +122,13 @@
 					</div>
 				</div>
 				<div class="clearfix"></div>
-
-				<!--<div class="user-operation-item pull-left">
-					<a href="__ROOT__/Logout"><i class="icon-signout"></i>&nbsp;&nbsp;退出</a>
-				</div>-->
 			</div>
 			<div class="clearfix"></div>
 		</div>
 
 
 
-		<!-- 正文区域 -->
+		{//正文区域}
 		<div id="content">
 			<present name="PERMISSION_DENIED">
 				<div class="permission-denied">
@@ -151,7 +145,7 @@
 			</present>
 		</div>
 
-		<!-- 消息提示模态框 -->
+		{//消息提示模态框}
 		<block name="modalBlock">
 			<div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
 				<div class="modal-dialog modal-sm">
@@ -167,7 +161,7 @@
 		</block>
 	</div>
 
-	<!-- 检测IE（如果是低版本IE浏览器则直接屏蔽） -->
+	{//检测IE（如果是低版本IE浏览器则直接屏蔽）}
 	<div style="display: none" id=browser_ie>
 		<div class=brower_info>
 			<div class="browser_box">
@@ -182,7 +176,7 @@
 		</div>
 	</div>
 
-	<!-- 定义消息提示模态框 -->
+	{//定义消息提示模态框}
 	<div class="modal fade bs-example-modal-sm" id="MessageModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
 		<div class="modal-dialog modal-sm" role="document">
 			<div class="modal-content" id="MessageText">
@@ -191,17 +185,17 @@
 		</div>
 	</div>
 
-	<!-- Modal集 -->
+	{//Modal集}
 	<block name="modals">
 
 	</block>
 
-	<!-- 回到顶部 -->
+	{//回到顶部}
 	<div id="scrollBackTop" class="sr-only" title="回到顶部"><i class="icon-arrow-up"></i></div>
 
 
 	<script>
-		//如果检测到用户浏览器为IE则禁用
+		{//如果检测到用户浏览器为IE则禁用}
 		var str = navigator.userAgent;
 
 		if(str.indexOf('MSIE')>0){
