@@ -31,7 +31,7 @@
 	
 	<div class="row">
 		<div class="col-lg-12 sample-table-container">
-			<table class="layui-table" lay-skin="line">
+			<table class="layui-table">
 				<thead>
 					<tr>
 						<th>样品单号</th>
@@ -42,7 +42,7 @@
 						<th>客户名称</th>
 						<th>设备品牌</th>
 						<th>设备型号</th>
-						<th width="100px">当前进度</th>
+						<th width="125">当前进度</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -56,22 +56,25 @@
 						<td>{$detailResult.brand}</td>
 						<td>{$detailResult.model}</td>
 						<td>
-							<eq name="detailResult.state" value="N">
+							<if condition="$detailResult['state'] eq 'N'">
 								<eq name="detailResult.now_step" value="$detailResult.max_step">
-									<span class="tag tag-success">{$detailResult.name}</span>
+									<span class="tag tag-success">已发货待{$detailResult.name}</span>
 								<else/>
-									<span class="tag tag-primary">{$detailResult.name}</span>
+									<span class="tag tag-primary">{$detailResult.name}中</span>
+								</eq>
+							<elseif condition="$detailResult['state'] eq 'C'" />
+								<eq name="detailResult.now_step" value="$detailResult.max_step">
+									<span class="tag tag-success">已{$detailResult.name}</span>
 								</eq>
 							<else/>
-								<span class="tag tag-danger">{$detailResult.name}</span>
-							</eq>
+								<span class="tag tag-danger">{$detailResult.name}失败</span>
+							</if>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
-
 
 	{//产品进度}
 
@@ -91,7 +94,7 @@
 												<div class="sr-only popover-box">
 													<volist name="vo.log" id="v">
 														<div class="log-box">
-															<span class="log-box-time">{$v.log_time|date="Y-m-d H:i",###}</span>
+															<span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i",###}</span>
 															<span class="log-box-context">{$v.context}</span>
 														</div>
 													</volist>
@@ -119,7 +122,7 @@
 												<div class="sr-only popover-box">
 													<volist name="vo.log" id="v">
 														<div class="log-box">
-															<span class="log-box-time">{$v.log_time|date="Y-m-d H:i",###}</span>
+															<span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i",###}</span>
 															<span class="log-box-context">{$v.context}</span>
 														</div>
 													</volist>
@@ -156,18 +159,18 @@
 	</div>
 
 	{//交期}
-	<div class="layui-collapse">
+	<div class="section-primary">
 		<div class="layui-colla-item">
-			<div class="layui-colla-title">交期&nbsp;&nbsp;
+			<div class="section-title"><h5>交期&nbsp;&nbsp;
 				<notempty name="detailResult.actual_date">
 					<if condition="strtotime($detailResult['actual_date']) elt strtotime($detailResult['requirements_date'])">
 						<span class="tag tag-success">正常</span>
 					<else/>
 						<span class="tag tag-danger">延期</span>
-					</if>
+					</if></h5>
 				</notempty>
 			</div>
-			<div class="layui-colla-content layui-show">
+			<div class="section-body">
 				<span class="due-time">要求交期：{$detailResult.requirements_date}</span>
 				{//如果存在预计交期则显示}
 				<notempty name="detailResult.expect_date">
@@ -183,104 +186,99 @@
 
 	{//物流}
 	<if condition="!empty($detailResult['logistics']) and !empty($detailResult['waybill'])">
-		<div class="layui-collapse">
-			<div class="layui-colla-item">
-				<div class="layui-colla-title">物流</div>
-				<div class="layui-colla-content layui-show">
-					<span class="logistics-item">物流公司：{$detailResult.logistics_data.logistics_name}</span>
-					<span class="logistics-item">运单号：{$detailResult.waybill}</span>
-				</div>
+		<div class="section-primary">
+			<div class="section-title"><h5>物流</h5></div>
+			<div class="section-body">
+				<span class="logistics-item">物流公司：{$detailResult.logistics_data.logistics_name}</span>
+				<span class="logistics-item">运单号：<a href="__ROOT__/Sample/Logistics/id/{$detailResult.id}">{$detailResult.waybill}</a></span>
 			</div>
 		</div>
 	</if>
 
 	{//备注}
-	<div class="layui-collapse">
-		<div class="layui-colla-item">
-			<div class="layui-colla-title">备注</div>
-			<div class="layui-colla-content layui-show">
+	<div class="section-primary">
+		<div class="section-title"><h5>备注</h5></div>
+		<div class="section-body">
+			<notempty name="detailResult.note">
 				<p>{$detailResult.note}</p>
-			</div>
+			<else/>
+				<p>无</p>
+			</notempty>
+
 		</div>
 	</div>
 
 	{//日志}
-	<div class="layui-collapse">
-		<div class="layui-colla-item">
-			<div class="layui-colla-title">日志</div>
-			<div class="layui-colla-content layui-colla-content-rewrite layui-show">
-				<table class="log-table">
-					<tbody>
+	<div class="section-primary">
+		<div class="section-title"><h5>日志</h5></div>
+		<div class=" layui-colla-content-rewrite section-body">
+			<table class="log-table">
+				<tbody>
 
-						{/*
-						1. 检查是否存在日志记录
-						2. 最新日志前面加上new标志
-						*/}
+					{/*
+					1. 检查是否存在日志记录
+					2. 最新日志前面加上new标志
+					*/}
 
-						<notempty name="newlog">
-							<volist name="newlog" id="value">
-								<eq name="i" value="1"> 	{// i=1 表示最新的日志记录}
-									<tr>
-										<eq name="value.new" value="$value.new">
-											<td><img src="{$value.face}" alt="" width="40"></td>
-											<td>
-												<p>{$value.context} <img src="__IMG__/new.gif" alt="" style="position: relative;top: -3px;"></p>
-												<p>{$value.nickname}　|　{$value.name}　|　{$value.log_time|date="Y-m-d H:i",###}</p>
-											</td>
-										</eq>
-									</tr>
-								<else/>
-									<tr>
-										<eq name="value.new" value="$value.new">
-											<td><img src="{$value.face}" alt="" width="40"></td>
-											<td>
-												<p>{$value.context}</p>
-												<p>{$value.nickname}　|　{$value.name}　|　{$value.log_time|date="Y-m-d H:i",###}</p>
-											</td>
-										</eq>
-									</tr>
-								</eq>
-							</volist>
-						<else/>
-							{//日志为空则显示没有日志}
-							<i class="icon-exclamation-sign"></i> 没有日志
-						</notempty>
-					</tbody>
-				</table>
-			</div>
+					<notempty name="newlog">
+						<volist name="newlog" id="value">
+							<eq name="i" value="1"> 	{// i=1 表示最新的日志记录}
+								<tr>
+									<eq name="value.new" value="$value.new">
+										<td><img src="{$value.face}" alt="" width="40"></td>
+										<td>
+											<p>{$value.context} <img src="__IMG__/new.gif" alt="" style="position: relative;top: -3px;"></p>
+											<p>{$value.nickname}　|　{$value.name}　|　{$value.log_time|date="Y-m-d H:i",###}</p>
+										</td>
+									</eq>
+								</tr>
+							<else/>
+								<tr>
+									<eq name="value.new" value="$value.new">
+										<td><img src="{$value.face}" alt="" width="40"></td>
+										<td>
+											<p>{$value.context}</p>
+											<p>{$value.nickname}　|　{$value.name}　|　{$value.log_time|date="Y-m-d H:i",###}</p>
+										</td>
+									</eq>
+								</tr>
+							</eq>
+						</volist>
+					<else/>
+						{//日志为空则显示没有日志}
+						<i class="icon-exclamation-sign"></i> 没有日志
+					</notempty>
+				</tbody>
+			</table>
 		</div>
 	</div>
 
 	{//附件列表}
-	<div class="layui-collapse">
-		<div class="layui-colla-item">
-			<div class="layui-colla-title">附件列表</div>
-			<div class="layui-colla-content layui-show">
-				<notempty name="detailResult.attachment">
-					<volist name="detailResult.attachment" id="value">
-						<div class="file-item">
-							<div class="file-info"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" target="_blank" title="{$value.savename}">{$value.savename}</a></div>
-						</div>
-					</volist>
-					<else/>
-					<i class="icon-exclamation-sign"></i> 没有附件
-				</notempty>
-			</div>
+	<div class="section-primary">
+		<div class="section-title"><h5>附件列表</h5></div>
+		<div class="section-body">
+			<notempty name="detailResult.attachment">
+				<volist name="detailResult.attachment" id="value">
+					<div class="file-item">
+						<div class="file-info"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" target="_blank" title="{$value.savename}">{$value.savename}</a></div>
+					</div>
+				</volist>
+				<else/>
+				<i class="icon-exclamation-sign"></i> 没有附件
+			</notempty>
 		</div>
 	</div>
 
 	{//测试报告：不为空才显示}
 	<notempty name="detailResult.test_report">
-		<div class="layui-collapse">
-			<div class="layui-colla-item">
-				<div class="layui-colla-title">测试报告</div>
-				<div class="layui-colla-content layui-show">
-					<volist name="detailResult.test_report" id="value">
-						<div class="file-item">
-							<div class="file-info"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" target="_blank" title="{$value.savename}">{$value.savename}</a></div>
-						</div>
-					</volist>
-				</div>
+		<div class="section-primary">
+			<div class="section-title"><h5>测试报告</h5></div>
+			<div class="section-body">
+				<volist name="detailResult.test_report" id="value">
+					<div class="file-item">
+						<div class="file-info"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" target="_blank" title="{$value.savename}">{$value.savename}</a></div>
+					</div>
+				</volist>
 			</div>
 		</div>
 	</notempty>
@@ -322,7 +320,12 @@
 									<label class="layui-form-label" style="padding-left: 0;width: 60px;">类型</label>
 									<div class="layui-input-inline">
 										<select class="" name="type" lay-verify="required" lay-filter="operation">
-											<option value="log" selected>添加日志</option>
+											<elt name="detailResult.now_step"  value="$detailResult.max_step">
+												<option value="log" selected>添加日志</option>
+											</elt>
+											<eq name="detailResult.now_step" value="$detailResult.max_step">
+												<option value="success">完成</option>
+											</eq>
 											<lt name="detailResult.now_step" value="$detailResult.max_step">
 												<option value="push">推送到：Step{$detailResult.next_step.id}-{$detailResult.next_step.name}</option>
 											</lt>

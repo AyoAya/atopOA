@@ -1,6 +1,11 @@
+#manager-input{
+	cursor: not-allowed !important;
+}
+
 .sample-container {
 	width: 900px;
 	margin: 15px auto 0;
+	padding-bottom: 300px;
 }
 .traverse {
 	padding-top: 25px;
@@ -134,7 +139,7 @@
 }
 .product-list-box ul li {
 	display: inline-block;
-	width: 16.66665%;
+	width: 16.3%;
 	padding: 0 15px;
 	height: 30px;
 	line-height: 30px;

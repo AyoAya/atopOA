@@ -86,10 +86,13 @@ class SampleController extends AuthController {
     # 初始化添加页面及添加入库
     public function add(){
 
+        $model = new model();
+
         if(IS_POST) {
 
             if (I('post.order_num')) {
-
+                print_r(I('post.'));
+die;
                 $sample = M('sample');
                 $sample_data['order_num'] = I('post.order_num');
                 $sample_data['order_charge'] = I('post.order_charge');
@@ -132,6 +135,7 @@ class SampleController extends AuthController {
                             # 写入步骤数据
                             $tmp_op_id = $sample_model->table(C('DB_PREFIX').'sample_operating')->addAll($tmp_op_data);
 
+
                             if( !$tmp_op_id ){
                                 $sample_model->rollback();
                                 $this->ajaxReturn(['flag'=>0,'msg'=>'添加订单失败！']);
@@ -145,6 +149,7 @@ class SampleController extends AuthController {
                     }
 
                     $sample_model->commit();
+
                     $this->ajaxReturn(['flag'=>1,'msg'=>'添加订单成功！','id'=>$sample_id]);
                 }
             }
@@ -154,6 +159,11 @@ class SampleController extends AuthController {
             if( session('user')['department'] != 4 ){
                 $this->error('你没有权限访问该页面');
             }
+
+            #设备品牌数据
+            $vendor_brand = M('VendorBrand')->field('id,brand')->select();
+            $this->assign('vendorBrand',$vendor_brand);
+
 
             $this->assign('productFilter', $this->getProductData());
             $this->display();
@@ -235,10 +245,13 @@ class SampleController extends AuthController {
                                                              ->table(C('DB_PREFIX').'sample_operating a,'.C('DB_PREFIX').'sample_step b,'.C('DB_PREFIX').'user c')
                                                              ->where( 'a.asc_detail='.$value['id'].' AND a.asc_step=b.id AND a.operator=c.id' )
                                                              ->select();
-
                 # 获取当前步骤产生的日志
                 foreach( $value['operating'] as $k=>&$v ){
-                    $v['log'] = $sample_log_model->where( ['asc_detail'=>$v['asc_detail'],'log_step'=>$v['id']] )->order('log_time ASC')->select();
+                    $v['log'] = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'sample_log b')
+                                      ->field('b.context,b.asc_detail,b.log_time,b.person,b.log_step,a.nickname')
+                                      ->where('a.id = b.person AND b.asc_detail ='.$v['asc_detail'].' AND b.log_step ='.$v['id'])
+                                      ->order('b.log_time ASC')
+                                      ->select();
                 }
 
             }
@@ -296,9 +309,8 @@ class SampleController extends AuthController {
         }
 
         $max_step = $model->table(C('DB_PREFIX').'sample_step')->field('id')->max('id');
-        //print_r($max_step);
 
-//print_r($summary);
+
         $this->assign('page',$pageShow);
         $this->assign('max_step',$max_step);
         $this->assign('summary',$summary);
@@ -341,7 +353,7 @@ class SampleController extends AuthController {
                                                                 ->where( 'a.asc_detail='.I('get.id').' AND a.asc_step=b.id AND a.operator=c.id' )
                                                                 ->select();
 
-            $sample_log_model = M('SampleLog');
+            $model = new model();
 
             $log_data = M()->field('a.context,a.asc_detail,a.log_time,b.id step_id,b.name,c.nickname,c.face')
                 ->table(C('DB_PREFIX').'sample_log a,'.C('DB_PREFIX').'sample_step b,'.C('DB_PREFIX').'user c')
@@ -353,7 +365,11 @@ class SampleController extends AuthController {
 
             # 获取日志数据
             foreach( $detailResult[0]['operating'] as $key=>&$value ){
-                $value['log'] = $sample_log_model->where( ['asc_detail'=>$value['asc_detail'],'log_step'=>$value['id']] )->order('log_time ASC')->select();
+                $value['log'] = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'sample_log b')
+                    ->field('b.context,b.asc_detail,b.log_time,b.person,b.log_step,a.nickname')
+                    ->where('a.id = b.person AND b.asc_detail ='.$value['asc_detail'].' AND b.log_step ='.$value['id'])
+                    ->order('b.log_time ASC')
+                    ->select();
             }
 
             # 检查附件和测试报告是否为空，如果不为空则将附件转换为数组
@@ -432,6 +448,8 @@ class SampleController extends AuthController {
 
                     break;
             }
+
+            //print_r($detailResult[0]);
 
             $this->assign('detailResult',$detailResult[0]);
             $this->display();
@@ -687,11 +705,69 @@ class SampleController extends AuthController {
 
                     break;
 
+                case 'success':
+
+                    $now_step_id = $orderData[0]['now_step'];
+
+                    $model->startTrans();
+
+                    #记录完成时添加的日志
+                    $add_transfer_log_id = $model->table(C('DB_PREFIX').'sample_log')->add($logData);
+                    # 完成当前步骤的时间
+                    $op_time_save = $model->table(C('DB_PREFIX').'sample_operating')->where('asc_step ='.$now_step_id.' AND asc_detail ='.$post['asc_detail'])->save( ['op_time'=>time()] );
+                    $detail_now_state = $model->table(C('DB_PREFIX').'sample_detail')->where('id ='.$post['asc_detail'])->save( ['state'=>'C'] );
+
+                    if($add_transfer_log_id && $op_time_save && $detail_now_state){
+
+                        $model->commit();
+
+                        $this->pushEmail('SUCCESS', $emails, $orderData[0]);
+
+                        $this->ajaxReturn( ['flag'=>1,'msg'=>'完成'] );
+
+                    }else{
+                        $model->rollback();
+                        $this->ajaxReturn( ['flag'=>0,'msg'=>'失败'] );
+                    }
+
+                    break;
+
             }
 
         }
 
     }
+
+    public function Logistics(){
+        $model = new model();
+        $LogisticsResult = $model
+                            ->table(C('DB_PREFIX').'sample_detail a,'.C('DB_PREFIX').'logistics b')
+                            ->field('a.pn,a.requirements_date,a.waybill,b.logistics_name,b.logistics_code')
+                            ->where('a.id ='.$_GET['id'].' AND a.logistics = b.id')
+                            ->select();
+        $Logistics_code = $LogisticsResult[0]['logistics_code'];
+        $waybill = $LogisticsResult[0]['waybill'];
+
+
+        $url = 'http://www.kuaidi100.com/query?type='.$Logistics_code.'&postid='.$waybill;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+        $result = curl_exec($ch);
+
+        $logistics_data = json_decode( $result, true);
+
+        if(curl_errno($ch)){
+            print_r(curl_error($ch));
+        }
+
+        curl_close($ch);
+
+        $this->assign('logisticsData',$logistics_data);
+        $this->assign('LogisticsResult',$LogisticsResult[0]);
+        $this->display();
+    }
+
 
     # 邮件推送
     public function pushEmail( $type, $address, $data, $cc='' ){
@@ -723,6 +799,24 @@ BASIC;
 
 
         switch( $type ){
+            case 'ADD':
+                $subject = '样品订单 '.$order_num.' 已下单请您关注';
+                $body = <<<HTML
+                
+<style>
+.step {
+    padding: 2px 5px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border: solid 1px #000;
+}
+</style>
+<p>Dear $call,</p>
+<p>样品订单 <b>$order_num</b> 已下单请您关注</p>
+HTML;
+
+                break;
             case 'LOG':
                 $subject = '样品订单 '.$order_num.' 日志更新';
                 $body = <<<HTML
@@ -738,6 +832,15 @@ BASIC;
 <p>Dear $call,</p>
 <p>样品订单 <b>$order_num</b> 日志更新</p>
 <p>当前步骤：<span class="step">Step$step_id-$step_name</span></p>
+HTML;
+
+                break;
+            case 'SUCCESS':
+
+                $subject = '样品订单 '.$order_num.' 已完成';
+                $body = <<<HTML
+<p>Dear $call,</p>
+<p>样品订单 <b>$order_num</b> 已完成</p>
 HTML;
 
                 break;

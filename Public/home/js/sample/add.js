@@ -131,7 +131,7 @@ $(function(){
 					count = $(this).find('input[name =count]').val(),
                     requirements_date = $(this).find('input[name =requirements_date]').val(),
 					customer = $(this).find('input[name =customer]').val(),
-					brand = $(this).find('input[name =brand]').val(),
+					brand = $(this).find('.vendor-brand-select .layui-form-select .layui-anim .layui-this').text(),
 					model = $(this).find('input[name =model]').val(),
                     manager = $(this).find('input[name =manager_id]').val(),
                     product_id = $(this).find('input[name =product_id]').val(),
@@ -187,9 +187,11 @@ $(function(){
 							location.href = 'http://'+ThinkPHP['HTTP_HOST']+'/Sample/overview/id/'+response.id;
 						}
                     }else{
-						AllData = '{"sample_detail":[';
-						layer.msg(response.msg,{icon:2});
-
+                        jsonObj = new Array();
+						layer.msg(response.msg,{icon:2,time:2000});
+						setTimeout(function(){
+							layer.closeAll();
+						},2000);
 					}
 				}
 			});
@@ -198,6 +200,7 @@ $(function(){
 
 
 		form.on('submit(productSearch)', function(data){
+
 			$.ajax({
 				url : ThinkPHP['AJAX'] + '/Sample/productSearch',
 				type : 'POST',
@@ -207,7 +210,7 @@ $(function(){
 					if( response.flag > 0 ){
 						var pns = '';
 						for( var key in response.data ){	//拼装所有产品型号数据
-							pns += '<li pro_id="'+ response.data[key].id +'">'+ response.data[key].pn +'</li>\r\n';
+							pns += '<li pro_id="'+ response.data[key].id +'" manager="'+ response.data[key].manager +'" manger_name="'+ response.data[key].nickname +'">'+ response.data[key].pn +'</li>\r\n';
 						}
 						$('.product-list-box ul').html(pns);
 					}else{
@@ -220,6 +223,15 @@ $(function(){
 
 
 
+        //添加一栏
+        var traverse = $('#wrap').html();
+        $('#addBar').click(function(){
+            $('#wrap').append(traverse);
+            initDatetimePicker();	//每当添加一栏之后初始化全部时间选择器
+            $('#layer-open-content').html(filter_content);
+            form.render();
+        });
+
 
 
 
@@ -229,13 +241,14 @@ $(function(){
 
 	//点击选择产品展开筛选器
 	var pro_element = null;
-	$(document).on('click', '.sample_product_select', function(){
+	$(document).on('click', '.sample_product_select', function(data){
 		pro_element = $(this);
 		var filter_dialog = layer.open({
 			type : 1,
 			title : '选择产品',
 			area: ['1200px'],
 			shade: ['0.5','#000'],
+            dataType : 'json',
 			content: filter_content,
 			cancel : function(index, layero){
 				$('#filter-map input').val('');
@@ -309,7 +322,7 @@ $(function(){
 				if( response.flag > 0 ){
 					var pns = '';
 					for( var key in response.data ){	//拼装所有产品型号数据
-						pns += '<li pro_id="'+ response.data[key].id +'" manager="'+ response.data[key].manager +'">'+ response.data[key].pn +'</li>\r\n';
+						pns += '<li pro_id="'+ response.data[key].id +'" manager="'+ response.data[key].manager +'" manager_name="'+response.data[key].nickname+'">'+ response.data[key].pn +'</li>\r\n';
 					}
 					for( var k in response.category ){
 						var _selector = '.filter-items-' + k.substring(0, k.length-1),
@@ -370,16 +383,9 @@ $(function(){
 		pro_element.val($(this).text());
 		pro_element.prev().val($(this).attr('pro_id'));
 		pro_element.prev().prev().val($(this).attr('manager'));
+        pro_element.parent().parent().next().find('.manager-input').val($(this).attr('manager_name'));
 		layer.closeAll();
 	});
-
-    //添加一栏
-    var traverse = $('#wrap').html();
-    $('#addBar').click(function(){
-		$('#wrap').append(traverse);
-		initDatetimePicker();	//每当添加一栏之后初始化全部时间选择器
-		$('#layer-open-content').html(filter_content);
-    });
 
     //删除栏位
     $('#wrap').on('click','.remove-bar',function(){
@@ -426,7 +432,7 @@ $(function(){
 			autoclose: 1,
 			todayHighlight: 1,
 			startDate : new Date(),
-			pickerPosition: "bottom-left",
+			pickerPosition: "bottom-right",
 			startView: 2,
 			minView: 2,
 			forceParse: 0

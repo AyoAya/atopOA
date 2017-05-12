@@ -50,6 +50,7 @@
 				</div>
 			</div>
 
+
 			<!-- 遍历栏位 -->
 			<div id="wrap">
 				<div class="traverse well well-sm">
@@ -62,16 +63,17 @@
 							<input type="text" name="product_select" readonly placeholder="请选择产品" autocomplete="off" class="layui-input sample_product_select" lay-verify="required">
 						</div>
 					</div>
+
+					<div class="layui-inline">
+						<label class="layui-form-label">产品经理</label>
+						<div class="layui-input-inline">
+							<input type="text" value="" readonly class="layui-input manager-input" placeholder="请先选择产品">
+						</div>
+					</div>
 					<div class="layui-inline">
 						<label class="layui-form-label">模块数量</label>
 						<div class="layui-input-inline">
 							<input type="text" name="count" placeholder="请输入模块数量" autocomplete="off" class="layui-input  sample_count" lay-verify="number">
-						</div>
-					</div>
-					<div class="layui-inline">
-						<label class="layui-form-label">要求交期</label>
-						<div class="layui-input-inline">
-							<input type="text" name="requirements_date" readonly placeholder="请选择要求交期" autocomplete="off" class="layui-input sample_requirements_date" lay-verify="required">
 						</div>
 					</div>
 					<div class="layui-inline">
@@ -82,8 +84,12 @@
 					</div>
 					<div class="layui-inline">
 						<label class="layui-form-label">设备品牌</label>
-						<div class="layui-input-inline">
-							<input type="text" name="brand" placeholder="请输入设备品牌" autocomplete="off" class="layui-input sample_brand" lay-verify="required">
+						<div class="layui-input-inline vendor-brand-select">
+							<select name="brand" lay-search>
+								<volist name="vendorBrand" id="vo">
+									<option value="{$vo.brand}">{$vo.brand}</option>
+								</volist>
+							</select>
 						</div>
 					</div>
 					<div class="layui-inline">
@@ -96,6 +102,12 @@
 						<label class="layui-form-label">备注信息</label>
 						<div class="layui-input-block">
 							<textarea name="note" placeholder="请输入备注信息" class="layui-textarea sample_note" rows="5" lay-verify="required"></textarea>
+						</div>
+					</div>
+					<div class="layui-inline">
+						<label class="layui-form-label">要求交期</label>
+						<div class="layui-input-inline">
+							<input type="text" name="requirements_date" readonly placeholder="请选择要求交期" autocomplete="off" class="layui-input sample_requirements_date" lay-verify="required">
 						</div>
 					</div>
 				</div>
@@ -236,7 +248,7 @@
 			<div class="product-list-box">
 				<ul>
 					<volist name="productFilter.defaultData" id="value">
-						<li pro_id="{$value.id}" manager="{$value.manager}">{$value.pn}</li>
+						<li pro_id="{$value.id}" manager="{$value.manager}" manager_name="{$value.nickname}">{$value.pn}</li>
 					</volist>
 				</ul>
 			</div>

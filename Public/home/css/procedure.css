@@ -26,10 +26,11 @@
     top: 50px;
     width: 120px;
     overflow: hidden;
-    color: #888;
+    color: #333;
     line-height: 150%;
 }
 .procedure .procedure-table .procedure-wrap td.active .procedure-title {
+    font-size: 15px;
     color: #428bca;
 }
 .procedure .procedure-table .procedure-wrap td.error .procedure-title {

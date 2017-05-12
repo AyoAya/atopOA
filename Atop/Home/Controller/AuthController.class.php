@@ -107,6 +107,10 @@ class AuthController extends Controller {
                 }
             }
             $productResult['defaultData'] = $pro_rel_ships->field('id,pn,manager')->limit('0,30')->select();   //默认加载30条数据
+            $user = M('User');
+            foreach ($productResult['defaultData'] as $key=>&$value){
+                $value['nickname'] = $user->field('nickname')->find($value['manager'])['nickname'];
+            }
             return $productResult;
         }
     }
@@ -118,7 +122,10 @@ class AuthController extends Controller {
             $searchValue = I('post.search','',false);
             $pro_rel_ships = M('Productrelationships');
             $map['pn'] = ['like','%'.$searchValue.'%'];
-            $searchResult = $pro_rel_ships->field('id,pn')->where($map)->select();
+            $searchResult = $pro_rel_ships->field('id,pn,manager')->where($map)->select();  $user = M('User');
+            foreach ($searchResult as $key=>&$value){
+                $value['nickname'] = $user->field('nickname')->find($value['manager'])['nickname'];
+            }
             if( $searchResult ){
                 $this->ajaxReturn( ['flag'=>1, 'data'=>$searchResult] );
             }else{
@@ -147,14 +154,24 @@ class AuthController extends Controller {
             if( $postdata['filter']['casetemp'] ){
                 $condition['casetemp'] = $postdata['filter']['casetemp'];
             }
+            //print_r($condition);
             $pro_rel_ships = M('Productrelationships');
+
             $filterResult = $pro_rel_ships->field('id,pn,manager')->where($condition)->select();
+            //print_r($filterResult);
+            $user = M('User');
+            foreach ($filterResult as $key=>&$value){
+                $value['nickname'] = $user->field('nickname')->find($value['manager'])['nickname'];
+            }
+            //print_r($filterResult);
             $categoryResult = $this->getProductData($condition);
-            foreach($postdata['filter'] as $key=>$value){
+            //print_r($filterResult);
+            foreach($postdata['filter'] as $key=>&$value){
                 if( $value != '' ){
                     unset($categoryResult[$key.'s']);
                 }
             }
+            //print_r($postdata['filter']);
             if( $filterResult ){
                 $this->ajaxReturn( ['flag'=>1, 'data'=>$filterResult, 'category'=>$categoryResult] );
             }else{

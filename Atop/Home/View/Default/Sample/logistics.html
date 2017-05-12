@@ -30,7 +30,7 @@
 <block name="breadcrumb">
     <ol class="breadcrumb breadcrumb-edit">
         <li><a href="__ROOT__/Sample">样品管理</a></li>
-        <li class="active"><a href="__ROOT__/sampleDetails/{$order}">样品详情</a></li>
+        <li class="active"><a href="__ROOT__/sample/detail/id/{$Think.get.id}">样品详情</a></li>
         <li class="active">物流状态</li>
     </ol>
 </block>
@@ -52,9 +52,9 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{$sample.totalorder}</td>
+                    <td>{$LogisticsResult.pn}</td>
                     <td>
-                        <switch name="sample.logistics">
+                        <switch name="LogisticsResult.logistics_code">
                             <case value="shunfeng">顺丰物流</case>
                             <case value="dhl">DHL</case>
                             <case value="fedex">FedEx</case>
@@ -64,8 +64,8 @@
                             <case value="zhongtong">中通速递</case>
                         </switch>
                     </td>
-                    <td>{$sample.awb}</td>
-                    <td>{$sample.createtime|date="Y-m-d H:i:s",###}</td>
+                    <td>{$LogisticsResult.waybill}</td>
+                    <td>{$LogisticsResult.requirements_date}</td>
                 </tr>
             </tbody>
         </table>
@@ -74,7 +74,7 @@
         </div>
         <eq name="logistics.status" value="200">
             <ul id="logistics-list">
-                <volist name="logistics.data" id="value">
+                <volist name="logisticsData" id="value">
                     <eq name="i" value="1">
                         <li><mark><b><i class="icon-time"></i>&nbsp;{$value.time}&nbsp;&nbsp;&nbsp;&nbsp;{$value.context}</b></mark></li>
                     <else/>
@@ -83,7 +83,7 @@
                 </volist>
             </ul>
         <else/>
-            {$logistics.message}
+            {$logisticsData.message}
         </eq>
     </div>
 

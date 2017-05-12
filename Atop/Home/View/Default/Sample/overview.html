@@ -48,7 +48,7 @@
                     <th>客户名称</th>
                     <th>设备品牌</th>
                     <th>设备型号</th>
-                    <th width="100">当前进度</th>
+                    <th width="125">当前进度</th>
                 </tr>
             </thead>
             <tbody>
@@ -62,112 +62,113 @@
                         <td>{$value.brand}</td>
                         <td>{$value.model}</td>
                         <td>
-                            <eq name="value.state" value="N">
-                                <eq name="value.now_step" value="$value.max_step">
-                                    <span class="tag tag-success">{$value.step_name}</span>
+                            <if condition="$value['state'] eq 'N'">
+                                <eq name="progress.now_step" value="$progress.max_step">
+                                    <span class="tag tag-success">已发货待{$value.step_name}</span>
                                 <else/>
-                                    <span class="tag tag-primary">{$value.step_name}</span>
+                                    <span class="tag tag-primary">{$value.step_name}中</span>
+                                </eq>
+                            <elseif condition="$value['state'] eq 'C'" />
+                                <eq name="progress.now_step" value="$progress.max_step">
+                                    <span class="tag tag-success">已{$value.step_name}</span>
                                 </eq>
                             <else/>
-                                <span class="tag tag-danger">{$value.step_name}</span>
-                            </eq>
+                                <span class="tag tag-danger">{$detailResult.name}失败</span>
+                            </if>
                         </td>
                     </tr>
                 </volist>
             </tbody>
         </table>
 
-
+        {//进度条}
         <volist name="progress" id="value" key="ONE_KEY">
-            <div class="layui-collapse">
-                <div class="layui-colla-item">
-                    <div class="layui-colla-title"><a href="__ROOT__/Sample/detail/id/{$value.id}">{$value.pn}</a></div>
-                    <div class="layui-colla-content layui-show">
-                        <div class="procedure">
-                            <table class="procedure-table">
-                                <tr class="procedure-wrap">
+            <div class="section-primary">
+                <div class="section-title "><h5><a href="__ROOT__/Sample/detail/id/{$value.id}">{$value.pn}</a></h5></div>
+                <div class="section-body">
+                    <div class="procedure">
+                        <table class="procedure-table">
+                            <tr class="procedure-wrap">
 
-                                    <volist name="stepData" id="val" key="TWO_KEY">
-                                        <volist name="value.operating" id="vo">
-                                            <eq name="val.id" value="$vo.id">
-                                                <notempty name="vo.op_time">
-                                                    <td class="active">
-                                                        <div class="procedure-title">{$val.name}
-                                                            <notempty name="vo.log">
-                                                                <i class=" icon-info-sign myTooltip">
-                                                                    <div class="sr-only popover-box" style="top: 26px;" >
-                                                                        <foreach name="vo.log" item="v">
-                                                                            <div class="log-box">
-                                                                                <span class="log-box-time">{$v.log_time|date="Y-m-d H:i",###}</span>
-                                                                                <span class="log-box-context">{$v.context}</span>
-                                                                            </div>
-                                                                        </foreach>
-                                                                    </div>
-                                                                </i>
-                                                            </notempty>
-                                                        </div>
-                                                        <div class="procedure-step"><i class="icon-ok"></i></div>
-                                                        <div class="procedure-info">
-                                                            {$vo.nickname}<br>
-                                                            {$vo.op_time|date="Y-m-d H:i",###}
-                                                        </div>
-                                                        <div class="procedure-hollow"></div>
-                                                    </td>
-                                                <else/>
-                                                    <td  class="<eq name='value.state' value='Y'>error</eq>">
-                                                        <div class="procedure-title">{$val.name}
-                                                            <notempty name="vo.log">
-                                                                <i class=" icon-info-sign myTooltip">
-                                                                    <div class="sr-only popover-box">
-                                                                        <foreach name="vo.log" item="v">
-                                                                            <div class="log-box">
-                                                                                <span class="log-box-time">{$v.log_time|date="Y-m-d H:i",###}</span>
-                                                                                <span class="log-box-context">{$v.context}</span>
-                                                                            </div>
-                                                                        </foreach>
-                                                                    </div>
-                                                                </i>
-                                                            </notempty>
-                                                        </div>
-                                                        <div class="procedure-step">{$TWO_KEY}</div>
-                                                        <div class="procedure-info"></div>
-                                                        <div class="procedure-hollow"></div>
-                                                    </td>
-                                                </notempty>
-                                            </eq>
-                                        </volist>
-                                        <if condition="($val['id']-1) egt count($value['operating'])">
-                                            {//还未进行的步骤}
-                                            <td>
-                                                <div class="procedure-title">{$val.name}</div>
-                                                <div class="procedure-step">{$TWO_KEY}</div>
-                                                <div class="procedure-info">
-                                                    <volist name="detailResult.operating" id="val">
-                                                        <eq name="value.id" value="$val.id">
-                                                            {$val.op_time|date="Y-m-d H:i",###}
-                                                        </eq>
-                                                    </volist>
-                                                </div>
-                                                <div class="procedure-hollow"></div>
-                                            </td>
-                                        </if>
+                                <volist name="stepData" id="val" key="TWO_KEY">
+                                    <volist name="value.operating" id="vo">
+                                        <eq name="val.id" value="$vo.id">
+                                            <notempty name="vo.op_time">
+                                                <td class="active">
+                                                    <div class="procedure-title">{$val.name}
+                                                        <notempty name="vo.log">
+                                                            <i class=" icon-info-sign myTooltip">
+                                                                <div class="sr-only popover-box" style="top: 26px;" >
+                                                                    <foreach name="vo.log" item="v">
+                                                                        <div class="log-box">
+                                                                            <span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i",###}</span>
+                                                                            <span class="log-box-context">{$v.context}</span>
+                                                                        </div>
+                                                                    </foreach>
+                                                                </div>
+                                                            </i>
+                                                        </notempty>
+                                                    </div>
+                                                    <div class="procedure-step"><i class="icon-ok"></i></div>
+                                                    <div class="procedure-info">
+                                                        {$vo.nickname}<br>
+                                                        {$vo.op_time|date="Y-m-d H:i",###}
+                                                    </div>
+                                                    <div class="procedure-hollow"></div>
+                                                </td>
+                                            <else/>
+                                                <td  class="<eq name='value.state' value='Y'>error</eq>">
+                                                    <div class="procedure-title">{$val.name}
+                                                        <notempty name="vo.log">
+                                                            <i class=" icon-info-sign myTooltip">
+                                                                <div class="sr-only popover-box">
+                                                                    <foreach name="vo.log" item="v">
+                                                                        <div class="log-box">
+                                                                            <span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i",###}</span>
+                                                                            <span class="log-box-context">{$v.context}</span>
+                                                                        </div>
+                                                                    </foreach>
+                                                                </div>
+                                                            </i>
+                                                        </notempty>
+                                                    </div>
+                                                    <div class="procedure-step">{$TWO_KEY}</div>
+                                                    <div class="procedure-info"></div>
+                                                    <div class="procedure-hollow"></div>
+                                                </td>
+                                            </notempty>
+                                        </eq>
                                     </volist>
+                                    <if condition="($val['id']-1) egt count($value['operating'])">
+                                        {//还未进行的步骤}
+                                        <td>
+                                            <div class="procedure-title">{$val.name}</div>
+                                            <div class="procedure-step">{$TWO_KEY}</div>
+                                            <div class="procedure-info">
+                                                <volist name="detailResult.operating" id="val">
+                                                    <eq name="value.id" value="$val.id">
+                                                        {$val.op_time|date="Y-m-d H:i",###}
+                                                    </eq>
+                                                </volist>
+                                            </div>
+                                            <div class="procedure-hollow"></div>
+                                        </td>
+                                    </if>
+                                </volist>
 
-                                </tr>
-                            </table>
-                        </div>
-
+                            </tr>
+                        </table>
                     </div>
+
                 </div>
             </div>
         </volist>
 
 
 
-        <div class="layui-collapse">
-            <div class="layui-colla-item">
-                <div class="layui-colla-title">附件列表</div>
-                <div class="layui-colla-content layui-show">
+        <div class="section-primary">
+                <div class="section-title"><h5>附件列表</h5></div>
+                <div class="section-body">
                     <notempty name="orderData.attachment">
                         <volist name="orderData.attachment" id="value">
                             <div class="file-item">
@@ -179,7 +180,6 @@
                     </notempty>
                 </div>
             </div>
-        </div>
 
     </div>
 
