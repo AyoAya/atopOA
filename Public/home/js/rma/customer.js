@@ -253,6 +253,14 @@ $(function(){
 			unwrap : false
 		});
 
+		// 处理layui的placeholder问题
+		$('.step-placeholder .layui-form-select .layui-select-title input').attr('placeholder','当前进度');
+		$('.sales-placeholder .layui-form-select .layui-select-title input').attr('placeholder','销售人员');
+		$('.customer-placeholder .layui-form-select .layui-select-title input').attr('placeholder','设备厂商');
+
+
+
+
 	});
 
 	// layer open弹出层

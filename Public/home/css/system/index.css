@@ -19,10 +19,10 @@
     cursor: pointer;
 }
 .config-verify-box h4 span,.config-page-box h4 span {
-    background: url("../img/switch_off.png") center center no-repeat;
+    background: url("../../img/switch_off.png") center center no-repeat;
 }
 .config-verify-box h4 span.active,.config-page-box h4 span.active {
-    background: url("../img/switch_on.png") center center no-repeat;
+    background: url("../../img/switch_on.png") center center no-repeat;
 }
 .config-page-box .input-group {
     margin-top: 26px;
@@ -35,7 +35,7 @@
     margin: 20px 0;
 }
 .config-verify-info p span.active {
-    background: url("../img/switch_small_on.png") center center no-repeat;
+    background: url("../../img/switch_small_on.png") center center no-repeat;
 }
 .config-verify-info p span {
     display: inline-block;
@@ -45,7 +45,7 @@
     width: 32px;
     height: 16px;
     cursor: pointer;
-    background: url("../img/switch_small_off.png") center center no-repeat;
+    background: url("../../img/switch_small_off.png") center center no-repeat;
 }
 .upload-form-config-box label {
     font-weight: normal !important;

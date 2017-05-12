@@ -1,24 +1,27 @@
 <?php
 namespace Home\Controller;
-
 use Think\Model;
 use Think\Page;
-class RMAController extends AuthController{
 
-    private $str = '';
-    private $in = array();
-    private $filter = array();
+class RMAController extends AuthController{
 
     //客诉处理
     public function index(){
 
+        $model = new Model();
+
+        # 客诉表实例
         $customer = M('Oacustomercomplaint');
 
+        # 筛选基本条件：主表和从表关联
         $where = 'a.id=b.main_assoc AND b.step_assoc=c.id ';
 
+        # 检测是否勾选与我相关
         if( !empty(I('get.withme')) ){
             $where .= 'AND b.operation_person LIKE "%'.session('user')['id'].'%" ';  //与我相关，查询所有自己参与的客诉
         }
+
+        # 指定步骤
         if( !empty(I('get.step')) ){
             if( I('get.step') != 'close' ){  //如果提交的进度值为数字类型则表明筛选该步骤id的数据，我、如果不是则为已关闭的类型
                 //$where = 'a.id=b.main_assoc ';
@@ -27,6 +30,8 @@ class RMAController extends AuthController{
                 $where .= 'AND a.rma_state="Y" ';    //查询所有已关闭的客诉
             }
         }
+
+        # 时间区
         if( !empty(I('get.start_date')) && !empty(I('get.end_date')) ){
             $where .= 'AND a.cc_time>="'.I('get.start_date').'" AND a.cc_time<="'.I('get.end_date').'" ';
         }elseif( !empty(I('get.start_date')) && empty(I('get.end_date')) ){
@@ -34,32 +39,41 @@ class RMAController extends AuthController{
         }elseif( empty(I('get.start_date')) && !empty(I('get.end_date')) ){
             $where .= 'AND a.cc_time<="'.I('get.end_date').'" ';
         }
+
+        # 单号
         if( !empty(I('get.order')) ){
             $where .= 'AND a.sale_order='.I('get.order').' ';
         }
+
+        # 销售：为兼容旧版客诉，获取人员采取下拉式选择非手动填写保证数据正确性
         if( !empty(I('get.salesperson')) ){
             $where .= 'AND a.salesperson="'.I('get.salesperson').'" ';
         }
+
+        # 客户
         if( !empty(I('get.customer')) ){
             $where .= 'AND a.customer="'.I('get.customer').'" ';
         }
+
+        # 设备厂商
         if( !empty(I('get.vendor')) ){
             $where .= 'AND a.vendor="'.I('get.vendor').'" ';
         }
+
+        # 搜索
         if( !empty(I('get.search')) ){
             $where = 'a.id=b.main_assoc AND b.step_assoc=c.id ';
             $where .= 'AND CONCAT(a.salesperson,a.customer,a.sale_order,a.vendor,a.model,a.error_message) LIKE "%'.I('get.search').'%"';
         }
 
+        # 只查询新版本客诉
         $where .= 'AND a.version="new"';
 
-        //echo $where;
-
-
+        # 用户表实例
         $user = M('User');
-        $levelReport = $user->field('level,report,department')->find(session('user')['id']);
-        $str = '';
-        if($levelReport['department']==4){
+
+        # 检测登录用户部门
+        /*if($levelReport['department']==4){
             if($levelReport['level']<=4){
                 $reportList = $user->field('id,account,report')->where('report='.session('user')['id'])->select();
                 if($reportList){
@@ -74,60 +88,76 @@ class RMAController extends AuthController{
             }else{
                 goto step;
             }
-        }
+        }*/
 
 
-        step:
         $count = $customer->table('atop_oacustomercomplaint a,atop_oacustomeroperation b,atop_oacustomerstep c')->where($where)->group('a.id')->select();
-        //echo $customer->getLastSql();
         $count = count($count);
-        //echo $count;
-        //分页
+
+        # 分页
         $page = new Page($count,C('LIMIT_SIZE'));
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
         $page->setConfig('next','<span aria-hidden="true">下一页</span>');
         $page->setConfig('first','<span aria-hidden="true">首页</span>');
         $page->setConfig('last','<span aria-hidden="true">尾页</span>');
+
+        # 是否注入分页信息
         if(C('PAGE_STATUS_INFO')){
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
+
+        # 查询数据
         $result = $customer->table('atop_oacustomercomplaint a,atop_oacustomeroperation b,atop_oacustomerstep c')
                             ->field('a.id,a.cc_time,a.salesperson,a.customer,a.sale_order,a.pn,a.vendor,a.model,a.error_message,a.reason,a.comments,a.status,a.uid,a.rma_state,a.version,b.main_assoc,b.step_assoc,c.id step_id,c.step_name')
                             ->where($where)->order('a.cc_time DESC,a.id DESC')->group('a.id')->limit($page->firstRow.','.$page->listRows)->select();
-        //print_r($result);
-        $user = M('User');
-        $step = M('Oacustomerstep');
 
+        # 步骤表实例
+        $step = M('Oacustomerstep');
+        # 获取到步骤不等于1（下单）的数据
         $step_data = $step->where('id > 1')->select();
         $this->assign('stepData',$step_data);
 
-        $operation = M('Oacustomeroperation');
         foreach($result as $key=>&$value){
+
             //如果用户为空则采用默认头像
             $face = $user->table('__USER__ u,__OACUSTOMERCOMPLAINT__ o')->field('u.nickname,u.face')->where('u.account=o.salesperson AND o.id='.$value['id'])->select()[0];
+
             if(!empty($face['face'])){
                 $value['face'] = $face['face'];
             }else{
                 $value['face'] = '/Public/home/img/face/default_face.png';
             }
+
             if(!empty($face['face'])){
                 $value['nickname'] = $face['nickname'];
             }
+
             //过滤html标签
             $value['error_message'] = str_replace('<br />','',$value['error_message']);
             $value['reason'] = str_replace('<br />','',$value['reason']);
             $value['now_step'] = M()->field('b.id,b.step_name')->table('atop_oacustomercomplaint a,atop_oacustomerstep b')->where('a.now_step=b.id AND a.id='.$value['id'])->select()[0];    //将最新步骤信息注入模板
+
         }
-        //print_r($result);
-        $this->assign('filter',$condition);
+
+        # 获取销售部门人员信息
+        $sales = $model->table(C('DB_PREFIX').'user')->field('account,nickname')->where('department=4')->order('id ASC')->select();
+        $brands = $model->table(C('DB_PREFIX').'vendor_brand')->order('id ASC')->select();
+
+        $filter_data['sales'] = $sales;
+        $filter_data['brands'] = $brands;
+
+        $this->assign('filter',$filter_data);
+
         $pageShow = $page->show();
         $this->assign('pageShow',$pageShow);
-        emptyData:
+
         //print_r($result);
         $this->assign('customer',$result);
+
         //当数据为空显示图片
         $this->assign('empty','<div class="empty-box"><span class="empty-pic"></span></div>');
         $this->display();
+
     }
 
     //获取所有下属资料

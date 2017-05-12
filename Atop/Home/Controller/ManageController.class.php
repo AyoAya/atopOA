@@ -37,19 +37,19 @@ class ManageController extends AuthController {
             switch($value['state']){
                 case 1:
                     $value['state_text'] = '正常';
-                    $value['state_class'] = 'label-success';
+                    $value['state_class'] = 'tag-success';
                     break;
                 case 2:
                     $value['state_text'] = '禁用';
-                    $value['state_class'] = 'label-danger';
+                    $value['state_class'] = 'tag-danger';
                     break;
                 case 3:
                     $value['state_text'] = '离职';
-                    $value['state_class'] = 'label-warning';
+                    $value['state_class'] = 'tag-warning';
                     break;
                 default:
                     $value['state_text'] = 'UNKNOW';
-                    $value['state_class'] = 'label-danger';
+                    $value['state_class'] = 'tag-danger';
             }
         }
         # print_r($result);
@@ -93,19 +93,19 @@ class ManageController extends AuthController {
             switch($value['state']){
                 case 1:
                     $value['state_text'] = '正常';
-                    $value['state_class'] = 'label-success';
+                    $value['state_class'] = 'tag-success';
                     break;
                 case 2:
                     $value['state_text'] = '禁用';
-                    $value['state_class'] = 'label-danger';
+                    $value['state_class'] = 'tag-danger';
                     break;
                 case 3:
                     $value['state_text'] = '离职';
-                    $value['state_class'] = 'label-warning';
+                    $value['state_class'] = 'tag-warning';
                     break;
                 default:
                     $value['state_text'] = 'UNKNOW';
-                    $value['state_class'] = 'label-danger';
+                    $value['state_class'] = 'tag-danger';
             }
         }
         # print_r($result);

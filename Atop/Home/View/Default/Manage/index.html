@@ -41,17 +41,18 @@
 	<div class="clearfix" style="margin-bottom: 15px;"></div>
 
 
-	<table class="layui-table" id="table">
+	<table class="layui-table" lay-skin="line">
 		<thead>
 			<th>序号</th>
+			<th>头像</th>
 			<th>账号</th>
 			<th>姓名</th>
 			<th>部门</th>
 			<th>级别</th>
 			<th>职位</th>
 			<th>汇报关系</th>
-			<th>状态</th>
-			<th>操作</th>
+			<th width="120">状态</th>
+			<th width="200">操作</th>
 		</thead>
 		<tbody>
 			<volist name="personList" id="value">
@@ -64,18 +65,19 @@
 							{$i}
 						</if>
 					</td>
+					<td><img src="__ROOT__{$value.face}" alt="" width="40" style="-webkit-border-radius: 50%;-moz-border-radius: 50%;border-radius: 50%;width: 40px;height: 40px;overflow: hidden;"></td>
 					<td>{$value.account}</td>	
 					<td>{$value.nickname}</td>
 					<td>{$value.department_name}</td>
 					<td>{$value.level_name}</td>
 					<td>{$value.position_name}</td>
 					<td>{$value.report_name}</td>
-					<td><span class="label {$value.state_class}">{$value.state_text}</span></td>
+					<td><span class="tag {$value.state_class}">{$value.state_text}</span></td>
 					<td>
 						<neq name="value.id" value="$Think.session.user.id">
-							<div class="btn-group">
-								<a href="__ROOT__/Manage/edit/id/{$value.id}" class="btn btn-default btn-sm" personid="{$value.id}"><i class="icon-pencil"></i> 编辑</a>
-								<button class="btn btn-default btn-sm delete-user" personid="{$value.id}"><i class="icon-remove"></i> 删除</button>
+							<div class="layui-btn-group">
+								<a href="__ROOT__/Manage/edit/id/{$value.id}" class="layui-btn layui-btn-primary layui-btn-small" personid="{$value.id}"><i class="icon-pencil"></i> 编辑</a>
+								<button class="layui-btn layui-btn-primary layui-btn-small btn delete-user" personid="{$value.id}"><i class="icon-remove"></i> 删除</button>
 							</div>
 						</neq>
 					</td>							
@@ -106,8 +108,8 @@
 				</div>
 				<div class="modal-footer">
 					<input type="hidden" name="hiddenID" value="" id="hiddenID">
-					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" id="done-delete">确定</button>
+					<button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
+					<button type="button" class="layui-btn" id="done-delete">确定</button>
 				</div>
 			</div>
 		</div>

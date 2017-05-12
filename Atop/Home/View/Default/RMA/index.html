@@ -76,7 +76,7 @@
 				<div class="layui-form-item">
 					<div class="layui-inline">
 						<label class="layui-form-label">当前进度</label>
-						<div class="layui-input-inline">
+						<div class="layui-input-inline step-placeholder">
 							<select name="step">
 								<option value="">选择指定步骤</option>
 								<volist name="stepData" id="value">
@@ -108,8 +108,21 @@
 					</div>
 					<div class="layui-inline">
 						<label class="layui-form-label">销售人员</label>
-						<div class="layui-input-inline">
-							<input type="text" name="salesperson" class="layui-input" placeholder="销售人员" value="{$Think.get.salesperson}">
+						<div class="layui-input-inline sales-placeholder">
+							<select name="salesperson">
+								<option value="">销售人员</option>
+								<volist name="filter.sales" id="value">
+									<present name="Think.get.salesperson">
+										<eq name="Think.get.salesperson" value="$value.account">
+											<option value="{$value.account}" selected>{$value.nickname}</option>
+										<else/>
+											<option value="{$value.account}">{$value.nickname}</option>
+										</eq>
+									<else/>
+										<option value="{$value.account}">{$value.nickname}</option>
+									</present>
+								</volist>
+							</select>
 						</div>
 					</div>
 					<div class="layui-inline">
@@ -120,8 +133,21 @@
 					</div>
 					<div class="layui-inline">
 						<label class="layui-form-label">设备厂商</label>
-						<div class="layui-input-inline">
-							<input type="text" name="vendor" class="layui-input" placeholder="设备厂商" value="{$Think.get.vendor}">
+						<div class="layui-input-inline customer-placeholder">
+							<select name="vendor">
+								<option value="">设备厂商</option>
+								<volist name="filter.brands" id="value">
+									<present name="Think.get.vendor">
+										<eq name="Think.get.vendor" value="$value.brand">
+											<option value="{$value.brand}" selected>{$value.brand}</option>
+										<else/>
+											<option value="{$value.brand}">{$value.brand}</option>
+										</eq>
+									<else/>
+										<option value="{$value.brand}">{$value.brand}</option>
+									</present>
+								</volist>
+							</select>
 						</div>
 					</div>
 				</div>
