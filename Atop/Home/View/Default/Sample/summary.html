@@ -57,15 +57,15 @@
                             <td>{$vo.brand}</td>
                             <td>{$vo.model}</td>
                             <td>
-                                <eq name="vo.state" value="N">
-                                    <eq name="vo.now_step" value="$max_step">
+                                <if condition="$vo.state eq N OR $vo.state eq C">
+                                    <if condition="$vo.now_step" value="$max_step">
                                         <span class="tag tag-success">{$vo.step_name}</span>
                                     <else/>
                                         <span class="tag tag-primary">{$vo.step_name}</span>
-                                    </eq>
+                                    </if>
                                 <else/>
                                     <span class="tag tag-danger">{$vo.step_name}</span>
-                                </eq>
+                                </if>
                             </td>
                         </tr>
                     <else/>

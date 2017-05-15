@@ -151,13 +151,18 @@ class SampleController extends AuthController {
 
                     $sample_model->commit();
 
-                   /* $addData = $sample_model->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c')
+                    $addData = $sample_model->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c')
                                                 ->field('a.order_num,a.create_person_name,b.requirements_date,c.nickname,b.pn')
                                                 ->where('a.id ='.$sample_id.' AND b.detail_assoc = a.id AND b.manager = c.id')
-                                                ->select();*/
+                                                ->select();
 
+                    $emails = $sample_model->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c')
+                                           ->field('c.email')
+                                           ->distinct(true)
+                                           ->where('a.id ='.$sample_id.' AND b.detail_assoc = a.id AND b.manager = c.id')
+                                           ->select();
 
-                    //print_r($addData);
+                    $this->pushEmail('ADD', $emails,$addData );
 
                     $this->ajaxReturn(['flag'=>1,'msg'=>'添加订单成功！','id'=>$sample_id]);
                 }
@@ -809,23 +814,62 @@ BASIC;
 
         switch( $type ){
             case 'ADD':
-                $subject = '样品订单 '.$order_num.' 已下单请您关注';
-                $body = <<<HTML
-                
-               
+
+                $style = <<<STYLE
 <style>
-.step {
-    padding: 2px 5px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    border: solid 1px #000;
+.table {
+    width: 100%;
+    border: solid 1px #ccc;
+    font-size:14px;
+}
+.table thead tr th,.table tbody tr td {
+    padding: 9px 15px;
+    border-right: solid 1px #ccc;
+    border-top: solid 1px #ccc;
+    text-align: left;
+}
+.table thead tr:first-child th {
+    border-top: none;
+}
+.table thead tr th:last-child,.table tbody tr td:last-child {
+    border-right: none;
 }
 </style>
-<p>Dear $call,</p>
-<p>样品订单 <b>$order_num</b> 已下单请您关注</p>
+STYLE;
 
-HTML;
+                $order_basic= '';
+                $tmpString = '';
+                $subject = '样品订单 '.$data[0]['order_num'].' 已下单请您关注';
+
+                $tmpString .= '<p>Dear'. $call.',</p>
+                        <p>样品订单 <b>'.$data[0]['order_num'].'</b> 已下单请您关注</p><br>';
+
+                $tmpString .= '<table class="table" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>序号</th>
+                                            <th>销售</th>
+                                            <th>产品型号</th>
+                                            <th>产品经理</th>
+                                            <th>要求交期</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>';
+
+                foreach($data as $key=>&$value){
+                    $tmpString .= '<tr>
+                                        <td>'.($key+1).'</td>
+                                        <td>'.$value['create_person_name'].'</td>
+                                        <td>'.$value['pn'].'</td>
+                                        <td>'.$value['nickname'].'</td>
+                                        <td>'.$value['requirements_date'].'</td>
+                                   </tr>';
+                }
+
+                $tmpString .= '</tbody></table>';
+
+                $body = $style.$tmpString;
+
 
                 break;
             case 'LOG':

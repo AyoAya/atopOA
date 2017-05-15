@@ -63,13 +63,13 @@
                         <td>{$value.model}</td>
                         <td>
                             <if condition="$value['state'] eq 'N'">
-                                <eq name="progress.now_step" value="$progress.max_step">
+                                <eq name="value.now_step" value="$value.max_step">
                                     <span class="tag tag-success">已发货待{$value.step_name}</span>
                                 <else/>
                                     <span class="tag tag-primary">{$value.step_name}中</span>
                                 </eq>
                             <elseif condition="$value['state'] eq 'C'" />
-                                <eq name="progress.now_step" value="$progress.max_step">
+                                <eq name="value.now_step" value="$value.max_step">
                                     <span class="tag tag-success">已{$value.step_name}</span>
                                 </eq>
                             <else/>
