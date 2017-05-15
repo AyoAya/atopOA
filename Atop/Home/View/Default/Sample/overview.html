@@ -101,7 +101,7 @@
                                                                 <div class="sr-only popover-box" style="top: 26px;" >
                                                                     <foreach name="vo.log" item="v">
                                                                         <div class="log-box">
-                                                                            <span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i",###}</span>
+                                                                            <span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i:s",###}</span>
                                                                             <span class="log-box-context">{$v.context}</span>
                                                                         </div>
                                                                     </foreach>
@@ -112,7 +112,7 @@
                                                     <div class="procedure-step"><i class="icon-ok"></i></div>
                                                     <div class="procedure-info">
                                                         {$vo.nickname}<br>
-                                                        {$vo.op_time|date="Y-m-d H:i",###}
+                                                        {$vo.op_time|date="Y-m-d H:i:s",###}
                                                     </div>
                                                     <div class="procedure-hollow"></div>
                                                 </td>
@@ -124,7 +124,7 @@
                                                                 <div class="sr-only popover-box">
                                                                     <foreach name="vo.log" item="v">
                                                                         <div class="log-box">
-                                                                            <span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i",###}</span>
+                                                                            <span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i:s",###}</span>
                                                                             <span class="log-box-context">{$v.context}</span>
                                                                         </div>
                                                                     </foreach>
@@ -147,7 +147,7 @@
                                             <div class="procedure-info">
                                                 <volist name="detailResult.operating" id="val">
                                                     <eq name="value.id" value="$val.id">
-                                                        {$val.op_time|date="Y-m-d H:i",###}
+                                                        {$val.op_time|date="Y-m-d H:i:s",###}
                                                     </eq>
                                                 </volist>
                                             </div>

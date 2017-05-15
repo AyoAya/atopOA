@@ -94,7 +94,7 @@
 												<div class="sr-only popover-box">
 													<volist name="vo.log" id="v">
 														<div class="log-box">
-															<span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i",###}</span>
+															<span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i:s",###}</span>
 															<span class="log-box-context">{$v.context}</span>
 														</div>
 													</volist>
@@ -107,7 +107,7 @@
 										<volist name="detailResult.operating" id="val">
 											<eq name="value.id" value="$val.id">
 												{$val.nickname}<br>
-												{$val.op_time|date="Y-m-d H:i",###}
+												{$val.op_time|date="Y-m-d H:i:s",###}
 											</eq>
 										</volist>
 									</div>
@@ -122,7 +122,7 @@
 												<div class="sr-only popover-box">
 													<volist name="vo.log" id="v">
 														<div class="log-box">
-															<span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i",###}</span>
+															<span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i:s",###}</span>
 															<span class="log-box-context">{$v.context}</span>
 														</div>
 													</volist>
@@ -145,7 +145,7 @@
 							<div class="procedure-info">
 								<volist name="detailResult.operating" id="val">
 									<eq name="value.id" value="$val.id">
-										{$val.op_time|date="Y-m-d H:i",###}
+										{$val.op_time|date="Y-m-d H:i:s",###}
 									</eq>
 								</volist>
 							</div>
@@ -228,7 +228,7 @@
 										<td><img src="{$value.face}" alt="" width="40"></td>
 										<td>
 											<p>{$value.context} <img src="__IMG__/new.gif" alt="" style="position: relative;top: -3px;"></p>
-											<p>{$value.nickname}　|　{$value.name}　|　{$value.log_time|date="Y-m-d H:i",###}</p>
+											<p>{$value.nickname}　|　{$value.name}　|　{$value.log_time|date="Y-m-d H:i:s",###}</p>
 										</td>
 									</eq>
 								</tr>
@@ -238,7 +238,7 @@
 										<td><img src="{$value.face}" alt="" width="40"></td>
 										<td>
 											<p>{$value.context}</p>
-											<p>{$value.nickname}　|　{$value.name}　|　{$value.log_time|date="Y-m-d H:i",###}</p>
+											<p>{$value.nickname}　|　{$value.name}　|　{$value.log_time|date="Y-m-d H:i:s",###}</p>
 										</td>
 									</eq>
 								</tr>

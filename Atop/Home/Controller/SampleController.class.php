@@ -91,8 +91,7 @@ class SampleController extends AuthController {
         if(IS_POST) {
 
             if (I('post.order_num')) {
-                print_r(I('post.'));
-die;
+
                 $sample = M('sample');
                 $sample_data['order_num'] = I('post.order_num');
                 $sample_data['order_charge'] = I('post.order_charge');
@@ -100,6 +99,7 @@ die;
                 $sample_data['create_person_id'] = session('user')['id'];
                 $sample_data['create_person_name'] = session('user')['nickname'];
                 $sample_data['order_state'] = 1;
+
 
                 # 订单号是否重复
                 $rel = $sample->where('order_num="'.I('post.order_num').'"')->select();
@@ -111,6 +111,7 @@ die;
                     $sample_model->startTrans();
                     $sample_id = $sample_model->table(C('DB_PREFIX').'sample')->add($sample_data);
                     $product_data = I('post.sample_details','',false);
+
                     foreach ($product_data as $key=>&$value){
 
                         # 将步骤和主表id注入产品详情表
@@ -149,6 +150,14 @@ die;
                     }
 
                     $sample_model->commit();
+
+                   /* $addData = $sample_model->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c')
+                                                ->field('a.order_num,a.create_person_name,b.requirements_date,c.nickname,b.pn')
+                                                ->where('a.id ='.$sample_id.' AND b.detail_assoc = a.id AND b.manager = c.id')
+                                                ->select();*/
+
+
+                    //print_r($addData);
 
                     $this->ajaxReturn(['flag'=>1,'msg'=>'添加订单成功！','id'=>$sample_id]);
                 }
@@ -803,6 +812,7 @@ BASIC;
                 $subject = '样品订单 '.$order_num.' 已下单请您关注';
                 $body = <<<HTML
                 
+               
 <style>
 .step {
     padding: 2px 5px;
@@ -814,6 +824,7 @@ BASIC;
 </style>
 <p>Dear $call,</p>
 <p>样品订单 <b>$order_num</b> 已下单请您关注</p>
+
 HTML;
 
                 break;
