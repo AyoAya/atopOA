@@ -1,0 +1,11 @@
+.layui-form {
+    width: 700px;
+}
+.layui-form .layui-form-label {
+    padding-right: 0;
+    padding-left: 0;
+    width: 60px;
+}
+.layui-form .layui-input-block {
+    margin-left: 80px;
+}

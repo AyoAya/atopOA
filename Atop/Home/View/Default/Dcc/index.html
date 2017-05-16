@@ -31,28 +31,32 @@
 
 	<div class="department-btn">
 		<a href="__ROOT__/DCC?department=6" class="col-box plan-box <eq name='userDepartment' value='6'>active</eq>" departmentid="6">
-			<div class="department-icon administration-icon"></div>
+			<!-- <div class="department-icon administration-icon"></div> -->
 			<div class="department-name">行政部</div>
 		</a>
 		<a href="__ROOT__/DCC?department=1" class="col-box sales-box <eq name='userDepartment' value='1'>active</eq>" departmentid="1">
-			<div class="department-icon  development-icon"></div>
+			<!-- <div class="department-icon  development-icon"></div> -->
 			<div class="department-name">研发部</div>
 		</a>
 		<a href="__ROOT__/DCC?department=2" class="col-box administration-box <eq name='userDepartment' value='2'>active</eq>" departmentid="2">
-			<div class="department-icon production-icon"></div>
+			<!-- <div class="department-icon production-icon"></div> -->
 			<div class="department-name">生产部</div>
 		</a>
 		<a href="__ROOT__/DCC?department=3" class="col-box development-box <eq name='userDepartment' value='3'>active</eq>" departmentid="3">
-			<div class="department-icon personnel-icon"></div>
+			<!-- <div class="department-icon personnel-icon"></div> -->
 			<div class="department-name">品质部</div>
 		</a>
 		<a href="__ROOT__/DCC?department=4" class="col-box personnel-box <eq name='userDepartment' value='4'>active</eq>" departmentid="4">
-			<div class="department-icon sales-icon"></div>
+			<!-- <div class="department-icon sales-icon"></div> -->
 			<div class="department-name">销售部</div>
 		</a>
 		<a href="__ROOT__/DCC?department=5" class="col-box plan-box <eq name='userDepartment' value='5'>active</eq>" departmentid="5">
-			<div class="department-icon plan-icon"></div>
+			<!-- <div class="department-icon plan-icon"></div> -->
 			<div class="department-name">计划部</div>
+		</a>
+		<a href="__ROOT__/DCC?department=9" class="col-box plan-box <eq name='userDepartment' value='9'>active</eq>" departmentid="5">
+			<!-- <div class="department-icon plan-icon"></div> -->
+			<div class="department-name">市场部</div>
 		</a>
 	</div>
 
@@ -73,11 +77,11 @@
 				</span>
 			</div>
 		</div>-->
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h2 class="panel-title">公开文档</h2>
+		<div class="section-primary">
+			<div class="section-title">
+				<h5>公开文档</h5>
 			</div>
-			<div class="panel-body">
+			<div class="section-body">
 				<div class="file-box">
 					<ul class="folders-list">
 						<present name="folders.public.file">
@@ -90,7 +94,7 @@
 								{:traverse_document($folders['public']['dir'])}
 							</present>
 						<else/>
-							没有数据
+							<i class="icon-exclamation-sign"></i> 没有数据
 						</notempty>
 					</ul>
 				</div>
@@ -98,11 +102,11 @@
 		</div>
 
 		<if condition="is_array($folders['private'])">
-			<div class="panel panel-default">
-				<div class="panel-heading">
+			<div class="section-primary">
+				<div class="section-title">
 					<h2 class="panel-title">内部文档</h2>
 				</div>
-				<div class="panel-body">
+				<div class="section-body">
 					<div class="file-box">
 						<ul class="folders-list">
 							<present name="folders.private.file">
@@ -115,7 +119,7 @@
 									{:traverse_document($folders['private']['dir'])}
 								</present>
 							<else/>
-								没有数据
+								<i class="icon-exclamation-sign"></i> 没有数据
 							</notempty>
 						</ul>
 					</div>
@@ -183,34 +187,3 @@
 	<input type="hidden" name="" value="{$path}" class="path" id="now-path">
 
 </block>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

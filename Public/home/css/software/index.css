@@ -1,0 +1,13 @@
+.search-box {
+    position: relative;
+}
+.search-box .search-input {
+    width: 300px;
+}
+.search-box .search-btn {
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    border: none;
+    height: 36px;
+}

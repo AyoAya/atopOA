@@ -1,11 +1,102 @@
 <!-- 【模板继承】 -->
 <extend name="layout/default"/>
-
-<block name="webtitle">
-    <title>添加样品</title>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/software/index.css">
 </block>
-
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/software/index.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>发布软件</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">发布软件</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
 <block name="content">
 
+    <div class="pull-left">
+        <a href="__ROOT__/Software/add" class="layui-btn layui-btn-primary">添加软件</a>
+    </div>
+
+    <div class="pull-right search-box">
+        <form class="layui-form">
+            <input type="text" class="layui-input search-input" placeholder="搜索">
+            <button lay-submit lay-filter="software" class="layui-btn layui-btn-primary search-btn"><i class="layui-icon">&#xe615;</i></button>
+        </form>
+    </div>
+
+    <div class="clearfix" style="margin-bottom: 15px;"></div>
+
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>项目类型</th>
+                <th>项目编号</th>
+                <th>项目名称</th>
+                <th>主控MCU</th>
+                <th>版本号</th>
+                <th>最后更新时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>FIRMWARE</td>
+                <td><a href="__ROOT__/Software/detail/id/1">FIRM0010</a></td>
+                <td>SFP+ LR</td>
+                <td>ADuC7023</td>
+                <td>V1.0</td>
+                <td>2017-05-15</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>ATE</td>
+                <td><a href="__ROOT__/Software/detail/id/2">PATE0001</a></td>
+                <td>ATOM自助调试软件</td>
+                <td></td>
+                <td>V1.2.15</td>
+                <td>2017-05-13</td>
+            </tr>
+        </tbody>
+    </table>
 
 </block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

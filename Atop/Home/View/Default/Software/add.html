@@ -1,0 +1,98 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/software/add.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/software/add.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>发布软件</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Software">发布软件</a></li>
+        <li class="active">添加软件</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">软件类型</label>
+            <div class="layui-input-block">
+                <select name="type" lay-filter="type">
+                    <option value="firmware" selected>firmware</option>
+                    <option value="ATE">ATE</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="number" lay-verify="required" class="layui-input" placeholder="请输入项目编号">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">项目名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" lay-verify="required" class="layui-input" placeholder="请输入项目名称">
+            </div>
+        </div>
+        <div class="layui-form-item mcu-box" style="display: block;">
+            <label class="layui-form-label">主控MCU</label>
+            <div class="layui-input-block">
+                <input type="text" name="mcu" lay-verify="required" class="layui-input" placeholder="请输入主控MCU">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <textarea type="text" name="mcu" class="layui-textarea" placeholder="备注信息"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="add">提交</button>
+                <button class="layui-btn layui-btn-primary" type="reset">重置</button>
+            </div>
+        </div>
+    </form>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

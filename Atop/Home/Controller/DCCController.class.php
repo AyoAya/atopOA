@@ -6,7 +6,7 @@ namespace Home\Controller;
  * 2016-10-12
  */
 class DCCController extends AuthController {
-    
+
     //初始化页面
     public function index(){
         $user = M('User');
@@ -47,8 +47,15 @@ class DCCController extends AuthController {
                 $folders_public = read_all_dir('./Uploads/dcc/administration/public');
                 $folders_private = read_all_dir('./Uploads/dcc/administration/private');
                 break;
+            case 9:
+                $department = 'market';
+                $folders_public = read_all_dir('./Uploads/dcc/market/public');
+                $folders_private = read_all_dir('./Uploads/dcc/market/private');
+                break;
         }
+
         $folders['public'] = $folders_public;
+
         if( I('get.department') && !empty(I('get.department')) ){
             if( $nowuser_department != I('get.department') && $nowuser_department != 0 ){
                 $folders['private'] = '您没有权限访问该部门内部文件';
@@ -58,6 +65,7 @@ class DCCController extends AuthController {
         }else{
             $folders['private'] = $folders_private;
         }
+
         $this->assign('userDepartment',$userDepartment);
         $this->assign('folders',$folders);
         $this->display();
@@ -88,6 +96,10 @@ class DCCController extends AuthController {
                 case 5:
                     $department = 'plan';
                     $folders = read_all_dir('./Uploads/dcc/plan/public');
+                    break;
+                case 9:
+                    $department = 'market';
+                    $folders = read_all_dir('./Uploads/dcc/market/public');
                     break;
             }
             $this->ajaxReturn($folders);exit;
@@ -126,11 +138,15 @@ class DCCController extends AuthController {
                         $department = 'plan';
                         $folders = read_all_dir('./Uploads/dcc/plan/'.I('post.folder'));
                         break;
+                    case 9:
+                        $department = 'market';
+                        $folders = read_all_dir('./Uploads/dcc/market/'.I('post.folder'));
+                        break;
                 }
                 $this->ajaxReturn($folders);exit;
             }
         }
     }
-    
-    
+
+
 }

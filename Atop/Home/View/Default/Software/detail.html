@@ -1,0 +1,207 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/timeline.css">
+    <link rel="stylesheet" href="__CSS__/software/detail.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/software/detail.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>软件详情</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Software">发布软件</a></li>
+        <li class="active">发布历史</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+
+    <div class="title-bar" style="margin: 0 0 20px 0;">
+        <h4>基本信息</h4>
+    </div>
+
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>项目类型</th>
+                <th>项目编号</th>
+                <th>项目名称</th>
+                <th>主控MCU</th>
+                <th>版本号</th>
+                <th>最后更新时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>FIRMWARE</td>
+                <td>FIRM0010</td>
+                <td>SFP+ LR</td>
+                <td>ADuC7023</td>
+                <td>V1.0</td>
+                <td>2017-05-15</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="title-bar" style="margin: 40px 0 30px 0;">
+        <h4>发布历史</h4>
+    </div>
+
+    {//软件发布里程碑}
+    <div class="timeline">
+        <div class="timeline-heading">
+            <table class="timeline-table">
+                <tr>
+                    <td class="timeline-info">
+                        <div class="timeline-time-big">V1.0</div>
+                        <div class="timeline-time-small">2017-05-14</div>
+                        <div class="timeline-circle"></div>
+                    </td>
+                    <td class="timeline-content">
+                        <div class="timeline-content-left pull-left">
+                            <div class="timeline-user-face">
+                                <img src="__IMG__/face/face_01.png" width="48" alt="">
+                            </div>
+                        </div>
+                        <div class="timeline-content-right pull-right">
+                            <p>更新的日志内容1</p>
+                            <div class="pic-group pull-left" style="text-align: center;">
+                                <a href="__ROOT__/Public/home/img/404.png" target="_blank" style="display: block;border: solid 1px #ccc;"><img class="customer-complaint-img-c" src="__IMG__/404.png" height="200" alt="加载失败"></a>
+                                <span class="pic-info">404图像附件测试名称</span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="attachment-box">
+                                <div class="attachment-box-dom">
+                                    <p class="file-name">
+                                        <!--<form action="__ROOT__/Auth/download" method="post">
+                                            <input type="hidden" name="filename" value="{$v.filename}">
+                                            <input type="hidden" name="filepath" value="{$v.filepath}">
+                                            <a class="download"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
+                                        </form>-->
+                                        <a href="#"><i class="file-icon file-icon-ext-jpg"></i> 下载文件的文件名称.jpg</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="timeline-other">张三<span class="timeline-divider">|</span>2017-05-15</div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="timeline-info">
+                        <div class="timeline-time-big">V1.1</div>
+                        <div class="timeline-time-small">2017-05-14</div>
+                        <div class="timeline-circle"></div>
+                    </td>
+                    <td class="timeline-content">
+                        <div class="timeline-content-left pull-left">
+                            <div class="timeline-user-face">
+                                <img src="__IMG__/face/face_01.png" width="48" alt="">
+                            </div>
+                        </div>
+                        <div class="timeline-content-right pull-right">
+                            <p>更新的日志内容2</p>
+                            <div class="pic-group pull-left" style="text-align: center;">
+                                <a href="__ROOT__/Public/home/img/404.png" target="_blank" style="display: block;border: solid 1px #ccc;"><img class="customer-complaint-img-c" src="__IMG__/404.png" height="200" alt="加载失败"></a>
+                                <span class="pic-info">404图像附件测试名称</span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="attachment-box">
+                                <div class="attachment-box-dom">
+                                    <p class="file-name">
+                                        <!--<form action="__ROOT__/Auth/download" method="post">
+                                            <input type="hidden" name="filename" value="{$v.filename}">
+                                            <input type="hidden" name="filepath" value="{$v.filepath}">
+                                            <a class="download"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
+                                        </form>-->
+                                        <a href="#"><i class="file-icon file-icon-ext-jpg"></i> 下载文件的文件名称.jpg</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="timeline-other">张三<span class="timeline-divider">|</span>2017-05-15</div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="timeline-info">
+                        <div class="timeline-time-big">V1.2</div>
+                        <div class="timeline-time-small">2017-05-14</div>
+                        <div class="timeline-circle"></div>
+                    </td>
+                    <td class="timeline-content">
+                        <div class="timeline-content-left pull-left">
+                            <div class="timeline-user-face">
+                                <img src="__IMG__/face/face_01.png" width="48" alt="">
+                            </div>
+                        </div>
+                        <div class="timeline-content-right pull-right">
+                            <p>更新的日志内容3</p>
+                            <div class="pic-group pull-left" style="text-align: center;">
+                                <a href="__ROOT__/Public/home/img/404.png" target="_blank" style="display: block;border: solid 1px #ccc;"><img class="customer-complaint-img-c" src="__IMG__/404.png" height="200" alt="加载失败"></a>
+                                <span class="pic-info">404图像附件测试名称</span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="attachment-box">
+                                <div class="attachment-box-dom">
+                                    <p class="file-name">
+                                        <!--<form action="__ROOT__/Auth/download" method="post">
+                                            <input type="hidden" name="filename" value="{$v.filename}">
+                                            <input type="hidden" name="filepath" value="{$v.filepath}">
+                                            <a class="download"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
+                                        </form>-->
+                                        <a href="#"><i class="file-icon file-icon-ext-jpg"></i> 下载文件的文件名称.jpg</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="timeline-other">张三<span class="timeline-divider">|</span>2017-05-15</div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
