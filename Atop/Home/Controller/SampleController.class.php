@@ -151,9 +151,9 @@ class SampleController extends AuthController {
 
                     $sample_model->commit();
 
-                    $addData = $sample_model->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c')
-                                                ->field('a.order_num,a.create_person_name,b.requirements_date,c.nickname,b.pn')
-                                                ->where('a.id ='.$sample_id.' AND b.detail_assoc = a.id AND b.manager = c.id')
+                    $addData = $sample_model->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c,'.C('DB_PREFIX').'productrelationships d')
+                                                ->field('a.order_num,a.create_person_name,b.requirements_date,b.count,b.model,b.brand,c.nickname,b.pn,d.type')
+                                                ->where('a.id ='.$sample_id.' AND b.detail_assoc = a.id AND b.manager = c.id AND b.product_id = d.id')
                                                 ->select();
 
                     $emails = $sample_model->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c')
@@ -849,7 +849,11 @@ STYLE;
                                         <tr>
                                             <th>序号</th>
                                             <th>销售</th>
+                                            <th>产品类型</th>
                                             <th>产品型号</th>
+                                            <th>设备品牌</th>
+                                            <th>设备型号</th>
+                                            <th>数量</th>
                                             <th>产品经理</th>
                                             <th>要求交期</th>
                                         </tr>
@@ -860,7 +864,11 @@ STYLE;
                     $tmpString .= '<tr>
                                         <td>'.($key+1).'</td>
                                         <td>'.$value['create_person_name'].'</td>
+                                        <td>'.$value['type'].'</td>
                                         <td>'.$value['pn'].'</td>
+                                        <td>'.$value['brand'].'</td>
+                                        <td>'.$value['model'].'</td>
+                                        <td>'.$value['count'].'</td>
                                         <td>'.$value['nickname'].'</td>
                                         <td>'.$value['requirements_date'].'</td>
                                    </tr>';
