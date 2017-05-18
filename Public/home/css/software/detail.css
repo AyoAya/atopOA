@@ -1,3 +1,27 @@
 .timeline .timeline-table .timeline-info .timeline-circle {
     top: 0 !important;
 }
+#myModal{
+    position: fixed;
+    top: 260px;
+}
+/*.btns{
+    height: 40px;
+}
+.btns #picker{
+    display: inline-block;
+    width: 60px;
+    height: 38px;
+    text-align: right;
+    padding: 9px 15px;
+}
+#ctlBtn{
+    display: block;
+    width: 131px;
+    height: 40px;
+    color: #fff;
+    background: #00b7ee;
+    position: relative;
+    left: 58px;
+    bottom:38px;
+}*/

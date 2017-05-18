@@ -25,7 +25,20 @@ $(function(){
 
         //监听提交
         form.on('submit(add)', function( data ){
+            $.ajax({
+                url : ThinkPHP['AJAX'] + '/Software/add',
+                type : 'POST',
+                data : data.field,
+                dataType : 'json',
+                success : function ( response ) {
+                    if( response.flag > 0 ){
+                        layer.msg(response.msg, {icon: 1, time: 2000});
+                    }else {
+                        layer.msg(response.msg, {icon: 2, time: 2000});
+                    }
+                }
 
+            });
 
 
             return false;

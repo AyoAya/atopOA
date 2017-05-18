@@ -48,7 +48,7 @@ $(function(){
             if( _value == 'push' || _value == 'transfer' || _value == 'rollback' ){
                 if( _value == 'push' ){
                     $('#operating-person').css({display:'inline-block'});
-                    $('.logistics').css({display:'inline-block'})
+                    $('.logistics').css({display:'inline-block'});
                     $('#transfer-person').css({display:'none'});
                     $('#rollback-person').css({display:'none'});
                     $('#TestReport').css({display:'block'});

@@ -3,10 +3,13 @@
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
     <link rel="stylesheet" href="__CSS__/timeline.css">
+    <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
     <link rel="stylesheet" href="__CSS__/software/detail.css">
+    <link rel="stylesheet" href="__CSS__/sample/detail.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
+    <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
     <script src="__JS__/software/detail.js"></script>
 </block>
 <!-- 【页面标题】 -->
@@ -41,15 +44,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>FIRMWARE</td>
-                <td>FIRM0010</td>
-                <td>SFP+ LR</td>
-                <td>ADuC7023</td>
-                <td>V1.0</td>
-                <td>2017-05-15</td>
-            </tr>
+            <volist name="softwareData" id="vo" key="k">
+                <tr>
+                    <td>{$k}</td>
+                    <td>{$vo.type}</td>
+                    <td>{$vo.number}</td>
+                    <td>{$vo.name}</td>
+                    <td>{$vo.mcu}</td>
+                    <td>V1.0</td>
+                    <td>2017-05-15</td>
+                </tr>
+            </volist>
         </tbody>
     </table>
 
@@ -172,6 +177,55 @@
             </table>
         </div>
     </div>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel" style="font-size: 18px;">添加处理记录</h4>
+                </div>
+
+                <form class="layui-form" action="" id="detail_form">
+                    <div class="modal-body">
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label" style="padding-left: 0;width: 60px;">备注</label>
+                            <div class="layui-input-block" style="margin-left: 60px;">
+                                <textarea name="context" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+
+                        {//文件上传}
+                        <div id="uploader" class="wu-example">
+                            <!--用来存放文件信息-->
+                            <div id="thelist" class="uploader-list"></div>
+                            <div class="btns">
+                                <div id="picker">附件</div>
+                                <button id="ctlBtn" class="btn btn-default soft-upload">上传附件</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <input type="hidden" name="asc_detail" value="{$detailResult.id}">
+
+                    <div class="modal-footer">
+                        <button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
+                        <button class="layui-btn" lay-submit lay-filter="processingRecord">立即提交</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#myModal" id="log-table">
+        <p>添加</p>
+        <p>处理记录</p>
+    </button>
+
 
 </block>
 

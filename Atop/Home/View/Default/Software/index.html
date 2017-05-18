@@ -47,24 +47,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>1</td>
-                <td>FIRMWARE</td>
-                <td><a href="__ROOT__/Software/detail/id/1">FIRM0010</a></td>
-                <td>SFP+ LR</td>
-                <td>ADuC7023</td>
-                <td>V1.0</td>
-                <td>2017-05-15</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>ATE</td>
-                <td><a href="__ROOT__/Software/detail/id/2">PATE0001</a></td>
-                <td>ATOM自助调试软件</td>
-                <td></td>
-                <td>V1.2.15</td>
-                <td>2017-05-13</td>
-            </tr>
+            <volist name="softData" id="vo" key="k">
+                 <tr>
+                    <td>{$k}</td>
+                    <td>{$vo.type}</td>
+                    <td><a href="__ROOT__/Software/detail/id/{$vo.id}">{$vo.number}</a></td>
+                    <td>{$vo.name}</td>
+                    <td>{$vo.muc}</td>
+                    <td>V1.0</td>
+                    <td>2017-05-15</td>
+                 </tr>
+            </volist>
         </tbody>
     </table>
 
