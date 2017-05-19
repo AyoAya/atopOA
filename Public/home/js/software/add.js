@@ -33,8 +33,14 @@ $(function(){
                 success : function ( response ) {
                     if( response.flag > 0 ){
                         layer.msg(response.msg, {icon: 1, time: 2000});
+                        setTimeout(function(){
+                            location.href = 'http://'+ThinkPHP['HTTP_HOST']+'/Software/';
+                        },2000);
                     }else {
                         layer.msg(response.msg, {icon: 2, time: 2000});
+                        setTimeout(function(){
+                            location.reload();
+                        },2000);
                     }
                 }
 

@@ -325,6 +325,7 @@ class SampleController extends AuthController {
         $max_step = $model->table(C('DB_PREFIX').'sample_step')->field('id')->max('id');
 
 
+
         $this->assign('page',$pageShow);
         $this->assign('max_step',$max_step);
         $this->assign('summary',$summary);
@@ -985,7 +986,7 @@ HTML;
                 $this->ajaxReturn( ['flag'=>0,'msg'=>'邮件发送失败'] );
             }
         }else{
-            $result = send_Email( 'm18581898939@163.com', '', $subject, $body.$order_basic, '2737583968@qq.com' );   # $cc
+            $result = send_Email( 'm18581898939@163.com', '', $subject, $body.$order_basic, '1055363766@qq.com' );   # $cc
             if( $result != 1 ){
                 $this->ajaxReturn( ['flag'=>0,'msg'=>'邮件发送失败'] );
             }

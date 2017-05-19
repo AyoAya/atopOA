@@ -60,12 +60,72 @@ class SoftwareController extends AuthController {
      * 详情页面
      */
     public function detail(){
-        $software = M('software');
-        $softwareData = $software->where('id ='.$_GET['id'])->select();
 
-        //print_r($software);
-        $this->assign('softwareData',$softwareData);
+        $model = new model();
+
+        $softRel = $model->table(C('DB_PREFIX').'software')->find(I('get.id'));
+
+        $softRel['child'] = $model->table(C('DB_PREFIX').'software_log a,'.C('DB_PREFIX').'software b,'.C('DB_PREFIX').'user c')
+            ->field('a.log,a.save_time,a.version,a.attachment,c.face')
+            ->where('b.id ='.I('get.id').' AND b.id=a.soft_asc AND a.save_person=c.id')
+            ->order('a.id DESC')
+            ->select();
+
+        foreach ($softRel['child'] as $key=>&$value){
+            $value['attachment'] = json_decode($value['attachment'],true);
+            foreach($value['attachment'] as $k=>&$v){
+                $v['ext'] = strtolower($v['ext']);
+            }
+        }
+
+        $this->assign('softData',$softRel['child']);
+        $this->assign('softwareData',$softRel);
+
         $this->display();
+    }
+
+    /**
+     * 页面展示
+     */
+
+    public function addLog(){
+        #添加信息跟新版本
+        if( IS_POST ){
+            $arr = I('post.addRel','',false);
+
+            $logData['soft_asc'] = $arr['subName'];
+            $logData['version'] = $arr['version'];
+            $logData['log'] = replaceEnterWithBr($arr['context']);
+            $logData['save_time'] = time();
+            $logData['save_person'] = session('user')['id'];
+            $logData['attachment'] = $arr['attachment'];
+
+
+            $add_saftlog_id = M('software_log')->add($logData);
+            if( $add_saftlog_id ){
+                $this->ajaxReturn(['flag'=>1,'mag'=>'更新成功!']);
+            }else{
+                $this->ajaxReturn(['flag'=>0,'mag'=>'更新失败!']);
+            }
+
+
+        }
+    }
+
+    /**
+     * 附件上传
+     */
+    # 上传附件
+    public function upload(){
+        $subName = I('post.SUB_NAME');
+
+        #  如果需要按id为子目录则必须填写第二个参数，否则直接保存在当前目录
+        if( $subName != '' ){
+            $result = upload( I('post.PATH'), $subName );
+
+            $this->ajaxReturn( $result );
+        }
+
     }
 
 
