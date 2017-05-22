@@ -175,7 +175,6 @@ $(function(){
             $(this).remove();
         });
 
-
         //监听rma处理类型
         //如果当前步骤处于销售确认是否转RMA，当用户选择推送到下一步则显示QA部门人员选择框否则隐藏
         form.on('select(operation)', function( data ){

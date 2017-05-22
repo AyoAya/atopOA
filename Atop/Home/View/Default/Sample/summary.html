@@ -57,8 +57,8 @@
                             <td>{$vo.brand}</td>
                             <td>{$vo.model}</td>
                             <td>
-                                <if condition="$vo.state eq N OR $vo.state eq C">
-                                    <if condition="$vo.now_step eq $max_step">
+                                <if condition="($vo.state eq N) OR ($vo.state eq C)">
+                                    <if condition="$vo.now_step eq 7">
                                         <span class="tag tag-success">{$vo.step_name}</span>
                                     <else/>
                                         <span class="tag tag-primary">{$vo.step_name}</span>

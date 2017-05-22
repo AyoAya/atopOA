@@ -142,7 +142,7 @@ h2 a {
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
-	overflow: hidden;
+	overflow: visible;
 }
 .section .section-title {
 	width: auto;
@@ -161,7 +161,7 @@ h2 a {
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
-	overflow: hidden;
+	overflow: visible;
 }
 .section-primary .section-title {
 	width: auto;

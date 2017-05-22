@@ -94,8 +94,8 @@
 												<div class="sr-only popover-box">
 													<volist name="vo.log" id="v">
 														<div class="log-box">
-															<span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i:s",###}</span>
-															<span class="log-box-context">{$v.context}</span>
+															<span class="log-box-time">{$v.log_time|date="Y-m-d H:i:s",###}</span>
+															<span class="log-box-context">[{$v.nickname}] {$v.context}</span>
 														</div>
 													</volist>
 												</div>
@@ -122,8 +122,8 @@
 												<div class="sr-only popover-box">
 													<volist name="vo.log" id="v">
 														<div class="log-box">
-															<span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i:s",###}</span>
-															<span class="log-box-context">{$v.context}</span>
+															<span class="log-box-time">{$v.log_time|date="Y-m-d H:i:s",###}</span>
+															<span class="log-box-context">[{$v.nickname}] {$v.context}</span>
 														</div>
 													</volist>
 												</div>
@@ -349,7 +349,7 @@
 									<div class="layui-input-inline">
 										<select class="" name="operator" lay-verify="required">
 											<volist name="persons" id="value">
-												<option value="{$value.id}" <eq name="value.id" value="$detailResult.manager">selected</eq>>{$value.nickname}</option>
+												<option value="{$value.id}">{$value.nickname}</option>
 											</volist>
 										</select>
 									</div>
@@ -362,7 +362,9 @@
 										<div class="layui-input-inline">
 											<select class="" name="transfer" lay-verify="required">
 												<volist name="transfer" id="value">
-													<option value="{$value.id}" <eq name="value.id" value="$detailResult.manager">selected</eq>>{$value.nickname}</option>
+													<neq name="value.id" value="$Think.session.user.id">
+														<option value="{$value.id}">{$value.nickname}</option>
+													</neq>
 												</volist>
 											</select>
 										</div>
@@ -389,6 +391,8 @@
 										<textarea name="context" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
 									</div>
 								</div>
+
+
 
 								{//如果当前步骤等于发货则加载物流信息记录操作}
 								<eq name="detailResult.now_step" value="6">
