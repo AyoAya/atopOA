@@ -338,12 +338,22 @@ class SampleController extends AuthController {
 
         $max_step = $model->table(C('DB_PREFIX').'sample_step')->field('id')->max('id');
 
-        print_r($summary);
+        //print_r($summary);
         $this->assign('page',$pageShow);
         $this->assign('max_step',$max_step);
         $this->assign('summary',$summary);
         $this->display();
 
+    }
+
+    /**
+     * 获取部门和人员
+     * @return mixed
+     */
+    private function getDepartmentsAndUsers(){
+        $result['departments'] = M('Department')->select();
+        $result['users'] = M('User')->where('id<>1 AND state=1')->select();
+        return $result;
     }
 
 
@@ -352,11 +362,16 @@ class SampleController extends AuthController {
 
         if( I('get.id') ){
 
+            $model = new model();
+
             # 获取产品基本信息
             $detailResult = M()->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c,'.C('DB_PREFIX').'productrelationships d,'.C('DB_PREFIX').'sample_step e')
                                ->field('a.id sample_id,a.attachment,b.test_report,a.create_person_id sales_id,a.create_person_name sales_name,b.id,a.order_num,b.detail_assoc,b.count,b.customer,b.brand,b.model,b.note,b.requirements_date,b.expect_date,b.actual_date,b.manager,b.now_step,b.state,b.logistics,b.waybill,c.nickname,d.type,d.pn,e.name,e.transfer,e.rollback,e.termination,e.extension')
                                ->where('a.id=b.detail_assoc AND b.manager=c.id AND b.product_id=d.id AND b.id='.I('get.id').' AND b.now_step=e.id')
                                ->select();
+
+            # 获取抄所有送人信息
+            $this->assign('ccList',$this->getDepartmentsAndUsers());
 
             # 如果物流数据不为空则将物流数据注入模板
             if( !empty($detailResult[0]['logistics']) && !empty($detailResult[0]['waybill']) ){
@@ -487,7 +502,6 @@ class SampleController extends AuthController {
                     break;
             }
 
-
             $this->assign('detailResult',$detailResult[0]);
             $this->display();
         }
@@ -500,7 +514,6 @@ class SampleController extends AuthController {
         if(IS_POST){
 
             $post = I('post.');
-
 
             $model = new Model();
 
@@ -551,6 +564,14 @@ class SampleController extends AuthController {
 
                 case 'log':     # 添加日志
 
+                   $cc_on = I('post.cc_on');
+                    if( $cc_on == 'Y' ){
+                        $cc = I('post.cc_email_list');
+                        $cc = $cc+$emails;
+                    }else{
+                        $cc = $emails;
+                    }
+
                     $model->startTrans();   # 开启事物
 
                     # 记录日志
@@ -560,7 +581,7 @@ class SampleController extends AuthController {
 
                         $model->commit();
 
-                        $this->pushEmail('LOG', $emails, $orderData[0]);
+                        $this->pushEmail('LOG', $emails, $orderData[0],$cc);
 
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
 
@@ -569,12 +590,21 @@ class SampleController extends AuthController {
 
                         $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                     }
-
                     break;
 
                 case 'push':    # 推送
-                    $now_step_id = $orderData[0]['now_step'];
 
+                    # 是否存在邮件抄送人
+                    $cc_on = I('post.cc_on');
+
+                    if( $cc_on == 'Y' ){
+                        $cc = I('post.cc_email_list');
+                        $cc = $cc+$emails;
+                    }else{
+                        $cc = $emails;
+                    }
+
+                    $now_step_id = $orderData[0]['now_step'];
                     $step_rel = M('SampleStep')->where( ['id'=>['in',[$now_step_id,$now_step_id+1]]] )->order('id ASC')->select();
 
                     # 拼装当前步骤信息和下一步步骤信息
@@ -606,7 +636,6 @@ class SampleController extends AuthController {
                     }
 
                     # 插入下一步操作人及步骤信息
-
                     $add_push_id = $model->table(C('DB_PREFIX').'sample_operating')->add($next_step_data);
 
                     # 记录推送时产生的日志
@@ -629,10 +658,9 @@ class SampleController extends AuthController {
 
                             $model->commit();
 
-                            $this->pushEmail('PUSH', $add_push_num['email'], $orderData[0],$emails);
+                            $this->pushEmail('PUSH', $add_push_num['email'], $orderData[0],$cc);
 
                             $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
-
 
                         }else{
                             $model->rollback();
@@ -646,7 +674,7 @@ class SampleController extends AuthController {
 
                             $model->commit();
 
-                            $this->pushEmail('PUSH', $add_push_num['email'], $orderData[0],$emails);
+                            $this->pushEmail('PUSH', $add_push_num['email'], $orderData[0],$cc);
 
                             $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
 
@@ -663,6 +691,17 @@ class SampleController extends AuthController {
 
                 case 'termination':     # 终止
 
+                    # 是否存在邮件抄送人
+                    $cc_on = I('post.cc_on');
+
+                    if( $cc_on == 'Y' ){
+                        $cc = I('post.cc_email_list');
+                        $cc = $cc+$emails;
+                    }else{
+                        $cc = $emails;
+                    }
+
+
                     # 修改产品状态
                     $state_save_result = $model->table(C('DB_PREFIX').'sample_detail')->save( ['id'=>$post['asc_detail'],'state'=>'Y'] );
 
@@ -673,7 +712,7 @@ class SampleController extends AuthController {
 
                         $model->commit();
 
-                        $this->pushEmail('TERMINATION', $emails, $orderData[0]);
+                        $this->pushEmail('TERMINATION', $emails, $orderData[0],$cc);
 
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
 
@@ -682,10 +721,19 @@ class SampleController extends AuthController {
 
                         $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                     }
-
                     break;
 
                 case 'transfer':    # 转交
+
+                    # 是否存在邮件抄送人
+                    $cc_on = I('post.cc_on');
+
+                    if( $cc_on == 'Y' ){
+                        $cc = I('post.cc_email_list');
+                        $cc = $cc+$emails;
+                    }else{
+                        $cc = $emails;
+                    }
 
                     # 记录转交时产生的日志
                     $add_transfer_log_id = $model->table(C('DB_PREFIX').'sample_log')->add($logData);
@@ -701,7 +749,7 @@ class SampleController extends AuthController {
 
                         $model->commit();
 
-                        $this->pushEmail('TRANSFER', $recipient['email'], $orderData[0], $emails);
+                        $this->pushEmail('TRANSFER', $recipient['email'], $orderData[0], $cc);
 
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
 
@@ -714,6 +762,16 @@ class SampleController extends AuthController {
                     break;
 
                 case 'rollback':    # 回退
+
+                    # 是否存在邮件抄送人
+                    $cc_on = I('post.cc_on');
+
+                    if( $cc_on == 'Y' ){
+                        $cc = I('post.cc_email_list');
+                        $cc = $cc+$emails;
+                    }else{
+                        $cc = $emails;
+                    }
 
                     # 产品表当前步骤-1
                     $detail_now_step_save = $model->table(C('DB_PREFIX').'sample_detail')->save( ['id'=>$post['asc_detail'],'now_step'=>($orderData[0]['now_step']-1)] );
@@ -744,7 +802,7 @@ class SampleController extends AuthController {
 
                         $model->commit();
 
-                        $this->pushEmail('ROLLBACK', $recipient['email'], $orderData[0], $emails);
+                        $this->pushEmail('ROLLBACK', $recipient['email'], $orderData[0], $cc);
 
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
 
@@ -757,6 +815,16 @@ class SampleController extends AuthController {
                     break;
 
                 case 'success':
+
+                    # 是否存在邮件抄送人
+                    $cc_on = I('post.cc_on');
+
+                    if( $cc_on == 'Y' ){
+                        $cc = I('post.cc_email_list');
+                        $cc = $cc+$emails;
+                    }else{
+                        $cc = $emails;
+                    }
 
                     $now_step_id = $orderData[0]['now_step'];
 
@@ -772,7 +840,7 @@ class SampleController extends AuthController {
 
                         $model->commit();
 
-                        $this->pushEmail('SUCCESS', $emails, $orderData[0]);
+                        $this->pushEmail('SUCCESS', $emails, $orderData[0],$cc);
 
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'操作完成'] );
 

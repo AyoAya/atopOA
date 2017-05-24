@@ -213,11 +213,6 @@ a {
 	-moz-border-radius: 50%;
 	border-radius: 50%;
 }
-
-
-
-
-
 .operation-type .layui-form-select {
 	width: 260px;
 }
@@ -226,6 +221,61 @@ a {
 }
 .logistics .layui-form-select {
 	width: 180px;
+}
+.push-email{
+
+}
+
+.abc{
+	width:100%;
+	height: 200px;
+	background: red;
+}
+
+/*** 抄送 ***/
+#ccBox {
+	margin-bottom: 15px;
+	border: solid 1px #e6e6e6;
+	padding: 10px;
+}
+#ccBox .layui-form-checkbox {
+	margin-top: 10px;
+}
+#ccBox .layui-form-checkbox span {
+	width: 67px;
+	text-align: center;
+	padding: 0;
+}
+#ccBox .cc-box-title,#ccBox .cc-box-body {
+
+}
+#ccBox .cc-box-title {
+	border-bottom: solid 1px #e6e6e6;
+}
+
+#all-cc-list {
+	margin-bottom: 10px;
+}
+#all-cc-list .cc-list-item {
+	font-size: 12px;
+	display: inline-block;
+	width: 67px;
+	height: 28px;
+	line-height: 28px;
+	text-align: center;
+	cursor: pointer;
+	border: solid 1px #e6e6e6;
+	position: relative;
+	margin-bottom: 5px;
+}
+#all-cc-list .cc-list-item .icon-remove {
+	color: #e6e6e6;
+}
+#all-cc-list .cc-list-item:hover .icon-remove {
+	color: #d9534f;
+}
+#all-cc-list .cc-list-item:hover {
+	border: solid 1px #d9534f;
 }
 
 

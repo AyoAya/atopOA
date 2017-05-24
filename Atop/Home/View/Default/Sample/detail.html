@@ -434,7 +434,7 @@
 								<eq name="detailResult.extension" value="Y">
 									<div class="layui-inline">
 										<label class="layui-form-label" style="padding-left: 2px;width: 60px;">交期</label>
-										<div class="layui-input-inline">
+										<div class="layui-input-inline" style="width: 256px">
 											<input type="text" class="layui-input expect_date" readonly name="expect_date" value="<notempty name='detailResult.expect_date'>{$detailResult.expect_date}<else/>{$detailResult.requirements_date}</notempty>">
 											<script>
 												$('.expect_date').datetimepicker({
@@ -455,7 +455,32 @@
 									</div>
 								</eq>
 
+								{//是否将邮件抄送给其他人}
+								<div class="layui-inline push-email" style="position: relative;top: -2px;">
+									<label class="layui-form-label" style="width: 120px;vertical-align: middle;padding: 2px 15px 0 15px;">抄送给其他人</label>
+									<div class="layui-input-inline" style="margin-left: 0px;">
+										<input type="checkbox" lay-filter="cc" name="cc_on" value="Y" title="" lay-skin="primary">
+									</div>
+								</div>
+
+								<div id="all-cc-list" class="sr-only" style="margin-top: 10px;"></div>
+								<div id="ccBox" class="sr-only">
+									<div class="cc-box-department" style="width: 200px;">
+										<select name="department" lay-filter="department">
+											<option value="0">选择部门</option>
+											<volist name="ccList.departments" id="value">
+												<option value="{$value.id}">{$value.name}</option>
+											</volist>
+										</select>
+									</div>
+									<div class="cc-box-list">
+										<volist name="ccList.users" id="vo">
+											<input type="checkbox" lay-filter="user" department="{$vo.department}" email="{$vo.email}" name="cc_list[]" title="{$vo.nickname}" value="{$vo.id}">
+										</volist>
+									</div>
+								</div>
 							</div>
+
 
 							<input type="hidden" name="asc_detail" value="{$detailResult.id}">
 
