@@ -72,9 +72,9 @@
         <div class="page-header">
             <h2>物流状态<small class="pull-right"><a href="https://www.kuaidi100.com/" target="_blank">无法查询？转到快递100查询</a></small></h2>
         </div>
-        <eq name="logistics.status" value="200">
+        <eq name="logisticsData.status" value="200">
             <ul id="logistics-list">
-                <volist name="logisticsData" id="value">
+                <volist name="logisticsData.data" id="value">
                     <eq name="i" value="1">
                         <li><mark><b><i class="icon-time"></i>&nbsp;{$value.time}&nbsp;&nbsp;&nbsp;&nbsp;{$value.context}</b></mark></li>
                     <else/>

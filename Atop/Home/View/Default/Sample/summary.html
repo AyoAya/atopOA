@@ -34,7 +34,7 @@
                 <th width="500">备注</th>
                 <th>设备厂商</th>
                 <th>设备型号</th>
-                <th width="100">当前进度</th>
+                <th width="11%">当前进度</th>
             </tr>
         </thead>
 
@@ -56,8 +56,8 @@
                             <td>{$vo.note}</td>
                             <td>{$vo.brand}</td>
                             <td>{$vo.model}</td>
-                            <td>
-                                <if condition="($vo.state eq N) OR ($vo.state eq C)">
+                            <td width="126">
+                        <!--        <if condition="($vo.state eq N) OR ($vo.state eq C)">
                                     <if condition="$vo.now_step eq 7">
                                         <span class="tag tag-success">{$vo.step_name}</span>
                                     <else/>
@@ -65,6 +65,17 @@
                                     </if>
                                 <else/>
                                     <span class="tag tag-danger">{$vo.step_name}</span>
+                                </if>-->
+                                <if condition="$vo.state eq 'N'">
+                                    <eq name="vo.now_step" value="$max_step">
+                                        <span class="tag tag-success">已发货待{$vo.step_name}</span>
+                                    <else/>
+                                        <span class="tag tag-primary">{$vo.step_name}中</span>
+                                    </eq>
+                                <elseif condition="$vo['state'] eq 'C'"/>
+                                    <span class="tag tag-success">已{$vo.step_name}</span>
+                                <else/>
+                                    <span class="tag tag-danger">{$vo.step_name}未通过</span>
                                 </if>
                             </td>
                         </tr>
@@ -75,16 +86,18 @@
                             <td>{$vo.note}</td>
                             <td>{$vo.brand}</td>
                             <td>{$vo.model}</td>
-                            <td>
-                                <eq name="vo.state" value="N">
+                            <td width="126">
+                                <if condition="$vo.state eq 'N'">
                                     <eq name="vo.now_step" value="$max_step">
-                                        <span class="tag tag-success">{$vo.step_name}</span>
+                                        <span class="tag tag-success">已发货待{$vo.step_name}</span>
                                         <else/>
-                                        <span class="tag tag-primary">{$vo.step_name}</span>
+                                        <span class="tag tag-primary">{$vo.step_name}中</span>
                                     </eq>
-                                <else/>
-                                    <span class="tag tag-danger">{$vo.step_name}</span>
-                                </eq>
+                                    <elseif condition="$vo['state'] eq 'C'"/>
+                                    <span class="tag tag-success">已{$vo.step_name}</span>
+                                    <else/>
+                                    <span class="tag tag-danger">{$vo.step_name}未通过</span>
+                                </if>
                             </td>
                         </tr>
                     </eq>
