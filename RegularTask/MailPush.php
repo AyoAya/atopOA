@@ -10,26 +10,28 @@ require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
 //定期推送汇总邮件
 class MailPush {
 
+
+
     //保存数据库资源句柄
     public $mysqli = null;
     //结果集资源
     public $result = null;
     //收件人
     public $address = array(
-        'yangpeiyun@atoptechnology.com',    //杨培云
+/*        'yangpeiyun@atoptechnology.com',    //杨培云
         'xiaoaiyou@atoptechnology.com',     //肖艾佑
         'chenshi@atoptechnology.com',   //陈实
         'haorui@atoptechnology.com',        //郝锐
-        'jonas@atoptechnology.com'         //张炜哲
+        'jonas@atoptechnology.com'         //张炜哲*/
     );
     public $cc = array(
-        'sunbin@atoptechnology.com',        //孙膑
+/*        'sunbin@atoptechnology.com',        //孙膑
         'dingzheng@atoptechnology.com',     //丁征
         'mikechen@atoptechnology.com',      //陈应时
         'xiaxiaosen@atoptechnology.com',    //夏小森
         'liping@atoptechnology.com',    //李平
         'kent@atoptechnology.com',      //董总
-        'jackfan@atoptechnology.com'    //范总
+        'jackfan@atoptechnology.com'    //范总*/
     );
 
 
@@ -51,6 +53,7 @@ class MailPush {
 
     //获取数据汇总信息
     public function get_summary_info(){
+
         $key = 0;
         $result = array();
         //获取到本周周一
@@ -59,6 +62,8 @@ class MailPush {
         $endDate = mktime(23,59,59,date("m"),date("d")-date("w")+5,date("Y"));
         //获取订单分组
         $totalorderGroup = "SELECT totalorder,createtime,customer,saleperson FROM atop_sample group by totalorder";
+
+
         $AllTotalorder = mysqli_query($this->mysqli,$totalorderGroup);
         while($totalRow = mysqli_fetch_assoc($AllTotalorder)){
             $arr = array();
@@ -405,6 +410,9 @@ class MailPush {
 }
 //实例化汇总信息推送
 $mail = new MailPush();
+
+$mail->get_summary_info();
+
 //print_r($mail->result);
 
 ?>

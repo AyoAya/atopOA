@@ -24,6 +24,7 @@ class SoftwareController extends AuthController {
 
         if( IS_POST ){
             $software = M('Software');
+            $software_log = M('SoftwareLog');
 
             $soft['type'] = I('post.type');
             $soft['number'] = I('post.number');
@@ -32,6 +33,7 @@ class SoftwareController extends AuthController {
             $soft['log'] = I('post.log');
             $soft['person'] = session('user')['nickname'];
             $soft['create_time'] = time();
+
             #判断用户是否选择ATE
             if(I('post.type') == 'ATE'){
                 $soft['mcu'] = '';
@@ -46,7 +48,20 @@ class SoftwareController extends AuthController {
                 $software_add_id = $software->add($soft);
                 if( $software_add_id ){
 
-                    $this->ajaxReturn(['flag'=>1,'msg'=>'添加项目成功!']);
+                    $softLog['soft_asc'] = $software_add_id;
+                    $softLog['version'] = 'v1.0';
+                    $softLog['save_time'] = time();
+                    $softLog['log'] = '有新软件发布';
+                    $softLog['save_person'] = session('user')['id'];
+
+                    $software_log_id = $software_log->add($softLog);
+
+                    if( $software_log_id ){
+
+                        $this->ajaxReturn(['flag'=>1,'msg'=>'添加项目成功!']);
+                    }else{
+                        $this->ajaxReturn(['flag'=>0,'msg'=>'添加项目失败!']);
+                    }
                 }else{
                     $this->ajaxReturn(['flag'=>0,'msg'=>'添加项目失败!']);
                     exit();
