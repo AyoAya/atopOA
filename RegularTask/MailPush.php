@@ -1,418 +1,463 @@
 ﻿<?php
-//屏蔽所有报错
+
+# 屏蔽所有报错
 error_reporting(0);
-//设置时区
+
+# 设置默认时间区
 date_default_timezone_set('PRC');
-//导入PHPMail邮件类
-require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
-require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
-
-//定期推送汇总邮件
-class MailPush {
 
 
+class PushEmail {
 
-    //保存数据库资源句柄
-    public $mysqli = null;
-    //结果集资源
-    public $result = null;
-    //收件人
-    public $address = array(
-/*        'yangpeiyun@atoptechnology.com',    //杨培云
-        'xiaoaiyou@atoptechnology.com',     //肖艾佑
-        'chenshi@atoptechnology.com',   //陈实
-        'haorui@atoptechnology.com',        //郝锐
-        'jonas@atoptechnology.com'         //张炜哲*/
-    );
-    public $cc = array(
-/*        'sunbin@atoptechnology.com',        //孙膑
-        'dingzheng@atoptechnology.com',     //丁征
-        'mikechen@atoptechnology.com',      //陈应时
-        'xiaxiaosen@atoptechnology.com',    //夏小森
-        'liping@atoptechnology.com',    //李平
-        'kent@atoptechnology.com',      //董总
-        'jackfan@atoptechnology.com'    //范总*/
-    );
+    # 定义数据库配置
+    private $db_host = 'localhost:3306';
+    private $db_user = 'root';
+    private $db_pwd = 'root';
+    private $db_name = 'atop';
+    static $address = ['liping@atoptechnology.com','vinty_email@163.com'];
+    static $cc = ['gongchixiang@atoptechnology.com','m18581898939@163.com'];
 
+    /*liping@atoptechnology*/
+    # 定义数据库资源句柄
+    static $mysqli;
 
-    //自动连接数据库
+    # 构造方法
     public function __construct(){
-        $this->mysql_init();
-        $this->get_summary_info();
-        $this->send_email($this->address,date('Y').'年第'.date('W').'周样品单状态汇总表',$this->result,$this->cc);
+        $this->connect();
+        $this->GetOrderSummary();
     }
 
-    //初始化连接数据库
-    public function mysql_init(){
-        $mysqli = mysqli_connect('localhost','root','root','atop');
-        mysqli_set_charset($mysqli,'UTF8');
-        if($mysqli){
-            $this->mysqli = $mysqli;
-        }
+    # 连接数据库并返回实例
+    public function connect(){
+        # 连接数据库并返回资源句柄
+        self::$mysqli = mysqli_connect( $this->db_host, $this->db_user, $this->db_pwd, $this->db_name );
+        # 设置连接字符集
+        self::$mysqli->query('set names utf8');
     }
 
-    //获取数据汇总信息
-    public function get_summary_info(){
+    # 查询本周数据
+    public function GetOrderSummary(){
 
-        $key = 0;
-        $result = array();
-        //获取到本周周一
-        $startDate = mktime(0, 0 , 0,date("m"),date("d")-date("w")+1,date("Y"));
-        //获取到本周周五
-        $endDate = mktime(23,59,59,date("m"),date("d")-date("w")+5,date("Y"));
-        //获取订单分组
-        $totalorderGroup = "SELECT totalorder,createtime,customer,saleperson FROM atop_sample group by totalorder";
+        # 获取到本周一时间戳
+        $start_date = strtotime(date('Y-m-d',(time()-((date('w')==0?7:date('w'))-1)*24*3600)));
 
+        # 汇总当时时间
+        $end_date = time();
 
-        $AllTotalorder = mysqli_query($this->mysqli,$totalorderGroup);
-        while($totalRow = mysqli_fetch_assoc($AllTotalorder)){
-            $arr = array();
-            //获取订单子数据
-            $childGroup = 'SELECT * FROM atop_sample WHERE totalorder="'.$totalRow['totalorder'].'"';
-            $AllChild = mysqli_query($this->mysqli,$childGroup);
-            while($childRow = mysqli_fetch_assoc($AllChild)){
-                //连接子表(审核)
-                $linkSampleS = "SELECT s.s_status,s.wid,s.s_time,u.nickname FROM atop_sample a,atop_sample_s s,atop_user u WHERE s.s_assoc={$childRow['id']} AND s.wid=u.id";
-                $linkSampleSResult = mysqli_query($this->mysqli,$linkSampleS);
-                if($linkSampleSResult){
-                    while($SResult = mysqli_fetch_assoc($linkSampleSResult)){
-                        $childRow['s_status'] = $SResult['s_status'];
-                        $childRow['s_nickname'] = $SResult['nickname'];
-                        $childRow['s_time'] = $SResult['s_time'];
-                    }
-                }
-                //连接子表(物料准备)
-                $linkSampleW = "SELECT w.w_status,w.cid,w.w_time,u.nickname FROM atop_sample a,atop_sample_w w,atop_user u WHERE w.w_assoc={$childRow['id']} AND w.cid=u.id";
-                $linkSampleWResult = mysqli_query($this->mysqli,$linkSampleW);
-                if($linkSampleWResult){
-                    while($WResult = mysqli_fetch_assoc($linkSampleWResult)){
-                        $childRow['w_status'] = $WResult['w_status'];
-                        $childRow['w_nickname'] = $WResult['nickname'];
-                        $childRow['w_time'] = $WResult['w_time'];
-                    }
-                }
-                //连接子表(样品制作)
-                $linkSampleC = "SELECT c.c_status,c.yid,c.c_time,u.nickname FROM atop_sample a,atop_sample_c c,atop_user u WHERE c.c_assoc={$childRow['id']} AND c.yid=u.id";
-                $linkSampleCResult = mysqli_query($this->mysqli,$linkSampleC);
-                if($linkSampleCResult){
-                    while($CResult = mysqli_fetch_assoc($linkSampleCResult)){
-                        $childRow['c_status'] = $CResult['c_status'];
-                        $childRow['c_nickname'] = $CResult['nickname'];
-                        $childRow['c_time'] = $CResult['c_time'];
-                    }
-                }
-                //连接子表(样品测试)
-                $linkSampleY = "SELECT y.y_status,y.fid,y.y_time,u.nickname FROM atop_sample a,atop_sample_y y,atop_user u WHERE y.y_assoc={$childRow['id']} AND y.fid=u.id";
-                $linkSampleYResult = mysqli_query($this->mysqli,$linkSampleY);
-                if($linkSampleYResult){
-                    while($YResult = mysqli_fetch_assoc($linkSampleYResult)){
-                        $childRow['y_status'] = $YResult['y_status'];
-                        $childRow['y_nickname'] = $YResult['nickname'];
-                        $childRow['y_time'] = $YResult['y_time'];
-                    }
-                }
-                //连接子表(发货)
-                $linkSampleF = "SELECT f.f_status,f.kid,f.f_time,u.nickname FROM atop_sample a,atop_sample_f f,atop_user u WHERE f.f_assoc={$childRow['id']} AND f.kid=u.id";
-                $linkSampleFResult = mysqli_query($this->mysqli,$linkSampleF);
-                if($linkSampleFResult){
-                    while($FResult = mysqli_fetch_assoc($linkSampleFResult)){
-                        $childRow['f_status'] = $FResult['f_status'];
-                        $childRow['f_nickname'] = $FResult['nickname'];
-                        $childRow['f_time'] = $FResult['f_time'];
-                    }
-                }
-                //连接子表(反馈)
-                $linkSampleK = "SELECT k_status,k_time FROM atop_sample_k WHERE k_assoc={$childRow['id']}";
-                $linkSampleKResult = mysqli_query($this->mysqli,$linkSampleK);
-                if($linkSampleKResult){
-                    while($KResult = mysqli_fetch_assoc($linkSampleKResult)){
-                        $childRow['k_status'] = $KResult['k_status'];
-                        $childRow['k_time'] = $KResult['k_time'];
-                    }
-                }
-                array_push($arr,$childRow);
-            }
-            $result[$key]['totalorder'] = $totalRow['totalorder'];
-            $result[$key]['customer'] = $totalRow['customer'];
-            $result[$key]['saleperson'] = $totalRow['saleperson'];
-            $result[$key]['childData'] = $arr;
-            $key++;
-        }
-        foreach($result as $key=>&$value){
-            foreach($value['childData'] as $k=>&$v){
-                if(!isset($v['s_status']) || $v['s_status']==3 && !isset($v['w_status']) && !isset($v['c_status']) && !isset($v['y_status']) && !isset($v['f_status']) && !isset($v['k_status'])){
-                    $v['state'] = '待审核';
-                    $v['color'] = 'warning';
-                    $v['operationPerson'] = $v['manager'];
-                }elseif($v['s_status']==2 && !isset($v['w_status']) && !isset($v['c_status']) && !isset($v['y_status']) && !isset($v['f_status']) && !isset($v['k_status'])){
-                    $v['state'] = '审核未通过';
-                    $v['color'] = 'danger';
-                    $v['operationPerson'] = $v['manager'];
-                }elseif($v['s_status']==1 && !isset($v['w_status']) || $v['w_status']==3 && !isset($v['c_status']) && !isset($v['y_status']) && !isset($v['f_status']) && !isset($v['k_status'])){
-                    $v['state'] = '物料准备中';
-                    $v['color'] = 'warning';
-                    $v['operationPerson'] = $v['s_nickname'];
-                }elseif($v['s_status']==1 && $v['w_status']==2 && !isset($v['c_status']) && !isset($v['y_status']) && !isset($v['f_status']) && !isset($v['k_status'])){
-                    $v['state'] = '物料准备未完成';
-                    $v['color'] = 'danger';
-                    $v['operationPerson'] = $v['s_nickname'];
-                }elseif($v['s_status']==1 && $v['w_status']==1 && !isset($v['c_status']) || $v['c_status']==3 && !isset($v['y_status']) && !isset($v['f_status']) && !isset($v['k_status'])){
-                    $v['state'] = '样品制作中';
-                    $v['color'] = 'warning';
-                    $v['operationPerson'] = $v['manager'];
-                }elseif($v['s_status']==1 && $v['w_status']==1 && $v['c_status']==2 && !isset($v['y_status']) && !isset($v['f_status']) && !isset($v['k_status'])){
-                    $v['state'] = '样品制作未完成';
-                    $v['color'] = 'danger';
-                    $v['operationPerson'] = $v['manager'];
-                }elseif($v['s_status']==1 && $v['w_status']==1 && $v['c_status']==1 && !isset($v['y_status']) || $v['y_status']==3 && !isset($v['f_status']) && !isset($v['k_status'])){
-                    $v['state'] = '样品测试中';
-                    $v['color'] = 'warning';
-                    $v['operationPerson'] = $v['c_nickname'];
-                }elseif($v['s_status']==1 && $v['w_status']==1 && $v['c_status']==1 && $v['y_status']==2 && !isset($v['f_status']) && !isset($v['k_status'])){
-                    $v['state'] = '样品测试未通过';
-                    $v['color'] = 'danger';
-                    $v['operationPerson'] = $v['c_nickname'];
-                }elseif($v['s_status']==1 && $v['w_status']==1 && $v['c_status']==1 && $v['y_status']==1 && !isset($v['f_status']) || $v['f_status']==3 && !isset($v['k_status'])){
-                    $v['state'] = '待发货';
-                    $v['color'] = 'warning';
-                    $v['operationPerson'] = $v['manager'];
-                }elseif($v['s_status']==1 && $v['w_status']==1 && $v['c_status']==1 && $v['y_status']==1 && $v['f_status']==2 && !isset($v['k_status'])){
-                    $v['state'] = '样品未发货';
-                    $v['color'] = 'danger';
-                    $v['operationPerson'] = $v['manager'];
-                }elseif($v['s_status']==1 && $v['w_status']==1 && $v['c_status']==1 && $v['y_status']==1 && $v['f_status']==1 && !isset($v['k_status']) || $v['k_status']==3){
-                    $v['state'] = '已发货,待反馈';
-                    $v['color'] = 'success';
-                    $v['operationPerson'] = $v['saleperson'];
-                }elseif($v['s_status']==1 && $v['w_status']==1 && $v['c_status']==1 && $v['y_status']==1 && $v['f_status']==1 && $v['k_status']==1 || $v['k_status']==2){
-                    $v['state'] = '已反馈';
-                    $v['color'] = 'success';
-                    $v['operationPerson'] = $v['saleperson'];
+        # 获取本周的订单数据
+        $sql = 'SELECT * FROM atop_sample WHERE create_time > '.$start_date.' AND create_time < '.$end_date.' ORDER BY create_time ASC';
+
+        $sample_data = self::select($sql);
+
+        foreach( $sample_data as $key=>&$value ){
+
+            $sql = 'SELECT 
+                        a.id detail_id, a.pn, a.count, a.customer, a.brand, a.model, a.note, a.requirements_date, a.expect_date, a.actual_date, a.state, a.now_step, c.type, d.nickname, b.name
+                      FROM 
+                        atop_sample_detail a, atop_sample_step b, atop_productrelationships c, atop_user d
+                      WHERE 
+                        detail_assoc = '.$value['id'].' AND a.product_id = c.id AND a.manager = d.id AND a.now_step = b.id';
+
+            $value['detail'] = self::select($sql);
+            //$value['nic'] = self::select($sql_s);
+
+            foreach( $value['detail'] as $k=>&$v ){
+
+                $sql = 'SELECT b.nickname current_person FROM atop_sample_operating a,atop_user b WHERE a.asc_detail='.$v['detail_id'].' AND a.operator=b.id';
+
+                $tmpArr = self::select($sql);
+
+                //print_r($tmpArr);
+
+                $v['current_person'] = end($tmpArr)['current_person'];
+
+                //print_r($value['detail']);
+
+                # 如果产品步骤大于6则说明该单已经完成
+                if( $v['now_step'] > 6 ){
+                    $v['class'] = 'success';
                 }else{
-                    $v['state'] = 'UNKNOWN';
-                    $v['color'] = 'danger';
-                    $v['operationPerson'] = 'UNKNOWN';
+                    $v['class'] = 'processing';
                 }
+
             }
+
         }
-        //排除已完成并且时间小于本周的订单
-        foreach($result as $key=>&$value){
-            foreach($value['childData'] as $k=>&$v){
-                if(isset($v['a_date']) && !empty($v['a_date']) && $v['a_date']!=''){
-                    if( ($v['a_date']-strtotime($v['d_date'])) > 0 ){
-                        $v['delivery_date_state'] = '延期';
+
+        //print_r($sample_data);
+        self::output( $sample_data );
+
+    }
+
+
+    private static function output( $data ){
+
+        $style = <<<STYLE
+<style>
+.title {
+    padding: 15px 0;
+    text-align: center;
+    border-bottom: none;
+    font-size: 18px;;
+}
+span.success {
+    padding: 2px 5px;
+    background: #5cb85c;
+    color: #fff;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+span.processing {
+    padding: 2px 5px;
+    background: #428bca;
+    color: #fff;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+span.danger {
+    padding: 2px 5px;
+    background: #d9534f;
+    color: #fff;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+.table {
+    font-size: 12px;
+    width: 100%;
+    border: solid 1px #ccc;
+}
+.table th,.table td {
+    padding: 9px 15px;
+}
+.table th,.table td a{
+    text-decoration: none;
+}
+.table td a {
+    color: #428bca;
+}
+.table thead tr th {
+    border-right: solid 1px #ccc;
+    padding: 12px 15px;
+}
+.table thead tr th:last-child {
+    border-right: none;
+}
+.table tbody tr td {
+    text-align: center;
+    border-top: solid 1px #ccc;
+    border-right: solid 1px #ccc;
+}
+.table tbody tr td:last-child {
+    border-right: none;
+}
+</style>
+STYLE;
+
+        $html = '<div class="title">'.date('Y',time()).'年第'.date('W',time()).'周样品订单状态汇总表</div>';
+
+        $html .= "\r\n<table class='table' cellpadding='0' cellspacing='0'>
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>订单号</th>
+            <th>销售</th>
+            <th>下单时间</th>
+            <th>产品型号</th>
+            <th width='80'>要求交期</th>
+            <th width='80'>预计交期</th>
+            <th width='80'>实际交期</th>
+            <th>模块数量</th>
+            <th>客户名称</th>
+            <th>设备品牌</th>
+            <th>设备型号</th> 
+            <th width='40'>交期状态</th>
+            <th>产品经理</th>
+            <th width='90'>当前进度</th>
+            <th>当前处理人</th>
+        </tr>
+    </thead>
+    <tbody>\r\n";
+
+        foreach( $data as $key=>&$value ){
+
+            $html .= "\t\t<tr>\r\n";
+
+            $html .= "\t\t\t<td rowspan='".count($value['detail'])."'>".($key+1)."</td>\r\n";
+
+            $html .= "\t\t\t<td rowspan='".count($value['detail'])."'><a href='http://".$_SERVER['HTTP_HOST']."/Sample/overview/id/{$value['id']}'>".$value['order_num']."</a></td>\r\n";
+
+            $html .= "\t\t\t<td rowspan='".count($value['detail'])."'>".$value['create_person_name']."</td>\r\n";
+
+            $html .= "\t\t\t<td rowspan='".count($value['detail'])."'>".date('Y-m-d ',$value['create_time'])."</td>\r\n";
+
+            foreach( $value['detail'] as $k=>&$v ){
+
+                if( $k == 0 ){
+
+                    $html .= "\t\t\t<td><a href='http://".$_SERVER['HTTP_HOST']."/Sample/detail/id/{$v['detail_id']}'>".$v['pn']."</a></td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['requirements_date']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['expect_date']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['actual_date']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['count']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['customer']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['brand']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['model']."</td>\r\n";
+
+                    if( !empty($v['actual_date'])){
+
+                        if( $v['actual_date'] < $v['requirements_date']){
+                            $html .= "\t\t\t<td><span class='danger'> 延期 </span></td>\r\n";
+                        }else{
+                            $html .= "\t\t\t<td><span class='success'> 正常 </span></td>\r\n";
+                        }
+
                     }else{
-                        $v['delivery_date_state'] = '正常';
-                    }
-                    $v['a_date'] = date('Y-m-d',$v['a_date']);
-                }else{
-                    if( (mktime(0,0,0,date('m'),date('d'),date('Y'))-strtotime($v['d_date'])) > 0 ){
-                        $v['delivery_date_state'] = '延期';
-                    }else{
-                        $v['delivery_date_state'] = '正常';
-                    }
-                }
-                if( isset($v['f_status']) && $v['f_status']==1 || isset($v['k_status']) && $v['k_status']==1 ){
 
-                    if( isset($v['f_status']) && $v['f_status']==1 && $v['f_time'] < $startDate || isset($v['k_status']) && $v['k_status']==1 && $v['k_time'] < $startDate ){
-                        unset($result[$key]['childData'][$k]);
-                        //如果pn为空则将该订单删除
-                        if(empty($result[$key]['childData'])){
-                            unset($result[$key]);
-                        }
+                        $html .= "\t\t\t<td><span class=''> --- </span></td>\r\n";
                     }
+
+
+                    $html .= "\t\t\t<td>".$v['nickname']."</td>\r\n";
+
+                    if( $v['state'] == 'N'|| $v['state'] == 'C' ){
+
+                        if( $v['class'] == 'processing' ){
+
+                            $html .= "\t\t\t<td><span class='".$v['class']."'>".$v['name']."中</span></td>\r\n";
+
+                        }else{
+
+                            if( $v['state'] == 'C' ){
+                                $html .= "\t\t\t<td><span class='".$v['class']."'>已".$v['name']."</span></td>\r\n";
+                            }else {
+                                $html .= "\t\t\t<td><span class='".$v['class']."'>已发货待".$v['name']."</span></td>\r\n";
+                            }
+
+
+                        }
+
+                    }else{
+
+                        $html .= "\t\t\t<td><span class='danger'>".$v['name']."未通过</span></td>\r\n";
+
+                    }
+
+                    $html .= "\t\t\t<td>".$v['current_person']."</td>\r\n";
+
+                    $html .= "\t\t</tr>\r\n";
+
                 }else{
-                    # 如果存在本周之前未完成的样品单将其删除
-                    if( isset($v['s_status']) && $v['s_status']==2 && $v['s_time'] < $startDate
-                        || isset($v['w_status']) && $v['w_status']==2 && $v['w_time'] < $startDate
-                        || isset($v['c_status']) && $v['c_status']==2 && $v['c_time'] < $startDate
-                        || isset($v['y_status']) && $v['y_status']==2 && $v['y_time'] < $startDate
-                        || isset($v['f_status']) && $v['f_status']==2 && $v['f_time'] < $startDate
-                        || isset($v['k_status']) && $v['k_status']==2 && $v['k_time'] < $startDate){
-                        unset($result[$key]['childData'][$k]);
-                        //如果pn为空则将该订单删除
-                        if(empty($result[$key]['childData'])){
-                            unset($result[$key]);
+
+                    $html .= "\t\t<tr>\r\n";
+
+                    $html .= "\t\t\t<td><a href='http://".$_SERVER['HTTP_HOST']."/Sample/detail/id/{$v['detail_id']}'>".$v['pn']."</a></td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['requirements_date']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['expect_date']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['actual_date']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['count']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['customer']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['brand']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['model']."</td>\r\n";
+
+                    if( !empty($v['actual_date'])){
+
+                        if( $v['actual_date'] < $v['requirements_date']){
+                            $html .= "\t\t\t<td><span class='danger'> 延期 </span></td>\r\n";
+                        }else{
+                            $html .= "\t\t\t<td><span class='success'> 正常 </span></td>\r\n";
                         }
+
+                    }else{
+
+                        $html .= "\t\t\t<td><span class=''> --- </span></td>\r\n";
                     }
+
+                    $html .= "\t\t\t<td>".$v['nickname']."</td>\r\n";
+
+                    if( $v['state'] == 'N'|| $v['state'] == 'C' ){
+
+                        if( $v['class'] == 'processing' ){
+
+                            $html .= "\t\t\t<td><span class='".$v['class']."'>".$v['name']."中</span></td>\r\n";
+
+                        }else{
+
+                            if( $v['state'] == 'C' ){
+                                $html .= "\t\t\t<td><span class='".$v['class']."'>已".$v['name']."</span></td>\r\n";
+                            }else {
+                                $html .= "\t\t\t<td><span class='".$v['class']."'>已".$v['name']."待反馈</span></td>\r\n";
+                            }
+
+
+                        }
+
+                    }else{
+
+                        $html .= "\t\t\t<td><span class='danger'>".$v['name']."未通过</span></td>\r\n";
+
+                    }
+
+                    $html .= "\t\t\t<td>".$v['current_person']."</td>\r\n";
+
+                    $html .= "\t\t</tr>\r\n";
+
                 }
+
             }
+
+
         }
-        //var_export($result);
-        //print_r($result);
-        $body = '<center><h1 style="font-style: normal;font-weight: normal;margin: 20px 0 10px 0;letter-spacing:2px;font-size: 25px;"><span>'.date('Y').'年第'.date('W').'周</span>样品单状态汇总表</h1><table border="0" cellspacing="0" cellpadding="7" width="100%" style="border:solid 1px #ccc;border-bottom:none;font-size:12px;overflow:hidden;">
-            <thead>
-                <tr style="text-align:center;background-color:#428bca;color: #fff;font-size:13px;">
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">序号</td>
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">订单号</td>
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">客户名称</td>
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">销售</td>
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">产品型号</td>
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">数量</td>
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">下单时间</td>
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">需求交期</td>
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">预计交期</td>
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">实际交期</td>
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">交期状态</td>
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">产品经理</td>
-                    <td style="border-right:solid 1px #ccc;font-weight:bold;text-align:center;">状态</td>
-                    <td style="font-weight:bold;text-align:center;">当前进度处理人</td>
-                </tr>
-            </thead>
-		<tbody>';
-        $number = 1;
-        foreach($result as $key=>&$value){
-            $body .= '<tr style="text-align:center;font-size:12px;">
-            <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;" rowspan="'.count($value['childData']).'">'.($number).'</td>
-            <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;" rowspan="'.count($value['childData']).'">
-                <a href="http://61.139.89.33:8088/sampleOverview/'.$value['totalorder'].'" target="_blank" style="color:#337ab7;text-decoration:none;">'.$value['totalorder'].'</a>
-            </td>
-            <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;" rowspan="'.count($value['childData']).'">'.$value['customer'].'</td>
-            <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;" rowspan="'.count($value['childData']).'">'.$value['saleperson'].'</td>';
-            $number++;
-            foreach($value['childData'] as $k=>&$v){
-                switch($v['color']){
-                    case 'warning':
-                        if($v['delivery_date_state']=='延期'){
-                            $body .= '<td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><a href="http://61.139.89.33:8088/sampleDetails/'.$v['order'].'" target="_blank" style="color:#337ab7;text-decoration:none;">'.$v['product'].'</a></td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['number'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.date('Y-m-d',$v['createtime']).'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['d_date'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['e_date'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['a_date'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><span style="padding:2px 5px;background:#d9534f;border-radius:3px;color:#fff;">'.$v['delivery_date_state'].'</span></td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['manager'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><span style="padding:3px 8px;background-color:#f0ad4e;border-radius:3px;color:#fff;">'.$v['state'].'</span></td>
-                                    <td style="border-bottom:solid 1px #ccc;text-align:center;">'.$v['operationPerson'].'</td>
-                                </tr>';
-                        }else{
-                            $body .= '<td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><a href="http://61.139.89.33:8088/sampleDetails/'.$v['order'].'" target="_blank" style="color:#337ab7;text-decoration:none;">'.$v['product'].'</a></td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['number'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.date('Y-m-d',$v['createtime']).'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['d_date'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['e_date'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['a_date'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><span style="padding:2px 5px;background:#5cb85c;border-radius:3px;color:#fff;">'.$v['delivery_date_state'].'</span></td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['manager'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><span style="padding:3px 8px;background-color:#f0ad4e;border-radius:3px;color:#fff;">'.$v['state'].'</span></td>
-                                    <td style="border-bottom:solid 1px #ccc;text-align:center;">'.$v['operationPerson'].'</td>
-                                </tr>';
-                        }
-                        break;
-                    case 'danger':
-                        if($v['delivery_date_state']=='延期'){
-                            $body .= '<td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><a href="http://61.139.89.33:8088/sampleDetails/'.$v['order'].'" target="_blank" style="color:#337ab7;text-decoration:none;">'.$v['product'].'</a></td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['number'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.date('Y-m-d',$v['createtime']).'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['d_date'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['e_date'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['a_date'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><span style="padding:2px 5px;background:#d9534f;border-radius:3px;color:#fff;">'.$v['delivery_date_state'].'</span></td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['manager'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><span style="padding:3px 8px;background-color:#d9534f;border-radius:3px;color:#fff;">'.$v['state'].'</span></td>
-                                <td style="border-bottom:solid 1px #ccc;text-align:center;">'.$v['operationPerson'].'</td>
-                            </tr>';
-                        }else{
-                            $body .= '<td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><a href="http://61.139.89.33:8088/sampleDetails/'.$v['order'].'" target="_blank" style="color:#337ab7;text-decoration:none;">'.$v['product'].'</a></td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['number'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.date('Y-m-d',$v['createtime']).'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['d_date'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['e_date'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['a_date'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><span style="padding:2px 5px;background:#5cb85c;border-radius:3px;color:#fff;">'.$v['delivery_date_state'].'</span></td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['manager'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><span style="padding:3px 8px;background-color:#d9534f;border-radius:3px;color:#fff;">'.$v['state'].'</span></td>
-                                <td style="border-bottom:solid 1px #ccc;text-align:center;">'.$v['operationPerson'].'</td>
-                            </tr>';
-                        }
-                        break;
-                    case 'success':
-                        if($v['delivery_date_state']=='延期'){
-                            $body .= '<td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><a href="http://61.139.89.33:8088/sampleDetails/'.$v['order'].'" target="_blank" style="color:#337ab7;text-decoration:none;">'.$v['product'].'</a></td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['number'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.date('Y-m-d',$v['createtime']).'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['d_date'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['e_date'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['a_date'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><span style="padding:2px 5px;background:#d9534f;border-radius:3px;color:#fff;">'.$v['delivery_date_state'].'</span></td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['manager'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><span style="padding:3px 8px;background-color:#5cb85c;border-radius:3px;color:#fff;">'.$v['state'].'</span></td>
-                                <td style="border-bottom:solid 1px #ccc;text-align:center;">'.$v['operationPerson'].'</td>
-                            </tr>';
-                        }else{
-                            $body .= '<td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><a href="http://61.139.89.33:8088/sampleDetails/'.$v['order'].'" target="_blank" style="color:#337ab7;text-decoration:none;">'.$v['product'].'</a></td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['number'].'</td>
-                                    <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.date('Y-m-d',$v['createtime']).'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['d_date'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['e_date'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['a_date'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><span style="padding:2px 5px;background:#5cb85c;border-radius:3px;color:#fff;">'.$v['delivery_date_state'].'</span></td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;">'.$v['manager'].'</td>
-                                <td style="border-bottom:solid 1px #ccc;border-right:solid 1px #ccc;text-align:center;"><span style="padding:3px 8px;background-color:#5cb85c;border-radius:3px;color:#fff;">'.$v['state'].'</span></td>
-                                <td style="border-bottom:solid 1px #ccc;text-align:center;">'.$v['operationPerson'].'</td>
-                            </tr>';
-                        }
-                        break;
-                }
-            }
-        }
-        $body .= '</tbody></table></center><span style="position:relative;top:15px;font-size:14px;">本报表自动生成时间：'.date('Y-m-d H:i:s',time()).'</span>';
-        $sign = '<div style="margin-top:40px;width: 100%;padding-top: 15px;border-top: solid 1px #ccc;"><div><img src="http://www.atoptechnology.com.cn/images/logo1.jpg" alt="..." style="float:left;"><span style="float:left;margin-left:15px;"><p style="margin:4px 0;">[ 该邮件由程序自动发送，请勿回复 ]</p><p style="margin:4px 0;">华拓光通信OA系统</p></span></div></div>';
-        //echo $body.$sign;
-        $this->result = $body.$sign;
+
+        $subject = date('Y',time()).'年第'.date('W',time()).'周样品订单进度汇总';
+
+        $html .= "\t</tbody>\r\n</table>";
+
+        echo $style.$html;
+        self::push_eml($style.$html,$subject);
+
     }
 
-    //发送邮件
-    public function send_email($address,$subject,$body,$cc=''){
-        //邮箱配置
-        $email_host = 'smtp.exmail.qq.com';
-        $email_username = 'oa@atoptechnology.com';
-        $email_password = 'Atop123456';
-        $email_from_name = '华拓光通信OA系统';
-        $email_port = '465';
+
+    /**
+     * 发送邮件
+     */
+    private static function push_eml($body,$subject){
+
+        $http_host = $_SERVER['HTTP_HOST'];
+
         //设置签名信息
-        //$sign = '<div style="margin-top:50px;width: 100%;padding-top: 15px;border-top: solid 1px #ccc;"><div><img src="http://www.atoptechnology.com.cn/images/logo1.jpg" alt="..." style="float:left;"><span style="float:left;margin-left:15px;"><p style="margin:4px 0;">[ 该邮件由程序自动发送，请勿回复 ]</p><p style="margin:4px 0;">华拓光通信OA系统</p></span></div></div>';
-        //实例化PHPMail类
-        $mail = new PHPMailer();
+        $sign = <<<SIGN
+<style>
+    .sign {
+        width: 98%;
+        padding: 15px;
+        margin-top: 50px;
+        background: #2a3542;
+        color: #fff;
+    }
+    .sign .logo {
+        height: 40px;
+    }
+    .sign .info {
+    
+    }
+    .sign .info p {
+        margin: 0;
+        padding: 0;
+        line-height: 26px;
+    }
+    .clearfix {
+        clear: both;
+    }
+</style>
+<div class="sign">
+    <div class="logo">
+        <img src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/>
+    </div>
+    <div class="info">
+        <p>该邮件由程序自动发送，请勿回复</p>
+        <p>华拓光通信OA系统&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL：61.139.89.33:8088</p>
+    </div>
+    <div class="clearfix"></div>
+</div>
+SIGN;
+
+        //导入PHPMail邮件类
+        require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
+        require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
+
+        $mail = new \PHPMailer();
+
         $mail->isSMTP();// 使用SMTP服务
         $mail->CharSet = "UTF-8";// 编码格式为utf8，不设置编码的话，中文会出现乱码
-        $mail->Host = $email_host;// 发送方的SMTP服务器地址
+        $mail->Host = 'smtp.exmail.qq.com';// 发送方的SMTP服务器地址
         $mail->SMTPAuth = true;// 是否使用身份验证
-        $mail->Username = $email_username;// 发送方的163邮箱用户名
-        $mail->Password = $email_password;// 发送方的邮箱密码，注意用163邮箱这里填写的是“客户端授权密码”而不是邮箱的登录密码！
+        $mail->Username = 'oa@atoptechnology.com';// 发送方的163邮箱用户名
+        $mail->Password = 'Atop123456';// 发送方的邮箱密码，注意用163邮箱这里填写的是“客户端授权密码”而不是邮箱的登录密码！
         $mail->SMTPSecure = "ssl";// 使用ssl协议方式
-        $mail->Port = $email_port;// 163邮箱的ssl协议方式端口号是465/994
-        //设置收件人信息及内容
-        $mail->setFrom($email_username,$email_from_name);// 设置发件人信息，如邮件格式说明中的发件人，这里会显示为Mailer(xxxx@163.com），Mailer是当做名字显示
-        if(is_array($address)){
-            foreach($address as $addressv){
-                $mail->AddAddress($addressv);
+        $mail->Port = '465';// 163邮箱的ssl协议方式端口号是465/994
+        $mail->setFrom('oa@atoptechnology.com','华拓光通信OA系统');// 设置发件人信息，如邮件格式说明中的发件人，这里会显示为Mailer(xxxx@163.com），Mailer是当做名字显示
+        //$mail->addAddress($address,$nickname);// 设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+        if( is_array(self::$address) ){
+            foreach(self::$address as $value){
+                $mail->addAddress($value);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
             }
         }else{
-            $mail->AddAddress($address);
+            $mail->addAddress(self::$address);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
         }
-        if($cc!=''){
-            if(is_array($cc)){
-                foreach($cc as $ccperson){
+        if( self::$cc!='' ){
+            if(is_array(self::$cc)){
+                foreach(self::$cc as $ccperson){
                     $mail->addCC($ccperson);
                 }
             }else{
-                $mail->addCC($cc);
+                $mail->addCC(self::$cc);
             }
         }
-        //$mail->addAddress($address);// 设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+        //$mail->addReplyTo("oa@atoptechnology.com","华拓光通信股份有限公司");// 设置回复人信息，指的是收件人收到邮件后，如果要回复，回复邮件将发送到的邮箱地址
+        //$mail->addCC("");// 设置邮件抄送人，可以只写地址，上述的设置也可以只写地址
+        //$mail->addBCC("");// 设置秘密抄送人
+        //$mail->addAttachment("test.jpg");// 添加附件
+
         $mail->IsHTML(true);
         $mail->Subject = $subject;// 邮件标题
-        $mail->Body = $body;// 邮件正文加签名
-        $mail->Send();
+        $mail->Body = '<div style="color: #000;padding: 0 20px;">'.$body.$sign.'</div>';// 邮件正文加签名
+        //$mail->AltBody = "This is the plain text纯文本";// 这个是设置纯文本方式显示的正文内容，如果不支持Html方式，就会用到这个，基本无用
+        if($mail->Send()){
+            return 1;
+        }else{
+            return $mail->ErrorInfo;
+        }
     }
 
+
+
+
+
+    /**
+     * 查询数据模型
+     * @param $sql 传入sql语句
+     * @return array
+     */
+    private static function select( $sql ){
+
+        # 定义空数组作用存放结果集数据
+        $tmpArr = [];
+
+        # 执行sql语句并得到结果集
+        $result = self::$mysqli->query( $sql );
+
+        # 遍历结果集
+        while( $row = $result->fetch_assoc() ) {
+            $tmpArr[] = $row;
+        }
+
+        # 返回查询数据
+        return $tmpArr;
+
+    }
+
+
 }
-//实例化汇总信息推送
-$mail = new MailPush();
 
-$mail->get_summary_info();
+# 实例化资源句柄
+$push_email = new PushEmail();
 
-//print_r($mail->result);
-
-?>
+# print_r($push_email::$mysqli);

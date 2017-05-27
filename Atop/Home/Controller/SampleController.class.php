@@ -76,8 +76,6 @@ class SampleController extends AuthController {
 
         }
 
-        //print_r($sampleResult);
-
         $this->assign('page',$pageShow);
         $this->assign('sampleResult',$sampleResult);
         $this->display();
@@ -152,7 +150,7 @@ class SampleController extends AuthController {
                     $sample_model->commit();
 
                     $addData = $sample_model->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c,'.C('DB_PREFIX').'productrelationships d')
-                                                ->field('a.order_num,a.create_person_name,b.requirements_date,b.count,b.model,b.brand,c.nickname,b.pn,d.type')
+                                                ->field('a.order_num, a.create_person_name, b.requirements_date, b.count, b.customer, b.model, b.brand, c.nickname, b.pn, d.type')
                                                 ->where('a.id ='.$sample_id.' AND b.detail_assoc = a.id AND b.manager = c.id AND b.product_id = d.id')
                                                 ->select();
 
@@ -291,6 +289,7 @@ class SampleController extends AuthController {
 
             $order_data['attachment'] = json_decode($order_data['attachment'], true);
 
+
             $this->assign('orderData',$order_data);
 
             $this->assign('progress', $child_data);
@@ -338,7 +337,6 @@ class SampleController extends AuthController {
 
         $max_step = $model->table(C('DB_PREFIX').'sample_step')->field('id')->max('id');
 
-        //print_r($summary);
         $this->assign('page',$pageShow);
         $this->assign('max_step',$max_step);
         $this->assign('summary',$summary);
@@ -466,7 +464,8 @@ class SampleController extends AuthController {
                     break;
 
                 case 5:
-                    $persons = M('user')->where( ['position'=>6] )->select();
+                    $persons = M('user')->where('id ='.$detailResult[0]['manager'])->select();;
+
                     $this->assign('persons',$persons);
 
                     if( $detailResult[0]['rollback'] == 'Y' ) {
@@ -501,7 +500,6 @@ class SampleController extends AuthController {
                     break;
             }
 
-            //print_r($detailResult);
 
             $this->assign('detailResult',$detailResult[0]);
             $this->display();
@@ -528,12 +526,6 @@ class SampleController extends AuthController {
             }
 
 
-         /*   if( !empty($post['operator']) ){
-                $condition = 'a.operator=b.id AND a.asc_detail='.$post['asc_detail'].' AND b.id <> '.$post['operator'];
-            }else{
-                $condition = 'a.operator=b.id AND a.asc_detail='.$post['asc_detail'];
-            }*/
-
             # 获取推送人员的邮件(不包含自己)
             $push_person_info = M()->field('b.nickname,b.email')
                                    ->table(C('DB_PREFIX').'sample_operating a,'.C('DB_PREFIX').'user b')
@@ -549,7 +541,7 @@ class SampleController extends AuthController {
             //print_r($emails);
 
             # 获取产品基本信息
-            $orderData = M()->field('a.id sample_id,a.order_num,a.create_person_name,b.id detail_id,b.pn,b.count,b.customer,b.manager,b.brand,b.model,b.note,b.requirements_date,b.now_step,c.id step_id,c.name step_name,d.nickname')
+            $orderData = M()->field('a.id sample_id,a.order_num,a.create_person_name,b.id detail_id,b.pn,b.count,b.customer,b.manager,b.brand,b.model,b.note,b.expect_date,b.requirements_date,b.now_step,c.id step_id,c.name step_name,d.nickname')
                             ->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'sample_step c,'.C('DB_PREFIX').'user d,'.C('DB_PREFIX').'sample_operating e')
                             ->where( 'a.id=b.detail_assoc AND b.id='.$post['asc_detail'].' AND b.now_step = c.id AND e.asc_detail = b.id AND e.operator = d.id' )
                             ->select();
@@ -658,10 +650,13 @@ class SampleController extends AuthController {
                     $add_push_num = $model->table(C('DB_PREFIX').'user')->field('nickname,id,email')->find($post['operator']);
 
                     $orderData[0]['recipient_name'] = $add_push_num['nickname'];
+                    # 获取提交的交期
+                    $orderData[0]['modify_date'] = $post['expect_date'];
 
                     if( isset($logistics_save) && isset($actual_date_save) ){
 
                         if( $op_time_save !== false &&  $add_push_log_id && $add_push_id && $save_detail_row !== false && $logistics_save !== false && $actual_date_save !== false ){
+
 
                             $model->commit();
                             $this->pushEmail('PUSH', $add_push_num['email'], $orderData[0],$cc);
@@ -926,7 +921,8 @@ STYLE;
                                     <thead>
                                         <tr>
                                             <th>序号</th>
-                                            <th>销售</th>
+                                            <th>销售人员</th>
+                                            <th>客户名称</th>
                                             <th>产品类型</th>
                                             <th>产品型号</th>
                                             <th>设备品牌</th>
@@ -945,6 +941,7 @@ STYLE;
                     $tmpString .= '<tr>
                                         <td>'.($key+1).'</td>
                                         <td>'.$value['create_person_name'].'</td>
+                                        <td>'.$value['customer'].'</td>
                                         <td>'.$value['type'].'</td>
                                         <td>'.$value['pn'].'</td>
                                         <td>'.$value['brand'].'</td>
@@ -984,7 +981,7 @@ HTML;
                 $subject = '样品订单 '.$order_num.' 已完成';
                 $body = <<<HTML
 <p>Dear $call,</p>
-<p>[$nickname] 给样品订单<b>$order_num</b>添加了新的反馈信息，该订单已完成。</p>
+<p>[$nickname] 给样品订单 <b>$order_num</b> 添加了新的反馈信息，该订单已完成。</p>
 HTML;
 
                 break;
@@ -1009,6 +1006,29 @@ HTML;
 HTML;
                 }else{
 
+                    if( $modify_date != $expect_date ){
+
+
+                        $user = session('user')['nickname'];
+                        $subject = '样品订单 '.$order_num.' 步骤更新';
+                        $body = <<<HTML
+<style>
+.step {
+    padding: 2px 5px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border: solid 1px #000;
+}
+</style>
+<p>Dear $call,</p>
+<p>[$user] 将样品订单 <b>$order_num</b> 由 <span class="step">$now_step_str</span> 推送到 <span class="step">$next_step_str</span>，并修改了交期，请您及时处理。</p>
+<p>预计交期：$modify_date</p>
+HTML;
+
+
+                    }else{
+
                 $user = session('user')['nickname'];
 
                 $subject = '样品订单 '.$order_num.' 步骤更新';
@@ -1025,6 +1045,8 @@ HTML;
 <p>Dear $call,</p>
 <p>[$user] 将样品订单 <b>$order_num</b> 由 <span class="step">$now_step_str</span> 推送到 <span class="step">$next_step_str</span>，请您及时处理。</p>
 HTML;
+
+                    }
                 }
                 break;
             case 'TERMINATION':

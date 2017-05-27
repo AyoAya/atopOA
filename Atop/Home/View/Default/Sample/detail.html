@@ -16,7 +16,7 @@
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
-	<title>添加样品</title>
+	<title>订单详情</title>
 </block>
 <!-- 【路径导航】 -->
 <block name="breadcrumb">
@@ -421,8 +421,7 @@
 								{//如果当前步骤等于发货则加载上传附件操作}
 								<eq name="detailResult.now_step" value="6">
 									<div class="layui-inline" id="TestReport" style="margin-bottom: 0; display: none;">
-										<label class="layui-form-label" style="padding-left: 2px;width: 60px;">报告</label>
-										<div class="layui-input-inline">
+										<div class="layui-input-inline" style="margin-left: 17px;margin-bottom: ">
 											<div id="testReportPick"><i class="icon-arrow-up"></i> 上传测试报告</div>
 											<div class="uploader-attachment-queue" style="width: 508px !important;"></div>
 										</div>

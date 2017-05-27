@@ -10,7 +10,7 @@
 </block>
 
 <block name="webtitle">
-	<title>ATOP</title>
+	<title>样品管理</title>
 </block>
 
 <block name="breadcrumb">
@@ -64,7 +64,11 @@
 						<h4>
 							<a href="__ROOT__/Sample/overview/id/{$value.id}">{$value.order_num}</a>
 							<notempty name="value.order_charge">
-								<span class="paid-sign">{$value.order_charge}</span>
+								<eq name="value.order_charge" value="免费">
+									<span class="tag tag-sign tag-free">{$value.order_charge}</span>
+								<else/>
+									<span class="tag tag-sign tag-pay">{$value.order_charge}</span>
+								</eq>
 							</notempty>
 
 						</h4>
