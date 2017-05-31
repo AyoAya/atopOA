@@ -3,6 +3,7 @@
 
 <block name="linkcss">
 	<link rel="stylesheet" href="__CSS__/Huploadify.css">
+	<link rel="stylesheet" href="__CSS__/productFilter.css">
 	<link rel="stylesheet" href="__CSS__/jquery.toastmessage.css">
 	<link rel="stylesheet" href="__CSS__/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" href="__CSS__/oldcustomer/customer-details.css">
@@ -10,6 +11,7 @@
 
 <block name="linkjs">
 	<script src="__JS__/jquery.Huploadify.js"></script>
+	<script src="__JS__/productFilter.js" charset="UTF-8"></script>
 	<script src="__JS__/jquery.validate.min.js"></script>
 	<script src="__JS__/jquery.form.js"></script>
 	<script src="__JS__/bootstrap-datetimepicker.js"></script>
@@ -162,6 +164,144 @@
 		</div>
 	</div>
 
+
+
+	<!-- 产品筛选 -->
+	<div id="layer-open-content" style="display: none;">
+		<div class="product-filter-box">
+			<div class="filter-search">
+				<form class="layui-form">
+					<div class="filter-search-block">
+						<input type="text" name="search" placeholder="搜索产品型号" class="layui-input">
+						<button lay-submit class="product-search-btn" lay-filter="productSearch"><i class="layui-icon">&#xe615;</i></button>
+					</div>
+				</form>
+			</div>
+			<div class="product-category-box">
+				<div class="filter-category">
+					<div class="filter-name pull-left">类型：</div>
+					<div class="filter-items pull-left">
+						<ul class="filter-items-type">
+							<volist name="productFilter.types" id="value">
+								<if condition="$i gt 6">
+									<li category="type" class="filter-item overflow" title="{$value.type}">{$value.type}</li>
+									<else/>
+									<li category="type" class="filter-item" title="{$value.type}">{$value.type}</li>
+								</if>
+							</volist>
+						</ul>
+					</div>
+					<div class="filter-more pull-left">
+						<if condition="count($productFilter['types']) gt 6">
+							<i class="icon-chevron-down an-more-btn" flag="off"></i>
+						</if>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="filter-category">
+					<div class="filter-name pull-left">波长：</div>
+					<div class="filter-items pull-left">
+						<ul class="filter-items-wavelength">
+							<volist name="productFilter.wavelengths" id="value">
+								<if condition="$i gt 6">
+									<li category="wavelength" class="filter-item overflow" as_name="{$value.wavelength}" title="{$value.wavelength}">{$value.wavelength}</li>
+									<else/>
+									<li category="wavelength" class="filter-item" as_name="{$value.wavelength}" title="{$value.wavelength}">{$value.wavelength}</li>
+								</if>
+							</volist>
+						</ul>
+					</div>
+					<div class="filter-more pull-left">
+						<if condition="count($productFilter['wavelengths']) gt 6">
+							<i class="icon-chevron-down an-more-btn" flag="off"></i>
+						</if>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="filter-category">
+					<div class="filter-name pull-left">距离：</div>
+					<div class="filter-items pull-left">
+						<ul class="filter-items-reach">
+							<volist name="productFilter.reachs" id="value">
+								<if condition="$i gt 6">
+									<li category="reach" class="filter-item overflow" title="{$value.reach}">{$value.reach}</li>
+									<else/>
+									<li category="reach" class="filter-item" title="{$value.reach}">{$value.reach}</li>
+								</if>
+							</volist>
+						</ul>
+					</div>
+					<div class="filter-more pull-left">
+						<if condition="count($productFilter['reachs']) gt 6">
+							<i class="icon-chevron-down an-more-btn" flag="off"></i>
+						</if>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="filter-category">
+					<div class="filter-name pull-left">接口：</div>
+					<div class="filter-items pull-left">
+						<ul class="filter-items-connector">
+							<volist name="productFilter.connectors" id="value">
+								<if condition="$i gt 6">
+									<li category="connector" class="filter-item overflow" title="{$value.connector}">{$value.connector}</li>
+									<else/>
+									<li category="connector" class="filter-item" title="{$value.connector}">{$value.connector}</li>
+								</if>
+							</volist>
+						</ul>
+					</div>
+					<div class="filter-more pull-left">
+						<if condition="count($productFilter['connectors']) gt 6">
+							<i class="icon-chevron-down an-more-btn" flag="off"></i>
+						</if>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="filter-category">
+					<div class="filter-name pull-left">环境：</div>
+					<div class="filter-items pull-left">
+						<ul class="filter-items-casetemp">
+							<volist name="productFilter.casetemps" id="value">
+								<if condition="$i gt 6">
+									<li category="casetemp" class="filter-item overflow" as_name="{$value.casetemp}" title="{$value.casetemp_as_name}">{$value.casetemp_as_name}</li>
+									<else/>
+									<li category="casetemp" class="filter-item" as_name="{$value.casetemp}" title="{$value.casetemp_as_name}">{$value.casetemp_as_name}</li>
+								</if>
+							</volist>
+						</ul>
+					</div>
+					<div class="filter-more pull-left">
+						<if condition="count($productFilter['casetemps']) gt 6">
+							<i class="icon-chevron-down an-more-btn" flag="off"></i>
+						</if>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+			<hr>
+			<div class="product-list-box">
+				<ul>
+					<volist name="productFilter.defaultData" id="value">
+						<li pro_id="{$value.id}" manager="{$value.manager}">{$value.pn}</li>
+					</volist>
+				</ul>
+			</div>
+			<form id="filter-map" style="display: none;">
+				<input type="hidden" name="type" value="">
+				<input type="hidden" name="wavelength" value="">
+				<input type="hidden" name="reach" value="">
+				<input type="hidden" name="connector" value="">
+				<input type="hidden" name="casetemp" value="">
+			</form>
+			<div class="reset-filter-box">
+				<div class="pull-right"><button class="layui-btn layui-btn-danger reset-filter-btn">重置筛选</button></div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+
+
 	<script>
 	$('.form_date').datetimepicker({
         language:  'zh-CN',
@@ -192,9 +332,9 @@
 
 	<!-- 转为新版客诉模态框 -->
 	<if condition="$Think.session.user.account eq strtolower($details['salesperson'])">
-		<div class="modal fade bs-example-modal-sm" id="changeNewVersion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal fade" id="changeNewVersion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			<div class="layui-form">
-				<div class="modal-dialog modal-sm" role="document">
+				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -221,6 +361,15 @@
 												<option value="{$value.brand}">{$value.brand}</option>
 											</volist>
 										</select>
+									</div>
+								</div>
+							</present>
+							<present name="productFilter">
+								<div class="layui-form-item">
+									<label class="layui-form-label">产品型号</label>
+									<div class="layui-input-block pn-position-relative">
+										<input type="text" name="pn" readonly placeholder="选择产品型号" class="layui-input product-select">
+										<button type="button" class="clear-empty" title="清空"><i class="layui-icon">&#x1006;</i></button>
 									</div>
 								</div>
 							</present>

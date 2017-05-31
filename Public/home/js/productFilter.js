@@ -3,6 +3,8 @@
  */
 $(function(){
 
+
+    var filter_content =$('#layer-open-content').html();
     //重置筛选
     $(document).on('click', '.reset-filter-btn', function(){
         $('#filter-map input').val('');

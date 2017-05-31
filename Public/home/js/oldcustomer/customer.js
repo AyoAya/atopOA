@@ -5,6 +5,11 @@
 $(function(){
 
 	//alert($('body').width());
+	var filter_content =$('#layer-open-content').html();
+
+	$('.pn-position-relative .clear-empty').click(function(){
+			$(this).prev().val('');
+	});
 
 
 	//转为新版客诉
@@ -36,9 +41,62 @@ $(function(){
 			return false;
 		});
 
+		form.on('submit(productSearch)', function(data){
+
+			$.ajax({
+				url : ThinkPHP['AJAX'] + '/Sample/productSearch',
+				type : 'POST',
+				data : data.field,
+				dataType : 'json',
+				success : function( response ){
+					if( response.flag > 0 ){
+						var pns = '';
+						for( var key in response.data ){	//拼装所有产品型号数据
+							pns += '<li pro_id="'+ response.data[key].id +'" manager="'+ response.data[key].manager +'" manger_name="'+ response.data[key].nickname +'">'+ response.data[key].pn +'</li>\r\n';
+						}
+						$('.product-list-box ul').html(pns);
+					}else{
+						layer.msg(response.msg);
+					}
+				}
+			});
+			return false;
+		});
+
 	});
 
 
+
+		//点击选择产品展开筛选器
+		var pro_element = null;
+		$(document).on('click', '.product-select', function(data){
+			pro_element = $(this);
+			var filter_dialog = layer.open({
+				type : 1,
+				title : '选择产品',
+				area: ['1200px'],
+				shade: ['0.5','#000'],
+        dataType : 'json',
+				content: filter_content,
+				cancel : function(index, layero){
+					$('#filter-map input').val('');
+					layer.close(index);
+				}
+			});
+		});
+
+		//将产品信息添加到栏位
+		$(document).on('click', '.product-list-box ul li' ,function(){
+			if( $.trim(pro_element.val()) != '' ){
+					pro_element.val(pro_element.val()+' , '+$(this).text());
+			}else{
+					pro_element.val($(this).text());
+			}
+			// pro_element.prev().val($(this).attr('pro_id'));
+			// pro_element.prev().prev().val($(this).attr('manager'));
+      // pro_element.parent().parent().next().find('.manager-input').val($(this).attr('manager_name'));
+			layer.closeAll();
+		});
 
 
 
@@ -52,13 +110,13 @@ $(function(){
 		backdrop:false,
 		show:false
 	});
-	
+
 	//初始化选择销售人员模态框
 	$('#sales-modal').modal({
 		backdrop:false,
 		show:false
 	});
-	
+
 	//点击销售人员添加active类
 	$('#user-list li').click(function(){
 		$(this).addClass('active').siblings().removeClass('active');
@@ -72,7 +130,7 @@ $(function(){
 	$('#pn').click(function(){
 		alert(1);
 	});
-	
+
 	//新增客诉验证ajax处理
 	$('#form').validate({
 		focusInvalid : true,
@@ -128,7 +186,7 @@ $(function(){
 			if(element.attr('name')=='salesperson'){
 				error.appendTo(element.parents('#form').find('#salesperson_error'));
 			}else{
-			    error.appendTo(element.next()); 
+			    error.appendTo(element.next());
 			}
 		},
 		submitHandler : function(form){
@@ -377,7 +435,7 @@ $(function(){
 			},800);
 		}
 	});
-	
+
 	//确定添加处理记录/验证表单数据
 	$('#processingRecords').validate({
 		focusInvalid : false,
@@ -411,7 +469,7 @@ $(function(){
 			}else if(element.attr('name')=='log_date'){
 				error.appendTo(element.parent().next());
 			}else{
-			    error.appendTo(element.next()); 
+			    error.appendTo(element.next());
 			}
 		},
 		submitHandler : function(form){
@@ -502,7 +560,7 @@ $(function(){
 		$('#SearchHiddenText').val($('#SearchText').val());
 		$('#SearchHiddenForm').submit();
 	});
-	
+
 	//删除图像
 	$('#file-preview').on('click','.remove-file',function(){
 		var _this = $(this);
@@ -518,7 +576,7 @@ $(function(){
 			}
 		},'json');
 	});
-	
+
 	//选择处理状态
 	$('#dropdown-list li').click(function(){
 		$('#deal-text').text($(this).text());
@@ -772,7 +830,7 @@ $(function(){
 			$('#manager-id').val('');
 		}
 	});
-	
+
 });
 
 
@@ -1098,19 +1156,3 @@ function filter(key,value,th){
 		}
 	},'json');
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

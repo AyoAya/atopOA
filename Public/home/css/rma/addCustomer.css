@@ -72,7 +72,7 @@
 	cursor: pointer !important;
 }
 #form {
-	padding-top: 20px;	
+	padding-top: 20px;
 	padding-bottom: 150px;
 }
 .add-customer {
@@ -90,8 +90,8 @@ label {
 	padding: 0;
 }
 .help-block-edit {
-	margin-top: 5px;	
-	margin-bottom: 15px;	
+	margin-top: 5px;
+	margin-bottom: 15px;
 }
 .help-block-color {
 	color: red;
@@ -324,15 +324,3 @@ label {
 .modal-dialog-editsize {
 	width: 1060px;
 }
-
-
-
-
-
-
-
-
-
-
-
-

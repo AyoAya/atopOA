@@ -246,9 +246,17 @@ class CustomerController extends AuthController{
         //获取客诉处理记录并注入模板
         $complaint = M('Oacustomercomplaint');
         $complaintlog = M('Oacustomercomplaintlog');
+        $productRelationShipsModel = M('Productrelationships');
         //获取当前id指定的客诉
         $resultData = $complaint->find(I('get.id'));
         //print_r($resultData);
+
+        $prsm_res = $productRelationShipsModel->where(['pn'=>$resultData['pn']])->select();
+
+        # 如果pn对比结果为空则说明数据库不存在用户录入的pn型号，并将产品筛选组件注入模板
+        if( empty($prsm_res) ){
+            $this->assign('productFilter', $this->getProductData());
+        }
 
         $productModel = $resultData['vendor'];
 
@@ -371,10 +379,9 @@ class CustomerController extends AuthController{
             $value['log_content']= htmlspecialchars_decode($value['log_content']);
         }
         # 如果当前登录的用户是该条客诉的销售，那么将FAE工程师列表注入模板
-        if( session('user')['account'] == $resultData['salesperson'] ){
-            $FAE_person_list = $user->field('id,nickname')->where( ['position'=>12,'state'=>1] )->select(); //筛选所有职位为FAE工程师并状态为正常的人员集
-            $this->assign('FAE_person_list',$FAE_person_list);
-        }
+        $FAE_person_list = $user->field('id,nickname')->where( ['position'=>12,'state'=>1] )->select(); //筛选所有职位为FAE工程师并状态为正常的人员集
+        $this->assign('FAE_person_list',$FAE_person_list);
+
         $this->assign('details',$resultData);
         $sessionArr['session_name'] = session_name();
         $sessionArr['session_id'] = session_id();

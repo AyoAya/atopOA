@@ -452,13 +452,13 @@ $(function(){
 		backdrop:false,
 		show:false
 	});
-	
+
 	//初始化选择销售人员模态框
 	$('#sales-modal').modal({
 		backdrop:false,
 		show:false
 	});
-	
+
 	//点击销售人员添加active类
 	$('#user-list li').click(function(){
 		$(this).addClass('active').siblings().removeClass('active');
@@ -472,7 +472,7 @@ $(function(){
 	$('#pn').click(function(){
 		//alert(1);
 	});
-	
+
 	//新增客诉验证ajax处理
 	$('#form').validate({
 		focusInvalid : true,
@@ -528,7 +528,7 @@ $(function(){
 			if(element.attr('name')=='salesperson'){
 				error.appendTo(element.parents('#form').find('#salesperson_error'));
 			}else{
-			    error.appendTo(element.next()); 
+			    error.appendTo(element.next());
 			}
 		},
 		submitHandler : function(form){
@@ -769,7 +769,7 @@ $(function(){
 			},800);
 		}
 	});
-	
+
 	//确定添加处理记录/验证表单数据
 	$('#processingRecords').validate({
 		focusInvalid : false,
@@ -803,7 +803,7 @@ $(function(){
 			}else if(element.attr('name')=='log_date'){
 				error.appendTo(element.parent().next());
 			}else{
-			    error.appendTo(element.next()); 
+			    error.appendTo(element.next());
 			}
 		},
 		submitHandler : function(form){
@@ -894,7 +894,7 @@ $(function(){
 		$('#SearchHiddenText').val($('#SearchText').val());
 		$('#SearchHiddenForm').submit();
 	});
-	
+
 	//删除图像
 	$('#file-preview').on('click','.remove-file',function(){
 		var _this = $(this);
@@ -910,7 +910,7 @@ $(function(){
 			}
 		},'json');
 	});
-	
+
 	//选择处理状态
 	$('#dropdown-list li').click(function(){
 		$('#deal-text').text($(this).text());
@@ -1164,7 +1164,7 @@ $(function(){
 			$('#manager-id').val('');
 		}
 	});
-	
+
 });
 
 
@@ -1490,19 +1490,3 @@ function filter(key,value,th){
 		}
 	},'json');
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

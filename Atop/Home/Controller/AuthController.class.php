@@ -17,7 +17,7 @@ class AuthController extends Controller {
             session('user',$userInfo);
         }
 
-        
+
         //如果session不存在就跳转到登录页
         if(!session('user')){
             //如果session不存在则将当前页面url记录在session中
@@ -38,17 +38,17 @@ class AuthController extends Controller {
             }
             $this->assign('face',$face);
         }
-        
+
         //如果是超级管理员就给予所有权限
         if(session('user')['id']==1) return true;
-        
+
         //检查权限
         $auth = new Auth();
         if(!$auth->check(MODULE_NAME.'/'.CONTROLLER_NAME.'/', session('user')['id'])){
             # 如果验证失败则将该信息注入模板
             $this->assign('PERMISSION_DENIED',true);
         }
-        
+
     }
 
 

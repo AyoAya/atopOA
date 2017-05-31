@@ -1,7 +1,7 @@
 @CHARSET "UTF-8";
 
 /*考虑页面布局取消uploadify进度条显示*/
-.uploadify-queue { 
+.uploadify-queue {
 	display: none;
 }
 .uploadify-button {
@@ -87,7 +87,7 @@ kbd.kbd-info {
 	padding: 5px;
 	background: #fff;
 	border: solid 1px #ccc;
-	border-radius: 4px;	
+	border-radius: 4px;
 }
 #deal-record .customer-complaint-img {
 	max-height: 240px;
@@ -134,16 +134,37 @@ code {
 	clear: both;
 }
 #deal-record .attachment-box .attachment-box-dom {
-	
+
 }
 #deal-record .attachment-box .attachment-box-dom .file-name-info {
-	
+
 }
 #deal-record .attachment-box .attachment-box-dom .customer-complaint-file {
-	
+
 }
 #deal-record .attachment-box .attachment-box-dom form input[type=submit] {
 	margin-left: 5px;
+}
+
+
+
+
+.pn-position-relative {
+	position: relative;
+}
+.pn-position-relative button {
+	position: absolute;
+	right: 1px;
+	top: 1px;
+	line-height: 40px;
+	width: 36px;
+	height: 36px;
+	border: none;
+	background: #fff;
+	color: #888;
+}
+.pn-position-relative button:hover i {
+	color: red;
 }
 
 
@@ -152,7 +173,7 @@ code {
 	position: relative;
 }
 .help-block-position,.help-block-textarea {
-	color: #d9534f;	
+	color: #d9534f;
 }
 .form-group .help-block-position {
 	position: absolute;
@@ -178,8 +199,8 @@ code {
 	width: 100% !important;
 	height: 80px !important;
 	resize: none !important;
-	margin-bottom: 0 !important;	
-	margin-top: 35px !important;	
+	margin-bottom: 0 !important;
+	margin-top: 35px !important;
 }
 .inline-file {
 	float: right;
@@ -302,25 +323,3 @@ code {
 #changeNewVersion .layui-input-block {
 	margin-left: 80px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
