@@ -258,7 +258,7 @@ class CustomerController extends AuthController{
         $is_exists = $vendor_brand->where( ['brand'=>$productModel] )->select();
 
         if( empty($is_exists) ){   //查看该客诉的设备品牌是否存在于表中，如果存在则不用选择，不存在则注入模板
-            $this->assign('vendorBrand',$vendor_brand->order('brand ASC')->select());
+            $this->assign('vendorBrand',$vendor_brand->order('id ASC')->select());
         }
 
         foreach($resultData as $key=>&$value){
