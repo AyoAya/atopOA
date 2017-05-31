@@ -1,0 +1,69 @@
+
+.system-container {
+    padding-bottom: 360px;
+}
+.config-verify-box p {
+    font-size: 16px;
+}
+.config-verify-box .verify-switch,.config-page-box .verify-switch {
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    top: 6px;
+    left: 10px;
+    display: inline-block;
+    width: 48px;
+    height: 23px;
+    cursor: pointer;
+}
+.config-verify-box h4 span,.config-page-box h4 span {
+    background: url("../img/switch_off.png") center center no-repeat;
+}
+.config-verify-box h4 span.active,.config-page-box h4 span.active {
+    background: url("../img/switch_on.png") center center no-repeat;
+}
+.config-page-box .input-group {
+    margin-top: 26px;
+    width: 260px;
+}
+.config-verify-info {
+    padding-left: 20px;
+}
+.config-verify-info p {
+    margin: 20px 0;
+}
+.config-verify-info p span.active {
+    background: url("../img/switch_small_on.png") center center no-repeat;
+}
+.config-verify-info p span {
+    display: inline-block;
+    position: relative;
+    top: 3px;
+    left: 10px;
+    width: 32px;
+    height: 16px;
+    cursor: pointer;
+    background: url("../img/switch_small_off.png") center center no-repeat;
+}
+.upload-form-config-box label {
+    font-weight: normal !important;
+    font-size: 14px;
+}
+.upload-config-input {
+    width: 160px;
+}
+.upload-config-input-exts {
+    width: 490px;
+}
+.btn-submit {
+    margin-top: 15px;
+    padding: 10px 30px;
+}
+.help-block {
+    color: #d9534f;
+}
+.input-group-cookie {
+    width: 320px !important;
+}

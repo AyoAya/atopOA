@@ -81,7 +81,7 @@ a {
 	border-radius: 2px;
 }
 .procedure .procedure-table .procedure-wrap td:last-child .procedure-title .myTooltip .popover-box {
-	left: -90px;
+	left: -139px;
 }
 .procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip .popover-box:after {
 	content: '';
@@ -96,7 +96,7 @@ a {
 	background-size: 100%;
 }
 .procedure .procedure-table .procedure-wrap td:last-child .procedure-title .myTooltip .popover-box:after {
-	left: 296px;
+	left: 346px;
 }
 .procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip .popover-box .log-box {
 	text-align: left;

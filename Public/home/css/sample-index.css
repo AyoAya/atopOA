@@ -1,0 +1,148 @@
+@CHARSET "UTF-8";
+
+.search-box {
+	width: 300px;
+	position: relative;
+	right: 20px;
+}
+.search-box .search-btn {
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	border: none;
+	width: 36px;
+	height: 36px;
+	text-align: left;
+}
+.search-box .search-btn i {
+	position: absolute;
+	left: 50%;
+	margin-left: -9px;
+	top: 0;
+}
+#span{
+	display: inline-block;
+	float: right;
+	position: relative;
+	line-height: 36px;
+	font-size: 14px;
+	padding: 0 20px 5px 0;
+	margin: 0 0 10px 0;
+	color: #eee;
+	top: -4px;
+}
+
+.col-lg-4 {
+	padding-left: 0;
+	margin-left: 0;
+}
+.order-box {
+	position: relative;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	min-height: 130px;
+	border: solid 1px #ddd;
+	margin-bottom: 20px;
+	background: #fff;
+}
+.order-box:hover {
+	box-shadow: 0 0 10px #ccc;
+}
+.order-box .order-heading {
+	height: 50px;
+	position: relative;
+	color: #fff;
+}
+.order-box .order-heading a {
+	color: #fff;
+}
+.order-box .order-heading .details {
+	margin: 7px 7px 0 0;
+}
+.order-box .order-heading span {
+	position: absolute;
+	left: 12px;
+	top: 8px;
+	width: 70px;
+	height: 120px;
+	text-align: center;
+}
+.order-box .order-heading span a {
+	margin-bottom: 5px;
+}
+.order-box .order-heading span p {
+	color: #555 !important;
+	font-size: 11px !important;
+	margin-top: 3px !important;
+}
+.order-box .order-heading .saleorder-face {
+	width: 60px;
+	height: 60px;
+	margin-top: 5px;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	border: solid 1px #ddd;
+}
+.order-box .order-heading h4 {
+	padding-left: 106px;
+	height: 50px;
+	line-height: 50px;
+	font-size: 20px;
+}
+.order-box .order-body {
+	padding-left: 106px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-size: 12px;
+}
+.order-box .order-body p {
+	line-height: 19px;
+}
+.order-box .order-footer {
+	width: 100%;
+	padding: 5px 0 5px 15px;
+	position: absolute;
+	bottom: 0;
+	border-top: solid 1px #ccc;
+}
+#search {
+	position: absolute;
+	top: 7px;
+	right: 280px;
+	width: 260px;
+}
+#search .input-group-btn {
+	position: absolute;
+	right: 40px;
+}
+#search .search-input {
+	width: 220px;
+}
+#search .clear-condition {
+	position: absolute;
+	right: -40px;
+}
+.empty-data {
+	padding: 150px 0 0 0;
+	color: #ccc;
+	font-size: 30px;
+	text-align: center;
+}
+.empty-data .empty-icon {
+	font-size: 150px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

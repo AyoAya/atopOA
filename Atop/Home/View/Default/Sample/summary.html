@@ -22,7 +22,7 @@
 <!-- 【正文区域】 -->
 <block name="content">
 
-    <table class="layui-table">
+    <table class="layui-table" style="font-size: 12px !important;">
 
         <thead>
             <tr>
@@ -34,7 +34,7 @@
                 <th width="500">备注</th>
                 <th>设备厂商</th>
                 <th>设备型号</th>
-                <th width="11%">当前进度</th>
+                <th width="126">当前进度</th>
             </tr>
         </thead>
 
@@ -56,7 +56,7 @@
                             <td>{$vo.note}</td>
                             <td>{$vo.brand}</td>
                             <td>{$vo.model}</td>
-                            <td width="126">
+                            <td>
                         <!--        <if condition="($vo.state eq N) OR ($vo.state eq C)">
                                     <if condition="$vo.now_step eq 7">
                                         <span class="tag tag-success">{$vo.step_name}</span>
@@ -86,7 +86,7 @@
                             <td>{$vo.note}</td>
                             <td>{$vo.brand}</td>
                             <td>{$vo.model}</td>
-                            <td width="126">
+                            <td>
                                 <if condition="$vo.state eq 'N'">
                                     <eq name="vo.now_step" value="$max_step">
                                         <span class="tag tag-success">已发货待{$vo.step_name}</span>
