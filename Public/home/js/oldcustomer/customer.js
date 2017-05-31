@@ -194,7 +194,7 @@ $(function(){
 		var h = img.height;
 		if(w>=documentWidth && h>=documentHeight){
 			//当图像展开后禁用滚动条
-			$('#content-box').mCustomScrollbar('disable');
+			//$('#content-box').mCustomScrollbar('disable');
 			$('.pictureContainer img').css({'max-width':(documentWidth-360)+'px'});
 			setTimeout(function(){
 				var imgHeight = $('.pictureContainer img').height();
@@ -202,7 +202,7 @@ $(function(){
 			},50);
 		}else if(w>=documentWidth && h<documentHeight){
 			//当图像展开后禁用滚动条
-			$('#content-box').mCustomScrollbar('disable');
+			//$('#content-box').mCustomScrollbar('disable');
 			$('.pictureContainer img').css({'max-width':(documentWidth-360)+'px'});
 			setTimeout(function(){
 				var imgHeight = $('.pictureContainer img').height();
@@ -210,7 +210,7 @@ $(function(){
 			},50);
 		}else if(w<documentWidth && h>=documentHeight){
 			//当图像展开后禁用滚动条
-			$('#content-box').mCustomScrollbar('disable');
+			//$('#content-box').mCustomScrollbar('disable');
 			$('.pictureContainer img').css({'max-height':(documentHeight-120)+'px'});
 			setTimeout(function(){
 				var imgWidth = $('.pictureContainer img').width();
@@ -218,7 +218,7 @@ $(function(){
 			},50);
 		}else if(w<documentWidth && h<documentHeight){
 			//当图像展开后禁用滚动条
-			$('#content-box').mCustomScrollbar('disable');
+			//$('#content-box').mCustomScrollbar('disable');
 			setTimeout(function(){
 				var imgWidth = $('.pictureContainer img').width();
 				var imgHeight = $('.pictureContainer img').height();
@@ -231,7 +231,7 @@ $(function(){
 	//点击关闭图像预览
 	$('.closePreview').click(function(){
 		//当图像关闭后开启滚动条
-		$('#content-box').mCustomScrollbar('update');
+		//$('#content-box').mCustomScrollbar('update');
 		$('#picturePreview').fadeOut('normal');
 	});
 

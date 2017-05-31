@@ -155,7 +155,11 @@ class RMAController extends AuthController{
         $this->assign('customer',$result);
 
         //当数据为空显示图片
-        $this->assign('empty','<div class="empty-box"><span class="empty-pic"></span></div>');
+        $this->assign('empty','<div class="permission-denied">
+					<div class="permission-denied-icon"><i class="icon-exclamation-sign"></i></div>
+					<p class="permission-denied-text-zh">没有数据</p>
+					<p class="permission-denied-text-en">No data</p>
+				</div>');
         $this->display();
 
     }

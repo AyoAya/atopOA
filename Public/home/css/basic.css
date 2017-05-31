@@ -346,3 +346,20 @@ i.file-icon-ext-jpg,i.file-icon-ext-png,i.file-icon-ext-gif,i.file-icon-ext-jpeg
 i.file-icon-ext-rar,i.file-icon-ext-zip {
 	background: url("../img/fileIcon/icon_rar.gif") center center  no-repeat;
 }
+
+
+/*** 没有权限访问页面 ***/
+.permission-denied {
+	text-align: center;
+	margin: 150px auto 0;
+	color: #888;
+}
+.permission-denied .permission-denied-icon {
+	font-size: 80px;
+}
+.permission-denied .permission-denied-text-zh {
+	font-size: 20px;
+}
+.permission-denied .permission-denied-text-en {
+	font-size: 12px;
+}

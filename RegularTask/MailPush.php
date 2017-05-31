@@ -14,8 +14,22 @@ class PushEmail {
     private $db_user = 'root';
     private $db_pwd = 'root';
     private $db_name = 'atop';
-    static $address = ['liping@atoptechnology.com','vinty_email@163.com'];
-    static $cc = ['gongchixiang@atoptechnology.com','m18581898939@163.com'];
+    static $address = [
+		'yangpeiyun@atoptechnology.com',    //杨培云
+        'xiaoaiyou@atoptechnology.com',     //肖艾佑
+        'chenshi@atoptechnology.com',   //陈实
+        'haorui@atoptechnology.com',        //郝锐
+        'jonas@atoptechnology.com'         //张炜哲
+	];
+    static $cc = [
+		'sunbin@atoptechnology.com',        //孙膑
+        'dingzheng@atoptechnology.com',     //丁征
+        'mikechen@atoptechnology.com',      //陈应时
+        'xiaxiaosen@atoptechnology.com',    //夏小森
+        'liping@atoptechnology.com',    //李平
+        'kent@atoptechnology.com',      //董总
+        'jackfan@atoptechnology.com'    //范总
+	];
 
     /*liping@atoptechnology*/
     # 定义数据库资源句柄
@@ -380,8 +394,8 @@ STYLE;
 SIGN;
 
         //导入PHPMail邮件类
-        require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
-        require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
+        require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
+		require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
 
         $mail = new \PHPMailer();
 
