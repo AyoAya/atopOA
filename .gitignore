@@ -1,3 +1,6 @@
 Uploads/
 .idea/
 Atop/Runtime/
+.buildpath
+.project
+.settings/
