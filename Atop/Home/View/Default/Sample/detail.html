@@ -16,7 +16,7 @@
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
-	<title>添加样品</title>
+	<title>订单详情</title>
 </block>
 <!-- 【路径导航】 -->
 <block name="breadcrumb">
@@ -94,8 +94,8 @@
 												<div class="sr-only popover-box">
 													<volist name="vo.log" id="v">
 														<div class="log-box">
-															<span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i:s",###}</span>
-															<span class="log-box-context">{$v.context}</span>
+															<span class="log-box-time">{$v.log_time|date="Y-m-d H:i:s",###}</span>
+															<span class="log-box-context">[{$v.nickname}] {$v.context}</span>
 														</div>
 													</volist>
 												</div>
@@ -122,8 +122,8 @@
 												<div class="sr-only popover-box">
 													<volist name="vo.log" id="v">
 														<div class="log-box">
-															<span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i:s",###}</span>
-															<span class="log-box-context">{$v.context}</span>
+															<span class="log-box-time">{$v.log_time|date="Y-m-d H:i:s",###}</span>
+															<span class="log-box-context">[{$v.nickname}] {$v.context}</span>
 														</div>
 													</volist>
 												</div>
@@ -349,7 +349,7 @@
 									<div class="layui-input-inline">
 										<select class="" name="operator" lay-verify="required">
 											<volist name="persons" id="value">
-												<option value="{$value.id}" <eq name="value.id" value="$detailResult.manager">selected</eq>>{$value.nickname}</option>
+												<option value="{$value.id}">{$value.nickname}</option>
 											</volist>
 										</select>
 									</div>
@@ -362,7 +362,9 @@
 										<div class="layui-input-inline">
 											<select class="" name="transfer" lay-verify="required">
 												<volist name="transfer" id="value">
-													<option value="{$value.id}" <eq name="value.id" value="$detailResult.manager">selected</eq>>{$value.nickname}</option>
+													<neq name="value.id" value="$Think.session.user.id">
+														<option value="{$value.id}">{$value.nickname}</option>
+													</neq>
 												</volist>
 											</select>
 										</div>
@@ -389,6 +391,8 @@
 										<textarea name="context" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
 									</div>
 								</div>
+
+
 
 								{//如果当前步骤等于发货则加载物流信息记录操作}
 								<eq name="detailResult.now_step" value="6">
@@ -417,8 +421,7 @@
 								{//如果当前步骤等于发货则加载上传附件操作}
 								<eq name="detailResult.now_step" value="6">
 									<div class="layui-inline" id="TestReport" style="margin-bottom: 0; display: none;">
-										<label class="layui-form-label" style="padding-left: 2px;width: 60px;">报告</label>
-										<div class="layui-input-inline">
+										<div class="layui-input-inline" style="margin-left: 17px;margin-bottom: ">
 											<div id="testReportPick"><i class="icon-arrow-up"></i> 上传测试报告</div>
 											<div class="uploader-attachment-queue" style="width: 508px !important;"></div>
 										</div>
@@ -430,7 +433,7 @@
 								<eq name="detailResult.extension" value="Y">
 									<div class="layui-inline">
 										<label class="layui-form-label" style="padding-left: 2px;width: 60px;">交期</label>
-										<div class="layui-input-inline">
+										<div class="layui-input-inline" style="width: 256px">
 											<input type="text" class="layui-input expect_date" readonly name="expect_date" value="<notempty name='detailResult.expect_date'>{$detailResult.expect_date}<else/>{$detailResult.requirements_date}</notempty>">
 											<script>
 												$('.expect_date').datetimepicker({
@@ -451,7 +454,32 @@
 									</div>
 								</eq>
 
+								{//是否将邮件抄送给其他人}
+								<div class="layui-inline push-email" style="position: relative;top: -2px;">
+									<label class="layui-form-label" style="width: 120px;vertical-align: middle;padding: 2px 15px 0 15px;">抄送给其他人</label>
+									<div class="layui-input-inline" style="margin-left: 0px;">
+										<input type="checkbox" lay-filter="cc" name="cc_on" value="Y" title="" lay-skin="primary">
+									</div>
+								</div>
+
+								<div id="all-cc-list" class="sr-only" style="margin-top: 10px;"></div>
+								<div id="ccBox" class="sr-only">
+									<div class="cc-box-department" style="width: 200px;">
+										<select name="department" lay-filter="department">
+											<option value="0">选择部门</option>
+											<volist name="ccList.departments" id="value">
+												<option value="{$value.id}">{$value.name}</option>
+											</volist>
+										</select>
+									</div>
+									<div class="cc-box-list">
+										<volist name="ccList.users" id="vo">
+											<input type="checkbox" lay-filter="user" department="{$vo.department}" email="{$vo.email}" name="cc_list[]" title="{$vo.nickname}" value="{$vo.id}">
+										</volist>
+									</div>
+								</div>
 							</div>
+
 
 							<input type="hidden" name="asc_detail" value="{$detailResult.id}">
 

@@ -142,7 +142,7 @@ h2 a {
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
-	overflow: hidden;
+	overflow: visible;
 }
 .section .section-title {
 	width: auto;
@@ -161,7 +161,7 @@ h2 a {
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
-	overflow: hidden;
+	overflow: visible;
 }
 .section-primary .section-title {
 	width: auto;
@@ -175,9 +175,6 @@ h2 a {
 .section-primary .section-body {
 	padding: 15px;
 }
-
-
-
 .commingSoon {
 	color: #888;
 	position: fixed;
@@ -287,6 +284,14 @@ span.tag-danger {
 }
 span.tag-success {
 	background: #5cb85c;
+}
+span.tag-free {
+	background: #FBBC05;
+	color: #fff;
+}
+span.tag-pay {
+	background: #96475A;
+	color: #fff;
 }
 
 

@@ -76,8 +76,6 @@ class SampleController extends AuthController {
 
         }
 
-        //print_r($sampleResult);
-
         $this->assign('page',$pageShow);
         $this->assign('sampleResult',$sampleResult);
         $this->display();
@@ -152,17 +150,32 @@ class SampleController extends AuthController {
                     $sample_model->commit();
 
                     $addData = $sample_model->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c,'.C('DB_PREFIX').'productrelationships d')
-                                                ->field('a.order_num,a.create_person_name,b.requirements_date,b.count,b.model,b.brand,c.nickname,b.pn,d.type')
+                                                ->field('a.order_num, a.create_person_name, b.requirements_date, b.count, b.customer, b.model, b.brand, c.nickname, b.pn, d.type')
                                                 ->where('a.id ='.$sample_id.' AND b.detail_assoc = a.id AND b.manager = c.id AND b.product_id = d.id')
                                                 ->select();
 
                     $emails = $sample_model->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c')
-                                           ->field('c.email')
+                                           ->field('c.email,c.nickname')
                                            ->distinct(true)
                                            ->where('a.id ='.$sample_id.' AND b.detail_assoc = a.id AND b.manager = c.id')
                                            ->select();
 
-                    $this->pushEmail('ADD', $emails,$addData );
+                    $person = session('user')['email'];
+
+                    $tmpEmails = [];
+                    $tmpNickname = [];
+
+                    # 将收集的收件人邮箱地址转换为一维数组
+                    foreach($emails as $key=>&$value){
+                        $tmpEmails[] = $value['email'];
+                        $tmpNickname[] = $value['nickname'];
+                    }
+
+                    $tmpNickname = array_unique($tmpNickname);
+
+                    $addData['recipient_name'] = implode('&',$tmpNickname);
+
+                    $this->pushEmail('ADD', $tmpEmails,$addData,$person );
 
                     $this->ajaxReturn(['flag'=>1,'msg'=>'添加订单成功！','id'=>$sample_id]);
                 }
@@ -276,6 +289,7 @@ class SampleController extends AuthController {
 
             $order_data['attachment'] = json_decode($order_data['attachment'], true);
 
+
             $this->assign('orderData',$order_data);
 
             $this->assign('progress', $child_data);
@@ -308,7 +322,6 @@ class SampleController extends AuthController {
         }
 
         $summary = $model->table(C('DB_PREFIX').'sample')->limit($page->firstRow.','.$page->listRows)->select();
-        //$sampleResult = $model->table(C('DB_PREFIX').'sample')->limit($page->firstRow.','.$page->listRows)->select();
 
         $pageShow = $page->show();
 
@@ -324,12 +337,21 @@ class SampleController extends AuthController {
 
         $max_step = $model->table(C('DB_PREFIX').'sample_step')->field('id')->max('id');
 
-
         $this->assign('page',$pageShow);
         $this->assign('max_step',$max_step);
         $this->assign('summary',$summary);
         $this->display();
 
+    }
+
+    /**
+     * 获取部门和人员
+     * @return mixed
+     */
+    private function getDepartmentsAndUsers(){
+        $result['departments'] = M('Department')->select();
+        $result['users'] = M('User')->where('id<>1 AND state=1')->select();
+        return $result;
     }
 
 
@@ -338,11 +360,16 @@ class SampleController extends AuthController {
 
         if( I('get.id') ){
 
+            $model = new model();
+
             # 获取产品基本信息
             $detailResult = M()->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c,'.C('DB_PREFIX').'productrelationships d,'.C('DB_PREFIX').'sample_step e')
                                ->field('a.id sample_id,a.attachment,b.test_report,a.create_person_id sales_id,a.create_person_name sales_name,b.id,a.order_num,b.detail_assoc,b.count,b.customer,b.brand,b.model,b.note,b.requirements_date,b.expect_date,b.actual_date,b.manager,b.now_step,b.state,b.logistics,b.waybill,c.nickname,d.type,d.pn,e.name,e.transfer,e.rollback,e.termination,e.extension')
                                ->where('a.id=b.detail_assoc AND b.manager=c.id AND b.product_id=d.id AND b.id='.I('get.id').' AND b.now_step=e.id')
                                ->select();
+
+            # 获取抄所有送人信息
+            $this->assign('ccList',$this->getDepartmentsAndUsers());
 
             # 如果物流数据不为空则将物流数据注入模板
             if( !empty($detailResult[0]['logistics']) && !empty($detailResult[0]['waybill']) ){
@@ -385,7 +412,6 @@ class SampleController extends AuthController {
                     ->order('b.log_time ASC')
                     ->select();
             }
-
             # 检查附件和测试报告是否为空，如果不为空则将附件转换为数组
             if( !empty($detailResult[0]['attachment']) ){
                 $detailResult[0]['attachment'] = json_decode($detailResult[0]['attachment'], true);
@@ -400,19 +426,25 @@ class SampleController extends AuthController {
                     $persons = M('user')->where( ['department'=>5] )->select();
                     $this->assign('persons',$persons);
                     break;
+
                 case 3:
-                    $persons = M('user')->where( ['position'=>6] )->select();
+
+                    $persons = M('user')->where('id ='.$detailResult[0]['manager'])->select();;
+
                     $this->assign('persons',$persons);
 
                     if( $detailResult[0]['transfer'] == 'Y' ){
-                        # 获取转交人数据
-                        $transfer = M('User')->where('department='.session('user')['department'].' AND id<>'.session('user')['id'])->select();
+
+                        # 获取转交人数据(产品经理以及他的下属)
+                        $transfer = $model->table(C('DB_PREFIX').'user')->where('department = 5')->select();
+
                         $this->assign('transfer',$transfer);
                     }
-
                     break;
+
                 case 4:
                     $persons = M('user')->where( ['position'=>11] )->select();
+
                     $this->assign('persons',$persons);
 
                     if( $detailResult[0]['rollback'] == 'Y' ) {
@@ -421,15 +453,19 @@ class SampleController extends AuthController {
                         $this->assign('rollback', $rollback);
                     }
 
-                    if( $detailResult[0]['transfer'] == 'Y' ) {
-                        # 获取转交人数据
-                        $transfer = M('User')->where('position=' . session('user')['position'] . ' AND id<>' . session('user')['id'])->select();
-                        $this->assign('transfer', $transfer);
-                    }
+                    if( $detailResult[0]['transfer'] == 'Y' ){
+                        # 获取转交人数据(产品经理以及他的下属)
+                        $transfer = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'sample_detail b')->where('b.manager = a.id AND b.id ='.I('get.id'))->select();
+                        $manager = $transfer[0]['manager'];
+                        $rel = M('User')->where('report =' . $manager . ' OR id =' . $manager )->select();
 
+                        $this->assign('transfer',$rel);
+                    }
                     break;
+
                 case 5:
-                    $persons = M('user')->where( ['position'=>6] )->select();
+                    $persons = M('user')->where('id ='.$detailResult[0]['manager'])->select();;
+
                     $this->assign('persons',$persons);
 
                     if( $detailResult[0]['rollback'] == 'Y' ) {
@@ -439,8 +475,9 @@ class SampleController extends AuthController {
                     }
 
                     if( $detailResult[0]['transfer'] == 'Y' ) {
+
                         # 获取转交人数据
-                        $transfer = M('User')->where('position=' . session('user')['position'] . ' AND id<>' . session('user')['id'])->select();
+                        $transfer = M('User')->where('position='.session('user')['position'].' AND id<>'.session('user')['id'])->select();
                         $this->assign('transfer', $transfer);
                     }
 
@@ -463,7 +500,6 @@ class SampleController extends AuthController {
                     break;
             }
 
-            //print_r($detailResult[0]);
 
             $this->assign('detailResult',$detailResult[0]);
             $this->display();
@@ -477,13 +513,23 @@ class SampleController extends AuthController {
         if(IS_POST){
 
             $post = I('post.');
-
             $model = new Model();
+
+            if($post['type'] == 'log' || $post['type'] == 'success'){
+                $condition = 'a.operator=b.id AND a.asc_detail='.$post['asc_detail'].' AND b.id <> '.session('user')['id'];
+            }else{
+                if( !empty($post['operator']) ){
+                    $condition = 'a.operator=b.id AND a.asc_detail='.$post['asc_detail'].' AND b.id <> '.$post['operator'];
+                }else{
+                    $condition = 'a.operator=b.id AND a.asc_detail='.$post['asc_detail'];
+                }
+            }
+
 
             # 获取推送人员的邮件(不包含自己)
             $push_person_info = M()->field('b.nickname,b.email')
                                    ->table(C('DB_PREFIX').'sample_operating a,'.C('DB_PREFIX').'user b')
-                                   ->where('a.operator=b.id AND a.asc_detail='.$post['asc_detail'].' AND a.operator<>'.session('user')['id'])
+                                   ->where($condition)
                                    ->select();
 
             # 拼装推送人员邮箱
@@ -491,10 +537,13 @@ class SampleController extends AuthController {
                 $emails[] = $value['email'];
             }
 
+
+            //print_r($emails);
+
             # 获取产品基本信息
-            $orderData = M()->field('a.id sample_id,a.order_num,a.create_person_name,b.id detail_id,b.pn,b.count,b.customer,b.brand,b.model,b.note,b.requirements_date,b.now_step,c.id step_id,c.name step_name')
-                            ->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'sample_step c')
-                            ->where( 'a.id=b.detail_assoc AND b.id='.$post['asc_detail'].' AND b.now_step=c.id' )
+            $orderData = M()->field('a.id sample_id,a.order_num,a.create_person_name,b.id detail_id,b.pn,b.count,b.customer,b.manager,b.brand,b.model,b.note,b.expect_date,b.requirements_date,b.now_step,c.id step_id,c.name step_name,d.nickname')
+                            ->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'sample_step c,'.C('DB_PREFIX').'user d,'.C('DB_PREFIX').'sample_operating e')
+                            ->where( 'a.id=b.detail_assoc AND b.id='.$post['asc_detail'].' AND b.now_step = c.id AND e.asc_detail = b.id AND e.operator = d.id' )
                             ->select();
 
             # 检查是否存在预计交期
@@ -505,7 +554,6 @@ class SampleController extends AuthController {
                 }
             }
 
-
             $logData['asc_detail'] = $post['asc_detail'];
             $logData['context'] = strip_tags($post['context']);
             $logData['log_time'] = time();
@@ -514,36 +562,49 @@ class SampleController extends AuthController {
 
             # 将留言信息添加到邮件发送正文
             $orderData[0]['context'] = strip_tags($post['context']);
+            $orderData[0]['nickname'] = session('user')['nickname'];
 
             # 判断用户选择的操作类型
             switch( $post['type'] ){
 
                 case 'log':     # 添加日志
 
-                    $model->startTrans();   # 开启事物
+                    $userEmail[] = session('user')['email'];
 
+                    $cc_on = I('post.cc_on');
+                    if( $cc_on == 'Y' ){
+                        $cc = I('post.cc_email_list');
+                        $cc = array_merge($userEmail,$cc);
+                    }else{
+                        $cc = $userEmail;
+                    }
+
+                    $model->startTrans();   # 开启事物
                     # 记录日志
                     $add_log_id = $model->table(C('DB_PREFIX').'sample_log')->add( $logData );
 
                     if( $add_log_id ){
-
                         $model->commit();
-
-                        $this->pushEmail('LOG', $emails, $orderData[0]);
-
+                        $this->pushEmail('LOG', $emails, $orderData[0],$cc);
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
-
                     }else{
                         $model->rollback();
-
                         $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                     }
-
                     break;
 
                 case 'push':    # 推送
-                    $now_step_id = $orderData[0]['now_step'];
 
+                    # 是否存在邮件抄送人
+                    $cc_on = I('post.cc_on');
+                    if( $cc_on == 'Y' ){
+                        $cc = I('post.cc_email_list');
+                        $cc = array_merge($emails,$cc);
+                    }else{
+                        $cc = $emails;
+                    }
+
+                    $now_step_id = $orderData[0]['now_step'];
                     $step_rel = M('SampleStep')->where( ['id'=>['in',[$now_step_id,$now_step_id+1]]] )->order('id ASC')->select();
 
                     # 拼装当前步骤信息和下一步步骤信息
@@ -560,7 +621,6 @@ class SampleController extends AuthController {
                     $next_step_data['asc_step'] = $now_step_id+1;
 
                     $model = new Model();
-
                     # 开启事务
                     $model->startTrans();
 
@@ -576,7 +636,7 @@ class SampleController extends AuthController {
 
                     # 插入下一步操作人及步骤信息
                     $add_push_id = $model->table(C('DB_PREFIX').'sample_operating')->add($next_step_data);
-                    
+
                     # 记录推送时产生的日志
                     $add_push_log_id = $model->table(C('DB_PREFIX').'sample_log')->add($logData);
 
@@ -586,69 +646,77 @@ class SampleController extends AuthController {
                     # 修改主表步骤
                     $save_detail_row = $model->table(C('DB_PREFIX').'sample_detail')->save( ['id'=>$post['asc_detail'],'now_step'=>$now_step_id+1] );
 
+                    #获取收件人信息
+                    $add_push_num = $model->table(C('DB_PREFIX').'user')->field('nickname,id,email')->find($post['operator']);
+
+                    $orderData[0]['recipient_name'] = $add_push_num['nickname'];
+                    # 获取提交的交期
+                    $orderData[0]['modify_date'] = $post['expect_date'];
+
                     if( isset($logistics_save) && isset($actual_date_save) ){
 
                         if( $op_time_save !== false &&  $add_push_log_id && $add_push_id && $save_detail_row !== false && $logistics_save !== false && $actual_date_save !== false ){
 
+
                             $model->commit();
-
-                            $this->pushEmail('PUSH', $emails, $orderData[0]);
-
+                            $this->pushEmail('PUSH', $add_push_num['email'], $orderData[0],$cc);
                             $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
-
-
                         }else{
                             $model->rollback();
-
                             $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                         }
 
                     }else{
 
                         if( $op_time_save &&  $add_push_log_id && $add_push_id && $save_detail_row){
-
                             $model->commit();
-
-                            $this->pushEmail('PUSH', $emails, $orderData[0]);
-
+                            $this->pushEmail('PUSH', $add_push_num['email'], $orderData[0],$cc);
                             $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
-
-
                         }else{
                             $model->rollback();
-
                             $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                         }
-
                     }
-
                     break;
 
                 case 'termination':     # 终止
 
+                    # 是否存在邮件抄送人
+                    $cc_on = I('post.cc_on');
+
+                    if( $cc_on == 'Y' ){
+                        $cc = I('post.cc_email_list');
+                        $cc = array_merge($emails,$cc);
+                    }else{
+                        $cc = $emails;
+                    }
+
+
                     # 修改产品状态
                     $state_save_result = $model->table(C('DB_PREFIX').'sample_detail')->save( ['id'=>$post['asc_detail'],'state'=>'Y'] );
-
                     # 记录终止时产生的日志
                     $add_termination_log_id = $model->table(C('DB_PREFIX').'sample_log')->add($logData);
 
                     if( $state_save_result && $add_termination_log_id ){
-
                         $model->commit();
-
-                        $this->pushEmail('TERMINATION', $emails, $orderData[0]);
-
+                        $this->pushEmail('TERMINATION', $emails, $orderData[0],$cc);
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
-
                     }else{
                         $model->rollback();
-
                         $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                     }
-
                     break;
 
                 case 'transfer':    # 转交
+
+                    # 是否存在邮件抄送人
+                    $cc_on = I('post.cc_on');
+                    if( $cc_on == 'Y' ){
+                        $cc = I('post.cc_email_list');
+                        $cc = array_merge($emails,$cc);
+                    }else{
+                        $cc = $emails;
+                    }
 
                     # 记录转交时产生的日志
                     $add_transfer_log_id = $model->table(C('DB_PREFIX').'sample_log')->add($logData);
@@ -661,22 +729,27 @@ class SampleController extends AuthController {
                     $orderData[0]['recipient_name'] = $recipient['nickname'];
 
                     if( $transfer_save_result && $add_transfer_log_id ){
-
                         $model->commit();
-
-                        $this->pushEmail('TRANSFER', $recipient['email'], $orderData[0], $emails);
-
+                        # 调用邮箱
+                        $this->pushEmail('TRANSFER', $recipient['email'], $orderData[0], $cc);
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
-
                     }else{
                         $model->rollback();
-
                         $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                     }
-
                     break;
 
                 case 'rollback':    # 回退
+
+                    # 是否存在邮件抄送人
+                    $cc_on = I('post.cc_on');
+
+                    if( $cc_on == 'Y' ){
+                        $cc = I('post.cc_email_list');
+                        $cc = array_merge($emails,$cc);
+                    }else{
+                        $cc = $emails;
+                    }
 
                     # 产品表当前步骤-1
                     $detail_now_step_save = $model->table(C('DB_PREFIX').'sample_detail')->save( ['id'=>$post['asc_detail'],'now_step'=>($orderData[0]['now_step']-1)] );
@@ -704,16 +777,12 @@ class SampleController extends AuthController {
                     $orderData[0]['recipient_name'] = $recipient['nickname'];
 
                     if( $detail_now_step_save && $operating_now_step_del && $emp_prev_step_op_time && $add_rollback_log_id ){
-
                         $model->commit();
-
-                        $this->pushEmail('ROLLBACK', $recipient['email'], $orderData[0], $emails);
-
+                        #   调用邮箱
+                        $this->pushEmail('ROLLBACK', $recipient['email'], $orderData[0], $cc);
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
-
                     }else{
                         $model->rollback();
-
                         $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败'] );
                     }
 
@@ -721,8 +790,17 @@ class SampleController extends AuthController {
 
                 case 'success':
 
-                    $now_step_id = $orderData[0]['now_step'];
+                    # 是否存在邮件抄送人
+                    $userEmail[] = session('user')['email'];
+                    $cc_on = I('post.cc_on');
+                    if( $cc_on == 'Y' ){
+                        $cc = I('post.cc_email_list');
+                        $cc = array_merge($userEmail,$cc);
+                    }else{
+                        $cc = $userEmail;
+                    }
 
+                    $now_step_id = $orderData[0]['now_step'];
                     $model->startTrans();
 
                     #记录完成时添加的日志
@@ -732,16 +810,12 @@ class SampleController extends AuthController {
                     $detail_now_state = $model->table(C('DB_PREFIX').'sample_detail')->where('id ='.$post['asc_detail'])->save( ['state'=>'C'] );
 
                     if($add_transfer_log_id && $op_time_save && $detail_now_state){
-
                         $model->commit();
-
-                        $this->pushEmail('SUCCESS', $emails, $orderData[0]);
-
-                        $this->ajaxReturn( ['flag'=>1,'msg'=>'完成'] );
-
+                        $this->pushEmail('SUCCESS', $emails, $orderData[0],$cc);
+                        $this->ajaxReturn( ['flag'=>1,'msg'=>'操作完成'] );
                     }else{
                         $model->rollback();
-                        $this->ajaxReturn( ['flag'=>0,'msg'=>'失败'] );
+                        $this->ajaxReturn( ['flag'=>0,'msg'=>'操作失败'] );
                     }
 
                     break;
@@ -787,7 +861,6 @@ class SampleController extends AuthController {
     public function pushEmail( $type, $address, $data, $cc='' ){
 
         $http_host = $_SERVER['HTTP_HOST'];
-
         extract($data);
 
         # 如果是单人则显示收件人姓名否则群发显示All
@@ -808,7 +881,7 @@ class SampleController extends AuthController {
 <p>设备型号：$model</p>
 <p>备注：$note</p>
 <p>要求交期：$requirements_date</p><br>
-<p>详情请点击链接：<a href="http:# $http_host/Sample/detail/id/$detail_id" target="_blank">http:# $http_host/Sample/detail/id/$detail_id</a></p>
+<p>详情请点击链接：<a href="http://$http_host/Sample/detail/id/$detail_id" target="_blank">http:# $http_host/Sample/detail/id/$detail_id</a></p>
 BASIC;
 
 
@@ -839,16 +912,17 @@ STYLE;
 
                 $order_basic= '';
                 $tmpString = '';
-                $subject = '样品订单 '.$data[0]['order_num'].' 已下单请您关注';
+                $subject = '样品订单 '.$data[0]['order_num'].' 已下单';
 
-                $tmpString .= '<p>Dear'. $call.',</p>
-                        <p>样品订单 <b>'.$data[0]['order_num'].'</b> 已下单请您关注</p><br>';
+                $tmpString .= '<p>Dear '. $call.',</p>
+                        <p>样品订单 <b>'.$data[0]['order_num'].'</b> 已下单，请审核。</p><br>';
 
                 $tmpString .= '<table class="table" cellpadding="0" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>序号</th>
-                                            <th>销售</th>
+                                            <th>销售人员</th>
+                                            <th>客户名称</th>
                                             <th>产品类型</th>
                                             <th>产品型号</th>
                                             <th>设备品牌</th>
@@ -860,10 +934,14 @@ STYLE;
                                     </thead>
                                     <tbody>';
 
+                # 为保证数据遍历时不存在收件人姓名数据将该值删除
+                unset($data['recipient_name']);
+
                 foreach($data as $key=>&$value){
                     $tmpString .= '<tr>
                                         <td>'.($key+1).'</td>
                                         <td>'.$value['create_person_name'].'</td>
+                                        <td>'.$value['customer'].'</td>
                                         <td>'.$value['type'].'</td>
                                         <td>'.$value['pn'].'</td>
                                         <td>'.$value['brand'].'</td>
@@ -893,7 +971,7 @@ STYLE;
 }
 </style>
 <p>Dear $call,</p>
-<p>样品订单 <b>$order_num</b> 日志更新</p>
+<p>[$nickname] 给样品订单 <b>$order_num</b> 添加了新日志，请关注。</p>
 <p>当前步骤：<span class="step">Step$step_id-$step_name</span></p>
 HTML;
 
@@ -903,11 +981,53 @@ HTML;
                 $subject = '样品订单 '.$order_num.' 已完成';
                 $body = <<<HTML
 <p>Dear $call,</p>
-<p>样品订单 <b>$order_num</b> 已完成</p>
+<p>[$nickname] 给样品订单 <b>$order_num</b> 添加了新的反馈信息，该订单已完成。</p>
 HTML;
 
                 break;
             case 'PUSH':
+
+                if( $data['now_step'] == 6 ){
+                    $user = session('user')['nickname'];
+
+                    $subject = '样品订单 '.$order_num.' 步骤更新';
+                    $body = <<<HTML
+<style>
+.step {
+    padding: 2px 5px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border: solid 1px #000;
+}
+</style>
+<p>Dear $call,</p>
+<p>样品订单 <b>$order_num</b> 已发货，请您及时跟踪样品测试情况并提交反馈。</p>
+HTML;
+                }else{
+
+                    if( $modify_date != $expect_date ){
+
+
+                        $user = session('user')['nickname'];
+                        $subject = '样品订单 '.$order_num.' 步骤更新';
+                        $body = <<<HTML
+<style>
+.step {
+    padding: 2px 5px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border: solid 1px #000;
+}
+</style>
+<p>Dear $call,</p>
+<p>[$user] 将样品订单 <b>$order_num</b> 由 <span class="step">$now_step_str</span> 推送到 <span class="step">$next_step_str</span>，并修改了交期，请您及时处理。</p>
+<p>预计交期：$modify_date</p>
+HTML;
+
+
+                    }else{
 
                 $user = session('user')['nickname'];
 
@@ -923,16 +1043,17 @@ HTML;
 }
 </style>
 <p>Dear $call,</p>
-<p>样品订单 <b>$order_num</b> 步骤更新  </p>
-<p>由 [$user] 将 <span class="step">$now_step_str</span> 推送到 <span class="step">$next_step_str</span></p>
+<p>[$user] 将样品订单 <b>$order_num</b> 由 <span class="step">$now_step_str</span> 推送到 <span class="step">$next_step_str</span>，请您及时处理。</p>
 HTML;
 
+                    }
+                }
                 break;
             case 'TERMINATION':
 
                 $user = session('user')['nickname'];
 
-                $subject = '样品订单 '.$order_num.' 已终止';
+                $subject = '样品订单 '.$order_num.' 已终止，审核未通过。';
                 $body = <<<HTML
 <p>Dear $call,</p>
 <p>样品订单 <b>$order_num</b> 被 [$user] 终止</p>
@@ -947,10 +1068,19 @@ HTML;
 
                 $subject = '样品订单 '.$order_num.' 处理人转交';
                 $body = <<<HTML
+<style>
+.step {
+    padding: 2px 5px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border: solid 1px #000;
+}
+</style>
+                
 <p>Dear $call,</p>
-<p>样品订单 <b>$order_num</b> 步骤更新  </p>
-<p>[$user] 将处理人转交给 [$call]</p>
-<p>当前步骤：Step$step_id-$step_name</p>
+<p>[$user]将样品订单 <b>$order_num</b>转交给您，请及时处理。 </p>
+<p>当前步骤：<span class="step">Step$step_id-$step_name</span></p>
 HTML;
 
                 break;
@@ -970,8 +1100,7 @@ HTML;
 }
 </style>
 <p>Dear $call,</p>
-<p>样品订单 <b>$order_num</b> 步骤回退  </p>
-<p>[$user] 将步骤回退到 <span class="step">Step$prev_step_id-$prev_step_name</span></p>
+<p>[$user] 将样品订单 <b>$order_num</b> 由 <span class="step">Step$step_id-$step_name</span> 回退到 <span class="step">Step$prev_step_id-$prev_step_name</span>，请您及时处理。</p>
 HTML;
 
                 break;
@@ -980,12 +1109,12 @@ HTML;
 
         # 检查邮件发送结果
         if( $cc == '' ){
-            $result = send_Email( 'm18581898939@163.com', '', $subject, $body.$order_basic );
+            $result = send_Email( $address, '', $subject, $body.$order_basic );
             if( $result != 1 ){
                 $this->ajaxReturn( ['flag'=>0,'msg'=>'邮件发送失败'] );
             }
         }else{
-            $result = send_Email( 'm18581898939@163.com', '', $subject, $body.$order_basic, '2737583968@qq.com' );   # $cc
+            $result = send_Email( $address, '', $subject, $body.$order_basic, $cc);   # $cc
             if( $result != 1 ){
                 $this->ajaxReturn( ['flag'=>0,'msg'=>'邮件发送失败'] );
             }

@@ -1,0 +1,190 @@
+.compatible-container {
+    padding-top: 15px;
+    width: 600px;
+    margin: 0 auto;
+    padding-bottom: 200px;
+}
+.compatible-container .compatible-form textarea[name=comment] {
+    max-width: 600px;
+    min-width: 600px;
+    min-height: 100px;
+}
+.compatible-container .compatible-form .btn-submit,.compatible-container .compatible-form .btn-reset {
+    width: 100px;
+    height: 40px;
+}
+.compatible-container .compatible-form .btn-submit {
+    margin-left: 15px;
+}
+
+#stateText {
+    width: 90px;
+}
+
+#brandList {
+    padding-left: 6px;
+}
+#brandList li {
+    width: 134px;
+    border: solid 1px #ddd;
+    padding: 5px 0;
+    margin: 0 10px 10px 0;
+    display: inline-block;
+    text-indent: 10px;
+    cursor: pointer;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+#brandList li:nth-child(6n+0) {
+    margin-right: 0;
+}
+#brandList li:hover {
+    background: #428bca;
+    border: solid 1px #428bca;
+    color: #fff;
+}
+#prompt-content {
+    text-align: center;
+    padding: 15px 0 15px 0;
+}
+#prompt-content i {
+    font-size: 45px;
+    color: #5cb85c;
+}
+#prompt-content span {
+    font-size: 20px;
+    position: relative;
+    top: -8px;
+    left: 10px;
+}
+
+/*产品筛选模态框样式*/
+#product-modal {
+    font-size: 12px;
+}
+.filter-body .filter-col {
+    margin: 3px 0;
+    padding-top: 7px;
+    /*border-bottom: solid 1px #ccc;*/
+}
+.filter-body .filter-col span.label-type,.filter-body .filter-col ul,.filter-body .filter-col ul li {
+    display: inline-block;
+}
+.filter-body .filter-col span.label-type {
+    padding: 2px 5px;
+    background: #555;
+    color: #fff;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    vertical-align: top;
+    position: relative;
+    top: 0px;
+}
+.filter-body .filter-col ul li {
+    cursor: pointer;
+}
+.filter-body .filter-col ul {
+    width: 940px;
+    /*border: solid 1px blue;*/
+}
+.filter-body .filter-col ul li:hover {
+    background: #428bca;
+    border: solid 1px #428bca;
+    color: #fff;
+}
+.filter-body .filter-col .label-more {
+    padding: 2px 5px;
+    cursor: pointer;
+    position: relative;
+    top: -2px;
+}
+.input-d-date {
+    background: #fff !important;
+    cursor: pointer !important;
+}
+
+.condition-type,.condition-wavelength,.condition-reach,.condition-connector,.condition-casetemp {
+    position: relative;
+    top: -4px;
+    left: 5px;
+}
+.condition-type li,.condition-wavelength li,.condition-reach li,.condition-connector li,.condition-casetemp li {
+    width: 130px;
+    height: 24px;
+    border: solid 1px #fff;
+    text-align: left;
+    line-height: 22px;
+    margin: 3px 0px;
+    text-indent: 6px;
+}
+.condition-type li {
+    width: 130px;
+}
+.condition-wavelength li {
+    width: 130px;
+}
+.condition-wavelength li.width-length {
+    width: 180px;
+}
+.condition-reach li {
+    width: 130px;
+}
+.condition-connector li {
+    width: 130px;
+}
+.condition-casetemp li {
+    width: 130px;
+}
+
+#conditon-list li {
+    padding: 2px 5px;
+    border: solid 1px #555;
+    margin-bottom: 8px;
+    margin-right: 8px;
+    display: inline-block;
+}
+#conditon-list li.clear-condition {
+    background: #d9534f;
+    color: #fff;
+    cursor: pointer;
+    border: solid 1px #d9534f;
+    padding: 5px 10px;
+    font-size: 13px;
+    position: relative;
+    top: -5px;
+}
+#conditon-list li span {
+    cursor: pointer;
+    position: relative;
+    top: -1px;
+}
+#conditon-list li span:hover {
+    color: #d9534f;
+}
+#conditon-list li span.clear-condition-text:hover {
+    color: #fff;
+}
+
+
+#product-list li {
+    display: inline-block;
+    width: 15.2%;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    margin: 5px 5px;
+    border: solid 1px #ccc;
+    cursor: pointer;
+}
+#product-list li:hover {
+    background: #428bca;
+    color: #fff;
+    border: solid 1px #428bca;
+}
+
+
+.modal-dialog-editsize {
+    width: 1060px;
+}

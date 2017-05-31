@@ -44,17 +44,18 @@
             </tr>
         </thead>
         <tbody>
-            <volist name="softwareData" id="vo" key="k">
+
+
                 <tr>
-                    <td>{$k}</td>
-                    <td>{$vo.type}</td>
-                    <td>{$vo.number}</td>
-                    <td>{$vo.name}</td>
-                    <td>{$vo.mcu}</td>
-                    <td>V1.0</td>
-                    <td>2017-05-15</td>
+                    <td>1</td>
+                    <td>{$softwareData.type}</td>
+                    <td>{$softwareData.number}</td>
+                    <td>{$softwareData.name}</td>
+                    <td>{$softwareData.mcu}</td>
+                    <td>{$softwareData.child.0.version}</td>
+                    <td>{$softwareData.child.0.save_time|date="Y-m-d",###}</td>
                 </tr>
-            </volist>
+
         </tbody>
     </table>
 
@@ -66,119 +67,70 @@
     <div class="timeline">
         <div class="timeline-heading">
             <table class="timeline-table">
-                <tr>
-                    <td class="timeline-info">
-                        <div class="timeline-time-big">V1.0</div>
-                        <div class="timeline-time-small">2017-05-14</div>
-                        <div class="timeline-circle"></div>
-                    </td>
-                    <td class="timeline-content">
-                        <div class="timeline-content-left pull-left">
-                            <div class="timeline-user-face">
-                                <img src="__IMG__/face/face_01.png" width="48" alt="">
-                            </div>
-                        </div>
-                        <div class="timeline-content-right pull-right">
-                            <p>更新的日志内容1</p>
-                            <div class="pic-group pull-left" style="text-align: center;">
-                                <a href="__ROOT__/Public/home/img/404.png" target="_blank" style="display: block;border: solid 1px #ccc;"><img class="customer-complaint-img-c" src="__IMG__/404.png" height="200" alt="加载失败"></a>
-                                <span class="pic-info">404图像附件测试名称</span>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="attachment-box">
-                                <div class="attachment-box-dom">
-                                    <p class="file-name">
-                                        <!--<form action="__ROOT__/Auth/download" method="post">
-                                            <input type="hidden" name="filename" value="{$v.filename}">
-                                            <input type="hidden" name="filepath" value="{$v.filepath}">
-                                            <a class="download"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
-                                        </form>-->
-                                        <a href="#"><i class="file-icon file-icon-ext-jpg"></i> 下载文件的文件名称.jpg</a>
-                                    </p>
+
+                <volist name="softData" id="vo" key="k">
+
+                    <tr>
+                        <td class="timeline-info">
+                            <div class="timeline-time-big">{$vo.version}</div>
+                            <div class="timeline-time-small">{$vo.save_time|date="Y-m-d",###}</div>
+                            <div class="timeline-circle"></div>
+                        </td>
+                        <td class="timeline-content">
+                            <div class="timeline-content-left pull-left">
+                                <div class="timeline-user-face">
+                                    <img src="{$vo.face}" width="48" alt="">
                                 </div>
                             </div>
-                            <div class="timeline-other">张三<span class="timeline-divider">|</span>2017-05-15</div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="timeline-info">
-                        <div class="timeline-time-big">V1.1</div>
-                        <div class="timeline-time-small">2017-05-14</div>
-                        <div class="timeline-circle"></div>
-                    </td>
-                    <td class="timeline-content">
-                        <div class="timeline-content-left pull-left">
-                            <div class="timeline-user-face">
-                                <img src="__IMG__/face/face_01.png" width="48" alt="">
-                            </div>
-                        </div>
-                        <div class="timeline-content-right pull-right">
-                            <p>更新的日志内容2</p>
-                            <div class="pic-group pull-left" style="text-align: center;">
-                                <a href="__ROOT__/Public/home/img/404.png" target="_blank" style="display: block;border: solid 1px #ccc;"><img class="customer-complaint-img-c" src="__IMG__/404.png" height="200" alt="加载失败"></a>
-                                <span class="pic-info">404图像附件测试名称</span>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="attachment-box">
-                                <div class="attachment-box-dom">
-                                    <p class="file-name">
-                                        <!--<form action="__ROOT__/Auth/download" method="post">
-                                            <input type="hidden" name="filename" value="{$v.filename}">
-                                            <input type="hidden" name="filepath" value="{$v.filepath}">
-                                            <a class="download"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
-                                        </form>-->
-                                        <a href="#"><i class="file-icon file-icon-ext-jpg"></i> 下载文件的文件名称.jpg</a>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="timeline-other">张三<span class="timeline-divider">|</span>2017-05-15</div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="timeline-info">
-                        <div class="timeline-time-big">V1.2</div>
-                        <div class="timeline-time-small">2017-05-14</div>
-                        <div class="timeline-circle"></div>
-                    </td>
-                    <td class="timeline-content">
-                        <div class="timeline-content-left pull-left">
-                            <div class="timeline-user-face">
-                                <img src="__IMG__/face/face_01.png" width="48" alt="">
-                            </div>
-                        </div>
-                        <div class="timeline-content-right pull-right">
-                            <p>更新的日志内容3</p>
-                            <div class="pic-group pull-left" style="text-align: center;">
-                                <a href="__ROOT__/Public/home/img/404.png" target="_blank" style="display: block;border: solid 1px #ccc;"><img class="customer-complaint-img-c" src="__IMG__/404.png" height="200" alt="加载失败"></a>
-                                <span class="pic-info">404图像附件测试名称</span>
+                            <div class="timeline-content-right pull-right">
+                                <p>{$vo.log}</p>
+                                {//附件不为空才加载}
+                                <notempty name="vo.attachment">
+                                    <volist name="vo.attachment" id="val">
+                                        {//如果附件为图像则直接显示}
+                                        <in name="val.ext" value="jpg,jpeg,png,gif,bmp">
+                                            <div class="pic-group pull-left" style="text-align: center;">
+                                                <a href="__ROOT__/{$val.path}" target="_blank" style="display: block;border: solid 1px #ccc;"><img class="customer-complaint-img-c" src="__ROOT__/{$val.path}" height="200" alt="加载失败"></a>
+                                                <span class="pic-info">{$val.savename}</span>
+                                            </div>
+                                        </in>
+                                        <notin name="val.ext" value="jpg,jpeg,png,gif,bmp">
+                                            <div class="attachment-box">
+                                                <div class="attachment-box-dom">
+                                                    <p class="file-name">
+                                                        <a href="#"><i class="file-icon file-icon-ext-{$vo.attachment.0.ext}"></i> {$val.savename}</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </notin>
+                                    </volist>
+                                    <div class="clearfix"></div>
+                                </notempty>
+                                <div class="clearfix"></div>
+                                <div class="timeline-other">{$softwareData.person}<span class="timeline-divider">|</span>{$vo.save_time|date="Y-m-d",###}</div>
                             </div>
                             <div class="clearfix"></div>
-                            <div class="attachment-box">
-                                <div class="attachment-box-dom">
-                                    <p class="file-name">
-                                        <!--<form action="__ROOT__/Auth/download" method="post">
-                                            <input type="hidden" name="filename" value="{$v.filename}">
-                                            <input type="hidden" name="filepath" value="{$v.filepath}">
-                                            <a class="download"><i class="layui-icon">&#xe621;</i> {$v.filename}</a>
-                                        </form>-->
-                                        <a href="#"><i class="file-icon file-icon-ext-jpg"></i> 下载文件的文件名称.jpg</a>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="timeline-other">张三<span class="timeline-divider">|</span>2017-05-15</div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                </volist>
             </table>
         </div>
     </div>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+
+
+    <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
+        <p>添加</p>
+        <p>处理记录</p>
+    </button>
+
+
+</block>
+
+
+{//Modal集}
+<block name="modals">
+    <div class="modal fade" id="Modal-box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -196,23 +148,37 @@
                             </div>
                         </div>
 
+                        <div class="layui-form-item">
+                            <label class="layui-form-label version">版本号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="version" class="layui-input version-ipt" placeholder="例如 V1.25">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label" style="padding-left: 0;width: 60px;">附件</label>
+                            <div class="layui-input-block" style="margin-left: 60px;">
+                                <div id="picker">上传附件</div>
+                                <div class="uploader-file-queue"></div>
+                            </div>
+                        </div>
+
                         {//文件上传}
                         <div id="uploader" class="wu-example">
                             <!--用来存放文件信息-->
                             <div id="thelist" class="uploader-list"></div>
                             <div class="btns">
-                                <div id="picker">附件</div>
-                                <button id="ctlBtn" class="btn btn-default soft-upload">上传附件</button>
+
                             </div>
                         </div>
 
                     </div>
 
-                    <input type="hidden" name="asc_detail" value="{$detailResult.id}">
+                    <input type="hidden" id="subName" name="subName" value="{$softwareData.id}">
 
                     <div class="modal-footer">
                         <button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
-                        <button class="layui-btn" lay-submit lay-filter="processingRecord">立即提交</button>
+                        <button class="layui-btn" lay-submit lay-filter="software">立即提交</button>
                     </div>
 
                 </form>
@@ -220,17 +186,7 @@
             </div>
         </div>
     </div>
-
-    <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#myModal" id="log-table">
-        <p>添加</p>
-        <p>处理记录</p>
-    </button>
-
-
 </block>
-
-
-
 
 
 

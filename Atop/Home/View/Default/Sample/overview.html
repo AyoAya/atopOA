@@ -16,7 +16,7 @@
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
-    <title>样品总览</title>
+    <title>订单总览</title>
 </block>
 <!-- 【路径导航】 -->
 <block name="breadcrumb">
@@ -30,7 +30,15 @@
     <div class="overview-container">
         <div class="order-info-box">
             <div class="order-info pull-left">
-                <h2 class="order-num"><i class="icon-list-alt"></i>{$orderData.order_num} <notempty name="orderData.order_charge"><span class="tag tag-warning">{$orderData.order_charge} </span></notempty> </h2>
+                <h2 class="order-num"><i class="icon-list-alt"></i>{$orderData.order_num}
+                    <notempty name="orderData.order_charge">
+                        <eq name="orderData.order_charge" value="免费">
+                            <span class="tag tag-free">{$orderData.order_charge} </span>
+                        <else/>
+                            <span class="tag tag-pay">{$orderData.order_charge} </span>
+                        </eq>
+                    </notempty>
+                </h2>
             </div>
             <div class="order-other pull-right">
                 <p>销售人员：{$orderData.create_person_name}</p>
@@ -73,7 +81,7 @@
                                     <span class="tag tag-success">已{$value.step_name}</span>
                                 </eq>
                             <else/>
-                                <span class="tag tag-danger">{$detailResult.name}失败</span>
+                                <span class="tag tag-danger">{$value.step_name}未通过</span>
                             </if>
                         </td>
                     </tr>
@@ -101,8 +109,8 @@
                                                                 <div class="sr-only popover-box" style="top: 26px;" >
                                                                     <foreach name="vo.log" item="v">
                                                                         <div class="log-box">
-                                                                            <span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i:s",###}</span>
-                                                                            <span class="log-box-context">{$v.context}</span>
+                                                                            <span class="log-box-time">{$v.log_time|date="Y-m-d H:i:s",###}</span>
+                                                                            <span class="log-box-context">[{$v.nickname}] {$v.context}</span>
                                                                         </div>
                                                                     </foreach>
                                                                 </div>
@@ -124,8 +132,8 @@
                                                                 <div class="sr-only popover-box">
                                                                     <foreach name="vo.log" item="v">
                                                                         <div class="log-box">
-                                                                            <span class="log-box-time">[{$v.nickname}] {$v.log_time|date="Y-m-d H:i:s",###}</span>
-                                                                            <span class="log-box-context">{$v.context}</span>
+                                                                            <span class="log-box-time">{$v.log_time|date="Y-m-d H:i:s",###}</span>
+                                                                            <span class="log-box-context">[{$v.nickname}] {$v.context}</span>
                                                                         </div>
                                                                     </foreach>
                                                                 </div>

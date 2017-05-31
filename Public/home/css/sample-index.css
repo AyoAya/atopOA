@@ -46,22 +46,6 @@
 	margin-bottom: 20px;
 	background: #fff;
 }
-.order-box .sample_order_charge {
-	position: relative;
-}
-.order-box .sample_order_charge .tag-sign {
-	 position: absolute;
-	 right: 15px;
-	 top: 0;
-	 font-size: 11px;
-	 padding: 0 5px;
-	 height: 25px;
-	 line-height: 25px;
-	 -webkit-border-radius: 0 0 5px 5px;
-	 -moz-border-radius: 0 0 5px 5px;
-	 border-radius: 0 0 5px 5px;
-}
-
 .order-box:hover {
 	box-shadow: 0 0 10px #ccc;
 }
@@ -70,34 +54,24 @@
 	position: relative;
 	color: #fff;
 }
-.order-box div.processing {
-	background: #428bca;
-}
-.order-box div.success {
-	background: #5cb85c;
-}
-.order-box div.undone {
-	background: #d9534f;
-}
 .order-box .order-heading a {
 	color: #fff;
 }
 .order-box .order-heading .details {
 	margin: 7px 7px 0 0;
 }
-.order-box .order-heading .sales-info {
+.order-box .order-heading span {
 	position: absolute;
 	left: 12px;
 	top: 8px;
 	width: 70px;
 	height: 120px;
 	text-align: center;
-	z-index: 10;
 }
-.order-box .order-heading .sales-info a {
+.order-box .order-heading span a {
 	margin-bottom: 5px;
 }
-.order-box .order-heading .sales-info p {
+.order-box .order-heading span p {
 	color: #555 !important;
 	font-size: 11px !important;
 	margin-top: 3px !important;

@@ -1,27 +1,19 @@
 .timeline .timeline-table .timeline-info .timeline-circle {
     top: 0 !important;
 }
-#myModal{
+#Modal-box{
     position: fixed;
-    top: 260px;
+    top: 100px;
 }
-/*.btns{
-    height: 40px;
-}
-.btns #picker{
-    display: inline-block;
+.version{
     width: 60px;
-    height: 38px;
-    text-align: right;
-    padding: 9px 15px;
-}
-#ctlBtn{
-    display: block;
-    width: 131px;
-    height: 40px;
-    color: #fff;
-    background: #00b7ee;
+    height:38px;
+    padding: 9px 0px;
     position: relative;
-    left: 58px;
-    bottom:38px;
-}*/
+    right: 16px;
+}
+.version-ipt{
+    width: 505px;
+    position: relative;
+    left: -50px;
+}

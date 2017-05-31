@@ -1,0 +1,120 @@
+
+.letter {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+}
+.letter li {
+    display: inline-block;
+    margin: 0 10px;
+    cursor: pointer;
+}
+.letter li:hover {
+    color: #428bca;
+}
+
+.category {
+    display: block;
+    font-size: 20px;
+    color: #555;
+    margin: 5px 0;
+    text-indent: 5px;
+    padding-top: 10px;
+    text-decoration: none !important;
+    border-top: dashed 1px #ccc;
+}
+.category:first-child {
+    border: none;
+}
+.category:hover {
+    color: #555;
+}
+.category i {
+    margin-right: 10px;
+}
+.acronym-box {
+    width: 100px;
+    display: inline-block;
+    margin: 5px;
+    overflow: hidden;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+.acronym-box:hover {
+    -webkit-box-shadow: 0 0 5px #ccc;
+    -moz-box-shadow: 0 0 5px #ccc;
+    box-shadow: 0 0 5px #ccc;
+}
+.acronym-box:hover .wrap-heading {
+    background: #428bca;
+}
+.acronym-box:hover .jc-p {
+    color: #fff;
+    font-size: 14px;
+}
+.acronym-box .wrap-heading {
+    /*border-bottom: solid 1px #ccc;
+    background: #fbfbfb;*/
+    padding: 5px;
+    /*-webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -ms-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;*/
+}
+.acronym-box .jc-p {
+    font-size: 14px;
+    color: #555;
+    text-decoration: none;
+}
+.acronym-box .jc-p a {
+    color: #333;
+    /*-webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    -ms-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;*/
+}
+.acronym-box .wrap-footer {
+    font-size: 12px;
+    padding: 5px;
+    color: #555;
+    line-height: 18px;
+}
+.qc-p,.yy-p {
+    word-break:keep-all;/* 不换行 */
+    white-space:nowrap;/* 不换行 */
+    overflow:hidden;/* 内容超出宽度时隐藏超出部分的内容 */
+    text-overflow:ellipsis;
+}
+
+/*回到顶部*/
+#backtop {
+    display: none;
+    position: fixed;
+    right: 50px;
+    bottom: 40px;
+    width: 50px;
+    height: 50px;
+    border: solid 1px #555;
+    background: #fff;
+    padding-left: 9px;
+    padding-top: 4.5px;
+    box-sizing: border-box;
+    background: #fff;
+    transition: all .5s;
+}
+#backtop span{
+    cursor: pointer;
+    font-size: 15px;
+    text-align: center;
+    line-height:14px;
+    transition: all .5s;
+}
+#backtop:hover {
+    background: #d9534f;
+    border: solid 1px #d9534f;
+}
+#backtop:hover span {
+    color: #fff;
+}

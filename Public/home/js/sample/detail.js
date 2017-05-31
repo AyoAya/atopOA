@@ -42,6 +42,7 @@ $(function(){
 
         //监听操作类型，如果是push则显示推送人列表
         form.on('select(operation)', function( data ){
+
             var _value = data.value;    //获取到当前选中value
 
             //根据当前操作类型显示对应的处理人列表
@@ -196,6 +197,52 @@ $(function(){
 
         });
 
+        //监听用户是否开启抄送功能
+        form.on('checkbox(cc)', function( data ){
+            if( $(data.elem).is(':checked') == true ){
+                $('#all-cc-list').removeClass('sr-only');
+                $('#ccBox').removeClass('sr-only');
+            }else{
+                $('#all-cc-list').addClass('sr-only');
+                $('#ccBox').addClass('sr-only');
+            }
+        });
+
+        //默认隐藏所有的抄送人列表，当用户选择部门的时候显示对应的部门人员
+        $('.cc-box-list .layui-form-checkbox').css({display:'none'});
+
+        //监听用户选择所属部门显示对应对应部门人员
+        form.on('select(department)', function( data ){
+            var _value = data.value;
+            $('#ccBox .cc-box-list .layui-form-checkbox').css({display:'none'});
+            $('#ccBox .cc-box-list input[department='+_value+']').next().css({display:'inline-block'});
+
+        });
+
+        //监听用户选择抄送人
+        form.on('checkbox(user)', function( data ){
+            console.log();
+            if( $(data.elem).is(':checked') ){
+                var _tmpDom = '';
+                $(data.elem).attr('checked',true);
+                //如果选中当前人员则将该人员添加到展示列表
+                _tmpDom += '<div class="cc-list-item" value="'+$(this).attr('value')+'" email="'+$(this).attr('email')+'">'+$(this).attr('title')+' <i class="icon-remove"></i></div>\r\n';
+                $('#all-cc-list').append(_tmpDom);
+            }else{
+                $(data.elem).attr('checked',false);
+                //如果选中之后取消则将对应展示列表里的人员删除
+                $('#all-cc-list div[value='+$(this).attr('value')+']').remove();
+            }
+        });
+
+        //删除展示列表里面的抄送人
+        $('#all-cc-list').on('click', '.cc-list-item', function(){
+            var value = $(this).attr('value');
+            $('#ccBox .cc-box-list input[value='+ value +']').attr('checked',false);
+            $('#ccBox .cc-box-list input[value='+ value +']').next().removeClass('layui-form-checked');
+            $(this).remove();
+        });
+
 
         //添加处理记录
         form.on('submit(processingRecord)',function( data ){
@@ -203,6 +250,20 @@ $(function(){
             if( data.field.waybill && $.trim(data.field.waybill) == '' ){
                 layer.msg('请输入运单号');
                 return false;
+            }
+
+            //检查用户是否开启抄送
+            if( data.field.cc_on && data.field.cc_on == 'Y' ){
+                var emails = new Array();
+                //如果开启则收集选中的人员
+                $('#ccBox .cc-box-list input:checked').each(function(){
+                    emails.push($(this).attr('email'));
+                });
+                if( emails.length <= 0 ){
+                    layer.msg('你没有选择抄送人喔');
+                    return false;
+                }
+                data.field.cc_email_list = emails;
             }
 
             if( window.uploader ){

@@ -14,9 +14,10 @@
 .procedure .procedure-table .procedure-wrap td .procedure-title {
     position: absolute;
     top: -30px;
-    width: 80px;
+    width: 90px;
     left: 50%;
     margin-left: -40px;
+    font-size: 16px;
 }
 .procedure .procedure-table .procedure-wrap td .procedure-info {
     font-size: 12px;
@@ -30,7 +31,7 @@
     line-height: 150%;
 }
 .procedure .procedure-table .procedure-wrap td.active .procedure-title {
-    font-size: 15px;
+    font-size: 16px;
     color: #428bca;
 }
 .procedure .procedure-table .procedure-wrap td.error .procedure-title {

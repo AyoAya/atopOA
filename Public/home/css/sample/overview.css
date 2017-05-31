@@ -28,7 +28,7 @@ a:hover {
 	border-radius: 2px;
 }
 .procedure .procedure-table .procedure-wrap td:last-child .procedure-title .myTooltip .popover-box {
-	left: -90px;
+	left: -124px;
 }
 .procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip .popover-box:after {
 	content: '';
@@ -43,7 +43,7 @@ a:hover {
 	background-size: 100%;
 }
 .procedure .procedure-table .procedure-wrap td:last-child .procedure-title .myTooltip .popover-box:after {
-	left: 296px;
+	left: 330px;
 }
 .procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip .popover-box .log-box {
 	text-align: left;
