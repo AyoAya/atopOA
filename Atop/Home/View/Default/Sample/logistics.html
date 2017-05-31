@@ -45,6 +45,7 @@
             <thead>
                 <tr>
                     <th>订单号</th>
+                    <th>产品型号</th>
                     <th>物流公司</th>
                     <th>运单号</th>
                     <th>订单创建时间</th>
@@ -52,6 +53,7 @@
             </thead>
             <tbody>
                 <tr>
+                    <td>{$LogisticsResult.order_num}</td>
                     <td>{$LogisticsResult.pn}</td>
                     <td>
                         <switch name="LogisticsResult.logistics_code">
