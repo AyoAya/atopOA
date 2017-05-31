@@ -35,7 +35,7 @@
 	<!-- 旧版客诉不允许操作，只能转为新客诉之后才有操作【PS：只允许该条客诉的销售进行此操作】 -->
 
 
-	<eq name="Think.session.user.account" value="$details.salesperson">
+	<if condition="$Think.session.user.account eq strtolower($details['salesperson'])">
 		<div class="pull-left" role="group">
 			<button type="button" class="layui-btn layui-btn-primary" data-toggle="modal" data-target="#changeNewVersion">
 				<span class="glyphicon glyphicon-plus"></span> 转为新版客诉
@@ -43,7 +43,7 @@
 		</div>
 
 		<div class="clearfix" style="margin-bottom: 25px;"></div>
-	</eq>
+	</if>
 
 	<div class="panel panel-default">
 		<div class="panel-heading panel-heading-edit"><h4>基本信息</h4></div>
@@ -191,7 +191,7 @@
 
 
 	<!-- 转为新版客诉模态框 -->
-	<eq name="Think.session.user.account" value="$details.salesperson">
+	<if condition="$Think.session.user.account eq strtolower($details['salesperson'])">
 		<div class="modal fade bs-example-modal-sm" id="changeNewVersion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			<div class="layui-form">
 				<div class="modal-dialog modal-sm" role="document">
@@ -234,7 +234,7 @@
 				</div>
 			</div>
 		</div>
-	</eq>
+	</if>
 
 	<!-- 消息提示模态框 -->
 	<div class="modal fade bs-example-modal-sm" id="message-modal" role="dialog">
@@ -250,10 +250,3 @@
 	</div>
 
 </block>
-
-
-
-
-
-
-

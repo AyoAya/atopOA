@@ -148,7 +148,7 @@ class CustomerController extends AuthController{
             $this->in = array_unique($in);
         }
     }
-    
+
     //新增客诉
     public function addCustomer(){
         if(IS_POST){
@@ -238,7 +238,7 @@ class CustomerController extends AuthController{
             $this->display();
         }
     }
-    
+
     //客诉详情
     public function details(){
         if(!I('get.id')) return false;
@@ -474,7 +474,7 @@ HTML;
             }
         }
     }
-    
+
     //文件上传(客诉处理/客诉详情/添加客诉)
     public function uploadFile(){
         //$sessionid = I('post.PHPSESSID');
@@ -495,7 +495,7 @@ HTML;
         $this->ajaxReturn($arr);
         exit;
     }
-    
+
     //添加处理记录
     public function addComplaintLog(){
         if(!IS_AJAX) return false;
@@ -549,7 +549,7 @@ HTML;
             $this->ajaxReturn(array('flag'=>0,'msg'=>'记录添加失败'));
         }
     }
-    
+
     //删除图像
     public function unlinkPic(){
         if(!IS_AJAX) return false;
@@ -561,7 +561,7 @@ HTML;
             $this->ajaxReturn('false');exit;
         }
     }
-    
+
     //下载文件
     public function downloadFile(){
         //检测文件路径是否包含中文，如果存在中文则转换编码
@@ -591,5 +591,5 @@ HTML;
         $this->assign('status',$status);
         $this->display();
     }
-    
+
 }
