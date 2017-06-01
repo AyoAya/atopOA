@@ -304,17 +304,20 @@ code {
 
 /*** 转为新版客诉 ***/
 #changeNewVersion .warning-prompt {
-	color: #888;
-	font-size: 12px;
+	color: #428bca;
+}
+#changeNewVersion .warning-prompt-danger {
+	color: #d9534f;
+	margin-bottom: 15px;
+}
+#changeNewVersion .layui-form-item {
+	margin-bottom: 15px !important;
+	margin-top: 5px !important;
 }
 #changeNewVersion .warning-prompt i {
 	margin-right: 10px;
 	font-size: 14px;
 	color: #f0ad4e;
-}
-#changeNewVersion .layui-form-item {
-	margin-top: 15px;
-	margin-bottom: 0;
 }
 #changeNewVersion .layui-form-label {
 	width: 72px;

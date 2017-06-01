@@ -39,8 +39,8 @@
 
 	<if condition="$Think.session.user.account eq strtolower($details['salesperson'])">
 		<div class="pull-left" role="group">
-			<button type="button" class="layui-btn layui-btn-primary" data-toggle="modal" data-target="#changeNewVersion">
-				<span class="glyphicon glyphicon-plus"></span> 转为新版客诉
+			<button type="button" class="layui-btn" data-toggle="modal" data-target="#changeNewVersion" style="background: #428bca;">
+				<span class="icon-share-alt"></span> 转为新版客诉
 			</button>
 		</div>
 
@@ -341,11 +341,12 @@
 							<h4 class="modal-title" id="myModalLabel">转为新版客诉</h4>
 						</div>
 						<div class="modal-body">
-							<p class="warning-prompt"><i class="icon-warning-sign"></i>转为新版客诉后，将无法再回到旧版客诉</p>
+							<p class="warning-prompt-danger">注意：转为新版客诉后，将无法再回到旧版。</p>
+							<p class="warning-prompt"><i class="icon-warning-sign"></i>请选择处理人</p>
 							<div class="layui-form-item">
 								<label class="layui-form-label">FAE</label>
 								<div class="layui-input-block">
-									<select name="operation_person">
+									<select name="operation_person" lay-search>
 										<volist name="FAE_person_list" id="value">
 											<option value="{$value.id}">{$value.nickname}</option>
 										</volist>
@@ -353,10 +354,11 @@
 								</div>
 							</div>
 							<present name="vendorBrand"> {//如果设备厂商不存在则让销售选择}
+								<p class="warning-prompt"><i class="icon-warning-sign"></i> 设备厂商不合法，请重新选择</p>
 								<div class="layui-form-item">
 									<label class="layui-form-label">设备厂商</label>
 									<div class="layui-input-block">
-										<select name="vendor">
+										<select name="vendor" lay-search>
 											<volist name="vendorBrand" id="value">
 												<option value="{$value.brand}">{$value.brand}</option>
 											</volist>
@@ -365,10 +367,11 @@
 								</div>
 							</present>
 							<present name="productFilter">
+								<p class="warning-prompt"><i class="icon-warning-sign"></i> 产品信息不合法，请重新选择</p>
 								<div class="layui-form-item">
 									<label class="layui-form-label">产品型号</label>
 									<div class="layui-input-block pn-position-relative">
-										<input type="text" name="pn" readonly placeholder="选择产品型号" class="layui-input product-select">
+										<input type="text" name="pn" readonly placeholder="选择产品型号" lay-verify="required" class="layui-input product-select">
 										<button type="button" class="clear-empty" title="清空"><i class="layui-icon">&#x1006;</i></button>
 									</div>
 								</div>

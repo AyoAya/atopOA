@@ -394,6 +394,8 @@ class CustomerController extends AuthController{
     public function changeNewVersion(){
         if( IS_POST ){
 
+            $customercomplaint_pn_save_id = 1;
+
             $post = I('post.');
 
             $oacustomercomplaint_model = M('Oacustomercomplaint');
@@ -412,6 +414,11 @@ class CustomerController extends AuthController{
                 $customercomplaint_save_id = $model->table(C('DB_PREFIX').'oacustomercomplaint')->save( ['id'=>$post['main_assoc'],'version'=>'new','vendor'=>$post['vendor'],'now_step'=>2] );
             }else{
                 $customercomplaint_save_id = $model->table(C('DB_PREFIX').'oacustomercomplaint')->save( ['id'=>$post['main_assoc'],'version'=>'new','now_step'=>2] );
+            }
+
+            # 如果存在pn则说明旧版客诉录入的pn型号不合法，需要更新
+            if( isset($post['pn']) ){
+                $customercomplaint_pn_save_id = $model->table(C('DB_PREFIX').'oacustomercomplaint')->save( ['id'=>$post['main_assoc'],'pn'=>$post['pn']] );
             }
 
             # 转为新版客诉2：将从表上的version字段值改为new并且内容等于新客诉的改为步骤1，不为新客诉的改为2
@@ -441,7 +448,7 @@ class CustomerController extends AuthController{
             $operation_add_id_fae = $model->table(C('DB_PREFIX').'oacustomeroperation')->add($operation_data);
 
             # 当每个环节都成功之后再返回最终结果
-            if( $customercomplaint_save_id !== false && $customercomplaintlog_save_id_version !== false && $customercomplaintlog_save_id_step !== false && $customercomplaintlog_add_id && $operation_add_id_sale && $operation_add_id_fae ){
+            if( $customercomplaint_save_id !== false && $customercomplaint_pn_save_id != false && $customercomplaintlog_save_id_version !== false && $customercomplaintlog_save_id_step !== false && $customercomplaintlog_add_id && $operation_add_id_sale && $operation_add_id_fae ){
 
                 $model->commit();
 

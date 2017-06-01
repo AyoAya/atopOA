@@ -327,6 +327,7 @@ class RMAController extends AuthController{
 
         //获取当前id指定的客诉
         $resultData = $complaint->find(I('get.id'));
+        //print_r($resultData);
 
         //如果当前访问客诉为老版客诉则直接跳转到老版客诉页面
         if( $resultData['version'] != 'new' ){
@@ -566,12 +567,24 @@ class RMAController extends AuthController{
                 }
                 //如果该用户头像文件不存在则采用默认头像
                 if( $value['recorder'] != 'OASystem' ){
-                    $face = $user->field('nickname,face')->find($value['uid']);
-                    if($face){
-                        $value['face'] = $face['face'];
-                        $value['nickname'] = $face['nickname'];
+                    if( $value['uid'] != 0 ){
+                        $face = $user->field('nickname,face')->find($value['uid']);
+                        if($face){
+                            $value['face'] = $face['face'];
+                            $value['nickname'] = $face['nickname'];
+                        }else{
+                            $value['face'] = '/Public/home/img/face/default_face.png';
+                            $value['nickname'] = 'Unknow';
+                        }
                     }else{
-                        $value['face'] = '/Public/home/img/face/default_face.png';
+                        $face = $user->field('nickname,face')->where('account="'.$value['recorder'].'"')->limit(1)->select()[0];
+                        if($face){
+                            $value['face'] = $face['face'];
+                            $value['nickname'] = $face['nickname'];
+                        }else{
+                            $value['face'] = '/Public/home/img/face/default_face.png';
+                            $value['nickname'] = 'Unknow';
+                        }
                     }
                 }else{
                     $value['face'] = '/Public/home/img/OA_ststem_face.png';
