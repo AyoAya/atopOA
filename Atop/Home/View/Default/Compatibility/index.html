@@ -116,11 +116,11 @@
                         <td class="td_brand">{$value.VendorBrand.brand}</td>
                         <td class="td_model">{$value.model}</td>
                         <if condition="$value.state eq 1">
-                            <td class="state"><a href="__ROOT__/Compatibility?state={$value.state}"><span class="pass">{$value.state_text}</span></a></td>
+                            <td class="state"><a href="__ROOT__/Compatibility?state={$value.state}"><span class="tag tag-success">{$value.state_text}</span></a></td>
                         <elseif condition="$value.state eq 2"/>
-                            <td class="state"><a href="__ROOT__/Compatibility?state={$value.state}"><span class="comm">{$value.state_text}</span></a></td>
+                            <td class="state"><a href="__ROOT__/Compatibility?state={$value.state}"><span class="tag tag-warning">{$value.state_text}</span></a></td>
                         <else/>
-                            <td class="state"><a href="__ROOT__/Compatibility?state={$value.state}"><span class="fail">{$value.state_text}</span></a></td>
+                            <td class="state"><a href="__ROOT__/Compatibility?state={$value.state}"><span class="tag tag-danger">{$value.state_text}</span></a></td>
                         </if>
                         <td class="td_version">{$value.version}</td>
                         <td class="td_original">{$value.original}</td>

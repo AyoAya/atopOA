@@ -36,7 +36,7 @@
                     <th>波长</th>
                     <th>光组件</th>
                     <th>发端功率</th>
-                    <th>接受灵敏度</th>
+                    <th>接收灵敏度</th>
                     <th>接口</th>
                     <th>温度范围</th>
                     <th>距离</th>
@@ -70,14 +70,14 @@
             <table class="layui-table table-com">
                 <thead>
                 <tr>
-                    <th class="th_num">序号</th>
+                    <th class="th_num" width="55">序号</th>
                     <th class="th_brand">设备品牌</th>
                     <th class="th_model">设备型号</th>
-                    <th class="th_state">状态</th>
+                    <th class="th_state" width="90">状态</th>
                     <th class="th_version">版本</th>
                     <th class="th_original">原厂型号</th>
-                    <th class="th_comment">备注</th>
-                    <th class="th_person">添加人</th>
+                    <th class="th_comment" width="30%">备注</th>
+                    <th class="th_person" width="70">添加人</th>
                     <th class="th_time">添加时间</th>
                 </tr>
                 </thead>
@@ -88,11 +88,11 @@
                         <td>{$value.VendorBrand.brand}</td>
                         <td>{$value.model}</td>
                         <if condition="$value.state eq 1">
-                            <td class="state"><span class="pass">{$value.state_text}</span></td>
+                            <td class="state"><span class="tag tag-success">{$value.state_text}</span></td>
                         <elseif condition="$value.state eq 2"/>
-                            <td class="state"><span class="comm">{$value.state_text}</span></td>
+                            <td class="state"><span class="tag tag-warning">{$value.state_text}</span></td>
                         <else/>
-                            <td class="state"><span class="fail">{$value.state_text}</span></td>
+                            <td class="state"><span class="tag tag-danger">{$value.state_text}</span></td>
                         </if>
                         <td>{$value.version}</td>
                         <td>{$value.original}</td>
