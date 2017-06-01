@@ -17,3 +17,15 @@
     position: relative;
     left: -50px;
 }
+.face-box .attachment-box-dom .file-name{
+    position: relative;
+}
+.attachment-box-ext{
+    position: relative;
+    bottom: 44px;
+    left: 120px;
+}
+.timeline .timeline-heading .timeline-table .timeline-info, .timeline .timeline-heading .timeline-table .timeline-content {
+    padding: 0 25px 0px 20px;
+    vertical-align: top;
+}

@@ -10,12 +10,12 @@
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
-    <title>发布软件</title>
+    <title>软件发布</title>
 </block>
 <!-- 【路径导航】 -->
 <block name="breadcrumb">
     <ol class="breadcrumb breadcrumb-edit">
-        <li class="active">发布软件</li>
+        <li class="active">软件发布</li>
     </ol>
 </block>
 <!-- 【正文区域】 -->
@@ -49,13 +49,13 @@
         <tbody>
             <volist name="softData" id="vo" key="k">
                  <tr>
-                    <td>{$k}</td>
-                    <td>{$vo.type}</td>
-                    <td><a href="__ROOT__/Software/detail/id/{$vo.id}">{$vo.number}</a></td>
-                    <td>{$vo.name}</td>
-                    <td>{$vo.muc}</td>
-                    <td>V1.0</td>
-                    <td>2017-05-15</td>
+                        <td>{$k}</td>
+                        <td>{$vo.type}</td>
+                        <td><a href="__ROOT__/Software/detail/id/{$vo.id}">{$vo.number}</a></td>
+                        <td>{$vo.name}</td>
+                        <td>{$vo.mcu}</td>
+                        <td>{$vo.content.0.version}</td>
+                        <td>{$vo.content.0.save_time|date="Y-m-d" ,###}</td>
                  </tr>
             </volist>
         </tbody>

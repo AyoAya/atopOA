@@ -9,8 +9,23 @@ class SoftwareController extends AuthController {
      * 首页
      */
     public function index(){
-        $software = M('Software');
-        $softData =  $software->select();
+
+        $model = new model();
+
+        $softData =  $model->table(C('DB_PREFIX').'software')
+                           ->select();
+
+        foreach($softData as $key=>&$value){
+
+            $value['content'] = $model->table(C('DB_PREFIX').'software_log')
+                ->where('soft_asc ='.$value['id'])
+                ->order('id DESC')
+                ->field('version,save_time,soft_asc')
+                ->select();
+
+        }
+
+        //print_r($softData);
 
         $this->assign('softData',$softData);
         $this->display();
@@ -38,20 +53,25 @@ class SoftwareController extends AuthController {
             if(I('post.type') == 'ATE'){
                 $soft['mcu'] = '';
             }
+
             # 判断项目单号是否存在
             $rel = $software->where('number="'.I('post.number').'"')->select();
 
             if(!empty($rel)){
+
                 $this->ajaxReturn(['flag'=>0,'msg'=>'该项目已存在!']);
                 exit();
+
             }else{
+
                 $software_add_id = $software->add($soft);
+
                 if( $software_add_id ){
 
                     $softLog['soft_asc'] = $software_add_id;
                     $softLog['version'] = 'v1.0';
                     $softLog['save_time'] = time();
-                    $softLog['log'] = '有新软件发布';
+                    $softLog['log'] = '新软件发布';
                     $softLog['save_person'] = session('user')['id'];
 
                     $software_log_id = $software_log->add($softLog);
@@ -59,12 +79,19 @@ class SoftwareController extends AuthController {
                     if( $software_log_id ){
 
                         $this->ajaxReturn(['flag'=>1,'msg'=>'添加项目成功!']);
+
                     }else{
+
                         $this->ajaxReturn(['flag'=>0,'msg'=>'添加项目失败!']);
+                        exit();
+
                     }
+
                 }else{
+
                     $this->ajaxReturn(['flag'=>0,'msg'=>'添加项目失败!']);
                     exit();
+
                 }
             }
         }
@@ -118,9 +145,9 @@ class SoftwareController extends AuthController {
 
             $add_saftlog_id = M('software_log')->add($logData);
             if( $add_saftlog_id ){
-                $this->ajaxReturn(['flag'=>1,'mag'=>'更新成功!']);
+                $this->ajaxReturn(['flag'=>1,'msg'=>'更新成功!']);
             }else{
-                $this->ajaxReturn(['flag'=>0,'mag'=>'更新失败!']);
+                $this->ajaxReturn(['flag'=>0,'msg'=>'更新失败!']);
             }
 
 

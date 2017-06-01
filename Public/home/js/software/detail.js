@@ -3,6 +3,19 @@
  */
 $(function(){
 
+
+    // 默认只显示最新的一条版本信息
+    $('.timeline-tr').each(function () {
+        if($(this).index() == 0){
+            $(this).find('.timeline-content').find('.box-info').css('display','block');
+        }else{
+            $(this).find('.timeline-content').find('.box-info').css('display','none');
+            $(this).find('.timeline-content').find('.box-off-on').find('i').removeClass('icon-caret-down');
+            $(this).find('.timeline-content').find('.box-off-on').find('i').addClass('icon-caret-right');
+        }
+    })
+
+
     // 监听滚动，如果添加处理日志存在并且出现返回顶部按钮则将添加日志按钮向上调整
     $('#content').scroll(function(){
 
@@ -147,7 +160,22 @@ $(function(){
     });
 
 
+    //里程碑
 
+   $('.box-off-on').click(function () {
+
+       $(this).each(function () {
+          if($(this).next().next().css('display') == 'block'){
+              $(this).find('i').removeClass('icon-caret-down');
+              $(this).next().next().css('display','none');
+              $(this).find('i').addClass('icon-caret-right');
+          }else {
+              $(this).find('i').removeClass('icon-caret-right');
+              $(this).next().next().css('display','block');
+              $(this).find('i').addClass('icon-caret-down');
+          }
+      })
+    });
 
 
 

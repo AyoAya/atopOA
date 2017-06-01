@@ -14,12 +14,12 @@
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
-    <title>软件详情</title>
+    <title>发布历史</title>
 </block>
 <!-- 【路径导航】 -->
 <block name="breadcrumb">
     <ol class="breadcrumb breadcrumb-edit">
-        <li><a href="__ROOT__/Software">发布软件</a></li>
+        <li><a href="__ROOT__/Software">软件发布</a></li>
         <li class="active">发布历史</li>
     </ol>
 </block>
@@ -70,44 +70,57 @@
 
                 <volist name="softData" id="vo" key="k">
 
-                    <tr>
+                    <tr class="timeline-tr">
                         <td class="timeline-info">
-                            <div class="timeline-time-big">{$vo.version}</div>
-                            <div class="timeline-time-small">{$vo.save_time|date="Y-m-d",###}</div>
+                            <div class="timeline-time-big"><span>{$vo.save_time|date="Y-m-d",###}</span></div>
                             <div class="timeline-circle"></div>
                         </td>
                         <td class="timeline-content">
-                            <div class="timeline-content-left pull-left">
-                                <div class="timeline-user-face">
-                                    <img src="{$vo.face}" width="48" alt="">
-                                </div>
-                            </div>
-                            <div class="timeline-content-right pull-right">
-                                <p>{$vo.log}</p>
-                                {//附件不为空才加载}
+
+                            <div class="timeline-time-small box-off-on" style="margin-bottom: 20px; color: #428bca;font-size: 18px;"><a href="javascript:;">{$vo.version} <i class="icon-caret-down"></i></a></div>
+
+                            <div class="attachment-box-ext">
                                 <notempty name="vo.attachment">
                                     <volist name="vo.attachment" id="val">
-                                        {//如果附件为图像则直接显示}
-                                        <in name="val.ext" value="jpg,jpeg,png,gif,bmp">
-                                            <div class="pic-group pull-left" style="text-align: center;">
-                                                <a href="__ROOT__/{$val.path}" target="_blank" style="display: block;border: solid 1px #ccc;"><img class="customer-complaint-img-c" src="__ROOT__/{$val.path}" height="200" alt="加载失败"></a>
-                                                <span class="pic-info">{$val.savename}</span>
-                                            </div>
-                                        </in>
                                         <notin name="val.ext" value="jpg,jpeg,png,gif,bmp">
-                                            <div class="attachment-box">
-                                                <div class="attachment-box-dom">
+                                            <div class="attachment-box face-box">
+                                                <div class="attachment-box-dom" style="display: inline">
                                                     <p class="file-name">
-                                                        <a href="#"><i class="file-icon file-icon-ext-{$vo.attachment.0.ext}"></i> {$val.savename}</a>
+                                                        <a href="__ROOT__/{$val.path}"><i class="file-icon file-icon-ext-{$val.ext}"></i> {$val.savename}</a>
                                                     </p>
                                                 </div>
                                             </div>
                                         </notin>
                                     </volist>
-                                    <div class="clearfix"></div>
+                                    <div class="clearfix" style="margin-top:0px;"></div>
                                 </notempty>
-                                <div class="clearfix"></div>
-                                <div class="timeline-other">{$softwareData.person}<span class="timeline-divider">|</span>{$vo.save_time|date="Y-m-d",###}</div>
+                            </div>
+
+
+                            <div class="box-info" style="display: block">
+                                <div class="timeline-content-left pull-left">
+                                    <div class="timeline-user-face">
+                                        <img src="{$vo.face}" width="48" alt="">
+                                    </div>
+                                </div>
+                                <div class="timeline-content-right pull-right dis-box">
+                                    <p>{$vo.log}</p>
+                                    {//附件不为空才加载}
+                                    <notempty name="vo.attachment">
+                                        <volist name="vo.attachment" id="val">
+                                            {//如果附件为图像则直接显示}
+                                            <in name="val.ext" value="jpg,jpeg,png,gif,bmp">
+                                                <div class="pic-group pull-left" style="text-align: center;">
+                                                    <a href="__ROOT__/{$val.path}" target="_blank" style="display: block;border: solid 1px #ccc;"><img class="customer-complaint-img-c" src="__ROOT__/{$val.path}" height="200" alt="加载失败"></a>
+                                                    <span class="pic-info">{$val.savename}</span>
+                                                </div>
+                                            </in>
+                                        </volist>
+                                        <div class="clearfix"></div>
+                                    </notempty>
+                                    <div class="clearfix"></div>
+                                    <div class="timeline-other">{$softwareData.person}<span class="timeline-divider">|</span>{$vo.save_time|date="Y-m-d",###}</div>
+                                </div>
                             </div>
                             <div class="clearfix"></div>
                         </td>
@@ -124,7 +137,6 @@
         <p>处理记录</p>
     </button>
 
-
 </block>
 
 
@@ -135,23 +147,23 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel" style="font-size: 18px;">添加处理记录</h4>
+                    <h4 class="modal-title" id="myModalLabel" style="font-size: 18px;">更新版本</h4>
                 </div>
 
                 <form class="layui-form" action="" id="detail_form">
                     <div class="modal-body">
 
-                        <div class="layui-form-item layui-form-text">
-                            <label class="layui-form-label" style="padding-left: 0;width: 60px;">备注</label>
-                            <div class="layui-input-block" style="margin-left: 60px;">
-                                <textarea name="context" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
-                            </div>
-                        </div>
-
                         <div class="layui-form-item">
                             <label class="layui-form-label version">版本号</label>
                             <div class="layui-input-block">
-                                <input type="text" name="version" class="layui-input version-ipt" placeholder="例如 V1.25">
+                                <input type="text" name="version" class="layui-input version-ipt" style="width: 508px;" placeholder="例如 V1.25">
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label" style="padding-left: 0;width: 60px;">日志</label>
+                            <div class="layui-input-block" style="margin-left: 60px;">
+                                <textarea name="context" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
                             </div>
                         </div>
 
