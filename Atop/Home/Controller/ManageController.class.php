@@ -123,7 +123,6 @@ class ManageController extends AuthController {
     
     //添加管理员
     public function add(){
-        //print_r($_POST);die;
         if(IS_AJAX){
             $person = D('User');
             if(!$person->create()){
@@ -156,7 +155,7 @@ class ManageController extends AuthController {
     }
 
     //邮件通知
-    public function EmailNotice(){
+   public function EmailNotice(){
         if(!IS_POST) reutrn;
         $address = I('post.sendEmail');
         $result = send_Email($address,'这是邮件的标题','这是邮件的正文');
@@ -256,6 +255,12 @@ HTML;
         $userData['department'] = I('post.department');
         $userData['position'] = I('post.position');
         $userData['level'] = I('post.level');
+        $userData['sex'] = I('post.sex');
+
+        if($userData['sex'] == '女'){
+            $userData['face'] = '/Public/home/img/face/face_01.png';
+        }
+
         if(I('post.report')!=''){
             $userData['report'] = I('post.report');
         }
@@ -277,7 +282,7 @@ HTML;
                 $nickname = I('post.nickname');
                 $subject = '您的OA系统账号已开通!';
                 $body = '<p>Dear '.I('post.nickname').',</p><p>您的OA系统账号已开通!<br><br>账号：'.I('post.account').'<br>密码：'.I('post.password').'<br><br>收到邮件后请及时登录 <a style="color:#428bca;" href="http://'.$_SERVER['HTTP_HOST'].'">http://'.$_SERVER['HTTP_HOST'].'</a> 修改密码。</p>';
-                send_Email($address, $nickname, $subject, $body);
+                //send_Email($address, $nickname, $subject, $body);
                 $this->ajaxReturn(array('flag'=>'1','msg'=>'添加成功'));
             }else{
                 $this->ajaxReturn(array('flag'=>'0','msg'=>'添加失败'));
