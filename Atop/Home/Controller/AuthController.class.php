@@ -51,6 +51,23 @@ class AuthController extends Controller {
 
     }
 
+    # 获取所有部门和人员信息
+    protected function getAllUsersAndDepartments(){
+        $result['departments'] = M('Department')->select();
+        $result['users'] = M('User')->where('id<>1 AND state=1')->select();     //只获取状态为正常的人员
+        # 统计每个部门的人数
+        foreach($result['departments'] as $key=>&$value){
+            $num = 0;
+            foreach( $result['users'] as $k=>&$v ){
+                if( $value['id'] == $v['department'] ){
+                    $num++;
+                }
+            }
+            $value['summary'] = $num;
+        }
+        $this->assign('AUAD', $result);
+    }
+
 
 
     // 获取产品信息
