@@ -26,6 +26,7 @@ class AcronymController extends AuthController {
         $this->display();
     }
 
+
     //添加页面载入
     public function add(){
         if(IS_POST){
