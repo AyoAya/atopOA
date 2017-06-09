@@ -1,7 +1,7 @@
 <?php
 
 # 屏蔽所有报错
-#error_reporting(0);
+error_reporting(0);
 
 # 设置默认时间区
 date_default_timezone_set('PRC');
@@ -14,9 +14,30 @@ class PushEmail {
     private $db_user = 'root';
     private $db_pwd = 'root';
     private $db_name = 'atop';
-    static $address = ['vinty_email@163.com','m18581898939@163.com'];
-    static $cc = ['1055363766@qq.com','underfinedvar@qq.com'];
+    static $address = [
+        'm18581898939@163.com'
+        /*
+            'yangpeiyun@atoptechnology.com',    //杨培云
+            'xiaoaiyou@atoptechnology.com',     //肖艾佑
+            'chenshi@atoptechnology.com',   //陈实
+            'haorui@atoptechnology.com',        //郝锐
+            'jonas@atoptechnology.com'         //张炜哲
+            */
+    ];
+    static $cc = [
+        'gongchixiang@atoptechnology.com'
+        /*
+            'sunbin@atoptechnology.com',        //孙膑
+            'dingzheng@atoptechnology.com',     //丁征
+            'mikechen@atoptechnology.com',      //陈应时
+            'xiaxiaosen@atoptechnology.com',    //夏小森
+            'liping@atoptechnology.com',    //李平
+            'kent@atoptechnology.com',      //董总
+            'jackfan@atoptechnology.com'    //范总
+            */
+    ];
 
+    /*liping@atoptechnology*/
     # 定义数据库资源句柄
     static $mysqli;
 
@@ -44,7 +65,13 @@ class PushEmail {
         $end_date = time();
 
         # 获取本周的订单数据
-        $sql = 'SELECT * FROM atop_sample WHERE create_time > '.$start_date.' AND create_time < '.$end_date.' ORDER BY create_time ASC';
+        $sql = 'SELECT * FROM atop_sample a,atop_sample_detail b 
+                WHERE ((a.create_time > '.$start_date.' AND a.create_time < '.$end_date.') 
+                OR (b.now_step < 7 AND b.state = "N") 
+                OR (b.actual_date > '.$start_date.' AND b.actual_date < '.$end_date.')) 
+                AND a.id = b.detail_assoc 
+                GROUP BY b.id 
+                ORDER BY b.id ASC';
 
         $sample_data = self::select($sql);
 
@@ -57,10 +84,20 @@ class PushEmail {
                       WHERE 
                         detail_assoc = '.$value['id'].' AND a.product_id = c.id AND a.manager = d.id AND a.now_step = b.id';
 
-
             $value['detail'] = self::select($sql);
+            //$value['nic'] = self::select($sql_s);
 
             foreach( $value['detail'] as $k=>&$v ){
+
+                $sql = 'SELECT b.nickname current_person FROM atop_sample_operating a,atop_user b WHERE a.asc_detail='.$v['detail_id'].' AND a.operator=b.id';
+
+                $tmpArr = self::select($sql);
+
+                //print_r($tmpArr);
+
+                $v['current_person'] = end($tmpArr)['current_person'];
+
+                //print_r($value['detail']);
 
                 # 如果产品步骤大于6则说明该单已经完成
                 if( $v['now_step'] > 6 ){
@@ -73,16 +110,17 @@ class PushEmail {
 
         }
 
+        //print_r($sample_data);
         self::output( $sample_data );
 
     }
+
 
     private static function output( $data ){
 
         $style = <<<STYLE
 <style>
 .title {
-    border: solid 1px #ccc;
     padding: 15px 0;
     text-align: center;
     border-bottom: none;
@@ -120,6 +158,12 @@ span.danger {
 .table th,.table td {
     padding: 9px 15px;
 }
+.table th,.table td a{
+    text-decoration: none;
+}
+.table td a {
+    color: #428bca;
+}
 .table thead tr th {
     border-right: solid 1px #ccc;
     padding: 12px 15px;
@@ -138,7 +182,7 @@ span.danger {
 </style>
 STYLE;
 
-        $html = '<div class="title">华拓'.date('Y',time()).'年第'.date('W',time()).'周样品订单进度汇总</div>';
+        $html = '<div class="title">'.date('Y',time()).'年第'.date('W',time()).'周样品订单状态汇总表</div>';
 
         $html .= "\r\n<table class='table' cellpadding='0' cellspacing='0'>
     <thead>
@@ -146,15 +190,19 @@ STYLE;
             <th>序号</th>
             <th>订单号</th>
             <th>销售</th>
+            <th>下单时间</th>
             <th>产品型号</th>
-            <th>产品经理</th>
-            <th>要求交期</th>
-            <th>实际交期</th>
+            <th width='80'>要求交期</th>
+            <th width='80'>预计交期</th>
+            <th width='80'>实际交期</th>
             <th>模块数量</th>
             <th>客户名称</th>
             <th>设备品牌</th>
-            <th>设备型号</th>
-            <th>当前进度</th>
+            <th>设备型号</th> 
+            <th width='40'>交期状态</th>
+            <th>产品经理</th>
+            <th width='90'>当前进度</th>
+            <th>当前处理人</th>
         </tr>
     </thead>
     <tbody>\r\n";
@@ -165,19 +213,21 @@ STYLE;
 
             $html .= "\t\t\t<td rowspan='".count($value['detail'])."'>".($key+1)."</td>\r\n";
 
-            $html .= "\t\t\t<td rowspan='".count($value['detail'])."'>".$value['order_num']."</td>\r\n";
+            $html .= "\t\t\t<td rowspan='".count($value['detail'])."'><a href='http://".$_SERVER['HTTP_HOST']."/Sample/overview/id/{$value['id']}'>".$value['order_num']."</a></td>\r\n";
 
             $html .= "\t\t\t<td rowspan='".count($value['detail'])."'>".$value['create_person_name']."</td>\r\n";
+
+            $html .= "\t\t\t<td rowspan='".count($value['detail'])."'>".date('Y-m-d ',$value['create_time'])."</td>\r\n";
 
             foreach( $value['detail'] as $k=>&$v ){
 
                 if( $k == 0 ){
 
-                    $html .= "\t\t\t<td>".$v['pn']."</td>\r\n";
-
-                    $html .= "\t\t\t<td>".$v['nickname']."</td>\r\n";
+                    $html .= "\t\t\t<td><a href='http://".$_SERVER['HTTP_HOST']."/Sample/detail/id/{$v['detail_id']}'>".$v['pn']."</a></td>\r\n";
 
                     $html .= "\t\t\t<td>".$v['requirements_date']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['expect_date']."</td>\r\n";
 
                     $html .= "\t\t\t<td>".$v['actual_date']."</td>\r\n";
 
@@ -189,23 +239,46 @@ STYLE;
 
                     $html .= "\t\t\t<td>".$v['model']."</td>\r\n";
 
-                    if( $v['state'] == 'N' ){
+                    if( !empty($v['actual_date'])){
+
+                        if( $v['actual_date'] < $v['requirements_date']){
+                            $html .= "\t\t\t<td><span class='danger'> 延期 </span></td>\r\n";
+                        }else{
+                            $html .= "\t\t\t<td><span class='success'> 正常 </span></td>\r\n";
+                        }
+
+                    }else{
+
+                        $html .= "\t\t\t<td><span class=''> --- </span></td>\r\n";
+                    }
+
+
+                    $html .= "\t\t\t<td>".$v['nickname']."</td>\r\n";
+
+                    if( $v['state'] == 'N'|| $v['state'] == 'C' ){
 
                         if( $v['class'] == 'processing' ){
 
-                            $html .= "\t\t\t<td><span class='".$v['class']."'>".$v['name']."</span></td>\r\n";
+                            $html .= "\t\t\t<td><span class='".$v['class']."'>".$v['name']."中</span></td>\r\n";
 
                         }else{
 
-                            $html .= "\t\t\t<td><span class='".$v['class']."'>".$v['name']."</span></td>\r\n";
+                            if( $v['state'] == 'C' ){
+                                $html .= "\t\t\t<td><span class='".$v['class']."'>已".$v['name']."</span></td>\r\n";
+                            }else {
+                                $html .= "\t\t\t<td><span class='".$v['class']."'>已发货待".$v['name']."</span></td>\r\n";
+                            }
+
 
                         }
 
                     }else{
 
-                        $html .= "\t\t\t<td><span class='danger'>".$v['name']."</span></td>\r\n";
+                        $html .= "\t\t\t<td><span class='danger'>".$v['name']."未通过</span></td>\r\n";
 
                     }
+
+                    $html .= "\t\t\t<td>".$v['current_person']."</td>\r\n";
 
                     $html .= "\t\t</tr>\r\n";
 
@@ -213,11 +286,11 @@ STYLE;
 
                     $html .= "\t\t<tr>\r\n";
 
-                    $html .= "\t\t\t<td>".$v['pn']."</td>\r\n";
-
-                    $html .= "\t\t\t<td>".$v['nickname']."</td>\r\n";
+                    $html .= "\t\t\t<td><a href='http://".$_SERVER['HTTP_HOST']."/Sample/detail/id/{$v['detail_id']}'>".$v['pn']."</a></td>\r\n";
 
                     $html .= "\t\t\t<td>".$v['requirements_date']."</td>\r\n";
+
+                    $html .= "\t\t\t<td>".$v['expect_date']."</td>\r\n";
 
                     $html .= "\t\t\t<td>".$v['actual_date']."</td>\r\n";
 
@@ -229,23 +302,45 @@ STYLE;
 
                     $html .= "\t\t\t<td>".$v['model']."</td>\r\n";
 
-                    if( $v['state'] == 'N' ){
+                    if( !empty($v['actual_date'])){
+
+                        if( $v['actual_date'] < $v['requirements_date']){
+                            $html .= "\t\t\t<td><span class='danger'> 延期 </span></td>\r\n";
+                        }else{
+                            $html .= "\t\t\t<td><span class='success'> 正常 </span></td>\r\n";
+                        }
+
+                    }else{
+
+                        $html .= "\t\t\t<td><span class=''> --- </span></td>\r\n";
+                    }
+
+                    $html .= "\t\t\t<td>".$v['nickname']."</td>\r\n";
+
+                    if( $v['state'] == 'N'|| $v['state'] == 'C' ){
 
                         if( $v['class'] == 'processing' ){
 
-                            $html .= "\t\t\t<td><span class='".$v['class']."'>".$v['name']."</span></td>\r\n";
+                            $html .= "\t\t\t<td><span class='".$v['class']."'>".$v['name']."中</span></td>\r\n";
 
                         }else{
 
-                            $html .= "\t\t\t<td><span class='".$v['class']."'>".$v['name']."</span></td>\r\n";
+                            if( $v['state'] == 'C' ){
+                                $html .= "\t\t\t<td><span class='".$v['class']."'>已".$v['name']."</span></td>\r\n";
+                            }else {
+                                $html .= "\t\t\t<td><span class='".$v['class']."'>已".$v['name']."待反馈</span></td>\r\n";
+                            }
+
 
                         }
 
                     }else{
 
-                        $html .= "\t\t\t<td><span class='danger'>".$v['name']."</span></td>\r\n";
+                        $html .= "\t\t\t<td><span class='danger'>".$v['name']."未通过</span></td>\r\n";
 
                     }
+
+                    $html .= "\t\t\t<td>".$v['current_person']."</td>\r\n";
 
                     $html .= "\t\t</tr>\r\n";
 
@@ -256,11 +351,11 @@ STYLE;
 
         }
 
-        $subject = '华拓'.date('Y',time()).'年第'.date('W',time()).'周样品订单进度汇总';
+        $subject = date('Y',time()).'年第'.date('W',time()).'周样品订单进度汇总';
 
         $html .= "\t</tbody>\r\n</table>";
 
-        //echo $style.$html;
+        echo $style.$html;
         self::push_eml($style.$html,$subject);
 
     }
@@ -311,8 +406,8 @@ STYLE;
 SIGN;
 
         //导入PHPMail邮件类
-        require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
-        require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
+        require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
+        require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
 
         $mail = new \PHPMailer();
 

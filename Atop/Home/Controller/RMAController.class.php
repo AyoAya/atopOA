@@ -141,7 +141,7 @@ class RMAController extends AuthController{
 
         # 获取销售部门人员信息
         $sales = $model->table(C('DB_PREFIX').'user')->field('account,nickname')->where('department=4')->order('id ASC')->select();
-        $brands = $model->table(C('DB_PREFIX').'vendor_brand')->order('id ASC')->select();
+        $brands = $model->table(C('DB_PREFIX').'vendor_brand')->order('brand ASC')->select();
 
         $filter_data['sales'] = $sales;
         $filter_data['brands'] = $brands;

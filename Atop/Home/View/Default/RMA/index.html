@@ -137,15 +137,30 @@
 							<select name="vendor">
 								<option value="">设备厂商</option>
 								<volist name="filter.brands" id="value">
-									<present name="Think.get.vendor">
-										<eq name="Think.get.vendor" value="$value.brand">
-											<option value="{$value.brand}" selected>{$value.brand}</option>
+									<eq name="value.brand" value="N/A">
+										<present name="Think.get.vendor">
+											<eq name="Think.get.vendor" value="$value.brand">
+												<option value="{$value.brand}" selected>{$value.brand}</option>
+											<else/>
+												<option value="{$value.brand}">{$value.brand}</option>
+											</eq>
 										<else/>
 											<option value="{$value.brand}">{$value.brand}</option>
-										</eq>
-									<else/>
-										<option value="{$value.brand}">{$value.brand}</option>
-									</present>
+										</present>
+									</eq>
+								</volist>
+								<volist name="filter.brands" id="value">
+									<neq name="value.brand" value="N/A">
+										<present name="Think.get.vendor">
+											<eq name="Think.get.vendor" value="$value.brand">
+												<option value="{$value.brand}" selected>{$value.brand}</option>
+											<else/>
+												<option value="{$value.brand}">{$value.brand}</option>
+											</eq>
+										<else/>
+											<option value="{$value.brand}">{$value.brand}</option>
+										</present>
+									</neq>
 								</volist>
 							</select>
 						</div>

@@ -175,7 +175,7 @@ class SampleController extends AuthController {
 
                     $addData['recipient_name'] = implode('&',$tmpNickname);
 
-                    $this->pushEmail('ADD', $tmpEmails,$addData,$person );
+                    //$this->pushEmail('ADD', $tmpEmails,$addData,$person );
 
                     $this->ajaxReturn(['flag'=>1,'msg'=>'添加订单成功！','id'=>$sample_id]);
                 }
@@ -190,7 +190,6 @@ class SampleController extends AuthController {
             #设备品牌数据
             $vendor_brand = M('VendorBrand')->field('id,brand')->select();
             $this->assign('vendorBrand',$vendor_brand);
-
 
             $this->assign('productFilter', $this->getProductData());
             $this->display();
@@ -585,7 +584,7 @@ class SampleController extends AuthController {
 
                     if( $add_log_id ){
                         $model->commit();
-                        $this->pushEmail('LOG', $emails, $orderData[0],$cc);
+                       // $this->pushEmail('LOG', $emails, $orderData[0],$cc);
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
                     }else{
                         $model->rollback();
@@ -659,7 +658,7 @@ class SampleController extends AuthController {
 
 
                             $model->commit();
-                            $this->pushEmail('PUSH', $add_push_num['email'], $orderData[0],$cc);
+                           // $this->pushEmail('PUSH', $add_push_num['email'], $orderData[0],$cc);
                             $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
                         }else{
                             $model->rollback();
@@ -670,7 +669,7 @@ class SampleController extends AuthController {
 
                         if( $op_time_save &&  $add_push_log_id && $add_push_id && $save_detail_row){
                             $model->commit();
-                            $this->pushEmail('PUSH', $add_push_num['email'], $orderData[0],$cc);
+                           // $this->pushEmail('PUSH', $add_push_num['email'], $orderData[0],$cc);
                             $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
                         }else{
                             $model->rollback();
@@ -699,7 +698,7 @@ class SampleController extends AuthController {
 
                     if( $state_save_result && $add_termination_log_id ){
                         $model->commit();
-                        $this->pushEmail('TERMINATION', $emails, $orderData[0],$cc);
+                       // $this->pushEmail('TERMINATION', $emails, $orderData[0],$cc);
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
                     }else{
                         $model->rollback();
@@ -731,7 +730,7 @@ class SampleController extends AuthController {
                     if( $transfer_save_result && $add_transfer_log_id ){
                         $model->commit();
                         # 调用邮箱
-                        $this->pushEmail('TRANSFER', $recipient['email'], $orderData[0], $cc);
+                        //$this->pushEmail('TRANSFER', $recipient['email'], $orderData[0], $cc);
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
                     }else{
                         $model->rollback();
@@ -779,7 +778,7 @@ class SampleController extends AuthController {
                     if( $detail_now_step_save && $operating_now_step_del && $emp_prev_step_op_time && $add_rollback_log_id ){
                         $model->commit();
                         #   调用邮箱
-                        $this->pushEmail('ROLLBACK', $recipient['email'], $orderData[0], $cc);
+                      //  $this->pushEmail('ROLLBACK', $recipient['email'], $orderData[0], $cc);
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功'] );
                     }else{
                         $model->rollback();
@@ -811,7 +810,7 @@ class SampleController extends AuthController {
 
                     if($add_transfer_log_id && $op_time_save && $detail_now_state){
                         $model->commit();
-                        $this->pushEmail('SUCCESS', $emails, $orderData[0],$cc);
+                       // $this->pushEmail('SUCCESS', $emails, $orderData[0],$cc);
                         $this->ajaxReturn( ['flag'=>1,'msg'=>'操作完成'] );
                     }else{
                         $model->rollback();
@@ -829,9 +828,9 @@ class SampleController extends AuthController {
     public function Logistics(){
         $model = new model();
         $LogisticsResult = $model
-                            ->table(C('DB_PREFIX').'sample_detail a,'.C('DB_PREFIX').'logistics b,'.C('DB_PREFIX').'sample c')
-                            ->field('a.pn,a.requirements_date,a.waybill,b.logistics_name,b.logistics_code,c.order_num')
-                            ->where('a.id ='.$_GET['id'].' AND a.logistics = b.id AND c.id = a.detail_assoc')
+                            ->table(C('DB_PREFIX').'sample_detail a,'.C('DB_PREFIX').'logistics b')
+                            ->field('a.pn,a.requirements_date,a.waybill,b.logistics_name,b.logistics_code')
+                            ->where('a.id ='.$_GET['id'].' AND a.logistics = b.id')
                             ->select();
         $Logistics_code = $LogisticsResult[0]['logistics_code'];
         $waybill = $LogisticsResult[0]['waybill'];
@@ -850,8 +849,6 @@ class SampleController extends AuthController {
         }
 
         curl_close($ch);
-
-        print_r($LogisticsResult[0]);
 
         $this->assign('logisticsData',$logistics_data);
         $this->assign('LogisticsResult',$LogisticsResult[0]);

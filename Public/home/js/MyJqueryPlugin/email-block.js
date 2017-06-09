@@ -59,7 +59,7 @@
 
             });
 
-            _this.find('.email-block-users-box .email-block-item').click(function(){
+            _this.find('.email-block-users-box .email-block-item').click(function(event){
 
                 event.stopImmediatePropagation();
 
@@ -84,7 +84,7 @@
 
             });
 
-            _this.find('.email-block-user-items').on('click', '.email-block-user-item-span i.icon-remove', function(){
+            _this.find('.email-block-user-items').on('click', '.email-block-user-item-span i.icon-remove', function(event){
 
                 event.stopImmediatePropagation();
 
@@ -94,7 +94,7 @@
 
             });
 
-            _this.find('button.email-block-done-btn').click(function(){
+            _this.find('button.email-block-done-btn').click(function(event){
 
                 event.stopImmediatePropagation();
 
@@ -102,7 +102,7 @@
 
             });
 
-            _this.find('button.email-block-clear-btn').click(function(){
+            _this.find('button.email-block-clear-btn').click(function(event){
 
                 event.stopImmediatePropagation();
 
