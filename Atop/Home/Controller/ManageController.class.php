@@ -282,7 +282,7 @@ HTML;
                 $nickname = I('post.nickname');
                 $subject = '您的OA系统账号已开通!';
                 $body = '<p>Dear '.I('post.nickname').',</p><p>您的OA系统账号已开通!<br><br>账号：'.I('post.account').'<br>密码：'.I('post.password').'<br><br>收到邮件后请及时登录 <a style="color:#428bca;" href="http://'.$_SERVER['HTTP_HOST'].'">http://'.$_SERVER['HTTP_HOST'].'</a> 修改密码。</p>';
-                //send_Email($address, $nickname, $subject, $body);
+                send_Email($address, $nickname, $subject, $body);
                 $this->ajaxReturn(array('flag'=>'1','msg'=>'添加成功'));
             }else{
                 $this->ajaxReturn(array('flag'=>'0','msg'=>'添加失败'));
