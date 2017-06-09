@@ -192,7 +192,7 @@ class SoftwareController extends AuthController {
                 $data['push_email'] = json_decode($data[0]['push_email'],true);
                 $data['cc_email'] = json_decode($data[0]['cc_email'],true);
 
-                //if( !empty($pushArr) ) $this->pushEmail($pushArr,$data[0],$ccArr);
+                if( !empty($pushArr) ) $this->pushEmail($pushArr,$data[0],$ccArr);
 
                 $this->ajaxReturn(['flag' => 1, 'msg' => '更新成功!']);
             } else {
