@@ -22,6 +22,8 @@ class SoftwareController extends AuthController {
                 ->select();
         }
 
+
+
             foreach ($softData as $key => &$value) {
 
                 $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
@@ -32,21 +34,21 @@ class SoftwareController extends AuthController {
             }
 
             $softwareData = $model->table(C('DB_PREFIX') . 'software')
-                ->where("type='ate'")
+                ->where("type='ATE'")
                 ->select();
 
             foreach ($softwareData as $key => &$value) {
 
                 $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
-                    ->where('soft_asc =' . $value['id'])
+                    ->where('soft_asc ='.$value['id'])
                     ->order('id DESC')
                     ->field('version,save_time,soft_asc')
                     ->select();
-
-                $this->assign('softData', $softData);
-                $this->assign('softwareData', $softwareData);
-                $this->display();
             }
+
+        $this->assign('softData', $softData);
+        $this->assign('softwareData', $softwareData);
+        $this->display();
 
         }
 
@@ -228,7 +230,7 @@ class SoftwareController extends AuthController {
 
         $user = session('user')['nickname'];
 
-        $subject = ' [软件发布] '.$number.' 评估板手动软件 ( '.$name.' ) 发布更新'.$version.'';
+        $subject = ' [软件发布] '.$number.' ( '.$name.' ) 发布更新'.$version.'';
         $body = <<<HTML
 <style>
 .step {
@@ -247,7 +249,7 @@ a{
 }
 </style>
 <p>Dear $call,</p>
-<p>[$user] 发布了<b>$number</b>( $name 手动调试软件 )的 $version 版本，请登录<a href="http://$http_host/Software/detail/id/$soft_asc" target="_blank">http://$http_host/Software/detail/id/$soft_asc</a>下载使用</p>
+<p>[$user] 发布了<b>$number</b>( $name )的 $version 版本，请登录<a href="http://$http_host/Software/detail/id/$soft_asc" target="_blank">http://$http_host/Software/detail/id/$soft_asc</a>下载使用</p>
 <p class="title">更新记录：</p>
 <span>
     $log

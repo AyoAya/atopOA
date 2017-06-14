@@ -38,7 +38,9 @@
                 <th>项目类型</th>
                 <th>项目编号</th>
                 <th>项目名称</th>
-                <th>主控MCU</th>
+                <notempty name="softwareData.mcu">
+                    <th>主控MCU</th>
+                </notempty>
                 <th>版本号</th>
                 <th>最后更新时间</th>
             </tr>
@@ -50,7 +52,9 @@
                     <td>{$softwareData.type}</td>
                     <td>{$softwareData.number}</td>
                     <td>{$softwareData.name}</td>
-                    <td>{$softwareData.mcu}</td>
+                    <notempty name="softwareData.mcu">
+                        <td>{$softwareData.mcu}</td>
+                    </notempty>
                     <td>{$softwareData.child.0.version}</td>
                     <notempty name="softwareData.child.0.save_time">
                         <td>{$softwareData.child.0.save_time|date="Y-m-d" ,###}</td>
