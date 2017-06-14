@@ -190,7 +190,7 @@ class SampleController extends AuthController {
             }
 
             #设备品牌数据
-            $vendor_brand = M('VendorBrand')->field('id,brand')->select();
+            $vendor_brand = M('VendorBrand')->field('id,brand')->order('brand ASC')->select();
             $this->assign('vendorBrand',$vendor_brand);
 
             $this->assign('productFilter', $this->getProductData());

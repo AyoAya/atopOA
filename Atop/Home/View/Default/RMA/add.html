@@ -70,7 +70,15 @@
 					<!--<input type="text" name="vendor" class="layui-input" placeholder="例如 Huawei">-->
 					<select name="vendor" lay-search>
 						<volist name="vendorBrand" id="value">
-							<option value="{$value.brand}">{$value.brand}</option>
+							<eq name="value.brand" value="N/A">
+								<option value="{$value.brand}">{$value.brand}</option>
+							</eq>
+						</volist>
+
+						<volist name="vendorBrand" id="value">
+							<neq name="value.brand" value="N/A">
+								<option value="{$value.brand}">{$value.brand}</option>
+							</neq>
 						</volist>
 					</select>
 				</div>

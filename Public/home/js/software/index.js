@@ -17,5 +17,4 @@ $(function(){
         $('.ate-tab').css('display', 'inline-block');
     })
 
-
 })

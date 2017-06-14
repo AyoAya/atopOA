@@ -88,7 +88,15 @@
 						<div class="layui-input-inline vendor-brand-select">
 							<select name="brand" lay-search>
 								<volist name="vendorBrand" id="vo">
-									<option value="{$vo.brand}">{$vo.brand}</option>
+									<eq name="vo.brand" value="N/A">
+										<option value="{$vo.brand}">{$vo.brand}</option>
+									</eq>
+								</volist>
+
+								<volist name="vendorBrand" id="vo">
+									<neq name="vo.brand" value="N/A">
+										<option value="{$vo.brand}">{$vo.brand}</option>
+									</neq>
 								</volist>
 							</select>
 						</div>
