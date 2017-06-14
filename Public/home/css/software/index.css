@@ -11,3 +11,6 @@
     border: none;
     height: 36px;
 }
+.nav-tabs li a{
+    color: #444;
+}

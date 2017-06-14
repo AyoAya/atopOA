@@ -212,6 +212,11 @@ $(function(){
                     addRel : data.field,
                     email : emailObj,
                 },
+
+                beforeSend : function(){
+                    layer.load(2, { shade : [0.5,'#fff'] });
+                },
+
                 success : function( response ){
                     if( response.flag > 0 ){
                         layer.closeAll();

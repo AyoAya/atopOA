@@ -26,9 +26,6 @@
 .expense-box .expense-form .col-lg-6 {
     padding: 0 15px !important;
 }
-.expense-box .expense-form-container .col-lg-6:nth-child(odd) {
-    padding-right: 20px !important;
-}
 .expense-box .expense-form-container .col-lg-6:nth-child(even) {
     padding-left: 20px !important;
 }
@@ -137,3 +134,39 @@
     text-align: center;
     line-height: 60px;
 }
+.procedure-wrap .procedure-title{
+    width: 120px !important;
+    font-size: 15px !important;
+    margin-left: -60px !important;
+}
+.procedure-wrap .procedure-info{
+    color: #999 !important;
+}
+.expense-form-box{
+    margin-right: 23px !important;
+}
+.expense-form-box .close i{
+    position: relative;
+    top:12px;
+    color: red !important;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

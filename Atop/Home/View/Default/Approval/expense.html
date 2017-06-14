@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="__CSS__/bs-is-fun.css">
     <link rel="stylesheet" href="__CSS__/Huploadify.css">
     <link rel="stylesheet" href="__CSS__/jquery.toastmessage.css">
+    <link rel="stylesheet" href="__CSS__/procedure.css">
     <link rel="stylesheet" href="__CSS__/expense.css">
 </block>
 <!-- 【引入javascript文件】 -->
@@ -28,42 +29,134 @@
 <block name="content">
 
     <div class="expense-box">
-        <ul class="nav nav-pills nav-justified step step-progress">
+        <!--<ul class="nav nav-pills nav-justified step step-progress">
             <li class="active">
                 <a>发起报销<br>({$Think.session.user.nickname})</a>
             </li>
             <li><a>部门总监审核<br>({$director.0.nickname})</a></li>
             <li><a>财务总监审核<br>({$financial.director.nickname})</a></li>
             <li><a>财务副总审核<br>({$financial.vicepresident.nickname})</a></li>
-        </ul>
+        </ul>-->
+        <div class="section-primary" style="margin-bottom: 20px;">
+            <div class="section-title "><h5><a href="__ROOT__/Sample/detail/id/{$value.id}"></a></h5></div>
+            <div class="section-body">
+                <div class="procedure">
+                    <table class="procedure-table">
+                        <tr class="procedure-wrap">
+                            <td class="active">
+                                <div class="procedure-title">发起报销
+                                        <i class=" icon-info-sign myTooltip">
+                                            <div class="sr-only popover-box" style="top: 26px;" >
+                                                    <div class="log-box">
+                                                        <span class="log-box-time">2017-01-01</span>
+                                                        <span class="log-box-context">张伟哲</span>
+                                                    </div>
+                                            </div>
+                                        </i>
+                                </div>
+                                <div class="procedure-step"><i class="icon-ok"></i></div>
+                                <div class="procedure-info">
+                                    张伟哲<br>
+                                    2017-01-01
+                                </div>
+                                <div class="procedure-hollow"></div>
+
+                            {//还未进行的步骤}
+                            <td>
+                                <div class="procedure-title">部门总监审核</div>
+                                <div class="procedure-step">2</div>
+                                <div class="procedure-info">
+                                    张伟哲<br>
+                                    2017-01-01
+                                </div>
+                                <div class="procedure-hollow"></div>
+                            </td>
+
+                            <td>
+                                <div class="procedure-title">财务总监审核</div>
+                                <div class="procedure-step">3</div>
+                                <div class="procedure-info">
+                                    张伟哲<br>
+                                    2017-01-01
+                                </div>
+                                <div class="procedure-hollow"></div>
+                            </td>
+
+                            <td>
+                                <div class="procedure-title">财务副总审核</div>
+                                <div class="procedure-step">4</div>
+                                <div class="procedure-info">
+                                    张伟哲<br>
+                                    2017-01-01
+                                </div>
+                                <div class="procedure-hollow"></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+
+
         <div class="form-group">
             <label>标题：</label>
             <input type="text" class="form-control approval-title" placeholder="例：出差绵阳费用">
         </div>
         <div class="expense-form-container">
-            <form role="form" class="expense-form col-lg-6">
-                <div class="page-header">
-                    <h4><i class="icon-credit-card">&nbsp;</i>报销明细 (<span class="expense-number">1</span>)<i class="remove-detail pull-right icon-remove" title="删除该报销明细"></i></h4>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label>报销金额(元)：</label>
-                            <!-- 限制金额只能输入数字 -->
-                            <input type="text" placeholder="请输入报销金额 (必填)" name="" class="form-control input-money" onkeyup="value=value.replace(/[^1234567890]+/g,'')" onpaste="return false;">
+            <form role="form" class="expense-form col-lg-6" style="width: 100%; padding: 0 0 0 0">
+                <div class="pull-left expense-form-box" style="margin-right: 0px;">
+                    <div class="close"><i class="icon-remove"></i></div>
+                    <div class="page-header">
+                        <h4><i class="icon-credit-card">&nbsp;</i>报销明细<i class="remove-detail pull-right icon-remove" title="删除该报销明细"></i></h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>报销金额(元)：</label>
+                                <!-- 限制金额只能输入数字 -->
+                                <input type="text" placeholder="请输入报销金额 (必填)" name="" class="form-control input-money" onkeyup="value=value.replace(/[^1234567890]+/g,'')" onpaste="return false;">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>报销类别：</label>
+                                <input type="text" placeholder="如：采购经费 (必填)" name="" class="form-control input-category">
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label>报销类别：</label>
-                            <input type="text" placeholder="如：采购经费 (必填)" name="" class="form-control input-category">
-                        </div>
+                    <div class="form-group">
+                        <label>费用明细：</label>
+                        <textarea placeholder="请输入费用明细描述" name="" class="form-control textrea-detail rewrite-textarea"></textarea>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label>费用明细：</label>
-                    <textarea placeholder="请输入费用明细描述" name="" class="form-control textrea-detail rewrite-textarea"></textarea>
-                </div>
+
+              <!--  <div class="pull-left expense-form-box ">
+                    <div class="page-header">
+                        <h4><i class="icon-credit-card">&nbsp;</i>报销明细 (<span class="expense-number">2</span>)<i class="remove-detail pull-right icon-remove" title="删除该报销明细"></i></h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>报销金额(元)：</label>
+                                &lt;!&ndash; 限制金额只能输入数字 &ndash;&gt;
+                                <input type="text" placeholder="请输入报销金额 (必填)" name="" class="form-control input-money" onkeyup="value=value.replace(/[^1234567890]+/g,'')" onpaste="return false;">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label>报销类别：</label>
+                                <input type="text" placeholder="如：采购经费 (必填)" name="" class="form-control input-category">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>费用明细：</label>
+                        <textarea placeholder="请输入费用明细描述" name="" class="form-control textrea-detail rewrite-textarea"></textarea>
+                    </div>
+                </div>-->
+
             </form>
         </div>
         <div class="clearfix"></div>

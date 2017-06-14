@@ -16,7 +16,9 @@ class SampleController extends AuthController {
             $this->assign( 'search' , I('get.search') );
 
         }else{
+
             $count = $person->count();
+
         }
 
         # 数据分页

@@ -12,24 +12,45 @@ class SoftwareController extends AuthController {
 
         $model = new model();
 
-        $softData =  $model->table(C('DB_PREFIX').'software')
-                           ->select();
+        if(I('get.search')){
 
-        foreach($softData as $key=>&$value){
+        $softData = $model->table(C('DB_PREFIX') . 'software')->where('number LIKE "%'.I('get.search').'%" OR name LIKE "%'.I('get.search').'%" OR person LIKE "%'.I('get.search').'%"')->select();
 
-            $value['content'] = $model->table(C('DB_PREFIX').'software_log')
-                ->where('soft_asc ='.$value['id'])
-                ->order('id DESC')
-                ->field('version,save_time,soft_asc')
+        }else{
+        $softData = $model->table(C('DB_PREFIX') . 'software')
+                ->where("type='firmware'")
                 ->select();
-
         }
 
-        # print_r($softData);
+            foreach ($softData as $key => &$value) {
 
-        $this->assign('softData',$softData);
-        $this->display();
-    }
+                $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
+                    ->where('soft_asc =' . $value['id'])
+                    ->order('id DESC')
+                    ->field('version,save_time,soft_asc')
+                    ->select();
+            }
+
+            $softwareData = $model->table(C('DB_PREFIX') . 'software')
+                ->where("type='ate'")
+                ->select();
+
+            foreach ($softwareData as $key => &$value) {
+
+                $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
+                    ->where('soft_asc =' . $value['id'])
+                    ->order('id DESC')
+                    ->field('version,save_time,soft_asc')
+                    ->select();
+
+                $this->assign('softData', $softData);
+                $this->assign('softwareData', $softwareData);
+                $this->display();
+            }
+
+        }
+/*
+    }*/
 
 
     /**
@@ -39,13 +60,12 @@ class SoftwareController extends AuthController {
 
         if( IS_POST ){
             $software = M('Software');
-            $software_log = M('SoftwareLog');
 
             $soft['type'] = I('post.type');
             $soft['number'] = I('post.number');
             $soft['name'] = I('post.name');
             $soft['mcu'] = I('post.mcu');
-            $soft['log'] = I('post.log');
+            $soft['comment'] = str_replace("\n","<br>",I('post.log'));
             $soft['person'] = session('user')['nickname'];
             $soft['create_time'] = time();
 
@@ -66,33 +86,12 @@ class SoftwareController extends AuthController {
 
                 $software_add_id = $software->add($soft);
 
-                if( $software_add_id ){
+                if( $software_add_id ) {
 
-                    $softLog['soft_asc'] = $software_add_id;
-                    $softLog['version'] = 'V1.0';
-                    $softLog['save_time'] = time();
-                    $softLog['log'] = I('post.log');
-                    $softLog['save_person'] = session('user')['id'];
-
-                    $software_log_id = $software_log->add($softLog);
-
-                    if( $software_log_id ){
-
-                        $this->ajaxReturn(['flag'=>1,'msg'=>'添加项目成功!']);
-
-                    }else{
-
-                        $this->ajaxReturn(['flag'=>0,'msg'=>'添加项目失败!']);
-                        exit();
-
-                    }
-
-                }else{
-
-                    $this->ajaxReturn(['flag'=>0,'msg'=>'添加项目失败!']);
-                    exit();
+                    $this->ajaxReturn(['flag' => 1, 'msg' => '添加项目成功!']);
 
                 }
+
             }
         }
         $this->display();
@@ -114,7 +113,7 @@ class SoftwareController extends AuthController {
             ->select();
 
 
-        //print_r($softRel);
+        # print_r($softRel);
 
         foreach ($softRel['child'] as $key=>&$value){
             $value['attachment'] = json_decode($value['attachment'],true);
@@ -125,16 +124,12 @@ class SoftwareController extends AuthController {
             }
         }
 
-        //print_r($softRel);
-
         # 邮件推送抄送人
 
         $ccList = $model->table(C('DB_PREFIX').'department')->select();
         foreach ($ccList as $key=>&$value){
             $value['users'] = $model->table(C('DB_PREFIX').'user')->where('department ='.$value['id'])->select();
         }
-
-        # print_r($softRel);
 
         //调用父类注入部门和人员信息
         $this->getAllUsersAndDepartments();

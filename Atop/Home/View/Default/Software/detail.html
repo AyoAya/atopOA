@@ -28,11 +28,9 @@
 <!-- 【正文区域】 -->
 <block name="content">
 
-
-    <div class="title-bar" style="margin: 0 0 20px 0;">
+    <div class="title-bar" style="margin: 0 0 10px 0;">
         <h4>基本信息</h4>
     </div>
-
     <table class="layui-table">
         <thead>
             <tr>
@@ -54,13 +52,23 @@
                     <td>{$softwareData.name}</td>
                     <td>{$softwareData.mcu}</td>
                     <td>{$softwareData.child.0.version}</td>
-                    <td>{$softwareData.child.0.save_time|date="Y-m-d",###}</td>
+                    <notempty name="softwareData.child.0.save_time">
+                        <td>{$softwareData.child.0.save_time|date="Y-m-d" ,###}</td>
+                    </notempty>
+                    <empty name="softwareData.child.0.save_time">
+                        <td>{$softwareData.create_time|date="Y-m-d" ,###}</td>
+                    </empty>
                 </tr>
 
         </tbody>
     </table>
 
-    <div class="title-bar" style="margin: 40px 0 30px 0;">
+    <div class="title-bar" style="margin: 20px 0 20px 0;">
+        <h4>软件说明</h4>
+    </div>
+    <span style="border: 1px solid #e2e2e2; width: 100%;display: inline-block;padding:15px 0 20px 15px;">{$softwareData.comment}</span>
+
+    <div class="title-bar" style="margin: 20px 0 30px 0;">
         <h4>发布历史</h4>
     </div>
 

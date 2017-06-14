@@ -23,19 +23,37 @@
 
     <div class="pull-left">
         <a href="__ROOT__/Software/add" class="layui-btn layui-btn-primary">添加软件</a>
-    </div>
 
+    </div>
+    <present name="Think.get.search">
+        <div class="pull-left search-clear" style="margin-left: 15px;">
+            <a href="__ROOT__/Software" class="layui-btn layui-btn-danger clear-condition">清除条件</a>
+        </div>
+    </present>
     <div class="pull-right search-box">
         <form class="layui-form">
-            <input type="text" class="layui-input search-input" placeholder="搜索">
+            <input type="text" name="search" value="<present name='Think.get.search'>{$Think.get.search}</present>" id="searchText" class="layui-input search-input" placeholder="搜索">
             <button lay-submit lay-filter="software" class="layui-btn layui-btn-primary search-btn"><i class="layui-icon">&#xe615;</i></button>
         </form>
     </div>
 
+    <div class="btn-banner pull-left" style="width: 100%;margin-top: 20px;">
+        <ul class="nav nav-tabs">
+                <li role="presentation" class="active firm-li">
+                    <a href="javascript:void(0);" aria-controls="overview" role="tab">firmware</a>
+                </li>
+                <li role="presentation" class="ate-li">
+                    <a href="javascript:void(0);" aria-controls="plan" role="tab">ATE</a>
+                </li>
+        </ul>
+    </div>
+
     <div class="clearfix" style="margin-bottom: 15px;"></div>
 
-    <table class="layui-table">
-        <thead>
+<div class="firm-tab" style="width: 100%;">
+    <table class="layui-table" style="width: 100% !important;">
+
+        <thead  style="width: 100% !important;">
             <tr>
                 <th>序号</th>
                 <th>项目类型</th>
@@ -55,12 +73,59 @@
                         <td>{$vo.name}</td>
                         <td>{$vo.mcu}</td>
                         <td>{$vo.content.0.version}</td>
-                        <td>{$vo.content.0.save_time|date="Y-m-d" ,###}</td>
+                        <notempty name="vo.content.0.save_time">
+                            <td>{$vo.content.0.save_time|date="Y-m-d" ,###}</td>
+                        </notempty>
+                        <empty name="vo.content.0.save_time">
+                            <td>{$vo.create_time|date="Y-m-d" ,###}</td>
+                        </empty>
+
+
                  </tr>
             </volist>
         </tbody>
     </table>
+</div>
 
+<div class="ate-tab" style="width: 100%; display: none;">
+    <table class="layui-table" style="width: 100% !important;">
+        <thead style="width: 100% !important;" >
+        <tr>
+            <th>序号</th>
+            <th>项目类型</th>
+            <th>项目编号</th>
+            <th>项目名称</th>
+            <th>版本号</th>
+            <th>最后更新时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist name="softwareData" id="vo" key="k">
+            <tr>
+                <td>{$k}</td>
+                <td>{$vo.type}</td>
+                <td><a href="__ROOT__/Software/detail/id/{$vo.id}">{$vo.number}</a></td>
+                <td>{$vo.name}</td>
+                <td>{$vo.content.0.version}</td>
+                <notempty name="vo.content.0.save_time">
+                    <td>{$vo.content.0.save_time|date="Y-m-d" ,###}</td>
+                </notempty>
+                <empty name="vo.content.0.save_time">
+                    <td>{$vo.create_time|date="Y-m-d" ,###}</td>
+                </empty>
+
+
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+</div>
+
+
+
+    <div class="clearfix"></div>
+    <!-- 分页 -->
+    <ul class="pagination pagination-edit">{$page}</ul>
 </block>
 
 
