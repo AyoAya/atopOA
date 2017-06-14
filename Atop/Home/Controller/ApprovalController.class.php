@@ -14,7 +14,7 @@ class ApprovalController extends AuthController  {
     //初始化页面
     public function index(){
         //我发起的
-        $approval = D('Approval');
+        /*$approval = D('Approval');
         $approvalResult = $approval->where('person_id='.session('user')['id'])->order('create_time DESC')->select();
         $approvalResult = $this->conversionZH_CN($approvalResult);
         $approvalResult = $this->addStateStyle($approvalResult);
@@ -63,7 +63,7 @@ class ApprovalController extends AuthController  {
         # print_r($likedata);
         $this->assign('_empty','<div class="empty-info"><i class="icon-info-sign"></i><p>没有数据</p></div>');
         $this->assign('approval',$approvalResult);
-        $this->assign('likedata',$likedata);
+        $this->assign('likedata',$likedata);*/
         $this->display();
     }
 
