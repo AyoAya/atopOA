@@ -101,6 +101,7 @@ class PushEmail {
 
         }
 
+
         self::output( $sample_data );
 
     }
@@ -235,9 +236,9 @@ STYLE;
                     if( !empty($v['actual_date'])){
 
                         if( $v['actual_date'] < $v['requirements_date']){
-                            $html .= "\t\t\t<td><span class='danger'> 延期 </span></td>\r\n";
+                            $html .= "\t\t\t<td><span class='danger'> 正常 </span></td>\r\n";
                         }else{
-                            $html .= "\t\t\t<td><span class='success'> 正常 </span></td>\r\n";
+                            $html .= "\t\t\t<td><span class='success'> 延期 </span></td>\r\n";
                         }
 
                     }else{
@@ -298,9 +299,9 @@ STYLE;
                     if( !empty($v['actual_date'])){
 
                         if( $v['actual_date'] < $v['requirements_date']){
-                            $html .= "\t\t\t<td><span class='danger'> 延期 </span></td>\r\n";
+                            $html .= "\t\t\t<td><span class='danger'> 正常 </span></td>\r\n";
                         }else{
-                            $html .= "\t\t\t<td><span class='success'> 正常 </span></td>\r\n";
+                            $html .= "\t\t\t<td><span class='success'> 延期 </span></td>\r\n";
                         }
 
                     }else{
@@ -401,6 +402,9 @@ SIGN;
         //导入PHPMail邮件类
         require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
 		require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
+
+
+
 
         $mail = new \PHPMailer();
 
