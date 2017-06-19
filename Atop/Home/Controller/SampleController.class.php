@@ -424,13 +424,13 @@ class SampleController extends AuthController {
             # 根据当前步骤获取下一个步骤的处理人
             switch( $detailResult[0]['now_step'] ){
                 case 2:
-                    $persons = M('user')->where( ['department'=>5] )->select();
+                    $persons = M('user')->where( 'department=5 AND state=1' )->select();
                     $this->assign('persons',$persons);
                     break;
 
                 case 3:
 
-                    $persons = M('user')->where('id ='.$detailResult[0]['manager'])->select();;
+                    $persons = M('user')->where('id ='.$detailResult[0]['manager'].' AND state=1')->select();;
 
                     $this->assign('persons',$persons);
 
@@ -444,7 +444,7 @@ class SampleController extends AuthController {
                     break;
 
                 case 4:
-                    $persons = M('user')->where( ['position'=>11] )->select();
+                    $persons = M('user')->where( 'position=11 AND state=1' )->select();
 
                     $this->assign('persons',$persons);
 
@@ -465,7 +465,7 @@ class SampleController extends AuthController {
                     break;
 
                 case 5:
-                    $persons = M('user')->where('id ='.$detailResult[0]['manager'])->select();;
+                    $persons = M('user')->where('id ='.$detailResult[0]['manager'].' AND state=1')->select();;
 
                     $this->assign('persons',$persons);
 
@@ -484,7 +484,7 @@ class SampleController extends AuthController {
 
                     break;
                 case 6:
-                    $persons = M('user')->where( 'id='.$detailResult[0]['sales_id'] )->select();
+                    $persons = M('user')->where( 'id='.$detailResult[0]['sales_id'].' AND state=1' )->select();
                     $this->assign('persons',$persons);
 
                     # 注入物流公司数据
