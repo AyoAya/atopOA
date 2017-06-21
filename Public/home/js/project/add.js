@@ -71,7 +71,7 @@ $(function(){
             var _this = $(this);
             var _title = $(this).parent().prev().text();
             var _dpmt = $(this).attr('dpmt');
-            console.log(_dpmt);
+            //console.log(_dpmt);
             $('#choosePersonBody ul li').each(function(index){
                 // 隐藏非改部门人员
                 if( $(this).attr('dpmtid') != _dpmt ){
