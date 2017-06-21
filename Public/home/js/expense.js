@@ -35,6 +35,17 @@ $(function(){
         }
     });
 
+
+    //添加一栏
+    var num = 1,
+        _box = $('.expense-form').html();
+
+    $('.add-detail-btn').click(function () {
+        $('.expense-form').append(_box);
+    });
+
+
+
     //获取到报销明细表单dom
     var expenseHtml = $('.expense-form-container').html();
     //动态添加报销明细单

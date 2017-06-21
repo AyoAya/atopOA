@@ -4,12 +4,14 @@
 <block name="linkcss">
     <link rel="stylesheet" href="__CSS__/timeline.css">
     <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
-    <link rel="stylesheet" href="__CSS__/software/detail.css">
     <link rel="stylesheet" href="__CSS__/sample/detail.css">
+    <link rel="stylesheet" href="__CSS__/block/email.css">
+    <link rel="stylesheet" href="__CSS__/software/detail.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
     <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
+    <script src="__JS__/MyJqueryPlugin/email-block.js"></script>
     <script src="__JS__/software/detail.js"></script>
 </block>
 <!-- 【页面标题】 -->
@@ -26,11 +28,9 @@
 <!-- 【正文区域】 -->
 <block name="content">
 
-
-    <div class="title-bar" style="margin: 0 0 20px 0;">
+    <div class="title-bar" style="margin: 0 0 10px 0;">
         <h4>基本信息</h4>
     </div>
-
     <table class="layui-table">
         <thead>
             <tr>
@@ -38,28 +38,41 @@
                 <th>项目类型</th>
                 <th>项目编号</th>
                 <th>项目名称</th>
-                <th>主控MCU</th>
+                <notempty name="softwareData.mcu">
+                    <th>主控MCU</th>
+                </notempty>
                 <th>版本号</th>
                 <th>最后更新时间</th>
             </tr>
         </thead>
         <tbody>
 
-
                 <tr>
                     <td>1</td>
                     <td>{$softwareData.type}</td>
                     <td>{$softwareData.number}</td>
                     <td>{$softwareData.name}</td>
-                    <td>{$softwareData.mcu}</td>
+                    <notempty name="softwareData.mcu">
+                        <td>{$softwareData.mcu}</td>
+                    </notempty>
                     <td>{$softwareData.child.0.version}</td>
-                    <td>{$softwareData.child.0.save_time|date="Y-m-d",###}</td>
+                    <notempty name="softwareData.child.0.save_time">
+                        <td>{$softwareData.child.0.save_time|date="Y-m-d" ,###}</td>
+                    </notempty>
+                    <empty name="softwareData.child.0.save_time">
+                        <td>{$softwareData.create_time|date="Y-m-d" ,###}</td>
+                    </empty>
                 </tr>
 
         </tbody>
     </table>
 
-    <div class="title-bar" style="margin: 40px 0 30px 0;">
+    <div class="title-bar" style="margin: 20px 0 20px 0;">
+        <h4>软件说明</h4>
+    </div>
+    <span style="border: 1px solid #e2e2e2; width: 100%;display: inline-block;padding:15px 0 20px 15px;">{$softwareData.comment}</span>
+
+    <div class="title-bar" style="margin: 20px 0 30px 0;">
         <h4>发布历史</h4>
     </div>
 
@@ -75,36 +88,30 @@
                             <div class="timeline-time-big"><span>{$vo.save_time|date="Y-m-d",###}</span></div>
                             <div class="timeline-circle"></div>
                         </td>
-                        <td class="timeline-content">
-
-                            <div class="timeline-time-small box-off-on" style="margin-bottom: 20px; color: #428bca;font-size: 18px;"><a href="javascript:;">{$vo.version} <i class="icon-caret-down"></i></a></div>
-
-                            <div class="attachment-box-ext">
-                                <notempty name="vo.attachment">
-                                    <volist name="vo.attachment" id="val">
-                                        <notin name="val.ext" value="jpg,jpeg,png,gif,bmp">
-                                            <div class="attachment-box face-box">
-                                                <div class="attachment-box-dom" style="display: inline">
-                                                    <p class="file-name">
-                                                        <a href="__ROOT__/{$val.path}"><i class="file-icon file-icon-ext-{$val.ext}"></i> {$val.savename}</a>
-                                                    </p>
+                        <td class="timeline-content" style="padding-bottom: 15px;">
+                            <div class="timeline-time-small box-off-on" style="margin-bottom: 20px; color: #428bca;font-size: 18px;">
+                                <a href="javascript:;" style="width:100px !important; display: inline-block;">{$vo.version} <i class="icon-caret-down i-sty"></i></a>
+                                <div class="attachment-box-ext">
+                                    <notempty name="vo.attachment">
+                                        <volist name="vo.attachment" id="val">
+                                            <notin name="val.ext" value="jpg,jpeg,png,gif,bmp">
+                                                <div class="attachment-box face-box">
+                                                    <div class="attachment-box-dom" style="display: inline">
+                                                        <span class="file-name">
+                                                            <a href="__ROOT__/{$val.path}"><i class="file-icon file-icon-ext-{$val.ext}"></i> {$val.savename}</a>
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </notin>
-                                    </volist>
-                                    <div class="clearfix" style="margin-top:0px;"></div>
-                                </notempty>
+                                            </notin>
+                                        </volist>
+                                            <div class="clearfix annax"></div>
+                                    </notempty>
+                                </div>
                             </div>
 
-
                             <div class="box-info" style="display: block">
-                                <div class="timeline-content-left pull-left">
-                                    <div class="timeline-user-face">
-                                        <img src="{$vo.face}" width="48" alt="">
-                                    </div>
-                                </div>
-                                <div class="timeline-content-right pull-right dis-box">
-                                    <p>{$vo.log}</p>
+                                <div class="timeline-content-right dis-box">
+                                    <p>{$vo.log}</p><br>
                                     {//附件不为空才加载}
                                     <notempty name="vo.attachment">
                                         <volist name="vo.attachment" id="val">
@@ -112,14 +119,37 @@
                                             <in name="val.ext" value="jpg,jpeg,png,gif,bmp">
                                                 <div class="pic-group pull-left" style="text-align: center;">
                                                     <a href="__ROOT__/{$val.path}" target="_blank" style="display: block;border: solid 1px #ccc;"><img class="customer-complaint-img-c" src="__ROOT__/{$val.path}" height="200" alt="加载失败"></a>
-                                                    <span class="pic-info">{$val.savename}</span>
+                                                    <span class="pic-info">{$val.savename}</span><br>
                                                 </div>
                                             </in>
                                         </volist>
-                                        <div class="clearfix"></div>
+                                        <div class="clearfix annax"></div>
                                     </notempty>
                                     <div class="clearfix"></div>
-                                    <div class="timeline-other">{$softwareData.person}<span class="timeline-divider">|</span>{$vo.save_time|date="Y-m-d",###}</div>
+                                    <if condition="vo.push_email OR vo.cc_email" >
+                                        <div class="email-box">
+                                            <div class="email_person">
+                                                <notempty name="vo.push_email">
+                                                    <div class="email-box">
+                                                        <div style="display: inline-block">收件人 ：</div>
+                                                        <volist name="vo.push_email" id="v">
+                                                            <span>{$v.name}&nbsp;</span>
+                                                        </volist>
+                                                    </div>
+                                                </notempty>
+
+                                                <notempty name="vo.cc_email">
+                                                    <div class="email-box">
+                                                        <div style="display: inline-block">抄送人 ：</div>
+                                                        <volist name="vo.cc_email" id="v">
+                                                            <span>{$v.name}&nbsp;</span>
+                                                        </volist>
+                                                    </div>
+                                                </notempty>
+                                            </div>
+                                        </div>
+                                    </if>
+                                    <div class="timeline-other">{$softwareData.person}<span class="timeline-divider">|</span>{$vo.save_time|date="Y-m-d H:i:s",###}</div>
                                 </div>
                             </div>
                             <div class="clearfix"></div>
@@ -170,19 +200,21 @@
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label" style="padding-left: 0;width: 60px;">附件</label>
                             <div class="layui-input-block" style="margin-left: 60px;">
-                                <div id="picker">上传附件</div>
+                                <div id="picker" class="pull-left">上传附件</div>
                                 <div class="uploader-file-queue"></div>
                             </div>
                         </div>
 
-                        {//文件上传}
+                        <!--{//文件上传}
                         <div id="uploader" class="wu-example">
-                            <!--用来存放文件信息-->
+                            &lt;!&ndash;用来存放文件信息&ndash;&gt;
                             <div id="thelist" class="uploader-list"></div>
                             <div class="btns">
 
                             </div>
-                        </div>
+                        </div>-->
+
+                        <include file="block:email"/>
 
                     </div>
 

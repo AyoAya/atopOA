@@ -2692,7 +2692,7 @@
     
                 return ret;
             },
-    
+
             /**
              * 在队列中删除文件。
              * @grammar removeFile( file ) => Array
@@ -2702,9 +2702,16 @@
             removeFile: function( file ) {
                 var me = this,
                     existing = this._map[ file.id ];
-    
+
                 if ( existing ) {
                     delete this._map[ file.id ];
+                    for(var i = 0,len = this._queue.length;i < len;i++){
+                        var f = this._queue[i];
+                        if(f.id == file.id){
+                            this._queue.splice(i,1);
+                            break;
+                        }
+                    }
                     file.destroy();
                     this.stats.numofDeleted++;
                 }

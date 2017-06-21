@@ -141,7 +141,7 @@ class RMAController extends AuthController{
 
         # 获取销售部门人员信息
         $sales = $model->table(C('DB_PREFIX').'user')->field('account,nickname')->where('department=4')->order('id ASC')->select();
-        $brands = $model->table(C('DB_PREFIX').'vendor_brand')->order('id ASC')->select();
+        $brands = $model->table(C('DB_PREFIX').'vendor_brand')->order('brand ASC')->select();
 
         $filter_data['sales'] = $sales;
         $filter_data['brands'] = $brands;
@@ -290,7 +290,7 @@ class RMAController extends AuthController{
             }
 
             $vendor_brand_model = M('VendorBrand');
-            $vendor_brand_data = $vendor_brand_model->order('id ASC')->select();
+            $vendor_brand_data = $vendor_brand_model->order('brand ASC')->select();
             $this->assign('vendorBrand',$vendor_brand_data);
             $userlist = $user->field('id,nickname')->where('position=12')->select();
             $this->assign('productFilter',$this->getProductData()); //注入产品筛选数据
@@ -409,7 +409,7 @@ class RMAController extends AuthController{
         # 如果当前步骤在2、4、5则将下一步的推送人注入模板
         if( $resultData['now_step'] == 2 || $resultData['now_step'] == 4 || $resultData['now_step'] == 5 ){
             if( $resultData['now_step'] == 2 ){
-                $push_person_data = M()->field('b.id,b.nickname')->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'user b')->where( 'a.main_assoc='.I('get.id').' AND a.step_assoc=1 AND a.operation_person=b.id' )->select()[0];
+                $push_person_data = M()->field('b.id,b.nickname')->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'user b')->where( 'a.main_assoc='.I('get.id').' AND a.step_assoc=1 AND a.operation_person=b.id AND b.state=1' )->select()[0];
                 $this->assign('pushPerson',$push_person_data['nickname']);
             }elseif( $resultData['now_step'] == 4 ){
                 $productrelationships_model = M('Productrelationships');
@@ -437,27 +437,27 @@ class RMAController extends AuthController{
                         $person_str = substr($person_str,0,-1);
                         $this->assign('pushPersonX',$person_str);
                     } else {
-                        $push_person_data = M()->field('nickname')->table(C('DB_PREFIX').'productrelationships a,'.C('DB_PREFIX').'user b')->where( 'a.pn="'.trim($oacustomercomplaint_result['pn']).'" AND a.manager=b.id' )->select()[0];
+                        $push_person_data = M()->field('nickname')->table(C('DB_PREFIX').'productrelationships a,'.C('DB_PREFIX').'user b')->where( 'a.pn="'.trim($oacustomercomplaint_result['pn']).'" AND a.manager=b.id AND b.state=1 ' )->select()[0];
                         $this->assign('pushPersonX',$push_person_data['nickname']);
                     }
                 }
-                $push_person_data_2 = M()->field('b.id,b.nickname')->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'user b')->where( 'a.main_assoc='.I('get.id').' AND a.step_assoc=2 AND a.operation_person=b.id' )->select()[0];
+                $push_person_data_2 = M()->field('b.id,b.nickname')->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'user b')->where( 'a.main_assoc='.I('get.id').' AND a.step_assoc=2 AND a.operation_person=b.id AND b.state=1' )->select()[0];
                 $this->assign('pushPerson',$push_person_data_2['nickname']);
             }elseif( $resultData['now_step'] == 5 ){
-                $push_person_data = M()->field('b.id,b.nickname')->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'user b')->where( 'a.main_assoc='.I('get.id').' AND a.step_assoc=2 AND a.operation_person=b.id' )->select()[0];
+                $push_person_data = M()->field('b.id,b.nickname')->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'user b')->where( 'a.main_assoc='.I('get.id').' AND a.step_assoc=2 AND a.operation_person=b.id AND b.state=1' )->select()[0];
                 $this->assign('pushPerson',$push_person_data['nickname']);
             }
         }
 
         # 如果当前步骤为销售确认是否转RMA则将QA部门(品质部)人员列表注入模板
         if( $resultData['now_step'] == 3 || $resultData['now_step'] == 4 ){
-            $QA_list = $user->where( 'department=3 AND id<>'.session('user')['id'] )->select(); //获取到同部门且不包含自己的人员列表
+            $QA_list = $user->where( 'department=3 AND id<>'.session('user')['id'].' AND state=1' )->select(); //获取到同部门且不包含自己的人员列表
             $this->assign('QAlist',$QA_list);
         }elseif( $resultData['now_step'] == 5 || $resultData['now_step'] == 6 || $resultData['now_step'] == 2 ){
 
 
             # 获取上一个步骤id
-            $step_info_data = M('Oacustomercomplaintlog')->field('step')->where( 'cc_id='.I('get.id').' AND recorder<>"OASystem" AND step<'.$now_step )->order('id DESC')->limit(1)->select();
+            $step_info_data = M('Oacustomercomplaintlog')->field('step')->where( 'cc_id='.I('get.id').' AND recorder<>"OASystem" AND step<'.$now_step)->order('id DESC')->limit(1)->select();
 
             $prev_step_info = $oacustomeroperation_model->where( ['main_assoc'=>$resultData['id'],'step_assoc'=>$step_info_data[0]['step']] )->select();
             //print_r($step_info_data);
@@ -490,7 +490,7 @@ class RMAController extends AuthController{
             //print_r($step_info);
             $this->assign('fallback',$step_info);
             if( $resultData['now_step'] == 6 || $resultData['now_step'] == 2 ){
-                $FAE_list = M('User')->where( 'position=12 AND id<>'.session('user')['id'] )->select(); //获取到同职位且不包含自己的人员列表
+                $FAE_list = M('User')->where( 'position=12 AND id<>'.session('user')['id'].' AND state=1' )->select(); //获取到同职位且不包含自己的人员列表
                 $this->assign('FAElist',$FAE_list);
             }
         }

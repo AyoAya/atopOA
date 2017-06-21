@@ -12,24 +12,45 @@ class SoftwareController extends AuthController {
 
         $model = new model();
 
-        $softData =  $model->table(C('DB_PREFIX').'software')
-                           ->select();
+        if(I('get.search')){
 
-        foreach($softData as $key=>&$value){
+        $softData = $model->table(C('DB_PREFIX') . 'software')->where('number LIKE "%'.I('get.search').'%" OR name LIKE "%'.I('get.search').'%" OR person LIKE "%'.I('get.search').'%"')->select();
 
-            $value['content'] = $model->table(C('DB_PREFIX').'software_log')
-                ->where('soft_asc ='.$value['id'])
-                ->order('id DESC')
-                ->field('version,save_time,soft_asc')
+        }else{
+        $softData = $model->table(C('DB_PREFIX') . 'software')
+                ->where("type='firmware'")
                 ->select();
-
         }
 
-        //print_r($softData);
 
-        $this->assign('softData',$softData);
+
+            foreach ($softData as $key => &$value) {
+
+                $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
+                    ->where('soft_asc =' . $value['id'])
+                    ->order('id DESC')
+                    ->field('version,save_time,soft_asc')
+                    ->select();
+            }
+
+            $softwareData = $model->table(C('DB_PREFIX') . 'software')
+                ->where("type='ATE'")
+                ->select();
+
+            foreach ($softwareData as $key => &$value) {
+
+                $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
+                    ->where('soft_asc ='.$value['id'])
+                    ->order('id DESC')
+                    ->field('version,save_time,soft_asc')
+                    ->select();
+            }
+
+        $this->assign('softData', $softData);
+        $this->assign('softwareData', $softwareData);
         $this->display();
-    }
+
+        }
 
 
     /**
@@ -39,13 +60,12 @@ class SoftwareController extends AuthController {
 
         if( IS_POST ){
             $software = M('Software');
-            $software_log = M('SoftwareLog');
 
             $soft['type'] = I('post.type');
             $soft['number'] = I('post.number');
             $soft['name'] = I('post.name');
             $soft['mcu'] = I('post.mcu');
-            $soft['log'] = I('post.log');
+            $soft['comment'] = str_replace("\n","<br>",I('post.log'));
             $soft['person'] = session('user')['nickname'];
             $soft['create_time'] = time();
 
@@ -66,33 +86,12 @@ class SoftwareController extends AuthController {
 
                 $software_add_id = $software->add($soft);
 
-                if( $software_add_id ){
+                if( $software_add_id ) {
 
-                    $softLog['soft_asc'] = $software_add_id;
-                    $softLog['version'] = 'v1.0';
-                    $softLog['save_time'] = time();
-                    $softLog['log'] = '新软件发布';
-                    $softLog['save_person'] = session('user')['id'];
-
-                    $software_log_id = $software_log->add($softLog);
-
-                    if( $software_log_id ){
-
-                        $this->ajaxReturn(['flag'=>1,'msg'=>'添加项目成功!']);
-
-                    }else{
-
-                        $this->ajaxReturn(['flag'=>0,'msg'=>'添加项目失败!']);
-                        exit();
-
-                    }
-
-                }else{
-
-                    $this->ajaxReturn(['flag'=>0,'msg'=>'添加项目失败!']);
-                    exit();
+                    $this->ajaxReturn(['flag' => 1, 'msg' => '添加项目成功!']);
 
                 }
+
             }
         }
         $this->display();
@@ -108,19 +107,35 @@ class SoftwareController extends AuthController {
         $softRel = $model->table(C('DB_PREFIX').'software')->find(I('get.id'));
 
         $softRel['child'] = $model->table(C('DB_PREFIX').'software_log a,'.C('DB_PREFIX').'software b,'.C('DB_PREFIX').'user c')
-            ->field('a.log,a.save_time,a.version,a.attachment,c.face')
+            ->field('a.log,a.save_time,a.version,a.attachment,c.face,a.push_email,a.cc_email')
             ->where('b.id ='.I('get.id').' AND b.id=a.soft_asc AND a.save_person=c.id')
             ->order('a.id DESC')
             ->select();
 
+
+        # print_r($softRel);
+
         foreach ($softRel['child'] as $key=>&$value){
             $value['attachment'] = json_decode($value['attachment'],true);
+            $value['push_email'] = json_decode($value['push_email'],true);
+            $value['cc_email'] = json_decode($value['cc_email'],true);
             foreach($value['attachment'] as $k=>&$v){
                 $v['ext'] = strtolower($v['ext']);
             }
         }
 
+        # 邮件推送抄送人
+
+        $ccList = $model->table(C('DB_PREFIX').'department')->select();
+        foreach ($ccList as $key=>&$value){
+            $value['users'] = $model->table(C('DB_PREFIX').'user')->where('department ='.$value['id'])->select();
+        }
+
+        //调用父类注入部门和人员信息
+        $this->getAllUsersAndDepartments();
+
         $this->assign('softData',$softRel['child']);
+        $this->assign('ccList',$ccList);
         $this->assign('softwareData',$softRel);
 
         $this->display();
@@ -131,9 +146,16 @@ class SoftwareController extends AuthController {
      */
 
     public function addLog(){
+
+
+        $model = new model();
+
         #添加信息跟新版本
-        if( IS_POST ){
-            $arr = I('post.addRel','',false);
+        if( IS_POST ) {
+            $arr = I('post.addRel', '', false);
+            $arrData = I('post.', '', false);
+
+            $emails = json_decode($arrData['email'], true);
 
             $logData['soft_asc'] = $arr['subName'];
             $logData['version'] = $arr['version'];
@@ -141,16 +163,36 @@ class SoftwareController extends AuthController {
             $logData['save_time'] = time();
             $logData['save_person'] = session('user')['id'];
             $logData['attachment'] = $arr['attachment'];
+            $logData['push_email'] = !empty($emails['recipient']) ? json_encode($emails['recipient'], JSON_UNESCAPED_UNICODE) : '';
+            $logData['cc_email'] = !empty($emails['cc']) ? json_encode($emails['cc'], JSON_UNESCAPED_UNICODE) : '';
 
-
-            $add_saftlog_id = M('software_log')->add($logData);
-            if( $add_saftlog_id ){
-                $this->ajaxReturn(['flag'=>1,'msg'=>'更新成功!']);
-            }else{
-                $this->ajaxReturn(['flag'=>0,'msg'=>'更新失败!']);
+            $pushArr = [];
+            if( !empty($logData['push_email']) ){
+                foreach( $emails['recipient'] as $key=>&$value ){
+                    array_push($pushArr, $value['email']);
+                }
             }
 
+            $ccArr = [];
+            if( !empty($logData['cc_email']) ){
+                foreach( $emails['cc'] as $key=>&$value ){
+                    array_push($ccArr, $value['email']);
+                }
+            }
 
+            $add_saftlog_id = M('software_log')->add($logData);
+            if ($add_saftlog_id) {
+                #获取当前写入的数据
+                $data = $model->table(C('DB_PREFIX').'software a,'.C('DB_PREFIX').'software_log b')->where('a.id = b.soft_asc AND a.id = '.$arr['subName'].' AND '.$add_saftlog_id.'=b.id')->order('save_time DESC')->select();
+                $data['push_email'] = json_decode($data[0]['push_email'],true);
+                $data['cc_email'] = json_decode($data[0]['cc_email'],true);
+
+                if( !empty($pushArr) ) $this->pushEmail($pushArr,$data[0],$ccArr);
+
+                $this->ajaxReturn(['flag' => 1, 'msg' => '更新成功!']);
+            } else {
+                $this->ajaxReturn(['flag' => 0, 'msg' => '更新失败!']);
+            }
         }
     }
 
@@ -159,6 +201,7 @@ class SoftwareController extends AuthController {
      */
     # 上传附件
     public function upload(){
+
         $subName = I('post.SUB_NAME');
 
         #  如果需要按id为子目录则必须填写第二个参数，否则直接保存在当前目录
@@ -167,8 +210,71 @@ class SoftwareController extends AuthController {
 
             $this->ajaxReturn( $result );
         }
+    }
+
+    /***
+     * 邮件推送
+     */
+    # 邮件推送
+    public function pushEmail( $address, $data, $cc=[] ){
+
+        $http_host = $_SERVER['HTTP_HOST'];
+        extract($data);
+
+        # 如果是单人则显示收件人姓名否则群发显示All
+        if( isset($recipient_name) ){
+            $call = $recipient_name;
+        }else{
+            $call = 'All';
+        }
+
+        $user = session('user')['nickname'];
+
+        $subject = ' [软件发布] '.$number.' ( '.$name.' ) 发布更新'.$version.'';
+        $body = <<<HTML
+<style>
+.step {
+    padding: 2px 5px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    border: solid 1px #000;
+}
+.title {
+    font-size: 16px;
+    font-weight: 600;
+}
+a{
+    color: #428bca;
+}
+</style>
+<p>Dear $call,</p>
+<p>[$user] 发布了<b>$number</b>( $name )的 $version 版本，请登录<a href="http://$http_host/Software/detail/id/$soft_asc" target="_blank">http://$http_host/Software/detail/id/$soft_asc</a>下载使用</p>
+<p class="title">更新记录：</p>
+<span>
+    $log
+</span>
+HTML;
+
+
+        # 检查邮件发送结果
+        if( empty($cc) ){
+            $result = send_Email( $address, '', $subject, $body.$order_basic );
+            if( $result != 1 ){
+                $this->ajaxReturn( ['flag'=>0,'msg'=>'邮件发送失败'] );
+            }
+        }else{
+            $result = send_Email( $address, '', $subject, $body.$order_basic, $cc);   # $cc
+            if( $result != 1 ){
+                $this->ajaxReturn( ['flag'=>0,'msg'=>'邮件发送失败'] );
+            }
+        }
 
     }
+
+
+
+
 
 
 }

@@ -70,6 +70,7 @@
 							<input type="text" value="" readonly class="layui-input manager-input" placeholder="请先选择产品">
 						</div>
 					</div>
+
 					<div class="layui-inline">
 						<label class="layui-form-label">模块数量</label>
 						<div class="layui-input-inline">
@@ -87,7 +88,15 @@
 						<div class="layui-input-inline vendor-brand-select">
 							<select name="brand" lay-search>
 								<volist name="vendorBrand" id="vo">
-									<option value="{$vo.brand}">{$vo.brand}</option>
+									<eq name="vo.brand" value="N/A">
+										<option value="{$vo.brand}">{$vo.brand}</option>
+									</eq>
+								</volist>
+
+								<volist name="vendorBrand" id="vo">
+									<neq name="vo.brand" value="N/A">
+										<option value="{$vo.brand}">{$vo.brand}</option>
+									</neq>
 								</volist>
 							</select>
 						</div>

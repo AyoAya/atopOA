@@ -20,6 +20,7 @@ class PushEmail {
         'chenshi@atoptechnology.com',   //陈实
         'haorui@atoptechnology.com',        //郝锐
         'jonas@atoptechnology.com'         //张炜哲
+		
 	];
     static $cc = [
 		'sunbin@atoptechnology.com',        //孙膑
@@ -29,6 +30,7 @@ class PushEmail {
         'liping@atoptechnology.com',    //李平
         'kent@atoptechnology.com',      //董总
         'jackfan@atoptechnology.com'    //范总
+		
 	];
 
     /*liping@atoptechnology*/
@@ -58,8 +60,14 @@ class PushEmail {
         # 汇总当时时间
         $end_date = time();
 
-        # 获取本周的订单数据
-        $sql = 'SELECT * FROM atop_sample WHERE create_time > '.$start_date.' AND create_time < '.$end_date.' ORDER BY create_time ASC';
+     # 获取本周的订单数据
+        $sql = 'SELECT * FROM atop_sample a,atop_sample_detail b 
+                WHERE ((a.create_time > '.$start_date.' AND a.create_time < '.$end_date.') 
+                OR (b.now_step < 7 AND b.state = "N") 
+                OR (b.actual_date > '.$start_date.' AND b.actual_date < '.$end_date.')) 
+                AND a.id = b.detail_assoc 
+                GROUP BY a.id 
+                ORDER BY b.id ASC';
 
         $sample_data = self::select($sql);
 
@@ -70,22 +78,17 @@ class PushEmail {
                       FROM 
                         atop_sample_detail a, atop_sample_step b, atop_productrelationships c, atop_user d
                       WHERE 
-                        detail_assoc = '.$value['id'].' AND a.product_id = c.id AND a.manager = d.id AND a.now_step = b.id';
+                        a.detail_assoc = '.$value['detail_assoc'].' AND a.product_id = c.id AND a.manager = d.id AND a.now_step = b.id';
 
             $value['detail'] = self::select($sql);
-            //$value['nic'] = self::select($sql_s);
-
             foreach( $value['detail'] as $k=>&$v ){
 
                 $sql = 'SELECT b.nickname current_person FROM atop_sample_operating a,atop_user b WHERE a.asc_detail='.$v['detail_id'].' AND a.operator=b.id';
 
                 $tmpArr = self::select($sql);
 
-                //print_r($tmpArr);
-
                 $v['current_person'] = end($tmpArr)['current_person'];
 
-                //print_r($value['detail']);
 
                 # 如果产品步骤大于6则说明该单已经完成
                 if( $v['now_step'] > 6 ){
@@ -98,7 +101,7 @@ class PushEmail {
 
         }
 
-        //print_r($sample_data);
+
         self::output( $sample_data );
 
     }
@@ -154,7 +157,9 @@ span.danger {
 }
 .table thead tr th {
     border-right: solid 1px #ccc;
-    padding: 12px 15px;
+    color: #fff;
+    background: #428bca;
+    height: 20px;
 }
 .table thead tr th:last-child {
     border-right: none;
@@ -170,24 +175,25 @@ span.danger {
 </style>
 STYLE;
 
+
         $html = '<div class="title">'.date('Y',time()).'年第'.date('W',time()).'周样品订单状态汇总表</div>';
 
         $html .= "\r\n<table class='table' cellpadding='0' cellspacing='0'>
     <thead>
         <tr>
-            <th>序号</th>
+             <th>序号</th>
             <th>订单号</th>
             <th>销售</th>
             <th>下单时间</th>
-            <th>产品型号</th>
+            <th width='130'>产品型号</th>
             <th width='80'>要求交期</th>
             <th width='80'>预计交期</th>
             <th width='80'>实际交期</th>
-            <th>模块数量</th>
-            <th>客户名称</th>
+            <th width='48'>模块数量</th>
+            <th width='200'>客户名称</th>
             <th>设备品牌</th>
             <th>设备型号</th> 
-            <th width='40'>交期状态</th>
+            <th width='48'>交期状态</th>
             <th>产品经理</th>
             <th width='90'>当前进度</th>
             <th>当前处理人</th>
@@ -201,7 +207,7 @@ STYLE;
 
             $html .= "\t\t\t<td rowspan='".count($value['detail'])."'>".($key+1)."</td>\r\n";
 
-            $html .= "\t\t\t<td rowspan='".count($value['detail'])."'><a href='http://".$_SERVER['HTTP_HOST']."/Sample/overview/id/{$value['id']}'>".$value['order_num']."</a></td>\r\n";
+            $html .= "\t\t\t<td rowspan='".count($value['detail'])."'><a href='http://".$_SERVER['HTTP_HOST']."/Sample/overview/id/{$value['detail_assoc']}'>".$value['order_num']."</a></td>\r\n";
 
             $html .= "\t\t\t<td rowspan='".count($value['detail'])."'>".$value['create_person_name']."</td>\r\n";
 
@@ -230,9 +236,9 @@ STYLE;
                     if( !empty($v['actual_date'])){
 
                         if( $v['actual_date'] < $v['requirements_date']){
-                            $html .= "\t\t\t<td><span class='danger'> 延期 </span></td>\r\n";
-                        }else{
                             $html .= "\t\t\t<td><span class='success'> 正常 </span></td>\r\n";
+                        }else{
+                            $html .= "\t\t\t<td><span class='danger'> 延期 </span></td>\r\n";
                         }
 
                     }else{
@@ -293,9 +299,9 @@ STYLE;
                     if( !empty($v['actual_date'])){
 
                         if( $v['actual_date'] < $v['requirements_date']){
-                            $html .= "\t\t\t<td><span class='danger'> 延期 </span></td>\r\n";
-                        }else{
                             $html .= "\t\t\t<td><span class='success'> 正常 </span></td>\r\n";
+                        }else{
+                            $html .= "\t\t\t<td><span class='danger'> 延期 </span></td>\r\n";
                         }
 
                     }else{
@@ -396,6 +402,9 @@ SIGN;
         //导入PHPMail邮件类
         require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
 		require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
+
+
+
 
         $mail = new \PHPMailer();
 

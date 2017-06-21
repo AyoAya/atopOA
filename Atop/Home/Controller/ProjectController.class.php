@@ -170,7 +170,7 @@ class ProjectController extends AuthController
                 $param['title'] = '项目信息录入';
             }
             $this->assign('param',$param);
-            $users = M('User')->where('id<>1')->select();
+            $users = M('User')->where('id<>1 AND state=1')->select();
             $this->assign('users',$users);
             $this->display();
         }
@@ -244,7 +244,7 @@ class ProjectController extends AuthController
                 $plans = M('ProjectPlan')->field('id,gate,mile_stone,items,plan_start_time,plan_stop_time')->where('plan_project='.I('get.id'))->order('id ASC')->select();
                 //print_r($plans);
                 $this->assign('plans',$plans);
-                $users = M('User')->where('id<>1')->select();
+                $users = M('User')->where('id<>1 AND state=1')->select();
                 $this->assign('users',$users);
                 $this->display();
             }else{

@@ -30,6 +30,9 @@ $(function(){
                 type : 'POST',
                 data : data.field,
                 dataType : 'json',
+                beforeSend : function(){
+                    layer.load(2, { shade : [0.5,'#fff'] });
+                },
                 success : function ( response ) {
                     if( response.flag > 0 ){
                         layer.msg(response.msg, {icon: 1, time: 2000});

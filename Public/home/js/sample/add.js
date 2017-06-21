@@ -210,7 +210,7 @@ $(function(){
 					if( response.flag > 0 ){
 						var pns = '';
 						for( var key in response.data ){	//拼装所有产品型号数据
-							pns += '<li pro_id="'+ response.data[key].id +'" manager="'+ response.data[key].manager +'" manger_name="'+ response.data[key].nickname +'">'+ response.data[key].pn +'</li>\r\n';
+							pns += '<li pro_id="'+ response.data[key].id +'" manager="'+ response.data[key].manager +'" manager_name="'+ response.data[key].nickname +'">'+ response.data[key].pn +'</li>\r\n';
 						}
 						$('.product-list-box ul').html(pns);
 					}else{
