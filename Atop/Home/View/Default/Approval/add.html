@@ -1,0 +1,161 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/approval/add.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/approval/add.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>添加审批</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">添加审批</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="title-bar" style="margin: 0 0 30px 0;">
+        <h4>基本信息</h4>
+    </div>
+
+    <div class="basic-container">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">集名称</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" name="set_name" required placeholder="请输入集名称">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">归档目录</label>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" name="archive_dir" required placeholder="请输入归档目录">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="title-bar" style="margin: 25px 0 10px 0;">
+        <h4>步骤信息</h4>
+    </div>
+
+    <div class="approval-container">
+        <form class="wrapper-item layui-form">
+            <div class="approval-item approval-number">
+                <p>Step - <span>1</span></p>
+            </div>
+            <div class="approval-item approval-name">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">名称</div>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="step_name" placeholder="请输入步骤名称">
+                    </div>
+                </div>
+            </div>
+            <div class="approval-item approval-type">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">性质</div>
+                    <div class="layui-input-block">
+                        <select name="type" lay-filter="apr-type">
+                            <option value="department" selected>部门</option>
+                            <option value="position">职位</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="approval-item approval-category">
+                <div class="layui-form-item apr-dpmt">
+                    <div class="layui-form-label">部门</div>
+                    <div class="layui-input-block">
+                        <select name="department">
+                            <option value="1" selected>部门1</option>
+                            <option value="2">部门2</option>
+                            <option value="2">部门3</option>
+                            <option value="2">部门4</option>
+                            <option value="2">部门5</option>
+                            <option value="2">部门6</option>
+                            <option value="2">部门7</option>
+                            <option value="2">部门8</option>
+                            <option value="2">部门9</option>
+                            <option value="2">部门10</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item apr-pst" style="display: none;">
+                    <div class="layui-form-label">职位</div>
+                    <div class="layui-input-block">
+                        <select name="position">
+                            <option value="1" selected>职位1</option>
+                            <option value="2">职位2</option>
+                            <option value="2">职位3</option>
+                            <option value="2">职位4</option>
+                            <option value="2">职位5</option>
+                            <option value="2">职位6</option>
+                            <option value="2">职位7</option>
+                            <option value="2">职位8</option>
+                            <option value="2">职位9</option>
+                            <option value="2">职位10</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="approval-item approval-transfer">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">转交</div>
+                    <div class="layui-input-block">
+                        <select name="transfer">
+                            <option value="Y" selected>允许</option>
+                            <option value="N">不允许</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="approval-item approval-add-button">
+                <button type="button" class="layui-btn layui-btn-danger remove-column"><i class="icon-trash"></i> 移除</button>
+            </div>
+        </form>
+    </div>
+    <div class="button-wrapper">
+        <button type="button" class="layui-btn apr-submit">提交</button>
+        <button type="button" class="add-column layui-btn layui-btn-primary"><i class="icon-plus"></i> 添加一栏</button>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

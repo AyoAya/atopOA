@@ -67,6 +67,10 @@ class ApprovalController extends AuthController  {
         $this->display();
     }
 
+    public function add(){
+        $this->display();
+    }
+
     //将审批类型转换为中文
     private function conversionZH_CN( &$arr ){
         #print_r($arr);
