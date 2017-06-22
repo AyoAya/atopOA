@@ -103,7 +103,20 @@ $(function(){
                 }else{
                     tmpObj.position = $(this).find('.apr-pst .layui-anim .layui-this').attr('lay-value');
                 }
-                tmpObj.transfer = $(this).find('.approval-transfer .layui-anim .layui-this').attr('lay-value');
+
+                //手动监听是否可以转交
+                if($(this).find('input[name=transfer]').next().hasClass('layui-form-checked')){
+                    tmpObj.transfer = 'Y';
+                }else {
+                    tmpObj.transfer = 'N';
+                }
+                //手动监听是否可以拒绝
+                if($(this).find('input[name=refuse]').next().hasClass('layui-form-checked')){
+                    tmpObj.refuse = 'Y';
+                }else {
+                    tmpObj.refuse = 'N';
+                }
+
 
                 //单栏数据收集完毕后将信息存放入数组
                 tmpArr.push(tmpObj);
@@ -114,27 +127,38 @@ $(function(){
                 data.basic = basic_data;
                 data.step = tmpArr;
 
-                console.log(data);
+                $.ajax({
 
-                /*$.ajax({
-                    url: '',
+                    url: ThinkPHP['AJAX'] + '/Approval/add',
                     type: 'POST',
                     data: data,
                     dataType: 'json',
                     success: function(response){
-                        console.log(response);
+
+                        console.log(response.flag);
+
+                        if( response.flag > 0 ){
+                            layer.msg(response.msg,{icon:1,time:2000});
+                            location.reload();
+                        }else{
+
+                            layer.msg(response.msg,{icon:2,time:2000});
+
+                        }
                     }
-                });*/
+
+                });
             }else{
                 layer.msg('请确认数据的完整性', {icon: 2, time: 2000});
             }
 
 
+return false;
+
         });
 
 
     });
-
 
 
 

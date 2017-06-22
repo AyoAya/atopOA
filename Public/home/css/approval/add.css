@@ -10,6 +10,7 @@
 .approval-container .layui-form-item {
     margin-bottom: 0;
 }
+
 .basic-container .layui-form-item {
     padding: 0 18px;
 }
@@ -54,8 +55,16 @@
     flex: 10;
     padding: 25px 15px;
 }
+.approval-container .wrapper-item .approval-item:nth-child(5){
+    flex:5;
+    padding: 25px 15px;
+}
+.approval-container .wrapper-item .approval-item:nth-child(6){
+    flex:5;
+    padding: 25px 15px;
+}
 .approval-container .wrapper-item .approval-item:first-child {
-    flex: 3;
+    flex: 4;
 }
 .approval-container .wrapper-item .approval-item:last-child {
     flex: 4;

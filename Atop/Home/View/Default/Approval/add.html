@@ -77,14 +77,14 @@
                         <select name="department">
                             <option value="1" selected>部门1</option>
                             <option value="2">部门2</option>
-                            <option value="2">部门3</option>
-                            <option value="2">部门4</option>
-                            <option value="2">部门5</option>
-                            <option value="2">部门6</option>
-                            <option value="2">部门7</option>
-                            <option value="2">部门8</option>
-                            <option value="2">部门9</option>
-                            <option value="2">部门10</option>
+                            <option value="3">部门3</option>
+                            <option value="4">部门4</option>
+                            <option value="5">部门5</option>
+                            <option value="6">部门6</option>
+                            <option value="7">部门7</option>
+                            <option value="8">部门8</option>
+                            <option value="9">部门9</option>
+                            <option value="12">部门10</option>
                         </select>
                     </div>
                 </div>
@@ -94,19 +94,38 @@
                         <select name="position">
                             <option value="1" selected>职位1</option>
                             <option value="2">职位2</option>
-                            <option value="2">职位3</option>
-                            <option value="2">职位4</option>
-                            <option value="2">职位5</option>
-                            <option value="2">职位6</option>
-                            <option value="2">职位7</option>
-                            <option value="2">职位8</option>
-                            <option value="2">职位9</option>
-                            <option value="2">职位10</option>
+                            <option value="3">职位3</option>
+                            <option value="4">职位4</option>
+                            <option value="5">职位5</option>
+                            <option value="6">职位6</option>
+                            <option value="7">职位7</option>
+                            <option value="8">职位8</option>
+                            <option value="9">职位9</option>
+                            <option value="10">职位10</option>
                         </select>
                     </div>
                 </div>
             </div>
+
             <div class="approval-item approval-transfer">
+                <div class="layui-form-item" style="">
+                    <label class="layui-form-label">转交</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="transfer" title="支持" checked>
+                    </div>
+                </div>
+            </div>
+            <div class="approval-item approval-refuse">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">拒绝</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="refuse" title="支持">
+                    </div>
+                </div>
+            </div>
+
+
+         <!--   <div class="approval-item approval-transfer">
                 <div class="layui-form-item">
                     <div class="layui-form-label">转交</div>
                     <div class="layui-input-block">
@@ -116,7 +135,20 @@
                         </select>
                     </div>
                 </div>
-            </div>
+            </div>-->
+
+           <!-- <div class="approval-item approval-refuse">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">拒绝</div>
+                    <div class="layui-input-block">
+                        <select name="refuse">
+                            <option value="Y" selected>允许</option>
+                            <option value="N">不允许</option>
+                        </select>
+                    </div>
+                </div>
+            </div>-->
+
             <div class="approval-item approval-add-button">
                 <button type="button" class="layui-btn layui-btn-danger remove-column"><i class="icon-trash"></i> 移除</button>
             </div>

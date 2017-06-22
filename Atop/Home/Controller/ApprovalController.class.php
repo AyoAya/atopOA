@@ -6,68 +6,76 @@
  * Time: 11:02
  */
 namespace Home\Controller;
-
+use Think\Model;
 
 class ApprovalController extends AuthController  {
     private $director = array();
 
     //初始化页面
     public function index(){
-        //我发起的
-        /*$approval = D('Approval');
-        $approvalResult = $approval->relation(true)->where('person_id='.session('user')['id'])->order('create_time DESC')->select();
-        $approvalResult = $this->conversionZH_CN($approvalResult);
-        $approvalResult = $this->addStateStyle($approvalResult);
-        //如果审批类型是报销则计算报销总额
-        foreach($approvalResult as $key=>&$value){
-            //将审批人id和姓名拆分为数组便于查询
-            $value['approvals'] = explode(',',$value['approvals']);
-            $value['approvals_name'] = explode(',',$value['approvals_name']);
-            //审批创建时间和审批日志添加时间格式化
-            $value['create_time'] = conversiontime($value['create_time']);
-            if( !empty($value['log']) ){
-                foreach($value['log'] as $k=>&$v){
-                    $v['log_time'] = conversiontime($v['log_time']);
-                }
-            }
-            //如果附件不为空则拆分为数组
-            if( !empty($value['attachment']) ){
-                $value['attachment'] = explode(',',$value['attachment']);
-            }
-            //合并两个数组 ( 审批人id=>审批人姓名 )
-            $value['merge'] = array_combine($value['approvals'],$value['approvals_name']);
-            if( $value['type']=='expense' ){
-                //如果是审批类型是报销则计算报销总额
-                foreach($value['affiliated'] as $k=>&$v){
-                    $v['total_money'] += $v['money'];
-                }
-            }
-        }
-        //我审批的
-        $map['approvals'] = array('like','%'.session('user')['id'].'%');
-        $likedata = $approval->relation(true)->where($map)->select();
-        $likedata = $this->conversionZH_CN($likedata);
-        $likedata = $this->addStateStyle($likedata);
-        foreach($likedata as $key=>&$value){
-            $value['have_been_text'] = '未审批';
-            $value['create_time'] = conversiontime($value['create_time']);
-            if( isset($value['log']) && !empty($value['log']) ){
-                foreach($value['log'] as $k=>&$v){
-                    //查看log日志里面是否存在当前登录用户的记录，如果存在则证明这条记录被当前登录用户审批过
-                    if( $v['audit_id'] == session('user')['id'] ){
-                        $value['have_been_text'] = '已审批';
-                    }
-                }
-            }
-        }
-        # print_r($likedata);
-        $this->assign('_empty','<div class="empty-info"><i class="icon-info-sign"></i><p>没有数据</p></div>');
-        $this->assign('approval',$approvalResult);
-        $this->assign('likedata',$likedata);*/
+
         $this->display();
     }
 
+    //添加集
     public function add(){
+
+        $model = new model();
+
+        $tmpArr = $model->table(C('DB_PREFIX').'approval')->select();
+
+        foreach ($tmpArr as $key=>&$value){
+           $value['step'] = $model->table(C('DB_PREFIX').'approval_step')->where('a_id ='.$value['id'])->select();
+        }
+
+        if (IS_POST){
+
+            $postBasic = I('post.basic');
+            $postStep = I('post.step');
+
+            $model = new model();
+            $model->startTrans();
+
+            # 集表数据
+            $approval['name'] = $postBasic['set_name'];
+            $approval['create_person'] = session('user')['id'];
+            $approval['archive_dir'] = $postBasic['archive_dir'];
+
+            $approval_id = $model->table(C('DB_PREFIX').'approval')->add($approval);
+
+            if( $approval_id ){
+                # 收集步骤表数据
+                foreach ($postStep as $key=>&$value){
+                    $tmpStep['name'] = $value['step_name'];
+                    $tmpStep['step'] = $key+1;
+                    $tmpStep['type'] = $value['type'];
+                    $tmpStep['transfer'] = $value['transfer'];
+                    $tmpStep['refuse'] = $value['refuse'];
+                    $tmpStep['a_id'] = $approval_id;
+
+                    if(!empty($value['department'])){
+                        $tmpStep['position'] =$value['department'];
+                    }else{
+                        $tmpStep['position'] =$value['position'];
+                    }
+
+                    $a_step[] = array_merge($tmpStep);
+                }
+
+                $step_id = $model->table(C('DB_PREFIX').'approval_step')->addAll($a_step);
+
+                if($step_id){
+                    $model->commit();
+                    $this->ajaxReturn( ['flag'=>1,'msg'=>'添加成功!'] );
+
+                }else{
+                    $model->rollback();
+                    $this->ajaxReturn( ['flag'=>0,'msg'=>'添加失败!'] );
+                }
+            }
+        }
+
+
         $this->display();
     }
 
