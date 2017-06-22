@@ -1,0 +1,399 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
+    <link rel="stylesheet" href="__CSS__/approval/index.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
+    <script src="__JS__/approval/index.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>审批</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">审批</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="approval-wrapper">
+        <div class="layui-tab">
+            <ul class="layui-tab-title">
+                <li class="layui-this"><a>发起审批</a></li>
+                <li><a href="#">待我审批的</a></li>
+                <li><a href="#">我已审批的</a></li>
+                <li><a href="#">我发起的</a></li>
+                <li><a href="#">审批统计</a></li>
+            </ul>
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="init-apr">
+                        <div class="apr-box">
+                            <form class="layui-form">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">标题</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" name="apr_title" class="layui-input" required placeholder="请输入标题">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">类别</label>
+                                    <div class="layui-input-block">
+                                        <select name="category">
+                                            <option value="0">Category One</option>
+                                            <option value="1">Category Two</option>
+                                            <option value="2">Category Three</option>
+                                            <option value="3">Category Four</option>
+                                            <option value="4">Category Five</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">审批</label>
+                                    <div class="layui-input-block">
+                                        <select name="apr_user">
+                                            <option value="0">White</option>
+                                            <option value="1">五五开</option>
+                                            <option value="2">PDD</option>
+                                            <option value="3">卢本伟</option>
+                                            <option value="4">大司马</option>
+                                            <option value="5">骚男</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">附件</label>
+                                    <div class="layui-input-block">
+                                        <div id="filePick"><i class="icon-arrow-up"></i> 上传文件</div>
+                                        <div class="uploader-attachment-queue"></div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item layui-form-text">
+                                    <label class="layui-form-label">描述</label>
+                                    <div class="layui-input-block">
+                                        <textarea name="desc" placeholder="详细描述" class="layui-textarea"></textarea>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item layui-form-text">
+                                    <div class="layui-input-block">
+                                        <button lay-submit lay-filter="submit" class="layui-btn">提交</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="apr-box">
+                            <h3>类别预览：　<small>Category One</small></h3>
+                            <div class="apr-preview">
+                                <ul>
+                                    <li><i class="icon-double-angle-right"></i>　Step - 1　　步骤一</li>
+                                    <li><i class="icon-double-angle-right"></i>　Step - 2　　步骤二</li>
+                                    <li><i class="icon-double-angle-right"></i>　Step - 3　　步骤三</li>
+                                    <li><i class="icon-double-angle-right"></i>　Step - 4　　步骤四</li>
+                                    <li><i class="icon-double-angle-right"></i>　Step - 5　　步骤五</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <table class="layui-table" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th width="35%">标题</th>
+                            <th>类别</th>
+                            <th>发起人</th>
+                            <th>当前处理人</th>
+                            <th>创建时间</th>
+                            <th>进度</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <p>1</p>
+                            </td>
+                            <td>
+                                <a href="#">这是一条作用于测试的审批数据</a>
+                            </td>
+                            <td>
+                                <p>请假</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
+                            </td>
+                            <td>
+                                <p>2017-06-21 16:56</p>
+                            </td>
+                            <td>
+                                <p>审批</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>2</p>
+                            </td>
+                            <td>
+                                <a href="#">这是一条作用于测试的审批数据</a>
+                            </td>
+                            <td>
+                                <p>请假</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
+                            </td>
+                            <td>
+                                <p>2017-06-21 16:56</p>
+                            </td>
+                            <td>
+                                <p>审批</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>3</p>
+                            </td>
+                            <td>
+                                <a href="#">这是一条作用于测试的审批数据</a>
+                            </td>
+                            <td>
+                                <p>请假</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
+                            </td>
+                            <td>
+                                <p>2017-06-21 16:56</p>
+                            </td>
+                            <td>
+                                <p>审批</p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="layui-tab-item">
+                    <table class="layui-table" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th width="35%">标题</th>
+                            <th>类别</th>
+                            <th>发起人</th>
+                            <th>当前处理人</th>
+                            <th>创建时间</th>
+                            <th>进度</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <p>1</p>
+                            </td>
+                            <td>
+                                <a href="#">这是一条作用于测试的审批数据</a>
+                            </td>
+                            <td>
+                                <p>请假</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
+                            </td>
+                            <td>
+                                <p>2017-06-21 16:56</p>
+                            </td>
+                            <td>
+                                <p>审批</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>2</p>
+                            </td>
+                            <td>
+                                <a href="#">这是一条作用于测试的审批数据</a>
+                            </td>
+                            <td>
+                                <p>请假</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
+                            </td>
+                            <td>
+                                <p>2017-06-21 16:56</p>
+                            </td>
+                            <td>
+                                <p>审批</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>3</p>
+                            </td>
+                            <td>
+                                <a href="#">这是一条作用于测试的审批数据</a>
+                            </td>
+                            <td>
+                                <p>请假</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
+                            </td>
+                            <td>
+                                <p>2017-06-21 16:56</p>
+                            </td>
+                            <td>
+                                <p>审批</p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="layui-tab-item">
+                    <table class="layui-table" lay-skin="line">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th width="35%">标题</th>
+                            <th>类别</th>
+                            <th>发起人</th>
+                            <th>当前处理人</th>
+                            <th>创建时间</th>
+                            <th>进度</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <p>1</p>
+                            </td>
+                            <td>
+                                <a href="__URL__/detail">这是一条作用于测试的审批数据</a>
+                            </td>
+                            <td>
+                                <p>请假</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
+                            </td>
+                            <td>
+                                <p>2017-06-21 16:56</p>
+                            </td>
+                            <td>
+                                <p>审批</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>2</p>
+                            </td>
+                            <td>
+                                <a href="__URL__/detail">这是一条作用于测试的审批数据</a>
+                            </td>
+                            <td>
+                                <p>请假</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
+                            </td>
+                            <td>
+                                <p>2017-06-21 16:56</p>
+                            </td>
+                            <td>
+                                <p>审批</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>3</p>
+                            </td>
+                            <td>
+                                <a href="__URL__/detail">这是一条作用于测试的审批数据</a>
+                            </td>
+                            <td>
+                                <p>请假</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
+                            </td>
+                            <td>
+                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
+                            </td>
+                            <td>
+                                <p>2017-06-21 16:56</p>
+                            </td>
+                            <td>
+                                <p>审批</p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="layui-tab-item">内容5</div>
+            </div>
+        </div>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

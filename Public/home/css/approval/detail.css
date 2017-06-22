@@ -1,0 +1,105 @@
+.approval-wrapper {
+
+}
+.approval-wrapper .apr-title {
+    padding-top: 10px;
+}
+.approval-wrapper .apr-description {
+    margin-top: 20px;
+    color: #888;
+}
+.approval-wrapper .apr-info {
+    margin-top: 15px;
+    color: #bbb;
+}
+.approval-wrapper .apr-info .apr-info-item {
+    display: inline-block;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.approval-wrapper .apr-info .apr-info-item:first-child {
+    padding-left: 0;
+}
+.approval-wrapper .apr-info .apr-info-item img {
+    width: 30px;
+    height: 30px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.procedure {
+    margin-top: 60px !important;
+}
+
+.context-wrapper, .editor-wrapper {
+    margin-bottom: 100px;
+}
+.context-wrapper .context-column {
+    display: flex;
+    margin-bottom: 25px;
+}
+.context-wrapper .context-column:after {
+    clear: both;
+}
+.context-wrapper .context-column .context-item {
+
+}
+.context-wrapper .context-column .context-item:first-child {
+    float: left;
+    text-align: center;
+    padding-left: 20px;
+    border: none;
+    padding-right: 20px;
+}
+.context-wrapper .context-column .context-item:first-child img {
+    width: 60px;
+    height: 60px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.context-wrapper .context-column .context-item:last-child {
+    float: right;
+    display: inline-block;
+    position: relative;
+}
+.context-wrapper .context-column .context-item:last-child .context-text {
+    display: inline-block;
+    padding: 9px 15px;
+    border: solid 1px #ddd;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background: #f8f8f8;
+}
+.context-wrapper .context-column .context-item:last-child  .context-text:before {
+    content: '';
+    position: absolute;
+    left: -13px;
+    top: 20px;
+    width: 14px;
+    height: 14px;
+    background: url("../../img/arrow_left_border_ddd.png") right center no-repeat;
+}
+.context-wrapper .context-column .context-item:last-child .context-item-info {
+    font-size: 12px;
+    color: #888;
+    margin-top: 10px;
+}
+
+
+.editor-wrapper .layui-form .layui-inline {
+    margin-bottom: 20px;
+    margin-right: 25px;
+}
+.editor-wrapper .layui-form .layui-form-label {
+    padding-left: 0;
+    text-align: left;
+    width: 50px;
+}
+.editor-wrapper .layui-form .submit-box {
+    margin-top: 25px;
+}

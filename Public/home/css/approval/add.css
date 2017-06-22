@@ -55,7 +55,7 @@
     padding: 25px 15px;
 }
 .approval-container .wrapper-item .approval-item:first-child {
-    flex: 3;
+    flex: 3.5;
 }
 .approval-container .wrapper-item .approval-item:last-child {
     flex: 4;
