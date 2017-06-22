@@ -1,0 +1,227 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/approval/detail.css">
+    <link rel="stylesheet" href="__CSS__/procedure.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/approval/detail.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>详情</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__URL__/index">审批</a></li>
+        <li class="active">详情</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="approval-wrapper">
+        <div class="apr-title"><h3>这是一条作用于测试的审批数据 <small><span class="tag tag-info">Category One</span></small></h3></div>
+        <div class="apr-description">
+            <p>
+                <kbd>描述:</kbd> 测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，
+                测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用
+                条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据试用的审批数据，条目二
+                测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二
+                测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用
+            </p>
+        </div>
+        <div class="apr-info">
+            <div class="apr-info-item">
+                <img src="__IMG__/face/face_50.png" alt="">
+                <span class="apr-user">张三</span>
+            </div>
+            <div class="apr-info-item">
+                <i class="icon-time"></i>　2017-06-22 10:03
+            </div>
+        </div>
+    </div>
+
+    <div class="title-bar" style="margin: 20px 0 15px 0;">
+        <h4>进度</h4>
+    </div>
+
+    <div class="procedure">
+        <table class="procedure-table">
+            <tr class="procedure-wrap">
+                <td class="active">
+                    <div class="procedure-title">步骤一</div>
+                    <div class="procedure-step"><i class="icon-ok"></i></div>
+                    <div class="procedure-info">
+                        张三<br>2017-06-22 08:12
+                    </div>
+                    <div class="procedure-hollow"></div>
+                </td>
+                <td class="active">
+                    <div class="procedure-title">步骤二</div>
+                    <div class="procedure-step"><i class="icon-ok"></i></div>
+                    <div class="procedure-info">
+                        李四<br>2017-06-22 08:12
+                    </div>
+                    <div class="procedure-hollow"></div>
+                </td>
+                <td class="active">
+                    <div class="procedure-title">步骤三</div>
+                    <div class="procedure-step"><i class="icon-ok"></i></div>
+                    <div class="procedure-info">
+                        王五<br>2017-06-22 08:12
+                    </div>
+                    <div class="procedure-hollow"></div>
+                </td>
+                <td>
+                    <div class="procedure-title">步骤四</div>
+                    <div class="procedure-step">4</div>
+                    <div class="procedure-info">
+                        马六<br>2017-06-22 08:12
+                    </div>
+                    <div class="procedure-hollow"></div>
+                </td>
+                <td>
+                    <div class="procedure-title">步骤六</div>
+                    <div class="procedure-step">5</div>
+                    <div class="procedure-info">
+                        赵七<br>2017-06-22 08:12
+                    </div>
+                    <div class="procedure-hollow"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="title-bar" style="margin: 0 0 30px 0;">
+        <h4>审批记录</h4>
+    </div>
+
+    <div class="context-wrapper">
+        <div class="context-column">
+            <div class="context-item">
+                <img src="__IMG__/face/face_46.png" alt="">
+            </div>
+            <div class="context-item">
+                <div class="context-text">
+                    <p>测试用的审批数据，条目一</p>
+                    <p class="context-item-info">李某　｜　<code>Step - 1 : 步骤一</code>　|　2017-06-22 10:31</p>
+                </div>
+            </div>
+        </div>
+        <div class="context-column">
+            <div class="context-item">
+                <img src="__IMG__/face/face_47.png" alt="">
+            </div>
+            <div class="context-item">
+                <div class="context-text">
+                    <p>
+                        测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，
+                        <br>条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二
+                        <br>测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二
+                    </p>
+                    <p class="context-item-info">李某　｜　<code>Step - 2 : 步骤二</code>　|　2017-06-22 10:31</p>
+                </div>
+            </div>
+        </div>
+        <div class="context-column">
+            <div class="context-item">
+                <img src="__IMG__/face/face_48.png" alt="">
+            </div>
+            <div class="context-item">
+                <div class="context-text">
+                    <p>
+                        测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据用的审批数据，
+                        <br>条目二测试用的审批数据，条目二测试用的审，条目二测试用的审批数据，条目二
+                        <br>测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二
+                    </p>
+                    <p class="context-item-info">李某　｜　<code>Step - 3 : 步骤三</code>　|　2017-06-22 10:31</p>
+                </div>
+            </div>
+        </div>
+        <div class="context-column">
+            <div class="context-item">
+                <img src="__IMG__/face/face_49.png" alt="">
+            </div>
+            <div class="context-item">
+                <div class="context-text">
+                    <p>
+                        测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，
+                        测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用
+                        <br>条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据试用的审批数据，条目二
+                        <br>测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二
+                        <br>测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用
+                    </p>
+                    <p class="context-item-info">李某　｜　<code>Step - 4 : 步骤四</code>　|　2017-06-22 10:31</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="editor-wrapper">
+        <form class="layui-form">
+            <div class="layui-inline">
+                <label class="layui-form-label">动作</label>
+                <div class="layui-input-inline">
+                    <select name="apr_action">
+                        <option value="pass">通过</option>
+                        <option value="refuse">拒绝</option>
+                        <option value="transfer">转交</option>
+                        <option value="rollback">回退</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">转交</label>
+                <div class="layui-input-inline">
+                    <select name="transfer_user">
+                        <option value="1">张三</option>
+                        <option value="2">李四</option>
+                        <option value="3">王五</option>
+                        <option value="4">马六</option>
+                        <option value="5">赵七</option>
+                    </select>
+                </div>
+            </div>
+            <textarea id="editor" style="display: none;"></textarea>
+            <div class="submit-box">
+                <button lay-submit class="layui-btn submit-btn" lay-filter="submit">提交</button>
+            </div>
+        </form>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
