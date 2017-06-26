@@ -14,19 +14,62 @@ class ApprovalController extends AuthController  {
     //初始化页面
     public function index(){
 
+        $model = new model();
+
+        # 所有数据
+        $tmpArr = $model->table(C('DB_PREFIX').'approval')->select();
+
+        foreach ($tmpArr as $key=>&$value){
+            $value['step'] = $model->table(C('DB_PREFIX').'approval_step')->where('a_id ='.$value['id'])->select();
+        }
+
+        //print_r($tmpArr);
+
+        # 默认加载的集数据
+        $tmpSeData = $model->table(C('DB_PREFIX').'approval')->field('name aName,id')->order('id ASC')->limit(1)->select();
+        foreach ($tmpSeData as $key=>&$value){
+            $value['step'] = $model->table(C('DB_PREFIX').'approval_step')->where('a_id ='.$value['id'])->select();
+            foreach ($value['step'] as $k=>&$v){
+                if($v['type'] == 'department'){
+                    $v['person'] = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'department b')
+                                         ->where('b.id ='.$v['position'].' AND a.department = b.id')
+                                         ->field('a.nickname,a.email,a.id')
+                                         ->select();
+                }else{
+                    $v['person'] = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'position b')
+                        ->where('b.id ='.$v['position'].' AND a.position = b.id')
+                        ->field('a.nickname,a.email,a.id')
+                        ->select();
+                }
+            }
+        }
+
+        print_r($tmpSeData);
+        $this->assign('approvalData',$tmpArr);
+        $this->assign('tmpSeData',$tmpSeData);
         $this->display();
+    }
+
+    public function category(){
+
+        $model = new model();
+
+        $tmpSe = I('post.id');
+        # 监听选择集数据
+        if(IS_POST){
+            $rel = $model->table(C('DB_PREFIX').'approval')->field('name aName,id')->where('id ='.$tmpSe)->select();
+            foreach ($rel as $key=>&$value){
+                $value['step'] = $model->table(C('DB_PREFIX').'approval_step')->where('a_id ='.$value['id'])->select();
+            }
+        }
+
+        $tmpRel = json_encode($rel);
+        $this->ajaxReturn($tmpRel);
+
     }
 
     //添加集
     public function add(){
-
-        $model = new model();
-
-        $tmpArr = $model->table(C('DB_PREFIX').'approval')->select();
-
-        foreach ($tmpArr as $key=>&$value){
-           $value['step'] = $model->table(C('DB_PREFIX').'approval_step')->where('a_id ='.$value['id'])->select();
-        }
 
         if (IS_POST){
 

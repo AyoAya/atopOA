@@ -138,8 +138,11 @@ $(function(){
                         console.log(response.flag);
 
                         if( response.flag > 0 ){
+
                             layer.msg(response.msg,{icon:1,time:2000});
-                            location.reload();
+                            setTimeout(function () {
+                                //location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Approval/index';
+                            },2000);
                         }else{
 
                             layer.msg(response.msg,{icon:2,time:2000});

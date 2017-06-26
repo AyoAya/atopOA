@@ -43,18 +43,16 @@
                                         <input type="text" name="apr_title" class="layui-input" required placeholder="请输入标题">
                                     </div>
                                 </div>
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">类别</label>
-                                    <div class="layui-input-block">
-                                        <select name="category">
-                                            <option value="0">Category One</option>
-                                            <option value="1">Category Two</option>
-                                            <option value="2">Category Three</option>
-                                            <option value="3">Category Four</option>
-                                            <option value="4">Category Five</option>
-                                        </select>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">类别</label>
+                                        <div class="layui-input-block">
+                                            <select name="category" lay-filter="category">
+                                                <volist name="approvalData" id="value" key="key">
+                                                     <option value="{$value.id}">{$value.name}</option>
+                                                </volist>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">审批</label>
                                     <div class="layui-input-block">
@@ -89,14 +87,14 @@
                             </form>
                         </div>
                         <div class="apr-box">
-                            <h3>类别预览：　<small>Category One</small></h3>
+                            <h3>类别预览：　<small>{$tmpSeData.0.aname}</small></h3>
                             <div class="apr-preview">
                                 <ul>
-                                    <li><i class="icon-double-angle-right"></i>　Step - 1　　步骤一</li>
-                                    <li><i class="icon-double-angle-right"></i>　Step - 2　　步骤二</li>
-                                    <li><i class="icon-double-angle-right"></i>　Step - 3　　步骤三</li>
-                                    <li><i class="icon-double-angle-right"></i>　Step - 4　　步骤四</li>
-                                    <li><i class="icon-double-angle-right"></i>　Step - 5　　步骤五</li>
+                                    <volist name="tmpSeData" id="val" key="ke">
+                                        <volist name="val.step" id="v" key="k">
+                                            <li aid='{$v.a_id}' sid="{$v.id}"><i class='icon-double-angle-right'></i>　Step - {$v.step}　　{$v.name}</li>
+                                        </volist>
+                                    </volist>
                                 </ul>
                             </div>
                         </div>
