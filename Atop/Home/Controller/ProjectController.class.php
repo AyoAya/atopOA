@@ -835,7 +835,7 @@ HTML;
                         $planNode = $plan->find( I('post.plan_node') );
                         $planNode['pj_num'] = $projectResult['pj_num'];
                         $planNode['pj_name'] = $projectResult['pj_name'];
-                        $planNode['pj_create_person'] = $projectResult['pj_create_person'];
+                        $planNode['pj_create_person'] = $projectResult['pj_management'];
                         //print_r($planNode);
                         $this->pushEmail('update',$projectResult['pj_participate'].','.$projectResult['pj_create_person_id'],$planNode,$projectResult['id']);
                         $this->ajaxReturn( array('flag' => 1, 'msg' => '保存成功') );
