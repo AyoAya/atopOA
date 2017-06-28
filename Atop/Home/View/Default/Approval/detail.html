@@ -70,46 +70,6 @@
                         <div class="procedure-hollow"></div>
                     </td>
                 </volist>
-                <!--<td class="active">
-                    <div class="procedure-title">步骤一</div>
-                    <div class="procedure-step"><i class="icon-ok"></i></div>
-                    <div class="procedure-info">
-                        张三<br>2017-06-22 08:12
-                    </div>
-                    <div class="procedure-hollow"></div>
-                </td>
-                <td class="active">
-                    <div class="procedure-title">步骤二</div>
-                    <div class="procedure-step"><i class="icon-ok"></i></div>
-                    <div class="procedure-info">
-                        李四<br>2017-06-22 08:12
-                    </div>
-                    <div class="procedure-hollow"></div>
-                </td>
-                <td class="active">
-                    <div class="procedure-title">步骤三</div>
-                    <div class="procedure-step"><i class="icon-ok"></i></div>
-                    <div class="procedure-info">
-                        王五<br>2017-06-22 08:12
-                    </div>
-                    <div class="procedure-hollow"></div>
-                </td>
-                <td>
-                    <div class="procedure-title">步骤四</div>
-                    <div class="procedure-step">4</div>
-                    <div class="procedure-info">
-                        马六<br>2017-06-22 08:12
-                    </div>
-                    <div class="procedure-hollow"></div>
-                </td>
-                <td>
-                    <div class="procedure-title">步骤六</div>
-                    <div class="procedure-step">5</div>
-                    <div class="procedure-info">
-                        赵七<br>2017-06-22 08:12
-                    </div>
-                    <div class="procedure-hollow"></div>
-                </td>-->
             </tr>
         </table>
     </div>
@@ -130,53 +90,6 @@
                 </div>
             </div>
         </div>
-        <div class="context-column">
-            <div class="context-item">
-                <img src="__IMG__/face/face_47.png" alt="">
-            </div>
-            <div class="context-item">
-                <div class="context-text">
-                    <p>
-                        测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，
-                        <br>条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二
-                        <br>测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二
-                    </p>
-                    <p class="context-item-info">李某　｜　<code>Step - 2 : 步骤二</code>　|　2017-06-22 10:31</p>
-                </div>
-            </div>
-        </div>
-        <div class="context-column">
-            <div class="context-item">
-                <img src="__IMG__/face/face_48.png" alt="">
-            </div>
-            <div class="context-item">
-                <div class="context-text">
-                    <p>
-                        测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据用的审批数据，
-                        <br>条目二测试用的审批数据，条目二测试用的审，条目二测试用的审批数据，条目二
-                        <br>测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二
-                    </p>
-                    <p class="context-item-info">李某　｜　<code>Step - 3 : 步骤三</code>　|　2017-06-22 10:31</p>
-                </div>
-            </div>
-        </div>
-        <div class="context-column">
-            <div class="context-item">
-                <img src="__IMG__/face/face_49.png" alt="">
-            </div>
-            <div class="context-item">
-                <div class="context-text">
-                    <p>
-                        测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，
-                        测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用
-                        <br>条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据试用的审批数据，条目二
-                        <br>测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二
-                        <br>测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用
-                    </p>
-                    <p class="context-item-info">李某　｜　<code>Step - 4 : 步骤四</code>　|　2017-06-22 10:31</p>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="editor-wrapper">
@@ -184,15 +97,21 @@
             <div class="layui-inline">
                 <label class="layui-form-label">动作</label>
                 <div class="layui-input-inline">
-                    <select name="apr_action">
+                    <select name="apr_action" lay-filter="action">
                         <option value="pass">通过</option>
-                        <option value="refuse">拒绝</option>
-                        <option value="transfer">转交</option>
-                        <option value="rollback">回退</option>
+                        <eq name="DetailResult.current.refuse" value="Y">   {//如果集设定该步骤可以拒绝才显示}
+                            <option value="refuse">拒绝</option>
+                        </eq>
+                        <eq name="DetailResult.current.transfer" value="Y"> {//如果集设定该步骤可以回退才显示}
+                            <option value="transfer">转交</option>
+                        </eq>
+                        <gt name="DetailResult.current_step" value="1"> {//当前步骤数大于1的情况下才输出回退}
+                            <option value="rollback">回退</option>
+                        </gt>
                     </select>
                 </div>
             </div>
-            <div class="layui-inline">
+            <div class="layui-inline sr-only" id="transfer">
                 <label class="layui-form-label">转交</label>
                 <div class="layui-input-inline">
                     <select name="transfer_user">

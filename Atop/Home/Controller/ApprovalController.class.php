@@ -258,9 +258,13 @@ class ApprovalController extends AuthController  {
 
             $detail_data = $model->table(C('DB_PREFIX').'approval_detail')->find( I('get.id') );
 
+            $detail_data['attachment'] = json_decode($detail_data['attachment'], true);
+
             $detail_data['set'] = $model->table(C('DB_PREFIX').'approval')->where(['id'=>$detail_data['set_id']])->find();
 
             $detail_data['steps'] = $model->table(C('DB_PREFIX').'approval_step')->where(['a_id'=>$detail_data['set']['id']])->select();
+
+            //$detail_data['current'] = $detail_data['steps'][count($detail_data['steps'])-1];
 
             $detail_data['middle'] = $model->table(C('DB_PREFIX').'approval_middle')->where(['middle_detail'=>I('get.id')])->order('middle_time ASC')->select();
 
@@ -271,6 +275,14 @@ class ApprovalController extends AuthController  {
                             $value['state'] = 'completed';
                             $value['operator'] = $model->table(C('DB_PREFIX').'user')->field('nickname')->find( $v['middle_person'] )['nickname'];
                             $value['complete_time'] = $v['middle_time'];
+                        }elseif( $value['id'] == $v['middle_step'] && $v['middle_time'] == '' ){
+                            $detail_data['current'] = [
+                                'middle_detail'=>$v['middle_detail'],
+                                'middle_person'=>$v['middle_person'],
+                                'middle_step'=>$v['middle_step'],
+                                'middle_time'=>$v['middle_time']
+                            ];
+                            $value['state'] = 'processing';
                         }else{
                             $value['state'] = 'processing';
                         }

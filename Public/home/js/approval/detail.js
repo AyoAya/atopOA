@@ -27,9 +27,16 @@ $(function(){
                 ,'link' //超链接
                 ,'unlink' //清除链接
                 ,'face' //表情
-                ,'image' //插入图片
             ]
         });
+
+        form.on('select(action)', function(data){
+            if( data.value == 'transfer' ){
+                $('#transfer').removeClass('sr-only');
+            }else{
+                $('#transfer').addClass('sr-only');
+            }
+        })
 
     });
 
