@@ -450,7 +450,8 @@ p {
 <p class="prompt">注：内容由程序进行过滤，部分标签（如：图像/文件/表情）无法显示</p>
 HTML;
         }
-        send_Email($emailList,'',$subject,$body,$this->ccList);
+        die;
+        //send_Email($emailList,'',$subject,$body,$this->ccList);
     }
 
     # 详情页
