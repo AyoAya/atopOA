@@ -43,27 +43,20 @@
                                         <input type="text" name="apr_title" class="layui-input" required placeholder="请输入标题">
                                     </div>
                                 </div>
-                                    <div class="layui-form-item">
+                                    <div class="layui-form-item apr-type">
                                         <label class="layui-form-label">类别</label>
                                         <div class="layui-input-block">
                                             <select name="category" lay-filter="category">
                                                 <volist name="approvalData" id="value" key="key">
-                                                     <option value="{$value.id}">{$value.name}</option>
+                                                    <option value="{$value.id}">{$value.name}</option>
                                                 </volist>
                                             </select>
                                         </div>
                                     </div>
-                                <div class="layui-form-item">
+                                <div class="layui-form-item sel-person">
                                     <label class="layui-form-label">审批</label>
                                     <div class="layui-input-block">
-                                        <select name="apr_user">
-                                            <option value="0">White</option>
-                                            <option value="1">五五开</option>
-                                            <option value="2">PDD</option>
-                                            <option value="3">卢本伟</option>
-                                            <option value="4">大司马</option>
-                                            <option value="5">骚男</option>
-                                        </select>
+                                        <select name="apr_user"></select>
                                     </div>
                                 </div>
                                 <div class="layui-form-item">

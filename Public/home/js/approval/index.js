@@ -7,11 +7,12 @@ $(function(){
         var form = layui.form(),
             element = layui.element(),
             layer = layui.layer;
+        var SUB_NAME,LOG_ID;
 
         // uploader参数配置
         var logUploaderOption = {
-            auto: false,
-            server: ThinkPHP['AJAX'] + '/RMA/upload',
+            auto: true,
+            server: ThinkPHP['AJAX'] + '/Approval/uploadAttachment',
             pick: '#filePick',
             fileVal : 'Filedata',
             accept: {
@@ -59,6 +60,10 @@ $(function(){
         });
         // 上传成功时
         APRuploader.on('uploadSuccess', function( file,response ){
+
+            console.log(file);
+
+            var attachmentList = new Object();
             if( response.flag > 0 ){
                 var attachmentObject = new Object();
                 attachmentObject.SourceName = response.name;
@@ -69,11 +74,12 @@ $(function(){
                 layer.closeAll();
                 layer.msg(response.msg, { icon : 2,time : 2000 });
             }
+
         });
         // 所有文件上传结束时
-        APRuploader.on('uploadFinished', function(){
+        APRuploader.on('uploadFinished', function( data,attachmentList){
             $.ajax({
-                url : ThinkPHP['AJAX'] + '/RMA/insertAttachment',
+                url : ThinkPHP['AJAX'] + '/Approval/uploadAttachment',
                 type : 'POST',
                 data : {
                     logid : LOG_ID,
@@ -94,6 +100,8 @@ $(function(){
             });
         });
 
+        //alert($('.sel-person').find('select').text());
+
         // 删除队列文件
         $('.uploader-attachment-queue').on('click', '.icon-remove', function(){
             var id = $(this).parent().parent().attr('id');
@@ -104,44 +112,93 @@ $(function(){
         });
 
 
+        $.ajax({
+            url: ThinkPHP['AJAX'] + '/Approval/person',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id : $('.apr-type select').val()
+            },
+            success: function (response) {
+                let tmpPerson = '';
+
+                for (let i = 0; i < response.length; i++) {
+                    tmpPerson += '<option value="' + response[i].id + '" email="'+ response[i].email +'">' + response[i].nickname + '</option>\n\r'
+                }
+                $('.sel-person select').html(tmpPerson);
+                form.render('select');
+            }
+        });
+
         //监听选择的某个集
         form.on('select(category)',function(data){
-
-            $('.apr-box').find('.apr-preview').find('ul').find('li').each(function(){
-                $(this).remove();
-            });
 
             $.ajax({
                 url: ThinkPHP['AJAX'] + '/Approval/category',
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                   id : data.value
+                    id : data.value,
+
                 },
                 success : function( response ){
+                    let tem ='';
+
                     var jsonObj=eval('('+response+')');
-                    //console.log(jsonObj);
                     var arr = jsonObj[0].step;
-
                     $('.apr-box').find('small').html(jsonObj[0].aname);
+
                     //遍历step的数据注入模板
-                    for(var i=0;i<arr.length;i++){
-
-                        var tem = "<li aid='"+arr[i].a_id+"' sid='"+arr[i].id+"'><i class='icon-double-angle-right'></i>　Step - "+arr[i].step+"　　"+arr[i].name+"</li>";
-
-                        $('.apr-box').find('.apr-preview').find('ul').append(tem);
+                    for(let i=0;i<arr.length;i++){
+                         tem += "<li aid='"+arr[i].a_id+"' sid='"+arr[i].id+"'><i class='icon-double-angle-right'></i>　Step - "+arr[i].step+"　　"+arr[i].name+"</li>\n\r";
                     }
 
-                    //console.log(jsonObj[0]);
+                    $('.apr-box').find('.apr-preview').find('ul').html(tem);
+                    form.render('select');
+
+                }
+
+            });
+
+            $.ajax({
+                url: ThinkPHP['AJAX'] + '/Approval/person',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id : data.value,
+                },
+                success : function( response ){
+                    let tmpPerson = '';
+
+                    for (let i=0;i<response.length;i++){
+
+                        tmpPerson += '<option value="'+ response[i].id +'" email="'+ response[i].email +'">'+ response[i].nickname +'</option>\n\r'
+                    }
+                    $('.sel-person select').html(tmpPerson);
+                    form.render('select');
+
                 }
 
             });
 
         });
 
-       /* if(!Cat){
+        form.on('submit(submit)',function( data ){
 
-        }*/
+            $.ajax({
+                url : ThinkPHP['AJAX'] + '/Approval/index',
+                dataType : 'json',
+                type : 'POST',
+                data : {
+                     data : data.field
+                }
+
+            });
+
+            return false;
+
+        });
+
 
     });
 

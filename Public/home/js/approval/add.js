@@ -19,6 +19,25 @@ $(function(){
 
             $('.approval-container .layui-form:last-child').find('.approval-number p span').text( ++step_num );
 
+            $.ajax({
+                url : ThinkPHP['AJAX'] + '/Approval/aprType',
+                dataType : 'json',
+                type : 'POST',
+                data : {
+                    type : '部门'
+                },
+                success : function ( response ) {
+                    let tmpApr = '';
+                    for (let i=0;i<response.length;i++){
+                        tmpApr += '<option value="'+ response[i].id +'">'+ response[i].name +'</option>\r\n'
+                    }
+                    $('.apr-pst-box .apr-dpmt select').html(tmpApr);
+                    form.render('select');
+
+                }
+
+            });
+
             form.render();
 
         });
@@ -40,7 +59,51 @@ $(function(){
             }
         });
 
+        $.ajax({
+            url : ThinkPHP['AJAX'] + '/Approval/aprType',
+            dataType : 'json',
+            type : 'POST',
+            data : {
+                type : '部门'
+            },
+            success : function ( response ) {
+                let tmpApr = '';
+                for (let i=0;i<response.length;i++){
+                    tmpApr += '<option value="'+ response[i].id +'">'+ response[i].name +'</option>\r\n'
+                }
+                $('.apr-pst-box .apr-dpmt select').html(tmpApr);
+                form.render('select');
+
+            }
+
+        });
+
         form.on('select(apr-type)', function(data){
+
+            let type = data.value;
+
+            $.ajax({
+                url : ThinkPHP['AJAX'] + '/Approval/aprType',
+                dataType : 'json',
+                type : 'POST',
+                data : {
+                    type : $(this).text()
+                },
+                success : function ( response ) {
+                    let tmpApr = '';
+                    for (let i=0;i<response.length;i++){
+                        tmpApr += '<option value="'+ response[i].id +'">'+ response[i].name +'</option>\r\n'
+                    }
+                    if( data.value == 'position' ){
+                        $('.apr-pst-box .apr-pst select').html(tmpApr);
+                    }else{
+                        $('.apr-pst-box .apr-dpmt select').html(tmpApr);
+                    }
+                    form.render('select');
+
+                }
+
+            });
 
             let _parent = $(this).parents('.layui-form');
 
@@ -141,7 +204,7 @@ $(function(){
 
                             layer.msg(response.msg,{icon:1,time:2000});
                             setTimeout(function () {
-                                //location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Approval/index';
+                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Approval/index';
                             },2000);
                         }else{
 

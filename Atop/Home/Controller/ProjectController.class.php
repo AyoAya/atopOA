@@ -6,12 +6,12 @@ class ProjectController extends AuthController
 {
     # 默认抄送人列表
     private $defaultCClist = [
-        ['id'=>54, 'email'=>'dingzheng@atoptechnology.com', 'nickname'=>'丁征']
+        //['id'=>54, 'email'=>'dingzheng@atoptechnology.com', 'nickname'=>'丁征']
     ];
 
     # 抄送人列表
     private $ccList = array(
-        'dingzheng@atoptechnology.com'
+        'm18581898939@163.com'
     );
 
     # 初始化页面

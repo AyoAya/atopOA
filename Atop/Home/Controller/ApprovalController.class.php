@@ -25,6 +25,7 @@ class ApprovalController extends AuthController  {
 
         //print_r($tmpArr);
 
+
         # 默认加载的集数据
         $tmpSeData = $model->table(C('DB_PREFIX').'approval')->field('name aName,id')->order('id ASC')->limit(1)->select();
         foreach ($tmpSeData as $key=>&$value){
@@ -32,24 +33,29 @@ class ApprovalController extends AuthController  {
             foreach ($value['step'] as $k=>&$v){
                 if($v['type'] == 'department'){
                     $v['person'] = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'department b')
-                                         ->where('b.id ='.$v['position'].' AND a.department = b.id')
+                                         ->where('b.id ='.$v['position'].' AND a.department = b.id AND a.state = 1')
                                          ->field('a.nickname,a.email,a.id')
                                          ->select();
                 }else{
                     $v['person'] = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'position b')
-                        ->where('b.id ='.$v['position'].' AND a.position = b.id')
+                        ->where('b.id ='.$v['position'].' AND a.position = b.id AND a.state = 1')
                         ->field('a.nickname,a.email,a.id')
                         ->select();
                 }
             }
         }
 
-        print_r($tmpSeData);
+        if(IS_POST){
+            print_r(I('post.'));
+        }
+
+        //print_r($tmpArr);
         $this->assign('approvalData',$tmpArr);
         $this->assign('tmpSeData',$tmpSeData);
         $this->display();
     }
 
+    # select 首页监听数据
     public function category(){
 
         $model = new model();
@@ -61,10 +67,52 @@ class ApprovalController extends AuthController  {
             foreach ($rel as $key=>&$value){
                 $value['step'] = $model->table(C('DB_PREFIX').'approval_step')->where('a_id ='.$value['id'])->select();
             }
+
         }
 
         $tmpRel = json_encode($rel);
         $this->ajaxReturn($tmpRel);
+
+    }
+
+    # 第一步开始操作人
+    public function person(){
+
+        $model = new model();
+        $tmpSe = I('post.id');
+
+        # 选择后的部门或岗位人员
+        $tmpPerson = $model->table(C('DB_PREFIX').'approval a,'.C('DB_PREFIX').'approval_step b')->where('a.id = b.a_id AND a.id='.$tmpSe)->order('b.id ASC')->limit(1)->select();
+
+        if($tmpPerson[0]['type'] == 'department') {
+            $person = $model->table(C('DB_PREFIX') . 'user a,' . C('DB_PREFIX') . 'department b')->where(' a.department= b.id AND b.id='.$tmpPerson[0]['position'].' AND a.state = 1')->field('a.nickname,a.id,a.email')->select();
+        }else{
+            $person = $model->table(C('DB_PREFIX') . 'user a,' . C('DB_PREFIX') . 'position b')->where(' a.position= b.id AND b.id='.$tmpPerson[0]['position'].' AND a.state = 1')->field('a.nickname,a.id,a.email')->select();
+        }
+
+        $this->ajaxReturn($person);
+    }
+
+    # select add监听数据
+    public function aprType(){
+
+        $model = new model();
+
+        $type = I('post.type');
+
+        if(IS_POST){
+            if($type === '部门'){
+
+                $position = $model->table(C('DB_PREFIX').'department')->field('id,name')->select();
+
+            }else{
+
+                $position = $model->table(C('DB_PREFIX').'position')->field('id,name')->select();
+
+            }
+
+            $this->ajaxReturn($position);
+        }
 
     }
 
@@ -188,7 +236,7 @@ class ApprovalController extends AuthController  {
                 case 'expense':
                     $result = M()->field('a.id,a.create_time,a.expense_name,a.dda_state,a.dda_name,a.fda_state,a.fda_name,a.vpa_state,a.vpa_name,a.status,a.total_money,a.attachment,b.type,c.face')
                         ->table('atop_approval_expense a,atop_approval_center b,atop_user c')
-                        ->where('b.initiate='.session('user')['id'].' AND b.assoc=a.id AND b.initiate=c.id')
+                        ->where('b.initiate='.session('user')['id'].' AND b.assoc=a.id AND b.initiate=c.id  AND a.state = 1')
                         ->order('a.create_time DESC')
                         ->limit((I('post.pagenumber')-1)*C('LIMIT_SIZE'),C('LIMIT_SIZE'))
                         ->select();
@@ -331,7 +379,13 @@ class ApprovalController extends AuthController  {
 
     //上传附件
     public function uploadAttachment(){
-        if(!IS_POST) return;
+        $subName = I('post.SUB_NAME');
+        // 如果需要按id为子目录则必须填写第二个参数，否则直接保存在当前目录
+        if( $subName != '' ){
+            $result = upload( '/Approval/', $subName );
+            $this->ajaxReturn( $result );
+        }
+   /*     if(!IS_POST) return;
         $info = FileUpload('/Approval/',0,1);
         if(!info){ return false; }
         $file['flag'] = 1;
@@ -339,7 +393,7 @@ class ApprovalController extends AuthController  {
         $file['savepath'] = '/Uploads'.$info['Filedata']['savepath'].$info['Filedata']['name'];
         $file['ext'] = $info['Filedata']['ext'];
         $this->ajaxReturn($file);
-        exit;
+        exit;*/
     }
 
     //删除附件
