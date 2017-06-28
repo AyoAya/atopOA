@@ -22,17 +22,19 @@ class ApiController extends Controller {
 
             $page = I('get.page') > 0 ? I('get.page') : 1;
 
-
             $total = $model->table(C('DB_PREFIX').'user')->where('id<>1')->count();
 
-            $result = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'department b,'.C('DB_PREFIX').'position c,'.C('DB_PREFIX').'userlevel d,'.C('DB_PREFIX').'user e')
-                ->field('a.id,a.account,a.nickname,a.state,b.name department_name,c.name position_name,d.levelname,a.report,e.nickname report_name')
-                ->where('a.id<>1 AND a.department=b.id AND a.position=c.id AND a.level=d.id AND a.report=e.id')
+            $result = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'department b,'.C('DB_PREFIX').'position c,'.C('DB_PREFIX').'userlevel d')
+                ->field('a.id,a.account,a.nickname,a.state,b.name department_name,c.name position_name,d.levelname,a.report')
+                ->where('a.id<>1 AND a.department=b.id AND a.position=c.id AND a.level=d.id')
                 ->order('id ASC')
                 ->limit((($pagesize*($page-1))).','.$pagesize)
                 ->select();
 
             foreach($result as $key=>&$value){
+
+                $value['report_name'] = $model->table(C('DB_PREFIX').'user')->field('nickname')->find( $value['report'] )['nickname'];
+
                 switch( $value['state'] ){
                     case 1:
                         $value['state_name'] = '正常';
@@ -61,12 +63,27 @@ class ApiController extends Controller {
 
         }else{
 
-            $result = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'department b,'.C('DB_PREFIX').'position c,'.C('DB_PREFIX').'userlevel d,'.C('DB_PREFIX').'user e')
-                ->field('a.id,a.account,a.nickname,a.password,a.email,a.state,b.name department_name,c.name position_name,d.levelname,a.report,e.nickname report_name')
-                ->where('a.id<>1 AND a.id='.$query_id.' AND a.department=b.id AND a.position=c.id AND a.level=d.id AND a.report=e.id')
+            $result = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'department b,'.C('DB_PREFIX').'position c,'.C('DB_PREFIX').'userlevel d')
+                ->field('a.id,a.account,a.nickname,a.password,a.email,a.sex,a.state,b.id dpmt_id,b.name department_name,c.id pst_id,c.name position_name,d.id usl_id,d.levelname,a.report')
+                ->where('a.id<>1 AND a.id='.$query_id.' AND a.department=b.id AND a.position=c.id AND a.level=d.id')
                 ->select();
 
             foreach($result as $key=>&$value){
+
+                foreach( $result as $k=>&$v ){
+
+                    if( $v['report'] == $value['id'] ){
+
+                        $value['report_name'] = $v['nickname'];
+
+                    }else{
+
+                        $value['report_name'] = null;
+
+                    }
+
+                }
+
                 switch( $value['state'] ){
                     case 1:
                         $value['state_name'] = '正常';
@@ -85,6 +102,8 @@ class ApiController extends Controller {
                 }
             }
 
+            $result['rules'] = $this->getUserAuthRule($query_id);
+
             $this->ajaxReturn( $result );
 
         }
@@ -102,6 +121,8 @@ class ApiController extends Controller {
         $userAttributes['userlevels'] = $this->getAllUserLevel();
 
         $userAttributes['positions'] = $this->getAllPosition();
+
+        $userAttributes['authrule'] = $this->getAllModule();
 
         $this->ajaxReturn( $userAttributes );
 
@@ -134,6 +155,35 @@ class ApiController extends Controller {
     private function getAllPosition(){
 
         return M('Position')->select();
+
+    }
+
+    /**
+     * 获取所有模块数据
+     * @return mixed
+     */
+    private function getAllModule(){
+
+        return M('AuthRule')->where('title<>"系统"')->select();
+
+    }
+
+    /**
+     * 获取用户的权限组
+     * @param $id 用户id
+     * @return array
+     */
+    private function getUserAuthRule( $id ){
+
+        $user_account = M('User')->field('account')->find($id);
+
+        $map['title'] = $user_account['account'];
+
+        $result = M('AuthGroup')->where($map)->find();
+
+        $rules = explode(',', $result['rules']);
+
+        return $rules;
 
     }
 
