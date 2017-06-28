@@ -229,7 +229,7 @@ $(function(){
         //图片类型
         fileTypeDesc : '图片类型',
         //过滤文件格式
-        fileTypeExts : '*.rar;*.zip;*.txt;*.pdf;*.doc;*.docx;*.xls;*.xlsx',
+        fileTypeExts : '*.rar;*.zip;*.txt;*.pdf;*.doc;*.docx;*.xls;*.xlsx;*.ppt;*.jpg;*.jpeg;*.gif;*.png',
         //限制文件大小5m
         fileSizeLimit : 5242880,
         onUploadStart : function(){

@@ -104,6 +104,45 @@ $(function(){
         });
 
 
+        //监听选择的某个集
+        form.on('select(category)',function(data){
+
+            $('.apr-box').find('.apr-preview').find('ul').find('li').each(function(){
+                $(this).remove();
+            });
+
+            $.ajax({
+                url: ThinkPHP['AJAX'] + '/Approval/category',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                   id : data.value
+                },
+                success : function( response ){
+                    var jsonObj=eval('('+response+')');
+                    //console.log(jsonObj);
+                    var arr = jsonObj[0].step;
+
+                    $('.apr-box').find('small').html(jsonObj[0].aname);
+                    //遍历step的数据注入模板
+                    for(var i=0;i<arr.length;i++){
+
+                        var tem = "<li aid='"+arr[i].a_id+"' sid='"+arr[i].id+"'><i class='icon-double-angle-right'></i>　Step - "+arr[i].step+"　　"+arr[i].name+"</li>";
+
+                        $('.apr-box').find('.apr-preview').find('ul').append(tem);
+                    }
+
+                    //console.log(jsonObj[0]);
+                }
+
+            });
+
+        });
+
+       /* if(!Cat){
+
+        }*/
+
     });
 
 
