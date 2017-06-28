@@ -24,29 +24,30 @@
 <block name="content">
 
     <div class="approval-wrapper">
+        <input type="hidden" id="CurrentTab" value="{$Think.get.tab}">
         <div class="layui-tab">
             <ul class="layui-tab-title">
-                <li class="layui-this"><a>发起审批</a></li>
-                <li><a href="#">待我审批的</a></li>
-                <li><a href="#">我已审批的</a></li>
-                <li><a href="#">我发起的</a></li>
-                <li><a href="#">审批统计</a></li>
+                <li class="<eq name='tab' value='initiated'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/initiated">发起审批</a></li>
+                <li class="<eq name='tab' value='ongoing'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/ongoing">待我审批的</a></li>
+                <li class="<eq name='tab' value='already'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/already">我已审批的</a></li>
+                <li class="<eq name='tab' value='belongtome'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/belongtome">我发起的</a></li>
+                <li class="<eq name='tab' value='statistics'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/statistics">审批统计</a></li>
             </ul>
             <div class="layui-tab-content">
-                <div class="layui-tab-item layui-show">
+                <div class="layui-tab-item <eq name='tab' value='initiated'>layui-show</eq>">
                     <div class="init-apr">
                         <div class="apr-box">
                             <form class="layui-form">
                                 <div class="layui-form-item">
                                     <label class="layui-form-label">标题</label>
                                     <div class="layui-input-block">
-                                        <input type="text" name="apr_title" class="layui-input" required placeholder="请输入标题">
+                                        <input type="text" name="title" lay-verify="required" class="layui-input" required placeholder="请输入标题">
                                     </div>
                                 </div>
                                     <div class="layui-form-item apr-type">
                                         <label class="layui-form-label">类别</label>
                                         <div class="layui-input-block">
-                                            <select name="category" lay-filter="category">
+                                            <select name="set_id" lay-filter="category">
                                                 <volist name="approvalData" id="value" key="key">
                                                     <option value="{$value.id}">{$value.name}</option>
                                                 </volist>
@@ -56,7 +57,7 @@
                                 <div class="layui-form-item sel-person">
                                     <label class="layui-form-label">审批</label>
                                     <div class="layui-input-block">
-                                        <select name="apr_user"></select>
+                                        <select name="person"></select>
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
@@ -69,7 +70,7 @@
                                 <div class="layui-form-item layui-form-text">
                                     <label class="layui-form-label">描述</label>
                                     <div class="layui-input-block">
-                                        <textarea name="desc" placeholder="详细描述" class="layui-textarea"></textarea>
+                                        <textarea name="info" placeholder="详细描述" class="layui-textarea"></textarea>
                                     </div>
                                 </div>
                                 <div class="layui-form-item layui-form-text">
@@ -93,15 +94,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-tab-item">
+                <div class="layui-tab-item <eq name='tab' value='ongoing'>layui-show</eq>">
                     <table class="layui-table" lay-skin="line">
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th width="35%">标题</th>
+                            <th width="25%">标题</th>
                             <th>类别</th>
                             <th>发起人</th>
-                            <th>当前处理人</th>
                             <th>创建时间</th>
                             <th>进度</th>
                         </tr>
@@ -119,9 +119,6 @@
                             </td>
                             <td>
                                 <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
-                            </td>
-                            <td>
-                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
                             </td>
                             <td>
                                 <p>2017-06-21 16:56</p>
@@ -144,9 +141,6 @@
                                 <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
                             </td>
                             <td>
-                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
-                            </td>
-                            <td>
                                 <p>2017-06-21 16:56</p>
                             </td>
                             <td>
@@ -167,9 +161,6 @@
                                 <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
                             </td>
                             <td>
-                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
-                            </td>
-                            <td>
                                 <p>2017-06-21 16:56</p>
                             </td>
                             <td>
@@ -179,15 +170,14 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="layui-tab-item">
+                <div class="layui-tab-item <eq name='tab' value='already'>layui-show</eq>">
                     <table class="layui-table" lay-skin="line">
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th width="35%">标题</th>
+                            <th width="25%">标题</th>
                             <th>类别</th>
                             <th>发起人</th>
-                            <th>当前处理人</th>
                             <th>创建时间</th>
                             <th>进度</th>
                         </tr>
@@ -205,9 +195,6 @@
                             </td>
                             <td>
                                 <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
-                            </td>
-                            <td>
-                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
                             </td>
                             <td>
                                 <p>2017-06-21 16:56</p>
@@ -230,9 +217,6 @@
                                 <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
                             </td>
                             <td>
-                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
-                            </td>
-                            <td>
                                 <p>2017-06-21 16:56</p>
                             </td>
                             <td>
@@ -253,9 +237,6 @@
                                 <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
                             </td>
                             <td>
-                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
-                            </td>
-                            <td>
                                 <p>2017-06-21 16:56</p>
                             </td>
                             <td>
@@ -265,93 +246,45 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="layui-tab-item">
+                <div class="layui-tab-item <eq name='tab' value='belongtome'>layui-show</eq>">
                     <table class="layui-table" lay-skin="line">
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th width="35%">标题</th>
+                            <th width="25%">标题</th>
                             <th>类别</th>
-                            <th>发起人</th>
                             <th>当前处理人</th>
                             <th>创建时间</th>
                             <th>进度</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                <p>1</p>
-                            </td>
-                            <td>
-                                <a href="__URL__/detail">这是一条作用于测试的审批数据</a>
-                            </td>
-                            <td>
-                                <p>请假</p>
-                            </td>
-                            <td>
-                                <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
-                            </td>
-                            <td>
-                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
-                            </td>
-                            <td>
-                                <p>2017-06-21 16:56</p>
-                            </td>
-                            <td>
-                                <p>审批</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>2</p>
-                            </td>
-                            <td>
-                                <a href="__URL__/detail">这是一条作用于测试的审批数据</a>
-                            </td>
-                            <td>
-                                <p>请假</p>
-                            </td>
-                            <td>
-                                <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
-                            </td>
-                            <td>
-                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
-                            </td>
-                            <td>
-                                <p>2017-06-21 16:56</p>
-                            </td>
-                            <td>
-                                <p>审批</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p>3</p>
-                            </td>
-                            <td>
-                                <a href="__URL__/detail">这是一条作用于测试的审批数据</a>
-                            </td>
-                            <td>
-                                <p>请假</p>
-                            </td>
-                            <td>
-                                <p><img src="__IMG__/face/face_50.png" width="40" alt="">张某</p>
-                            </td>
-                            <td>
-                                <p><img src="__IMG__/face/face_37.png" width="40" alt="">李某人</p>
-                            </td>
-                            <td>
-                                <p>2017-06-21 16:56</p>
-                            </td>
-                            <td>
-                                <p>审批</p>
-                            </td>
-                        </tr>
+                            <volist name="BelongtomeResult" id="value">
+                                <tr>
+                                    <td>
+                                        <p>{$value.detail_id}</p>
+                                    </td>
+                                    <td>
+                                        <a href="__URL__/detail/id/{$value.detail_id}">{$value.title}</a>
+                                    </td>
+                                    <td>
+                                        <p>{$value.name}</p>
+                                    </td>
+                                    <td>
+                                        <p><img src="{$value.current_data.face}" width="40" alt="">{$value.current_data.nickname}</p>
+                                    </td>
+                                    <td>
+                                        <p>{$value.create_time|date="Y-m-d H:i",###}</p>
+                                    </td>
+                                    <td>
+                                        <p>{$value.current_data.name}</p>
+                                    </td>
+                                </tr>
+                            </volist>
                         </tbody>
                     </table>
                 </div>
-                <div class="layui-tab-item">内容5</div>
+                <div class="layui-tab-item <eq name='tab' value='statistics'>layui-show</eq>">内容5</div>
             </div>
         </div>
     </div>

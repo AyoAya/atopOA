@@ -24,23 +24,23 @@
 <block name="content">
 
     <div class="approval-wrapper">
-        <div class="apr-title"><h3>这是一条作用于测试的审批数据 <small><span class="tag tag-info">Category One</span></small></h3></div>
-        <div class="apr-description">
-            <p>
-                <kbd>描述:</kbd> 测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，
-                测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用
-                条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据试用的审批数据，条目二
-                测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二
-                测试用的审批数据，条目二测试用的审批数据，条目二测试用的审批数据，条目二测试用
-            </p>
+        <div class="apr-title">
+            <h3>{$DetailResult.title} <small><span class="tag tag-info">{$DetailResult.set.name}</span></small></h3>
         </div>
+        <notempty name="DetailResult.info">
+            <div class="apr-description">
+                <p>
+                    <kbd>描述:</kbd> {$DetailResult.info}
+                </p>
+            </div>
+        </notempty>
         <div class="apr-info">
             <div class="apr-info-item">
-                <img src="__IMG__/face/face_50.png" alt="">
-                <span class="apr-user">张三</span>
+                <img src="{$DetailResult.user.face}" alt="">
+                <span class="apr-user">{$DetailResult.user.nickname}</span>
             </div>
             <div class="apr-info-item">
-                <i class="icon-time"></i>　2017-06-22 10:03
+                <i class="icon-time"></i>　{$DetailResult.create_time|date="Y-m-d H:i",###}
             </div>
         </div>
     </div>
@@ -52,7 +52,25 @@
     <div class="procedure">
         <table class="procedure-table">
             <tr class="procedure-wrap">
-                <td class="active">
+                <volist name="DetailResult.steps" id="value">
+                    <td class="<eq name='value.state' value='completed'>active</eq>">
+                        <div class="procedure-title" style="width: 100%;margin-left: -50%;">{$value.name}</div>
+                        <div class="procedure-step">
+                            <neq name="value.state" value="processing">
+                                <i class="icon-ok"></i>
+                            <else/>
+                                {$value.step}
+                            </neq>
+                        </div>
+                        <neq name="value.state" value="processing">
+                            <div class="procedure-info">
+                                {$value.operator}<br>{$value.complete_time|date="Y-m-d H:i",###}
+                            </div>
+                        </neq>
+                        <div class="procedure-hollow"></div>
+                    </td>
+                </volist>
+                <!--<td class="active">
                     <div class="procedure-title">步骤一</div>
                     <div class="procedure-step"><i class="icon-ok"></i></div>
                     <div class="procedure-info">
@@ -91,7 +109,7 @@
                         赵七<br>2017-06-22 08:12
                     </div>
                     <div class="procedure-hollow"></div>
-                </td>
+                </td>-->
             </tr>
         </table>
     </div>

@@ -7,11 +7,12 @@ $(function(){
         var form = layui.form(),
             element = layui.element(),
             layer = layui.layer;
-        var SUB_NAME,LOG_ID;
+
+        var SUB_NAME, attachmentList = new Array();
 
         // uploader参数配置
         var logUploaderOption = {
-            auto: true,
+            auto: false,
             server: ThinkPHP['AJAX'] + '/Approval/uploadAttachment',
             pick: '#filePick',
             fileVal : 'Filedata',
@@ -53,20 +54,12 @@ $(function(){
             }
             layer.msg(msg, {icon: 2, time: 2000});
         });
-        // 上传之前
-        APRuploader.on('uploadBeforeSend', function( block, data, headers ){
-            data.SUB_NAME = SUB_NAME;
-            data.LOG_ID = LOG_ID;
-        });
         // 上传成功时
         APRuploader.on('uploadSuccess', function( file,response ){
 
-            console.log(file);
-
-            var attachmentList = new Object();
             if( response.flag > 0 ){
                 var attachmentObject = new Object();
-                attachmentObject.SourceName = response.name;
+                attachmentObject.Ext = response.ext;
                 attachmentObject.SaveName = response.savename;
                 attachmentObject.SavePath = response.path;
                 attachmentList.push(attachmentObject);
@@ -77,25 +70,18 @@ $(function(){
 
         });
         // 所有文件上传结束时
-        APRuploader.on('uploadFinished', function( data,attachmentList){
+        APRuploader.on('uploadFinished', function( data ){
+
             $.ajax({
-                url : ThinkPHP['AJAX'] + '/Approval/uploadAttachment',
-                type : 'POST',
-                data : {
-                    logid : LOG_ID,
-                    attachments : JSON.stringify(attachmentList)
+                url: ThinkPHP['AJAX'] + '/Approval/insertAttachment',
+                type: 'POST',
+                data: {
+                    sub_name: SUB_NAME,
+                    attachments: JSON.stringify(attachmentList)
                 },
-                dataType : 'json',
-                success : function( response ){
-                    if( response.flag > 0 ){
-                        layer.msg(response.msg, { icon : 1,time : 2000 });
-                        setTimeout(function(){
-                            location.reload();
-                        },2000);
-                    }else{
-                        layer.closeAll();
-                        layer.msg(response.msg, { icon : 2,time : 2000 });
-                    }
+                dataType: 'json',
+                success: function( response ){
+                    console.log(response);
                 }
             });
         });
@@ -106,29 +92,34 @@ $(function(){
         $('.uploader-attachment-queue').on('click', '.icon-remove', function(){
             var id = $(this).parent().parent().attr('id');
             // 删除队列中的文件
-            APRuploader.removeFile( APRuploader.getFile(id,true) );
+            APRuploader.removeFile( id, true );
             // 删除dom节点
             $(this).parent().parent().remove();
         });
 
 
-        $.ajax({
-            url: ThinkPHP['AJAX'] + '/Approval/person',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                id : $('.apr-type select').val()
-            },
-            success: function (response) {
-                let tmpPerson = '';
+        var CurrentTab = $('#CurrentTab').val();    //获取到当前的tab
+        // 如果当前访问的是 "initiated" 这个tab的才加载以下请求
+        if( CurrentTab == 'initiated' ){
+            $.ajax({
+                url: ThinkPHP['AJAX'] + '/Approval/person',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id : $('.apr-type select').val()
+                },
+                success: function (response) {
+                    let tmpPerson = '';
 
-                for (let i = 0; i < response.length; i++) {
-                    tmpPerson += '<option value="' + response[i].id + '" email="'+ response[i].email +'">' + response[i].nickname + '</option>\n\r'
+                    for (let i = 0; i < response.length; i++) {
+                        tmpPerson += '<option value="' + response[i].id + '" email="'+ response[i].email +'">' + response[i].nickname + '</option>\n\r'
+                    }
+                    $('.sel-person select').html(tmpPerson);
+                    form.render('select');
                 }
-                $('.sel-person select').html(tmpPerson);
-                form.render('select');
-            }
-        });
+            });
+        }
+
 
         //监听选择的某个集
         form.on('select(category)',function(data){
@@ -186,13 +177,29 @@ $(function(){
         form.on('submit(submit)',function( data ){
 
             $.ajax({
-                url : ThinkPHP['AJAX'] + '/Approval/index',
+                url : ThinkPHP['AJAX'] + '/Approval/SaveInitiatedApproval',
                 dataType : 'json',
                 type : 'POST',
-                data : {
-                     data : data.field
+                data : data.field,
+                beforeSend: function(){
+                    layer.load(1, {
+                        shade: [0.5,'#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success: function( response ){
+                    // 根据返回的结果检查队列里是否包含文件，如果有则上传，没有则直接跳转到详情页
+                    if( response.flag ){
+                        if( APRuploader.getFiles().length > 0 ){    //检查队列里是否包含文件
+                            SUB_NAME = response.flag;
+                            APRuploader.option('formData', {SUB_NAME: SUB_NAME});
+                            APRuploader.upload();
+                        }else{
+                            layer.msg(response.msg, {icon: 1, time: 1500});
+                        }
+                    }else{
+                        layer.msg('ERROR', {icon: 2, time: 2000});
+                    }
                 }
-
             });
 
             return false;

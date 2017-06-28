@@ -409,7 +409,7 @@ p {
 }
 </style>
 <p>Dear All,</p>
-<p>项目管理员 [ $pj_create_person ] 在 [ $pj_num / $pj_name ] 的 [ Gate$gate / $mile_stone ] 上传了新的文件</p>
+<p>项目管理员 [ $pj_management ] 在 [ $pj_num / $pj_name ] 的 [ Gate$gate / $mile_stone ] 上传了新的文件</p>
 <p class="main">文件：$filename</p>
 <p>详情请查看：<a href="http://$httpHost/Project/details/tab/document/id/$iid">http://$httpHost/Project/details/tab/document/id/$iid</a></p>
 HTML;
