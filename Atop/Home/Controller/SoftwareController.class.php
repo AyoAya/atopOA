@@ -1,6 +1,7 @@
 <?php
 namespace Home\Controller;
 use Think\Model;
+use Think\Page;
 
 class SoftwareController extends AuthController {
 
@@ -14,40 +15,107 @@ class SoftwareController extends AuthController {
 
         if(I('get.search')){
 
-        $softData = $model->table(C('DB_PREFIX') . 'software')->where('number LIKE "%'.I('get.search').'%" OR name LIKE "%'.I('get.search').'%" OR person LIKE "%'.I('get.search').'%"')->select();
+            $softData = $model->table(C('DB_PREFIX') . 'software')->where('number LIKE "%'.I('get.search').'%" OR name LIKE "%'.I('get.search').'%" OR person LIKE "%'.I('get.search').'%"')->select();
+            $count = $model->table(C('DB_PREFIX') . 'software')->where('number LIKE "%'.I('get.search').'%" OR name LIKE "%'.I('get.search').'%" OR person LIKE "%'.I('get.search').'%"')->count();
+            $tab = I('get.tab') ? I('get.tab') : 'software';
+            if( !in_array($tab,['software', 'ate'])) $tab = 'software';
+
+            # 数据分页
+            $page = new Page($count,15);
+            $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
+            $page->setConfig('next','<span aria-hidden="true">下一页</span>');
+            $page->setConfig('first','<span aria-hidden="true">首页</span>');
+            $page->setConfig('last','<span aria-hidden="true">尾页</span>');
+
+            if(C('PAGE_STATUS_INFO')){
+                $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
+            }
 
         }else{
-        $softData = $model->table(C('DB_PREFIX') . 'software')
-                ->where("type='firmware'")
-                ->select();
+
+            $tab = I('get.tab') ? I('get.tab') : 'software';
+            if( !in_array($tab,['software', 'ate'])) $tab = 'software';
+
+
+            switch ( $tab ){
+
+                case 'software' :
+
+                    $count = $model->table(C('DB_PREFIX') . 'software')
+                        ->where("type='firmware'")
+                        ->count();
+
+                    # 数据分页
+                    $page = new Page($count,15);
+                    $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
+                    $page->setConfig('next','<span aria-hidden="true">下一页</span>');
+                    $page->setConfig('first','<span aria-hidden="true">首页</span>');
+                    $page->setConfig('last','<span aria-hidden="true">尾页</span>');
+
+                    if(C('PAGE_STATUS_INFO')){
+                        $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
+                    }
+
+                    $softData = $model->table(C('DB_PREFIX') . 'software')
+                        ->where("type='firmware'")
+                        ->limit($page->firstRow.','.$page->listRows)
+                        ->select();
+
+                    foreach ($softData as $key => &$value) {
+
+                        $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
+                            ->where('soft_asc =' . $value['id'])
+                            ->order('id DESC')
+                            ->field('version,save_time,soft_asc')
+                            ->select();
+                    }
+
+                    break;
+
+                case  'ate' :
+
+                    $count = $model->table(C('DB_PREFIX') . 'software')
+                        ->where("type='ATE'")
+                        ->count();
+
+                    # 数据分页
+                    $page = new Page($count,15);
+                    $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
+                    $page->setConfig('next','<span aria-hidden="true">下一页</span>');
+                    $page->setConfig('first','<span aria-hidden="true">首页</span>');
+                    $page->setConfig('last','<span aria-hidden="true">尾页</span>');
+
+                    if(C('PAGE_STATUS_INFO')){
+                        $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
+                    }
+
+                    $softData = $model->table(C('DB_PREFIX') . 'software')
+                        ->where("type='ATE'")
+                        ->limit($page->firstRow.','.$page->listRows)
+                        ->select();
+
+                    foreach ($softData as $key => &$value) {
+
+                        $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
+                            ->where('soft_asc ='.$value['id'])
+                            ->order('id DESC')
+                            ->field('version,save_time,soft_asc')
+                            ->select();
+                    }
+
+
+                    break;
+            }
         }
 
+        if(I('get.p')){
+            $this->assign('pageNumber',I('get.p')-1);
+        }
 
-
-            foreach ($softData as $key => &$value) {
-
-                $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
-                    ->where('soft_asc =' . $value['id'])
-                    ->order('id DESC')
-                    ->field('version,save_time,soft_asc')
-                    ->select();
-            }
-
-            $softwareData = $model->table(C('DB_PREFIX') . 'software')
-                ->where("type='ATE'")
-                ->select();
-
-            foreach ($softwareData as $key => &$value) {
-
-                $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
-                    ->where('soft_asc ='.$value['id'])
-                    ->order('id DESC')
-                    ->field('version,save_time,soft_asc')
-                    ->select();
-            }
+        $pageShow = $page->show();
 
         $this->assign('softData', $softData);
-        $this->assign('softwareData', $softwareData);
+        $this->assign('page', $pageShow);
         $this->display();
 
         }
