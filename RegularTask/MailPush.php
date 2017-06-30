@@ -15,7 +15,7 @@ class PushEmail {
     private $db_pwd = 'root';
     private $db_name = 'atop';
     static $address = [
-		'yangpeiyun@atoptechnology.com',    //杨培云
+        'yangpeiyun@atoptechnology.com',    //杨培云
         'xiaoaiyou@atoptechnology.com',     //肖艾佑
         'chenshi@atoptechnology.com',   //陈实
         'haorui@atoptechnology.com',        //郝锐
@@ -71,6 +71,7 @@ class PushEmail {
 
         $sample_data = self::select($sql);
 
+
         foreach( $sample_data as $key=>&$value ){
 
             $sql = 'SELECT 
@@ -81,26 +82,35 @@ class PushEmail {
                         a.detail_assoc = '.$value['detail_assoc'].' AND a.product_id = c.id AND a.manager = d.id AND a.now_step = b.id';
 
             $value['detail'] = self::select($sql);
+
             foreach( $value['detail'] as $k=>&$v ){
 
                 $sql = 'SELECT b.nickname current_person FROM atop_sample_operating a,atop_user b WHERE a.asc_detail='.$v['detail_id'].' AND a.operator=b.id';
 
                 $tmpArr = self::select($sql);
 
+                if(strtotime($v['actual_date']) < $start_date && !empty($v['actual_date'])){
+
+                    unset($value['detail'][$k]);
+
+                }
                 $v['current_person'] = end($tmpArr)['current_person'];
 
 
                 # 如果产品步骤大于6则说明该单已经完成
+
                 if( $v['now_step'] > 6 ){
                     $v['class'] = 'success';
                 }else{
                     $v['class'] = 'processing';
                 }
 
+
+
             }
 
+            sort($value['detail']);
         }
-
 
         self::output( $sample_data );
 
