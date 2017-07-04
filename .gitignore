@@ -5,3 +5,5 @@ Atop/Runtime/
 .project
 .settings/
 ueditor/
+Atop/Common/Conf/config.php
+Atop/Common/Conf/config.php.bak
