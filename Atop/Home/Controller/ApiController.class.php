@@ -11,6 +11,25 @@ use Think\Model;
 
 class ApiController extends Controller {
 
+    public function login(){
+
+        $model = new Model();
+
+        $data = I('get.data','',false);
+
+        $map['account'] = $data['account'];
+        $map['password'] = sha1($data['password']);
+
+        $UserInfoData = $model->table(C('DB_PREFIX').'user')->field('id,account,nickname,email,createtime,lasttime,lastip,face,theme,department,position,report,level,state,sex')->where( $map )->find();
+
+        if( $UserInfoData ){
+            $this->ajaxReturn( ['flag'=>1, 'userdata'=>$UserInfoData] );
+        }else{
+            $this->ajaxReturn( ['flag'=>0, 'msg'=>'账号或密码错误!'] );
+        }
+
+    }
+
 
     public function getUsers($query_id = '') {
 
