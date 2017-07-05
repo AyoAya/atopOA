@@ -16,6 +16,7 @@ class PushEmail {
     private $db_name = 'atop';
     static $address = [
         'yangpeiyun@atoptechnology.com',    //杨培云
+        'huangzhengyin@atoptechnology.com',   //黄正银
         'xiaoaiyou@atoptechnology.com',     //肖艾佑
         'chenshi@atoptechnology.com',   //陈实
         'haorui@atoptechnology.com',        //郝锐
@@ -23,7 +24,9 @@ class PushEmail {
 		
 	];
     static $cc = [
-        'sunbin@atoptechnology.com',        //孙膑
+        'liuyan@atoptechnology.com',      //刘燕
+        'yubo@atoptechnology.com',          //余波
+        'sunbin@atoptechnology.com',        //孙彬
         'dingzheng@atoptechnology.com',     //丁征
         'mikechen@atoptechnology.com',      //陈应时
         'xiaxiaosen@atoptechnology.com',    //夏小森
