@@ -64,7 +64,7 @@ class PushEmail {
         $sql = 'SELECT * FROM atop_sample a,atop_sample_detail b 
                 WHERE ((a.create_time > '.$start_date.' AND a.create_time < '.$end_date.') 
                 OR (b.now_step < 7 AND b.state = "N") 
-                OR (strtotime(b.actual_date) > '.$start_date.' AND strtotime(b.actual_date) < '.$end_date.')) 
+                OR (UNIX_TIMESTAMP(b.actual_date) > '.$start_date.' AND UNIX_TIMESTAMP(b.actual_date) < '.$end_date.')) 
                 AND a.id = b.detail_assoc 
                 GROUP BY a.id 
                 ORDER BY b.id ASC';
