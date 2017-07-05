@@ -72,21 +72,16 @@ $(function(){
         // 所有文件上传结束时
         APRuploader.on('uploadFinished', function( data ){
 
-            $.ajax({
-                url: ThinkPHP['AJAX'] + '/Approval/insertAttachment',
-                type: 'POST',
-                data: {
-                    sub_name: SUB_NAME,
-                    attachments: JSON.stringify(attachmentList)
-                },
-                dataType: 'json',
-                success: function( response ){
-                    console.log(response);
-                }
-            });
+            var sub_name = SUB_NAME,
+                attachments = JSON.stringify(attachmentList);
+
+            layer.msg('操作成功', {icon: 1, time: 0});
+            setTimeout(function () {
+                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Approval/index';
+            })
+
         });
 
-        //alert($('.sel-person').find('select').text());
 
         // 删除队列文件
         $('.uploader-attachment-queue').on('click', '.icon-remove', function(){
@@ -195,6 +190,9 @@ $(function(){
                             APRuploader.upload();
                         }else{
                             layer.msg(response.msg, {icon: 1, time: 1500});
+                            setTimeout(function () {
+                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Approval/index';
+                            })
                         }
                     }else{
                         layer.msg('ERROR', {icon: 2, time: 2000});

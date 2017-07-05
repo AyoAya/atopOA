@@ -23,14 +23,14 @@ class PushEmail {
 		
 	];
     static $cc = [
-		'sunbin@atoptechnology.com',        //孙膑
+        'sunbin@atoptechnology.com',        //孙膑
         'dingzheng@atoptechnology.com',     //丁征
         'mikechen@atoptechnology.com',      //陈应时
         'xiaxiaosen@atoptechnology.com',    //夏小森
         'liping@atoptechnology.com',    //李平
         'kent@atoptechnology.com',      //董总
         'jackfan@atoptechnology.com'    //范总
-		
+
 	];
 
     /*liping@atoptechnology*/
@@ -64,7 +64,7 @@ class PushEmail {
         $sql = 'SELECT * FROM atop_sample a,atop_sample_detail b 
                 WHERE ((a.create_time > '.$start_date.' AND a.create_time < '.$end_date.') 
                 OR (b.now_step < 7 AND b.state = "N") 
-                OR (b.actual_date > '.$start_date.' AND b.actual_date < '.$end_date.')) 
+                OR (strtotime(b.actual_date) > '.$start_date.' AND strtotime(b.actual_date) < '.$end_date.')) 
                 AND a.id = b.detail_assoc 
                 GROUP BY a.id 
                 ORDER BY b.id ASC';

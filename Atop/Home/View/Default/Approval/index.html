@@ -12,26 +12,28 @@
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
-    <title>审批</title>
+    <title>通用评审</title>
 </block>
 <!-- 【路径导航】 -->
 <block name="breadcrumb">
     <ol class="breadcrumb breadcrumb-edit">
-        <li class="active">审批</li>
+        <li class="active">通用评审</li>
     </ol>
 </block>
 <!-- 【正文区域】 -->
 <block name="content">
 
+    <a href="__ROOT__/Approval/add" class="layui-btn layui-btn-primary" style="margin-bottom: 10px !important;">添加评审</a>
+
     <div class="approval-wrapper">
         <input type="hidden" id="CurrentTab" value="{$Think.get.tab}">
         <div class="layui-tab">
             <ul class="layui-tab-title">
-                <li class="<eq name='tab' value='initiated'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/initiated">发起审批</a></li>
-                <li class="<eq name='tab' value='ongoing'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/ongoing">待我审批的</a></li>
-                <li class="<eq name='tab' value='already'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/already">我已审批的</a></li>
+                <li class="<eq name='tab' value='initiated'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/initiated">发起评审</a></li>
+                <li class="<eq name='tab' value='ongoing'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/ongoing">待我评审的</a></li>
+                <li class="<eq name='tab' value='already'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/already">我已评审的</a></li>
                 <li class="<eq name='tab' value='belongtome'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/belongtome">我发起的</a></li>
-                <li class="<eq name='tab' value='statistics'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/statistics">审批统计</a></li>
+                <li class="<eq name='tab' value='statistics'>layui-this</eq>"><a href="__ROOT__/Approval/index/tab/statistics">评审统计</a></li>
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item <eq name='tab' value='initiated'>layui-show</eq>">
@@ -256,6 +258,7 @@
                             <th>当前处理人</th>
                             <th>创建时间</th>
                             <th>进度</th>
+                            <th>状态</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -278,6 +281,18 @@
                                     </td>
                                     <td>
                                         <p>{$value.current_data.name}</p>
+                                    </td>
+                                    <td>
+                                        <eq name="value.state" value="C">
+                                            <p style="width: 55px;height: 30px; background: #5cb85c;border-radius: 2px; text-align: center;line-height: 30px; color: #fff;">完成</p>
+                                        </eq>
+                                        <eq name="value.state" value="Y">
+                                            <p style="width: 55px;height: 30px; background: #428bca;border-radius: 2px; text-align: center;line-height: 30px; color: #fff;">进行中</p>
+                                        </eq>
+                                        <eq name="value.state" value="N">
+                                            <p style="width: 55px;height: 30px; background: #d9534f;border-radius: 2px; text-align: center;line-height: 30px; color: #fff;">拒绝</p>
+                                        </eq>
+
                                     </td>
                                 </tr>
                             </volist>

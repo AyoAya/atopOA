@@ -11,32 +11,12 @@ $(function(){
 
         //获取基本结构
         var base_column = $('.approval-container').html();
-
         //点击添加一栏
         $('.add-column').click( function(){
 
             $('.approval-container').append(base_column);
 
             $('.approval-container .layui-form:last-child').find('.approval-number p span').text( ++step_num );
-
-            $.ajax({
-                url : ThinkPHP['AJAX'] + '/Approval/aprType',
-                dataType : 'json',
-                type : 'POST',
-                data : {
-                    type : '部门'
-                },
-                success : function ( response ) {
-                    let tmpApr = '';
-                    for (let i=0;i<response.length;i++){
-                        tmpApr += '<option value="'+ response[i].id +'">'+ response[i].name +'</option>\r\n'
-                    }
-                    $('.apr-pst-box .apr-dpmt select').html(tmpApr);
-                    form.render('select');
-
-                }
-
-            });
 
             form.render();
 
@@ -59,61 +39,19 @@ $(function(){
             }
         });
 
-        $.ajax({
-            url : ThinkPHP['AJAX'] + '/Approval/aprType',
-            dataType : 'json',
-            type : 'POST',
-            data : {
-                type : '部门'
-            },
-            success : function ( response ) {
-                let tmpApr = '';
-                for (let i=0;i<response.length;i++){
-                    tmpApr += '<option value="'+ response[i].id +'">'+ response[i].name +'</option>\r\n'
-                }
-                $('.apr-pst-box .apr-dpmt select').html(tmpApr);
-                form.render('select');
-
-            }
-
-        });
-
         form.on('select(apr-type)', function(data){
-
-            let type = data.value;
-
-            $.ajax({
-                url : ThinkPHP['AJAX'] + '/Approval/aprType',
-                dataType : 'json',
-                type : 'POST',
-                data : {
-                    type : $(this).text()
-                },
-                success : function ( response ) {
-                    let tmpApr = '';
-                    for (let i=0;i<response.length;i++){
-                        tmpApr += '<option value="'+ response[i].id +'">'+ response[i].name +'</option>\r\n'
-                    }
-                    if( data.value == 'position' ){
-                        $('.apr-pst-box .apr-pst select').html(tmpApr);
-                    }else{
-                        $('.apr-pst-box .apr-dpmt select').html(tmpApr);
-                    }
-                    form.render('select');
-
-                }
-
-            });
 
             let _parent = $(this).parents('.layui-form');
 
-            if( $(this).text() === '职位' ){
-                _parent.find('.approval-category .apr-pst').css('display','block');
-                _parent.find('.approval-category .apr-dpmt').css('display','none');
-            }else{
+            if( $(this).attr('lay-value') === 'department' ){
                 _parent.find('.approval-category .apr-pst').css('display','none');
                 _parent.find('.approval-category .apr-dpmt').css('display','block');
+            }else{
+                _parent.find('.approval-category .apr-pst').css('display','block');
+                _parent.find('.approval-category .apr-dpmt').css('display','none');
             }
+
+            form.render('select');
 
         });
 
