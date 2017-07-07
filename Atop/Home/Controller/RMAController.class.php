@@ -583,7 +583,7 @@ class RMAController extends AuthController{
                             $value['nickname'] = $face['nickname'];
                         }else{
                             $value['face'] = '/Public/home/img/face/default_face.png';
-                            $value['nickname'] = 'Unknow';
+                            $value['nickname'] = $value['recorder'];
                         }
                     }
                 }else{
@@ -593,7 +593,7 @@ class RMAController extends AuthController{
                 $value['log_content']= htmlspecialchars_decode($value['log_content']);
             }
         }
-        //print_r($oacustomerstep_model_result);
+        print_r($oacustomerstep_model_result);
         //print_r($this->getDepartmentsAndUsers());
         $this->assign('ccList',$this->getDepartmentsAndUsers());
 
