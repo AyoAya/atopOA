@@ -1,0 +1,518 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/rma/satisfaction.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/rma/satisfaction.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>客诉满意度汇总</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/RMA">客诉处理</a></li>
+        <li class="active">客诉满意度汇总</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="sf-wrapper">
+        <div class="sf-box sf-box-l">
+            <div class="tt-bar">
+                问题代号 & 说明 <a href="__ROOT__/RMA/addQuestion" style="float: right;"><i class="icon-plus-sign"></i> 添加问题</a>
+            </div>
+            <div class="qs-list">
+                <div class="qs-item">
+                    <div class="qs-l">1</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">2</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">3</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">4</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">5</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">6</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">7</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">8</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">9</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">10</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">11</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">12</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">13</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">14</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+                <div class="qs-item">
+                    <div class="qs-l">15</div>
+                    <div class="qs-r">光功率不符合规格</div>
+                </div>
+            </div>
+        </div>
+        <div class="sf-box sf-box-r">
+            <div class="tt-bar" style="border-left: solid 1px #ccc;">
+                送样客诉
+            </div>
+            <div class="cc-box">
+                <div class="cc-item">
+                    <div class="cc-khmc">Coriant&nbsp;&nbsp;
+                        <small style="color: #bbb;">2017 - 上半年</small>
+                        <span class="pull-right">
+                            <a href="javascript:;" title="编辑" style="margin-right: 15px">
+                                <i class="icon-edit"></i><small style="position: relative;top: -1px;left: 4px;">编辑</small>
+                            </a>
+                            <a href="javascript:;" title="编辑">
+                                <i class="icon-trash"></i><small style="position: relative;top: -1px;left: 4px;">删除</small>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉问题</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>1,2,3,4</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉反馈</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>接受再送样；再送样通过。</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit">
+                        <div class="cc-ed-l">
+                            <code>客诉附件</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div><i class="file-icon-ext-xlsx" style="display: inline-block;width: 14px;height: 14px;margin-right: 7px;"></i><a href="#">满意度调查上传的附件.xlsx</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cc-item">
+                    <div class="cc-khmc">Coriant&nbsp;&nbsp;
+                        <small style="color: #bbb;">2017 - 上半年</small>
+                        <span class="pull-right">
+                            <a href="javascript:;" title="编辑" style="margin-right: 15px">
+                                <i class="icon-edit"></i><small style="position: relative;top: -1px;left: 4px;">编辑</small>
+                            </a>
+                            <a href="javascript:;" title="编辑">
+                                <i class="icon-trash"></i><small style="position: relative;top: -1px;left: 4px;">删除</small>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉问题</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>1,2,3,4</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉反馈</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>接受再送样；再送样通过。</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit">
+                        <div class="cc-ed-l">
+                            <code>客诉附件</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div><i class="file-icon-ext-xlsx" style="display: inline-block;width: 14px;height: 14px;margin-right: 7px;"></i><a href="#">满意度调查上传的附件.xlsx</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cc-item">
+                    <div class="cc-khmc">Coriant&nbsp;&nbsp;
+                        <small style="color: #bbb;">2017 - 上半年</small>
+                        <span class="pull-right">
+                            <a href="javascript:;" title="编辑" style="margin-right: 15px">
+                                <i class="icon-edit"></i><small style="position: relative;top: -1px;left: 4px;">编辑</small>
+                            </a>
+                            <a href="javascript:;" title="编辑">
+                                <i class="icon-trash"></i><small style="position: relative;top: -1px;left: 4px;">删除</small>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉问题</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>1,2,3,4</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉反馈</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>接受再送样；再送样通过。</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit">
+                        <div class="cc-ed-l">
+                            <code>客诉附件</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div><i class="file-icon-ext-xlsx" style="display: inline-block;width: 14px;height: 14px;margin-right: 7px;"></i><a href="#">满意度调查上传的附件.xlsx</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cc-item">
+                    <div class="cc-khmc">Coriant&nbsp;&nbsp;
+                        <small style="color: #bbb;">2017 - 上半年</small>
+                        <span class="pull-right">
+                            <a href="javascript:;" title="编辑" style="margin-right: 15px">
+                                <i class="icon-edit"></i><small style="position: relative;top: -1px;left: 4px;">编辑</small>
+                            </a>
+                            <a href="javascript:;" title="编辑">
+                                <i class="icon-trash"></i><small style="position: relative;top: -1px;left: 4px;">删除</small>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉问题</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>1,2,3,4</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉反馈</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>接受再送样；再送样通过。</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit">
+                        <div class="cc-ed-l">
+                            <code>客诉附件</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div><i class="file-icon-ext-xlsx" style="display: inline-block;width: 14px;height: 14px;margin-right: 7px;"></i><a href="#">满意度调查上传的附件.xlsx</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cc-item">
+                    <div class="cc-khmc">Coriant&nbsp;&nbsp;
+                        <small style="color: #bbb;">2017 - 上半年</small>
+                        <span class="pull-right">
+                            <a href="javascript:;" title="编辑" style="margin-right: 15px">
+                                <i class="icon-edit"></i><small style="position: relative;top: -1px;left: 4px;">编辑</small>
+                            </a>
+                            <a href="javascript:;" title="编辑">
+                                <i class="icon-trash"></i><small style="position: relative;top: -1px;left: 4px;">删除</small>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉问题</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>1,2,3,4</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉反馈</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>接受再送样；再送样通过。</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit">
+                        <div class="cc-ed-l">
+                            <code>客诉附件</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div><i class="file-icon-ext-xlsx" style="display: inline-block;width: 14px;height: 14px;margin-right: 7px;"></i><a href="#">满意度调查上传的附件.xlsx</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cc-item">
+                    <div class="cc-khmc">Coriant&nbsp;&nbsp;
+                        <small style="color: #bbb;">2017 - 上半年</small>
+                        <span class="pull-right">
+                            <a href="javascript:;" title="编辑" style="margin-right: 15px">
+                                <i class="icon-edit"></i><small style="position: relative;top: -1px;left: 4px;">编辑</small>
+                            </a>
+                            <a href="javascript:;" title="编辑">
+                                <i class="icon-trash"></i><small style="position: relative;top: -1px;left: 4px;">删除</small>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉问题</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>1,2,3,4</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉反馈</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>接受再送样；再送样通过。</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit">
+                        <div class="cc-ed-l">
+                            <code>客诉附件</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div><i class="file-icon-ext-xlsx" style="display: inline-block;width: 14px;height: 14px;margin-right: 7px;"></i><a href="#">满意度调查上传的附件.xlsx</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cc-item">
+                    <div class="cc-khmc">Coriant&nbsp;&nbsp;
+                        <small style="color: #bbb;">2017 - 上半年</small>
+                        <span class="pull-right">
+                            <a href="javascript:;" title="编辑" style="margin-right: 15px">
+                                <i class="icon-edit"></i><small style="position: relative;top: -1px;left: 4px;">编辑</small>
+                            </a>
+                            <a href="javascript:;" title="编辑">
+                                <i class="icon-trash"></i><small style="position: relative;top: -1px;left: 4px;">删除</small>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉问题</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>1,2,3,4</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉反馈</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>接受再送样；再送样通过。</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit">
+                        <div class="cc-ed-l">
+                            <code>客诉附件</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div><i class="file-icon-ext-xlsx" style="display: inline-block;width: 14px;height: 14px;margin-right: 7px;"></i><a href="#">满意度调查上传的附件.xlsx</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cc-item">
+                    <div class="cc-khmc">Coriant&nbsp;&nbsp;
+                        <small style="color: #bbb;">2017 - 上半年</small>
+                        <span class="pull-right">
+                            <a href="javascript:;" title="编辑" style="margin-right: 15px">
+                                <i class="icon-edit"></i><small style="position: relative;top: -1px;left: 4px;">编辑</small>
+                            </a>
+                            <a href="javascript:;" title="编辑">
+                                <i class="icon-trash"></i><small style="position: relative;top: -1px;left: 4px;">删除</small>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉问题</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>1,2,3,4</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉反馈</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>接受再送样；再送样通过。</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit">
+                        <div class="cc-ed-l">
+                            <code>客诉附件</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div><i class="file-icon-ext-xlsx" style="display: inline-block;width: 14px;height: 14px;margin-right: 7px;"></i><a href="#">满意度调查上传的附件.xlsx</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cc-item">
+                    <div class="cc-khmc">Coriant&nbsp;&nbsp;
+                        <small style="color: #bbb;">2017 - 上半年</small>
+                        <span class="pull-right">
+                            <a href="javascript:;" title="编辑" style="margin-right: 15px">
+                                <i class="icon-edit"></i><small style="position: relative;top: -1px;left: 4px;">编辑</small>
+                            </a>
+                            <a href="javascript:;" title="编辑">
+                                <i class="icon-trash"></i><small style="position: relative;top: -1px;left: 4px;">删除</small>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉问题</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>1,2,3,4</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉反馈</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>接受再送样；再送样通过。</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit">
+                        <div class="cc-ed-l">
+                            <code>客诉附件</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div><i class="file-icon-ext-xlsx" style="display: inline-block;width: 14px;height: 14px;margin-right: 7px;"></i><a href="#">满意度调查上传的附件.xlsx</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cc-item">
+                    <div class="cc-khmc">Coriant&nbsp;&nbsp;
+                        <small style="color: #bbb;">2017 - 上半年</small>
+                        <span class="pull-right">
+                            <a href="javascript:;" title="编辑" style="margin-right: 15px">
+                                <i class="icon-edit"></i><small style="position: relative;top: -1px;left: 4px;">编辑</small>
+                            </a>
+                            <a href="javascript:;" title="编辑">
+                                <i class="icon-trash"></i><small style="position: relative;top: -1px;left: 4px;">删除</small>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉问题</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>1,2,3,4</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉反馈</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>接受再送样；再送样通过。</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit">
+                        <div class="cc-ed-l">
+                            <code>客诉附件</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div><i class="file-icon-ext-xlsx" style="display: inline-block;width: 14px;height: 14px;margin-right: 7px;"></i><a href="#">满意度调查上传的附件.xlsx</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cc-item">
+                    <div class="cc-khmc">Coriant&nbsp;&nbsp;
+                        <small style="color: #bbb;">2017 - 上半年</small>
+                        <span class="pull-right">
+                            <a href="javascript:;" title="编辑" style="margin-right: 15px">
+                                <i class="icon-edit"></i><small style="position: relative;top: -1px;left: 4px;">编辑</small>
+                            </a>
+                            <a href="javascript:;" title="编辑">
+                                <i class="icon-trash"></i><small style="position: relative;top: -1px;left: 4px;">删除</small>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉问题</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>1,2,3,4</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit cc-edit-fs">
+                        <div class="cc-ed-l">
+                            <code>客诉反馈</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div>接受再送样；再送样通过。</div>
+                        </div>
+                    </div>
+                    <div class="cc-edit">
+                        <div class="cc-ed-l">
+                            <code>客诉附件</code>
+                        </div>
+                        <div class="cc-ed-r">
+                            <div><i class="file-icon-ext-xlsx" style="display: inline-block;width: 14px;height: 14px;margin-right: 7px;"></i><a href="#">满意度调查上传的附件.xlsx</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
