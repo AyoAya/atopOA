@@ -3,6 +3,13 @@
  */
 $(function(){
 
+
+    //实例化email推送
+    $('.email-block-wrapper').emailBlock();
+
+    // 初始化抄送人css
+    $('.email-block-wrapper').addClass('layui-inline');
+
     if($('.sel-type').val() == 'success' || $('.sel-type').val() == 'refuse'){
         $('#pass').addClass('sr-only');
     }
@@ -59,6 +66,24 @@ $(function(){
 
         form.on('submit(submit)',function( data ){
 
+            var ccs = [];
+
+            if( $('.email-block-cc').children().length ){
+                $('.email-block-cc .email-block-user-item-span').each(function (index) {
+                    let tmpObj = new Object();
+                    tmpObj.name = $(this).text();
+                    tmpObj.id = $(this).attr('user-id');
+                    tmpObj.email = $(this).attr('user-email');
+                    ccs.push(tmpObj);
+                })
+            }
+
+            var emailObj = JSON.stringify(ccs);
+
+            //console.log(emailObj);
+
+            //return false;
+
             $.ajax({
                 url : ThinkPHP['AJAX'] + '/Approval/step',
                 dataType : 'json',
@@ -66,7 +91,11 @@ $(function(){
                 data : {
                     data : data.field,
                     id : $(this).parent().prev().val(),
-                    dit : layedit.getContent(layeditBuild)
+                    dit : layedit.getContent(layeditBuild),
+                    email : emailObj
+                },
+                beforeSend : function(){
+                    layer.load(2, { shade : [0.5,'#fff'] });
                 },
                 success : function( response ) {
                     if (response.flag > 0) {

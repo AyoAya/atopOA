@@ -90,7 +90,7 @@
                         </td>
                         <td class="timeline-content" style="padding-bottom: 15px;">
                             <div class="timeline-time-small box-off-on" style="margin-bottom: 20px; color: #428bca;font-size: 18px;">
-                                <a href="javascript:;" style="width:100px !important; display: inline-block;">{$vo.version} <i class="icon-caret-down i-sty"></i></a>
+                                <a class="click-no" style="width:100px !important; display: inline-block;">{$vo.version} <i class="icon-caret-down i-sty"></i></a>
                                 <div class="attachment-box-ext">
                                     <notempty name="vo.attachment">
                                         <volist name="vo.attachment" id="val">
@@ -161,17 +161,20 @@
     </div>
 
 
-
-    <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
-        <p>添加</p>
-        <p>处理记录</p>
-    </button>
-
 </block>
 
 
 {//Modal集}
 <block name="modals">
+
+
+
+    <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
+        <p>发布</p>
+        <p>新版本</p>
+    </button>
+
+
     <div class="modal fade" id="Modal-box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

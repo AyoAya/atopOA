@@ -4,10 +4,12 @@
 <block name="linkcss">
     <link rel="stylesheet" href="__CSS__/approval/detail.css">
     <link rel="stylesheet" href="__CSS__/procedure.css">
+    <link rel="stylesheet" href="__CSS__/block/email.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
     <script src="__JS__/approval/detail.js"></script>
+    <script src="__JS__/MyJqueryPlugin/email-block.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -70,9 +72,11 @@
                             </eq>
                         </div>
                         <neq name="value.state" value="processing">
-                            <div class="procedure-info">
-                                {$value.operator}<br>{$value.complete_time|date="Y-m-d H:i",###}
-                            </div>
+                            <notempty name="value.complete_time">
+                                <div class="procedure-info">
+                                    {$value.operator}<br>{$value.complete_time|date="Y-m-d H:i",###}
+                                </div>
+                            </notempty>
                         </neq>
                         <div class="procedure-hollow"></div>
                     </td>
@@ -96,7 +100,7 @@
                 <div class="context-item">
                     <div class="context-text">
                         <p>{$value.log}</p>
-                        <p class="context-item-info">{$value.nickname}　｜　<code>Step - {$value.step} : {$value.name}</code>　| 　{$value.log_time|date='Y-m-d',###}</p>
+                        <p class="context-item-info">{$value.nickname}　｜　<code>Step - {$value.step} : {$value.name}</code>　| 　{$value.log_time|date='Y-m-d H:i',###}</p>
                     </div>
                 </div>
             </div>
@@ -168,6 +172,9 @@
                             </div>
                         </div>
                     </div>
+
+                    <include file="block:cc"/>
+
                     <textarea id="editor" style="display: none;"></textarea>
 
 

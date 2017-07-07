@@ -1,6 +1,7 @@
 /**
  * Created by GCX on 2017/5/18.
  */
+
 $(function(){
 
     //实例化email推送
@@ -20,7 +21,6 @@ $(function(){
     //移除i标签的默认样式
     $('.box-off-on').find('.file-name').find('i').removeClass('icon-caret-right');
 
-
     // 监听滚动，如果添加处理日志存在并且出现返回顶部按钮则将添加日志按钮向上调整
     $('#content').scroll(function(){
 
@@ -29,6 +29,7 @@ $(function(){
                 $('.solo_order').css({bottom : '60px'});
             }else{
                 $('.solo_order').css({bottom : '122px'});
+
             }
         }
 
@@ -265,15 +266,9 @@ $(function(){
     });
 
 
-
-
-
-
-
-
-
-
 })
+
+
 
 
 

@@ -59,6 +59,7 @@ class SoftwareController extends AuthController {
                     $softData = $model->table(C('DB_PREFIX') . 'software')
                         ->where("type='firmware'")
                         ->limit($page->firstRow.','.$page->listRows)
+                        ->order('number ASC')
                         ->select();
 
                     foreach ($softData as $key => &$value) {
@@ -92,6 +93,7 @@ class SoftwareController extends AuthController {
                     $softData = $model->table(C('DB_PREFIX') . 'software')
                         ->where("type='ATE'")
                         ->limit($page->firstRow.','.$page->listRows)
+                        ->order('number ASC')
                         ->select();
 
                     foreach ($softData as $key => &$value) {

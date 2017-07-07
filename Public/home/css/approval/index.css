@@ -31,8 +31,8 @@
     margin-bottom: 25px;
 }
 .approval-wrapper .layui-tab-content .layui-tab-item .layui-form .layui-form-label {
-    padding-left: 0;
-    text-align: left;
+    padding-left:0;
+    text-align: right;
     width: 60px;
 }
 .approval-wrapper .layui-tab-content .layui-tab-item .layui-form .layui-input-block {

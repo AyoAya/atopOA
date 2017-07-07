@@ -103,3 +103,13 @@
 .editor-wrapper .layui-form .submit-box {
     margin-top: 25px;
 }
+
+.email-block-wrapper{
+    width: 520px !important;
+    margin: 10px 0 0 -20px;
+    position: relative;
+
+}
+.layui-select-title{
+    width: 150px;
+}

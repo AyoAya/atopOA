@@ -97,6 +97,26 @@
 .email-box{
     padding:0 0 10px 0;
 }
+/*.solo_order{
+    background:#81c0f2;
+    width: 56px;
+    height: 56px;
+    position: fixed;
+    bottom: 60px;
+    right: 60px;
+    z-index: 1;
+    border-radius: 2px;
+    text-align: center;
+    cursor: pointer;
+    color: #fff;
+    font-size: 20px;
+    border: 0;
+    padding: 3px 0 0 0;
+}*/
+
+.click-no:hover{
+    cursor: pointer;
+}
 
 
 
