@@ -65,7 +65,7 @@ class SoftwareController extends AuthController {
 
                         $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
                             ->where('soft_asc =' . $value['id'])
-                            ->order('id DESC')
+                            ->order('id ASC')
                             ->field('version,save_time,soft_asc')
                             ->select();
                     }
@@ -98,7 +98,7 @@ class SoftwareController extends AuthController {
 
                         $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
                             ->where('soft_asc ='.$value['id'])
-                            ->order('id DESC')
+                            ->order('id ASC')
                             ->field('version,save_time,soft_asc')
                             ->select();
                     }

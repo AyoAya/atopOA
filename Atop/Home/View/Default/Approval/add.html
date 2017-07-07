@@ -10,12 +10,13 @@
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
-    <title>添加审批</title>
+    <title>添加评审</title>
 </block>
 <!-- 【路径导航】 -->
 <block name="breadcrumb">
     <ol class="breadcrumb breadcrumb-edit">
-        <li class="active">添加审批</li>
+        <li class="active"><a href="__ROOT__/Approval/index">通用评审</a></li>
+        <li class="active">添加评审</li>
     </ol>
 </block>
 <!-- 【正文区域】 -->
@@ -28,9 +29,9 @@
     <div class="basic-container">
         <form class="layui-form">
             <div class="layui-form-item">
-                <label class="layui-form-label">集名称</label>
+                <label class="layui-form-label">评审名称</label>
                 <div class="layui-input-block">
-                    <input type="text" class="layui-input" name="set_name" required placeholder="请输入集名称">
+                    <input type="text" class="layui-input" name="set_name" required placeholder="请输入评审名称">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -71,17 +72,25 @@
                 </div>
             </div>
             <div class="approval-item approval-category apr-pst-box">
+
                 <div class="layui-form-item apr-dpmt">
                     <div class="layui-form-label">部门</div>
                     <div class="layui-input-block">
                         <select name="department">
+                            <volist name="position.department" id="val">
+                                <option value="{$val.id}">{$val.name}</option>
+                            </volist>
                         </select>
                     </div>
                 </div>
-                <div class="layui-form-item apr-pst" style="display: none;">
+
+                <div class="layui-form-item apr-pst" style="display:none" >
                     <div class="layui-form-label">职位</div>
                     <div class="layui-input-block">
                         <select name="position">
+                            <volist name="position.position" id="val">
+                                <option value="{$val.id}">{$val.name}</option>
+                            </volist>
                         </select>
                     </div>
                 </div>

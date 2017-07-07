@@ -16,6 +16,7 @@ class PushEmail {
     private $db_name = 'atop';
     static $address = [
         'yangpeiyun@atoptechnology.com',    //杨培云
+        'huangzhengyin@atoptechnology.com',   //黄正银
         'xiaoaiyou@atoptechnology.com',     //肖艾佑
         'chenshi@atoptechnology.com',   //陈实
         'haorui@atoptechnology.com',        //郝锐
@@ -23,14 +24,16 @@ class PushEmail {
 		
 	];
     static $cc = [
-		'sunbin@atoptechnology.com',        //孙膑
+        'liuyan@atoptechnology.com',      //刘燕
+        'yubo@atoptechnology.com',          //余波
+        'sunbin@atoptechnology.com',        //孙彬
         'dingzheng@atoptechnology.com',     //丁征
         'mikechen@atoptechnology.com',      //陈应时
         'xiaxiaosen@atoptechnology.com',    //夏小森
         'liping@atoptechnology.com',    //李平
         'kent@atoptechnology.com',      //董总
         'jackfan@atoptechnology.com'    //范总
-		
+
 	];
 
     /*liping@atoptechnology*/
@@ -64,7 +67,7 @@ class PushEmail {
         $sql = 'SELECT * FROM atop_sample a,atop_sample_detail b 
                 WHERE ((a.create_time > '.$start_date.' AND a.create_time < '.$end_date.') 
                 OR (b.now_step < 7 AND b.state = "N") 
-                OR (b.actual_date > '.$start_date.' AND b.actual_date < '.$end_date.')) 
+                OR (UNIX_TIMESTAMP(b.actual_date) > '.$start_date.' AND UNIX_TIMESTAMP(b.actual_date) < '.$end_date.')) 
                 AND a.id = b.detail_assoc 
                 GROUP BY a.id 
                 ORDER BY b.id ASC';
