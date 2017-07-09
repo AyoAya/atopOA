@@ -614,6 +614,17 @@ class RMAController extends AuthController{
     }
 
     /**
+     * 添加送样客诉
+     */
+    public function addSatisfaction(){
+        $this->display();
+    }
+
+    public function process(){
+        $this->display();
+    }
+
+    /**
      * 获取部门和人员
      * @return mixed
      */
