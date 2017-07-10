@@ -610,6 +610,14 @@ class RMAController extends AuthController{
      * 客诉满意度汇总
      */
     public function satisfaction(){
+        $model = new Model();
+        $satisfactions = $model->table(C('DB_PREFIX').'rma_satisfaction')->select();
+        foreach( $satisfactions as $key=>&$value ){
+            if( !empty($value['attachment']) ){
+                $value['attachment'] = json_decode($value['attachment'], true);
+            }
+        }
+        $this->assign('satisfactions', $satisfactions);
         $this->display();
     }
 
@@ -617,9 +625,93 @@ class RMAController extends AuthController{
      * 添加送样客诉
      */
     public function addSatisfaction(){
-        $this->display();
+        if( !IS_POST ){
+            $issues = $this->getIssues();
+            $this->assign('issues', $issues);
+            $this->display();
+        }else{
+            sleep(2);
+            $model = new Model();
+            $postData = I('post.', '', false);
+            $postData['create_time'] = time();
+            $postData['create_user'] = session('user')['id'];
+            $id = $model->table(C('DB_PREFIX').'rma_satisfaction')->add($postData);
+            if( $id ){
+                $this->ajaxReturn( ['flag'=>$id, 'msg'=>'添加成功'] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0, 'msg'=>'添加失败'] );
+            }
+        }
     }
 
+    /**
+     * 保存送样客诉编辑
+     */
+    public function saveEditData(){
+        if( IS_POST ){
+            $postData = I('post.', '', false);
+            $postData['update_time'] = time();
+            $model = new Model();
+            $flag = $model->table(C('DB_PREFIX').'rma_satisfaction')->save($postData);
+            if( $flag !== false ){
+                $this->ajaxReturn( ['flag'=>1, 'msg'=>'保存成功'] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0, 'msg'=>'保存失败'] );
+            }
+        }
+    }
+
+    /**
+     * 送样客诉附件上传
+     */
+    public function SF_Upload(){
+        if( I('post.SUB_NAME', '', false) && is_numeric(I('post.SUB_NAME')) ){
+            $result = upload( '/RMA/SatisfactionDegree/', I('post.SUB_NAME', '', false) );
+            $this->ajaxReturn( $result );
+        }
+    }
+
+    /**
+     * 添加问题点
+     */
+    public function addIssue(){
+        if( !IS_POST ){
+            $this->display();
+        }else{
+            $model = new Model();
+            $postData = I('post.', '', false);
+            $id = $model->table(C('DB_PREFIX').'rma_issue')->add($postData);
+            if( $id ){
+                $this->ajaxReturn( ['flag'=>$id, 'msg'=>'添加成功'] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0, 'msg'=>'添加失败'] );
+            }
+        }
+    }
+
+    /**
+     * 获取所有问题点
+     * @param string $id
+     * @return mixed
+     */
+    private function getIssues($id = ''){
+        $model = new Model();
+        if( $id ){
+            $result = $model->table(C('DB_PREFIX').'rma_issue')->find($id);
+            if( $result ){
+                return $result;
+            }
+        }else{
+            $result = $model->table(C('DB_PREFIX').'rma_issue')->select();
+            if( $result ){
+                return $result;
+            }
+        }
+    }
+
+    /**
+     * 客诉流程页
+     */
     public function process(){
         $this->display();
     }

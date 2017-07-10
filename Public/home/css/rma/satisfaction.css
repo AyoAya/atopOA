@@ -19,7 +19,7 @@
     width: 280px;
     position: absolute;
     left: 31px;
-    top: 15px;
+    top: 20px;
     bottom: 0;
     z-index: 1;
     transition: all .3s;
@@ -58,6 +58,12 @@
 .sf-wrapper .sf-box-r .cc-box {
 
 }
+.sf-wrapper .sf-box-r .cc-box .sf-opr i {
+    font-size: 18px;
+}
+.sf-wrapper .sf-box-r .cc-box .sf-edit-btn {
+
+}
 .sf-wrapper .sf-box-r .cc-box .cc-item {
     padding: 15px 20px;
     border-bottom: solid 1px #ccc;
@@ -84,4 +90,18 @@
 }
 .sf-wrapper .sf-box-r .cc-box .cc-item .cc-edit .cc-ed-r {
     flex: 1;
+}
+
+
+.layui-table .dynamic {
+    display: none;
+}
+.layui-table td {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;   /*支持IE，chrome，FF不支持*/
+    word-wrap: break-word;   /*支持IE，chrome，FF*/
+}
+.layui-btn-group {
+    margin-left: 0 !important;
 }

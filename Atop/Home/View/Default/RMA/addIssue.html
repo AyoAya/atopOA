@@ -1,0 +1,50 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/rma/satisfaction.css">
+    <link rel="stylesheet" href="__CSS__/rma/addSatisfaction.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/rma/addIssue.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>添加问题点</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/RMA">客诉处理</a></li>
+        <li><a href="__ROOT__/RMA/satisfaction">客诉满意度汇总</a></li>
+        <li class="active">添加问题点</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <form class="layui-form" style="width: 700px;margin-left: 0px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">问题说明</label>
+            <div class="layui-input-block">
+                <input type="text" name="issue" class="layui-input" lay-verify="required" placeholder="请输入问题说明">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="IssueSubmit">提交</button>
+            </div>
+        </div>
+    </form>
+
+</block>
+
+
+
+
+
+
+
+
+
