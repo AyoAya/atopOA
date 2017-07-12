@@ -583,7 +583,7 @@ class RMAController extends AuthController{
                             $value['nickname'] = $face['nickname'];
                         }else{
                             $value['face'] = '/Public/home/img/face/default_face.png';
-                            $value['nickname'] = 'Unknow';
+                            $value['nickname'] = $value['recorder'];
                         }
                     }
                 }else{
@@ -603,6 +603,154 @@ class RMAController extends AuthController{
         $this->assign('nodeData',$oacustomerstep_model_result);
         //print_r($resultData);
 
+        $this->display();
+    }
+
+    /**
+     * 客诉满意度汇总
+     */
+    public function satisfaction(){
+        $model = new Model();
+        $count = $model->table(C('DB_PREFIX').'rma_satisfaction')->count();
+        //数据分页
+        $page = new Page($count, C('LIMIT_SIZE'));
+        $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
+        $page->setConfig('next','<span aria-hidden="true">下一页</span>');
+        $page->setConfig('first','<span aria-hidden="true">首页</span>');
+        $page->setConfig('last','<span aria-hidden="true">尾页</span>');
+        if( C('PAGE_STATUS_INFO') ){
+            $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
+        }
+        $satisfactions = $model->table(C('DB_PREFIX').'rma_satisfaction')->limit($page->firstRow.','.$page->listRows)->order('customer_name ASC,years ASC')->select();
+        foreach( $satisfactions as $key=>&$value ){
+            if( !empty($value['attachment']) ) $value['attachment'] = json_decode($value['attachment'], true);
+        }
+        $issues = $this->getIssues();
+        $this->assign('issues', $issues);
+        $pageShow = $page->show();
+        if(I('get.p')){
+            $this->assign('pagenumber',I('get.p')-1);
+        }
+        $this->assign('limitsize', C('LIMIT_SIZE'));
+        $this->assign('pageShow',$pageShow);
+        $this->assign('satisfactions', $satisfactions);
+        $this->display();
+    }
+
+    /**
+     * 添加送样客诉
+     */
+    public function addSatisfaction(){
+        if( !IS_POST ){
+            $issues = $this->getIssues();
+            $this->assign('issues', $issues);
+            $this->display();
+        }else{
+            $model = new Model();
+            $postData = I('post.', '', false);
+            $postData['create_time'] = time();
+            $postData['create_user'] = session('user')['id'];
+            $id = $model->table(C('DB_PREFIX').'rma_satisfaction')->add($postData);
+            if( $id ){
+                $this->ajaxReturn( ['flag'=>$id, 'msg'=>'添加成功'] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0, 'msg'=>'添加失败'] );
+            }
+        }
+    }
+
+    /**
+     * 保存送样客诉编辑
+     */
+    public function saveEditData(){
+        if( IS_POST ){
+            $postData = I('post.', '', false);
+            $postData['update_time'] = time();
+            $model = new Model();
+            $flag = $model->table(C('DB_PREFIX').'rma_satisfaction')->save($postData);
+            if( $flag !== false ){
+                $this->ajaxReturn( ['flag'=>1, 'msg'=>'保存成功'] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0, 'msg'=>'保存失败'] );
+            }
+        }
+    }
+
+    /**
+     * 删除指定送样客诉
+     */
+    public function deleteSatisfaction(){
+        if( IS_POST && I('post.id') && is_numeric(I('post.id')) ){
+            $model = new Model();
+            $result = $model->table(C('DB_PREFIX').'rma_satisfaction')->find(I('post.id', '', false));
+            if( !empty($result['attachment']) ){    //如果当前送样客诉包含附件则将附件源文件一同删除
+                $files = json_decode($result['attachment'], true);
+                foreach( $files as $key=>&$value ){
+                    //兼容文件存在中文字符导致的不能识别问题，将UTF-8编码转换为GB2312
+                    $filePath = iconv('UTF-8', 'GB2312', substr($value['path'],1));
+                    //将相对路径改为绝对路径保证文件的正确检测
+                    if( file_exists( getcwd().$filePath ) ) unlink( getcwd().$filePath );
+                }
+            }
+            $id = $model->table(C('DB_PREFIX').'rma_satisfaction')->delete(I('post.id', '', false));
+            if( $id ){
+                $this->ajaxReturn( ['flag'=>1, 'msg'=>'删除成功'] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0, 'msg'=>'删除失败'] );
+            }
+        }
+    }
+
+    /**
+     * 送样客诉附件上传
+     */
+    public function SF_Upload(){
+        if( I('post.SUB_NAME', '', false) && is_numeric(I('post.SUB_NAME')) ){
+            $result = upload( '/RMA/SatisfactionDegree/', I('post.SUB_NAME', '', false) );
+            $this->ajaxReturn( $result );
+        }
+    }
+
+    /**
+     * 添加问题点
+     */
+    public function addIssue(){
+        if( IS_POST ){
+            $model = new Model();
+            $postData = I('post.', '', false);
+            $id = $model->table(C('DB_PREFIX').'rma_issue')->add($postData);
+            if( $id ){
+                $this->ajaxReturn( ['flag'=>$id, 'msg'=>'添加成功'] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0, 'msg'=>'添加失败'] );
+            }
+        }
+    }
+
+    /**
+     * 获取所有问题点
+     * @param string $id
+     * @return mixed
+     */
+    private function getIssues($id = ''){
+        $model = new Model();
+        if( $id ){
+            $result = $model->table(C('DB_PREFIX').'rma_issue')->find($id);
+            if( $result ){
+                return $result;
+            }
+        }else{
+            $result = $model->table(C('DB_PREFIX').'rma_issue')->select();
+            if( $result ){
+                return $result;
+            }
+        }
+    }
+
+    /**
+     * 客诉流程页
+     */
+    public function flowchart(){
         $this->display();
     }
 

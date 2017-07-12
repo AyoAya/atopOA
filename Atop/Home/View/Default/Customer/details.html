@@ -35,16 +35,16 @@
 <block name="content">
 
 	<!-- 旧版客诉不允许操作，只能转为新客诉之后才有操作【PS：只允许该条客诉的销售进行此操作】 -->
-
-
 	<if condition="$Think.session.user.account eq strtolower($details['salesperson'])">
-		<div class="pull-left" role="group">
-			<button type="button" class="layui-btn" data-toggle="modal" data-target="#changeNewVersion" style="background: #428bca;">
-				<span class="icon-share-alt"></span> 转为新版客诉
-			</button>
-		</div>
+		<neq name="details.status" value="0">	{//只有状态不为0（已完成）的客诉才允许转为新版客诉}
+			<div class="pull-left" role="group">
+				<button type="button" class="layui-btn" data-toggle="modal" data-target="#changeNewVersion" style="background: #428bca;">
+					<span class="icon-share-alt"></span> 转为新版客诉
+				</button>
+			</div>
 
-		<div class="clearfix" style="margin-bottom: 25px;"></div>
+			<div class="clearfix" style="margin-bottom: 25px;"></div>
+		</neq>
 	</if>
 
 	<div class="panel panel-default">
