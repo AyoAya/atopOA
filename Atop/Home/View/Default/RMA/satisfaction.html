@@ -25,8 +25,10 @@
 <block name="content">
 
     <div class="pull-left">
-        <button type="button" class="layui-btn layui-btn-primary add-column"><i class="icon-plus"></i> 添加记录</button>
-        <button type="button" class="layui-btn layui-btn-primary add-issue-btn">添加问题点 <i class="icon-caret-down"></i></button>
+        <eq name="Think.session.user.department" value="9">  {//只有当前登录用户为市场部的时候才加载操作按钮}
+            <button type="button" class="layui-btn layui-btn-primary add-column"><i class="icon-plus"></i> 添加记录</button>
+            <button type="button" class="layui-btn layui-btn-primary add-issue-btn">添加问题点 <i class="icon-caret-down"></i></button>
+        </eq>
     </div>
     <div class="clearfix"></div>
     <div class="issue-wrapper">
@@ -55,7 +57,9 @@
                 <th>年份</th>
                 <th>反馈</th>
                 <th>附件</th>
-                <th>操作</th>
+                <eq name="Think.session.user.department" value="9">  {//只有当前登录用户为市场部的时候才加载操作按钮}
+                    <th>操作</th>
+                </eq>
             </tr>
         </thead>
         <tbody>
@@ -97,16 +101,18 @@
                             </notempty>
 
                         </td>
-                        <td width="13%">
-                            <div class="layui-btn-group">
-                                <button type="button" class="layui-btn layui-btn-primary edit-btn" title="编辑"><i class="icon-edit"></i></button>
-                                <button type="button" class="layui-btn layui-btn-primary del-btn" title="删除"><i class="icon-trash"></i></button>
-                            </div>
-                            <div class="edit-active layui-btn-group sr-only">
-                                <button type="button" class="layui-btn layui-btn-primary save-btn" title="保存"><i class="icon-ok"></i></button>
-                                <button type="button" class="layui-btn layui-btn-primary cancel-btn" title="取消"><i class="icon-remove"></i></button>
-                            </div>
-                        </td>
+                        <eq name="Think.session.user.department" value="9">  {//只有当前登录用户为市场部的时候才加载操作按钮}
+                            <td width="13%">
+                                <div class="layui-btn-group">
+                                    <button type="button" class="layui-btn layui-btn-primary edit-btn" title="编辑"><i class="icon-edit"></i></button>
+                                    <button type="button" class="layui-btn layui-btn-primary del-btn" title="删除"><i class="icon-trash"></i></button>
+                                </div>
+                                <div class="edit-active layui-btn-group sr-only">
+                                    <button type="button" class="layui-btn layui-btn-primary save-btn" title="保存"><i class="icon-ok"></i></button>
+                                    <button type="button" class="layui-btn layui-btn-primary cancel-btn" title="取消"><i class="icon-remove"></i></button>
+                                </div>
+                            </td>
+                        </eq>
                     </tr>
                 </volist>
             <else/>
