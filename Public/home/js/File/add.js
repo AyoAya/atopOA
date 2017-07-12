@@ -130,7 +130,7 @@ $(function(){
 
                 $.ajax({
 
-                    url: ThinkPHP['AJAX'] + '/Approval/add',
+                    url: ThinkPHP['AJAX'] + '/Review/add',
                     type: 'POST',
                     data: data,
                     dataType: 'json',
@@ -142,7 +142,7 @@ $(function(){
 
                             layer.msg(response.msg,{icon:1,time:2000});
                             setTimeout(function () {
-                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Approval/index';
+                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Review/index';
                             },2000);
                         }else{
 

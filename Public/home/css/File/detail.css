@@ -103,3 +103,77 @@
 .editor-wrapper .layui-form .submit-box {
     margin-top: 25px;
 }
+
+.email-block-wrapper{
+    width: 520px !important;
+    margin: 10px 0 0 -20px;
+    position: relative;
+
+}
+.layui-select-title{
+    width: 150px;
+}
+.ext-img{
+    background: url("../../img/fileIcon/icon_jpg.gif") center no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin: 0 5px 0 0px;
+    position: relative;
+    top:3px;
+}
+.ext-xls{
+    background: url("../../img/fileIcon/icon_xls.gif") center no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin: 0 5px 0 0px;
+    position: relative;
+    top:3px;
+}
+.ext-zip{
+    background: url("../../img/fileIcon/icon_rar.gif") center no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin: 0 5px 0 0px;
+    position: relative;
+    top:3px;
+}
+.ext-pdf{
+    background: url("../../img/fileIcon/icon_rar.gif") center no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin: 0 5px 0 0px;
+    position: relative;
+    top:3px;
+}
+.ext-doc{
+    background: url("../../img/fileIcon/icon_doc.gif") center no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin: 0 5px 0 0px;
+    position: relative;
+    top:3px;
+}
+.atta-box{
+    line-height: 20px;
+    height: 20px;
+}
+.atta-box p{
+    display: inline-block;
+    margin-left: 28px;
+}
+.atta-box a{
+    display: inline-block;
+    height: 16px;
+    line-height: 16px;
+}
+.pos-atta{
+    height:20px;
+    text-align: center;
+    line-height: 18px;
+    display: inline-block;
+}

@@ -1,0 +1,27 @@
+
+{//emial邮件发送模块}
+<div class="email-block-wrapper">
+    <div class="email-block-recipient-box" style="margin: 0 0 0 10px; width: 620px; ">
+       <!-- <label class="email-block-label">抄送人</label>-->
+        <div class="email-block-recipient">
+            <div class="email-block-user-items email-block-cc"></div>
+            <div class="email-block-users-box">
+                <div class="email-block-users-list">
+                    <volist name="AUAD.departments" id="value">
+                        <div class="email-block-department-name"><span>{$value.name} ({$value.summary})</span></div>
+                        <volist name="AUAD.users" id="val">
+                            <eq name="value.id" value="$val.department">
+                                <span class="email-block-item" user-id="{$val.id}" user-email="{$val.email}" title="{$val.email}">{$val.nickname}</span>
+                            </eq>
+                        </volist>
+                    </volist>
+                </div>
+                <div class="email-block-operation-bar">
+                    <button type="button" class="layui-btn email-block-done-btn">确定</button>
+                    <button type="button" class="layui-btn layui-btn-primary email-block-clear-btn">清空</button>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>

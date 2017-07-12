@@ -13,7 +13,7 @@ use Think\Model\RelationModel;
  * Class ApprovalModel
  * @package Home\Model
  */
-class ApprovalModel extends RelationModel  {
+class FileModel extends RelationModel  {
 
     //关联模型
     protected $_link = array(

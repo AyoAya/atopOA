@@ -1,0 +1,142 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
+    <link rel="stylesheet" href="__CSS__/File/index.css">
+    <link rel="stylesheet" href="__CSS__/File/add.css">
+    <link rel="stylesheet" href="__CSS__/File/reviewDetail.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
+    <script src="__JS__/File/index.js"></script>
+    <script src="__JS__/File/add.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>评审详情</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active"><a href="__ROOT__/File">文件管理</a></li>
+        <li class="active">评审详情</li>
+    </ol>
+</block>
+
+<block name="content">
+
+    <div class="title-bar" style="margin: 0 0 30px 0;">
+        <h4>基本信息</h4>
+    </div>
+
+    <div class="review-info-box">
+
+        <div class="layui-form-item">
+            <div class="layui-form-label">文件号：</div>
+            <div class="layui-input-block review-text">
+               {$person.file_no}
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <div class="layui-form-label">附　件：</div>
+            <div class="layui-input-block review-text">
+                <volist name="person.attachment" id="value">
+                    <in name="value.ext" value="jpg,jpeg,png,gif,bmp">
+                        <p>
+                            <!--<span class="ext-img"></span><a href="__ROOT__/{$value.path}">{$value.savename}</a>-->
+                            <img src="__ROOT__/Uploads/File/{$person.id}/{$value.savename}" alt="" style="width: auto;height: auto;max-width: 40%;max-height: 40%; ">
+                            <p>{$value.savename}</p>
+                        </p>
+                    </in>
+
+                    <in name="value.ext" value="zip,rar">
+                        <p>
+                            <span class="ext-zip"></span><a href="__ROOT__/{$value.path}">{$value.savename}</a>
+                        </p>
+                    </in>
+
+                    <in name="value.ext" value="xls,xlsx">
+                        <p>
+                            <span class="ext-xls"></span><a href="__ROOT__/{$value.path}">{$value.savename}</a>
+                        </p>
+                    </in>
+
+                    <in name="value.ext" value="doc,docx">
+                        <p>
+                            <span class="ext-doc"></span><a href="__ROOT__/{$value.path}">{$value.savename}</a>
+                        </p>
+                    </in>
+
+                    <in name="value.ext" value="pdf">
+                        <p>
+                            <span class="ext-pdf"></span><a href="__ROOT__/{$value.path}">{$value.savename}</a>
+                        </p>
+                    </in>
+                </volist>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-form-label">描述信息：</div>
+            <div class="layui-input-block review-text">
+                {$person.description}
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-form-label">发起人：</div>
+            <div class="layui-input-block review-text">
+                {$person.nickname}
+            </div>
+        </div>
+
+        <div class="layui-form-item"  style="border: 0;">
+            <div class="layui-form-label">发起时间：</div>
+            <div class="layui-input-block review-text">
+                {$person.rule_time|date="Y-m-d H:i",###}
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="title-bar" style="margin: 20px 0 30px 0;">
+        <h4>评审记录</h4>
+    </div>
+
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th style="width: 120px;">评审人</th>
+            <th style="width: 150px;">评审时间</th>
+            <th style="width: 120px;">状态</th>
+            <th>留下信息</th>
+        </tr>
+        </thead>
+        <tbody>
+        <volist name="reviewData" id="val">
+            <tr>
+                <td>{$val.nickname}</td>
+                <td>{$val.time}</td>
+                <td>
+                    <eq name="val.state" value="1">
+                        未评审
+                    </eq>
+                    <eq name="val.state" value="2">
+                        未通过
+                    </eq>
+                    <eq name="val.state" value="3">
+                        已通过
+                    </eq>
+                </td>
+                <td>{$val.log}</td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+
+
+</block>

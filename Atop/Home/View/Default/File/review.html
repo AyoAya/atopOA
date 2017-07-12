@@ -1,0 +1,85 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
+    <link rel="stylesheet" href="__PUBLIC__/home/css/block/email.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
+    <script src="__JS__/File/review.js"></script>
+    <script src="__JS__/MyJqueryPlugin/email-block.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>文件评审</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active"><a href="__ROOT__/File">文件管理</a></li>
+        <li class="active">文件评审</li>
+    </ol>
+</block>
+
+<block name="content">
+
+    <div class="title-bar" style="margin: 0 0 30px 0;">
+        <h4>添加评审</h4>
+    </div>
+
+
+    <div class="basic-container">
+        <form class="layui-form ">
+
+            <div class="layui-form-item">
+                <div class="layui-form-label">文件号</div>
+                <div class="layui-input-block"  style="width: 520px;">
+                    <select name="file_no" lay-filter="file_no">
+                        <volist name="numberData" id="val">
+                            <option value='{$val.id}'>{$val.file_no}</option>
+                        </volist>
+                    </select>
+                </div>
+            </div>
+
+            <!--<div class="layui-form-item layui-inline" style="margin:0 0 10px 30px;padding: 0;">
+                <button class="layui-btn layui-btn-primary layui-inline" style="width: 100px; padding: 0;" >选择文件号</button>
+            </div>-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">附件</label>
+                <div class="layui-input-block">
+                    <div id="filePick"><i class="icon-arrow-up"></i> 上传文件</div>
+                    <div class="uploader-attachment-queue"></div>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">描述</label>
+                <div class="layui-input-block"  style="width: 520px;">
+                    <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div>
+                <div>
+
+                    <div class="layui-form-item layui-form-text layui-inline">
+                        <label class="layui-form-label">评审人</label>
+                            <include file="block:cc"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="submit">发起评审</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</block>

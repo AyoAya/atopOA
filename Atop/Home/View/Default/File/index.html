@@ -1,0 +1,68 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
+    <link rel="stylesheet" href="__CSS__/File/index.css">
+    <link rel="stylesheet" href="__CSS__/File/add.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
+    <script src="__JS__/File/index.js"></script>
+    <script src="__JS__/File/add.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>文件管理</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">文件管理</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="approval-wrapper">
+            <ul class="layui-tab-title">
+                <li><a href="__ROOT__/File/apply">编号申请</a></li>
+                <li><a href="__ROOT__/File/review">文件评审</a></li>
+                <li><a href="__ROOT__/File/index">文件查询</a></li>
+                <li><a href="__ROOT__/File/fileDetail">文件详情</a></li>
+                <li><a href="__ROOT__/File/reviewDetail">评审详情</a></li>
+            </ul>
+    </div>
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,72 @@
+
+kdb{
+    background: #555 !important;
+    color:#fff;
+    display: inline;
+    border-radius: 2px;
+    padding: 2px 2px 2px 5px;
+}
+.layui-form-item{
+    margin-bottom: 0;
+    border-bottom: 1px solid #e2e2e2;
+    padding: 10px 0 10px 0;
+}
+.layui-form-item .layui-form-label{
+    width: 100px;
+    font-weight: 600 !important;
+    color: #555 ;
+    font-size: 14px;
+}
+.layui-form-item .review-text{
+    padding: 10px 0 0 0;
+    font-size: 13px;
+    color: #777;
+}
+.no-hand{
+    ime-mode: disabled;
+}
+.ext-img{
+    background: url("../../img/fileIcon/icon_jpg.gif") center no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin: 0 5px 0 0px;
+    position: relative;
+    top:3px;
+}
+.ext-xls{
+    background: url("../../img/fileIcon/icon_xls.gif") center no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin: 0 5px 0 0px;
+    position: relative;
+    top:3px;
+}
+.ext-zip{
+    background: url("../../img/fileIcon/icon_rar.gif") center no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin: 0 5px 0 0px;
+    position: relative;
+    top:3px;
+}
+.ext-pdf{
+    background: url("../../img/fileIcon/icon_rar.gif") center no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin: 0 5px 0 0px;
+    position: relative;
+    top:3px;
+}
+.ext-doc{
+    background: url("../../img/fileIcon/icon_doc.gif") center no-repeat;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin: 0 5px 0 0px;
+    position: relative;
+    top:3px;
+}

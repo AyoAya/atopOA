@@ -3,6 +3,7 @@
  */
 $(function(){
 
+
     layui.use(['form','layer','upload','element'], function(){
         var form = layui.form(),
             element = layui.element(),
@@ -10,10 +11,17 @@ $(function(){
 
         var SUB_NAME, attachmentList = new Array();
 
+
+        //添加一栏评审人
+        $('#addPerson').on('click',function(){
+
+        })
+
+
         // uploader参数配置
         var logUploaderOption = {
             auto: false,
-            server: ThinkPHP['AJAX'] + '/Approval/uploadAttachment',
+            server: ThinkPHP['AJAX'] + '/Review/uploadAttachment',
             pick: '#filePick',
             fileVal : 'Filedata',
             accept: {
@@ -75,10 +83,33 @@ $(function(){
             var sub_name = SUB_NAME,
                 attachments = JSON.stringify(attachmentList);
 
-            layer.msg('操作成功', {icon: 1, time: 0});
-            setTimeout(function () {
-                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Approval/index';
+
+            $.ajax({
+                url: ThinkPHP['AJAX'] + '/Review/saveDetailAttachment',
+                dataType: 'json',
+                type: 'POST',
+                data: {
+                    attachments : attachments,
+                    id : SUB_NAME
+                },
+                success : function( response ){
+                    if(response.flag > 0){
+                        layer.msg('操作成功', {icon: 1, time: 0});
+                        setTimeout(function () {
+                            location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Review/index';
+                        })
+                    }else{
+                        layer.msg(layer.msg, {icon: 2, time: 0});
+                        setTimeout(function () {
+                            location.reload();
+                        })
+                    }
+
+
+                }
             })
+
+
 
         });
 
@@ -93,11 +124,41 @@ $(function(){
         });
 
 
+        //alert($('.apr-type select').val())
         var CurrentTab = $('#CurrentTab').val();    //获取到当前的tab
         // 如果当前访问的是 "initiated" 这个tab的才加载以下请求
         if( CurrentTab == 'initiated' ){
+
             $.ajax({
-                url: ThinkPHP['AJAX'] + '/Approval/person',
+                url: ThinkPHP['AJAX'] + '/Review/category',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id : $('.apr-type select').val()
+
+                },
+                success : function( response ){
+                    let tem ='';
+
+                    var jsonObj=eval('('+response+')');
+                    var arr = jsonObj[0].step;
+                    $('.apr-box').find('small').html(jsonObj[0].aname);
+
+                    //遍历step的数据注入模板
+                    for(let i=0;i<arr.length;i++){
+                        tem += "<li aid='"+arr[i].a_id+"' sid='"+arr[i].id+"'><i class='icon-double-angle-right'></i>　Step - "+arr[i].step+"　　"+arr[i].name+"</li>\n\r";
+                    }
+
+                    $('.apr-box').find('.apr-preview').find('ul').html(tem);
+                    form.render('select');
+
+                }
+
+            });
+
+
+            $.ajax({
+                url: ThinkPHP['AJAX'] + '/Review/person',
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -113,6 +174,8 @@ $(function(){
                     form.render('select');
                 }
             });
+
+
         }
 
 
@@ -120,7 +183,7 @@ $(function(){
         form.on('select(category)',function(data){
 
             $.ajax({
-                url: ThinkPHP['AJAX'] + '/Approval/category',
+                url: ThinkPHP['AJAX'] + '/Review/category',
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -147,7 +210,7 @@ $(function(){
             });
 
             $.ajax({
-                url: ThinkPHP['AJAX'] + '/Approval/person',
+                url: ThinkPHP['AJAX'] + '/Review/person',
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -172,7 +235,7 @@ $(function(){
         form.on('submit(submit)',function( data ){
 
             $.ajax({
-                url : ThinkPHP['AJAX'] + '/Approval/SaveInitiatedApproval',
+                url : ThinkPHP['AJAX'] + '/Review/SaveInitiatedApproval',
                 dataType : 'json',
                 type : 'POST',
                 data : data.field,
@@ -182,16 +245,18 @@ $(function(){
                     });
                 },
                 success: function( response ){
+
                     // 根据返回的结果检查队列里是否包含文件，如果有则上传，没有则直接跳转到详情页
                     if( response.flag ){
-                        if( APRuploader.getFiles().length > 0 ){    //检查队列里是否包含文件
+
+                        if( APRuploader.getFiles().length > 0 ){ //检查队列里是否包含文件
                             SUB_NAME = response.flag;
                             APRuploader.option('formData', {SUB_NAME: SUB_NAME});
                             APRuploader.upload();
                         }else{
                             layer.msg(response.msg, {icon: 1, time: 1500});
                             setTimeout(function () {
-                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Approval/index';
+                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Review/index';
                             })
                         }
                     }else{

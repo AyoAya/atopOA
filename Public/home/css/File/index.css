@@ -28,15 +28,15 @@
     border-radius: 2px;
 }
 .approval-wrapper .layui-tab-content .layui-tab-item .layui-form .layui-form-item {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 .approval-wrapper .layui-tab-content .layui-tab-item .layui-form .layui-form-label {
-    padding-left: 0;
-    text-align: left;
-    width: 60px;
+    padding-left:0;
+    text-align: right;
+    width: 100px;
 }
 .approval-wrapper .layui-tab-content .layui-tab-item .layui-form .layui-input-block {
-    margin-left: 60px;
+    margin-left: 110px;
 }
 .approval-wrapper .layui-tab-content .layui-tab-item .init-apr {
     display: flex;
@@ -69,4 +69,19 @@
     margin-right: 10px;
     overflow: hidden;
 }
+
+/*#addPerson{
+    width: 100px;
+    height: 40px;background:#428bca;
+    cursor: pointer;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 40px;
+    color:#fff;
+    font-weight: 500;
+    font-size: 16px;
+    float: right;
+    position: relative;
+    bottom: 125px;
+}*/
 
