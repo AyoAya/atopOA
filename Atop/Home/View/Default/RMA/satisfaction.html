@@ -25,8 +25,23 @@
 <block name="content">
 
     <div class="pull-left">
-        <button type="button" class="layui-btn layui-btn-primary add-column"><i class="icon-plus"></i> 添加送样客诉</button>
-        <button type="button" class="layui-btn layui-btn-primary"><i class="icon-plus"></i> 添加问题点</button>
+        <button type="button" class="layui-btn layui-btn-primary add-column"><i class="icon-plus"></i> 添加记录</button>
+        <button type="button" class="layui-btn layui-btn-primary add-issue-btn">添加问题点 <i class="icon-caret-down"></i></button>
+    </div>
+    <div class="clearfix"></div>
+    <div class="issue-wrapper">
+        <form class="layui-form">
+            <div class="layui-inline">
+                <div class="layui-input-inline layui-input-inline-rewrite">
+                    <input type="text" lay-verify="required" name="issue" placeholder="问题点（例： 接受再送样；再送样通过。）" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline" style="margin-left: 10px;">
+                <div class="layui-input-inline layui-inline-rewrite">
+                    <button type="button" class="layui-btn" lay-submit lay-filter="IssueSubmit">添加</button>
+                </div>
+            </div>
+        </form>
     </div>
 
     <div class="clearfix" style="margin-bottom: 20px;"></div>
@@ -34,7 +49,7 @@
     <table class="layui-table">
         <thead>
             <tr>
-                <th>序号</th>
+                <th>#</th>
                 <th>客户</th>
                 <th>问题点</th>
                 <th>年份</th>
@@ -44,53 +59,85 @@
             </tr>
         </thead>
         <tbody>
-            <volist name="satisfactions" id="value">
-                <tr>
-                    <td width="6%">
-                        {$value.id}
-                        <input type="hidden" name="id" value="{$value.id}">
-                    </td>
-                    <td width="10%">
-                        <span class="stable">{$value.customer_name}</span>
-                        <input class="dynamic layui-input" type="hidden" name="customer_name" value="{$value.customer_name}">
-                    </td>
-                    <td width="16%">
-                        <span class="stable">{$value.issue_ids}</span>
-                        <input class="dynamic layui-input" type="hidden" name="issue_ids" value="{$value.issue_ids}">
-                    </td>
-                    <td width="15%">
-                        <span class="stable">{$value.years}</span>
-                        <input class="dynamic layui-input" type="hidden" name="years" value="{$value.years}">
-                    </td>
-                    <td width="20%">
-                        <span class="stable">{$value.feedback}</span>
-                        <input class="dynamic layui-input" type="hidden" name="feedback" value="{$value.feedback}">
-                    </td>
-                    <td  width="20%">
-                        <notempty name="value.attachment">
-                            <volist name="value.attachment" id="vo">
-                                <a href="/{$vo.path}" target="_blank"><i class="file-icon file-icon-ext-{$vo.ext}"></i> {$vo.savename}</a>
-                            </volist>
-                        <else/>
-                            <span class="stable">无</span>
-                            <div class="dynamic filePick"><i class="icon-arrow-up"></i> 上传文件</div>
-                        </notempty>
+            <notempty name="satisfactions">
+                <volist name="satisfactions" id="value" key="key">
+                    <tr>
+                        <td width="6%">
+                            <if condition="$Think.get.p AND $Think.get.p neq 1">
+                                {$pagenumber*$limitsize+$key}
+                            <else/>
+                                {$key}
+                            </if>
+                            <input type="hidden" name="id" value="{$value.id}">
+                        </td>
+                        <td width="10%">
+                            <span class="stable">{$value.customer_name}</span>
+                            <input class="dynamic layui-input" type="hidden" name="customer_name" value="{$value.customer_name}">
+                        </td>
+                        <td width="16%">
+                            <span class="stable">{$value.issue_ids}</span>
+                            <input class="dynamic layui-input" type="hidden" name="issue_ids" value="{$value.issue_ids}">
+                        </td>
+                        <td width="12%">
+                            <span class="stable">{$value.years}</span>
+                            <input class="dynamic layui-input" type="hidden" name="years" value="{$value.years}">
+                        </td>
+                        <td width="22%">
+                            <span class="stable">{$value.feedback}</span>
+                            <input class="dynamic layui-input" type="hidden" name="feedback" value="{$value.feedback}">
+                        </td>
+                        <td  width="21%">
+                            <notempty name="value.attachment">
+                                <volist name="value.attachment" id="vo">
+                                    <a href="/{$vo.path}" target="_blank"><i class="file-icon file-icon-ext-{$vo.ext}"></i> {$vo.savename}</a>
+                                </volist>
+                            <else/>
+                                <span class="stable">无</span>
+                                <div class="dynamic filePick"><i class="icon-arrow-up"></i> 上传文件</div>
+                            </notempty>
 
-                    </td>
-                    <td width="13%">
-                        <div class="layui-btn-group">
-                            <button type="button" class="layui-btn layui-btn-primary edit-btn" title="编辑"><i class="icon-edit"></i></button>
-                            <button type="button" class="layui-btn layui-btn-primary" title="删除"><i class="icon-trash"></i></button>
-                        </div>
-                        <div class="edit-active layui-btn-group sr-only">
-                            <button type="button" class="layui-btn layui-btn-primary save-btn" title="保存"><i class="icon-ok"></i></button>
-                            <button type="button" class="layui-btn layui-btn-primary cancel-btn" title="取消"><i class="icon-remove"></i></button>
-                        </div>
-                    </td>
+                        </td>
+                        <td width="13%">
+                            <div class="layui-btn-group">
+                                <button type="button" class="layui-btn layui-btn-primary edit-btn" title="编辑"><i class="icon-edit"></i></button>
+                                <button type="button" class="layui-btn layui-btn-primary del-btn" title="删除"><i class="icon-trash"></i></button>
+                            </div>
+                            <div class="edit-active layui-btn-group sr-only">
+                                <button type="button" class="layui-btn layui-btn-primary save-btn" title="保存"><i class="icon-ok"></i></button>
+                                <button type="button" class="layui-btn layui-btn-primary cancel-btn" title="取消"><i class="icon-remove"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                </volist>
+            <else/>
+                <tr>
+                    <td colspan="7"><p style="text-align: center;padding: 10px 0; font-size: 15px; color: #bbb;"><i class="icon-exclamation-sign"></i> 没有数据</p></td>
                 </tr>
-            </volist>
+            </notempty>
         </tbody>
     </table>
+
+    <!-- 分页 -->
+    <ul class="pagination pagination-edit">{$pageShow}</ul>
+
+    <div class="title-bar" style="margin: 0 0 20px 0;">
+        <h4>问题代号 / 说明对照</h4>
+    </div>
+    
+    <div class="issue-list">
+        <notempty name="issues">
+            <volist name="issues" id="value">
+                <div class="issue-item">
+                    <span>{$value.id}</span>
+                    <span>{$value.issue}</span>
+                </div>
+            </volist>
+        <else/>
+            <div style="font-size: 15px; color: #bbb;">
+                <span><i class="icon-exclamation-sign"></i> 没有数据</span>
+            </div>
+        </notempty>
+    </div>
 
 </block>
 

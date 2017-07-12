@@ -40,7 +40,14 @@ $(function(){
             let _dynamics = _parent.find('.dynamic');
             let _stables = _parent.find('.stable');
             SUB_NAME = _parent.find('input[name=id]').val();
-
+            let _current_index = _parent.index();
+            //解决webuploader实例化造成的按钮样式问题，用户只能单条记录修改
+            $('.layui-table tbody tr').each(function(index){
+                if( _current_index != index ){
+                    $(this).find('.layui-btn-group .edit-btn').attr('disabled', true);
+                    $(this).find('.layui-btn-group .edit-btn').css({cursor: 'not-allowed', border: '1px solid #e6e6e6', backgroundColor: '#FBFBFB', color: '#C9C9C9'});
+                }
+            });
             // 实例化uploader
             sfUploader = WebUploader.create( sfUploaderOption );
             // 上传错误时
@@ -99,6 +106,14 @@ $(function(){
             let _dynamics = _parent.find('.dynamic');
             let _stables = _parent.find('.stable');
 
+            let _current_index = _parent.index();
+            //解决webuploader实例化造成的按钮样式问题，用户只能单条记录修改
+            $('.layui-table tbody tr').each(function(index){
+                if( _current_index != index ){
+                    $(this).find('.layui-btn-group .edit-btn').attr('disabled', false);
+                    $(this).find('.layui-btn-group .edit-btn').css({cursor: 'pointer', border: '1px solid #C9C9C9', backgroundColor: '#fff', color: '#555'});
+                }
+            });
             sfUploader.destroy();
 
             _dynamics.attr('type', 'hidden');
@@ -164,8 +179,10 @@ $(function(){
                     "</div>" +
                 "</td>" +
             "</tr>";
-            $('.layui-table tbody').append(tableStructure);
+            $('.layui-table tbody').prepend(tableStructure);
             form.render();
+            $(this).attr('disabled', true);
+            $(this).css({cursor: 'not-allowed', border: '1px solid #e6e6e6', backgroundColor: '#FBFBFB', color: '#C9C9C9'});
         });
 
         /**
@@ -173,6 +190,8 @@ $(function(){
          */
         $('.layui-table').on('click', '.cancel-btn-a', function(){
             $(this).parents('tr').remove();
+            $('.add-column').attr('disabled', false);
+            $('.add-column').css({cursor: 'pointer', border: '1px solid #C9C9C9', backgroundColor: '#fff', color: '#555'});
         });
 
         /**
@@ -181,12 +200,25 @@ $(function(){
         $('.layui-table').on('click', '.save-btn-a', function(){
             let _tr = $(this).parents('tr');
             let tmpData = new Object();
-
             tmpData.customer_name = _tr.find('input[name=customer_name]').val();
             tmpData.issue_ids = _tr.find('input[name=issue_ids]').val();
             tmpData.years = _tr.find('input[name=years]').val();
             tmpData.feedback = _tr.find('input[name=feedback]').val();
-
+            if( $.trim(tmpData.customer_name) == '' ){
+                _tr.find('input[name=customer_name]').focus();
+                layer.msg('请输入客户名称');
+                return false;
+            }
+            if( $.trim(tmpData.issue_ids) == '' ){
+                _tr.find('input[name=issue_ids]').focus();
+                layer.msg('请输入问题点');
+                return false;
+            }
+            if( $.trim(tmpData.years) == '' ){
+                _tr.find('input[name=years]').focus();
+                layer.msg('请输入年份');
+                return false;
+            }
             $.ajax({
                 url: ThinkPHP['AJAX'] + '/RMA/addSatisfaction',
                 type: 'POST',
@@ -207,6 +239,77 @@ $(function(){
                     }
                 }
             });
+        });
+
+        /**
+         * 删除送样客诉
+         */
+        $('.layui-table').on('click', '.del-btn', function(){
+            let _tr = $(this).parents('tr');
+            let _id = _tr.find('input[name=id]').val();
+            $.ajax({
+                url: ThinkPHP['AJAX'] + '/RMA/deleteSatisfaction',
+                type: 'POST',
+                data: {
+                    id: _id
+                },
+                dataType: 'json',
+                beforeSend: function(){
+                    layer.load(2,{shade:[0.8,'#fff']});
+                },
+                success: function(response){
+                    if( response.flag > 0 ){
+                        layer.msg(response.msg, { icon : 1,time : 2000 });
+                        setTimeout(function(){
+                            location.replace(location.href);
+                        },2000);
+                    }else{
+                        layer.closeAll();
+                        layer.msg(response.msg, { icon : 2,time : 2000 });
+                    }
+                }
+            });
+        });
+
+        /**
+         * 添加问题点展开
+         */
+        $('.add-issue-btn').click(function(){
+            let _class = $(this).find('i').attr('class');
+            if( _class == 'icon-caret-down' ){
+                $(this).find('i').attr('class', 'icon-caret-up');
+                $('.issue-wrapper').slideDown('fast');
+            }else{
+                $(this).find('i').attr('class', 'icon-caret-down');
+                $('.issue-wrapper').slideUp('fast');
+            }
+        });
+
+        /**
+         * 监听添加问题点表单提交
+         */
+        form.on('submit(IssueSubmit)', function(data){
+            $.ajax({
+                url: ThinkPHP['AJAX'] + '/RMA/addIssue',
+                type: 'POST',
+                data: data.field,
+                dataType: 'json',
+                beforeSend: function(){
+                    layer.load(2,{shade:[0.8,'#fff']});
+                },
+                success: function(response){
+                    if( response.flag > 0 ){
+                        layer.msg(response.msg, { icon : 1,time : 2000 });
+                        setTimeout(function(){
+                            location.replace(location.href);
+                        },2000);
+                    }else{
+                        layer.closeAll();
+                        layer.msg(response.msg, { icon : 2,time : 2000 });
+                    }
+                }
+            });
+            return false;
         });
 
     });

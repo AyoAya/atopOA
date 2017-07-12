@@ -611,12 +611,28 @@ class RMAController extends AuthController{
      */
     public function satisfaction(){
         $model = new Model();
-        $satisfactions = $model->table(C('DB_PREFIX').'rma_satisfaction')->select();
-        foreach( $satisfactions as $key=>&$value ){
-            if( !empty($value['attachment']) ){
-                $value['attachment'] = json_decode($value['attachment'], true);
-            }
+        $count = $model->table(C('DB_PREFIX').'rma_satisfaction')->count();
+        //数据分页
+        $page = new Page($count, C('LIMIT_SIZE'));
+        $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
+        $page->setConfig('next','<span aria-hidden="true">下一页</span>');
+        $page->setConfig('first','<span aria-hidden="true">首页</span>');
+        $page->setConfig('last','<span aria-hidden="true">尾页</span>');
+        if( C('PAGE_STATUS_INFO') ){
+            $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
+        $satisfactions = $model->table(C('DB_PREFIX').'rma_satisfaction')->limit($page->firstRow.','.$page->listRows)->order('customer_name ASC,years ASC')->select();
+        foreach( $satisfactions as $key=>&$value ){
+            if( !empty($value['attachment']) ) $value['attachment'] = json_decode($value['attachment'], true);
+        }
+        $issues = $this->getIssues();
+        $this->assign('issues', $issues);
+        $pageShow = $page->show();
+        if(I('get.p')){
+            $this->assign('pagenumber',I('get.p')-1);
+        }
+        $this->assign('limitsize', C('LIMIT_SIZE'));
+        $this->assign('pageShow',$pageShow);
         $this->assign('satisfactions', $satisfactions);
         $this->display();
     }
@@ -630,7 +646,6 @@ class RMAController extends AuthController{
             $this->assign('issues', $issues);
             $this->display();
         }else{
-            sleep(2);
             $model = new Model();
             $postData = I('post.', '', false);
             $postData['create_time'] = time();
@@ -662,6 +677,31 @@ class RMAController extends AuthController{
     }
 
     /**
+     * 删除指定送样客诉
+     */
+    public function deleteSatisfaction(){
+        if( IS_POST && I('post.id') && is_numeric(I('post.id')) ){
+            $model = new Model();
+            $result = $model->table(C('DB_PREFIX').'rma_satisfaction')->find(I('post.id', '', false));
+            if( !empty($result['attachment']) ){    //如果当前送样客诉包含附件则将附件源文件一同删除
+                $files = json_decode($result['attachment'], true);
+                foreach( $files as $key=>&$value ){
+                    //兼容文件存在中文字符导致的不能识别问题，将UTF-8编码转换为GB2312
+                    $filePath = iconv('UTF-8', 'GB2312', substr($value['path'],1));
+                    //将相对路径改为绝对路径保证文件的正确检测
+                    if( file_exists( getcwd().$filePath ) ) unlink( getcwd().$filePath );
+                }
+            }
+            $id = $model->table(C('DB_PREFIX').'rma_satisfaction')->delete(I('post.id', '', false));
+            if( $id ){
+                $this->ajaxReturn( ['flag'=>1, 'msg'=>'删除成功'] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0, 'msg'=>'删除失败'] );
+            }
+        }
+    }
+
+    /**
      * 送样客诉附件上传
      */
     public function SF_Upload(){
@@ -675,9 +715,7 @@ class RMAController extends AuthController{
      * 添加问题点
      */
     public function addIssue(){
-        if( !IS_POST ){
-            $this->display();
-        }else{
+        if( IS_POST ){
             $model = new Model();
             $postData = I('post.', '', false);
             $id = $model->table(C('DB_PREFIX').'rma_issue')->add($postData);
@@ -712,7 +750,7 @@ class RMAController extends AuthController{
     /**
      * 客诉流程页
      */
-    public function process(){
+    public function flowchart(){
         $this->display();
     }
 
