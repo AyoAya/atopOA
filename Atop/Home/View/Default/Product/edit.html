@@ -1,0 +1,151 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__PUBLIC__/layui/css/layui.css">
+    <link rel="stylesheet" href="__CSS__/product/add.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__PUBLIC__/layui/layui.js"></script>
+    <script src="__JS__/product/edit.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>编辑产品</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Product">产品管理</a></li>
+        <li class="active">编辑产品</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="product-container">
+
+        <form class="layui-form">
+            <input type="hidden" name="id" value="{$product.id}">
+            <div class="layui-form-item">
+                <label class="layui-form-label">封装类型</label>
+                <div class="layui-input-block">
+                    <select name="type" lay-verify="required">
+                        <volist name="filter.types" id="value">
+                            <eq name="value.type" value="$product.type">
+                                <option value="{$value.type}" selected>{$value.type}</option>
+                            <else/>
+                                <option value="{$value.type}">{$value.type}</option>
+                            </eq>
+                        </volist>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">产品型号</label>
+                <div class="layui-input-block">
+                    <input type="text" name="pn" class="layui-input" value="{$product.pn}" required lay-verify="required" placeholder="例：APS31013CDL20">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">速率</label>
+                <div class="layui-input-block">
+                    <input type="text" name="rate" class="layui-input" value="{$product.rate}" required lay-verify="required" placeholder="例：100~155M">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">波长</label>
+                <div class="layui-input-block">
+                    <input type="text" name="wavelength" class="layui-input" value="{$product.wavelength}" required lay-verify="required" placeholder="例：1310nm">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">光组件</label>
+                <div class="layui-input-block">
+                    <input type="text" name="component" class="layui-input" value="{$product.component}" required placeholder="例：FP/PIN">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">发端功率</label>
+                <div class="layui-input-block">
+                    <input type="text" name="txpwr" class="layui-input" value="{$product.txpwr}" required lay-verify="required" placeholder="例：-15~-8dBm">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">接收灵敏度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="rxsens" class="layui-input" value="{$product.rxsens}" required lay-verify="required" placeholder="例：-28dBm">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">接口</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="connector" value="LC" title="LC" <eq name="product.connector" value="LC">checked</eq>>
+                    <input type="radio" name="connector" value="SC" title="SC" <eq name="product.connector" value="SC">checked</eq>>
+                    <input type="radio" name="connector" value="RJ45" title="RJ45" <eq name="product.connector" value="RJ45">checked</eq>>
+                    <input type="radio" name="connector" value="MPO" title="MPO" <eq name="product.connector" value="MPO">checked</eq>>
+                    <input type="radio" name="connector" value="N/A" title="N/A" <eq name="product.connector" value="N/A">checked</eq>>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">温度范围</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="casetemp" value="C" title="C档" <eq name="product.casetemp" value="C">checked</eq>>
+                    <input type="radio" name="casetemp" value="I" title="I 档" <eq name="product.casetemp" value="I">checked</eq>>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">距离</label>
+                <div class="layui-input-block">
+                    <input type="text" name="reach" class="layui-input" value="{$product.reach}" required lay-verify="required" placeholder="例：20km">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">多速率支持</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="multirate" value="Y" title="支持" <eq name="product.multirate" value="Y">checked</eq>>
+                    <input type="radio" name="multirate" value="N" title="不支持" <eq name="product.multirate" value="N">checked</eq>>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button lay-submit type="reset" class="layui-btn" lay-filter="ProductEditSubmit">提交</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

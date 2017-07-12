@@ -3,11 +3,10 @@
  */
 $(function(){
 
-    layui.use('form', function(){
+    layui.use(['form','layer'], function(){
         var form = layui.form(),
             layer = layui.layer;
         form.on('submit(productSubmit)', function( data ){
-            console.log(data.field);
             $.ajax({
                 url : ThinkPHP['AJAX'] + '/Product/add',
                 type : 'POST',
@@ -24,15 +23,37 @@ $(function(){
             });
             return false;
         });
-    });
 
-    // 为防止mCustomScrollbar插件优先级问题，档下拉框被展开时禁用该插件，页面任何区域被点击时再激活
-    /*$(document).on('click',function(){
-        if( $('.layui-form-select').hasClass('layui-form-selected') ){
-            $('#content-box').mCustomScrollbar('disable');
-        }else{
-            $('#content-box').mCustomScrollbar('update');
-        }
-    });*/
+
+        $('.del-btn').click(function(){
+            let del_id = $(this).attr('del-id');
+            layer.confirm('您确定要删除该条产品吗？', {
+                btn: ['确定', '取消']
+            }, function(index, layero){
+                $.ajax({
+                    url: ThinkPHP['AJAX'] + '/Product/delete',
+                    type: 'POST',
+                    data: {
+                        id: del_id
+                    },
+                    dataType: 'json',
+                    success: function(response){
+                        if( response.flag > 0 ){
+                            layer.msg(response.msg,{icon:1,time:2000});
+                            setTimeout(function(){
+                                location.replace(location.href);
+                            },2000);
+                        }else{
+                            layer.msg(response.msg,{icon:2});
+                        }
+                    }
+                });
+            }, function(index){
+
+            })
+        });
+
+
+    });
 
 });

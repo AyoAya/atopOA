@@ -84,7 +84,7 @@
 		</colgroup>
 		<thead>
 			<tr>
-				<th class="th_number">序号</th>
+				<th class="th_number" width="20">#</th>
 				<th class="th_type">封装类型</th>
 				<th class="th_pn">产品型号</th>
 				<th class="th_rate">速率</th>
@@ -97,9 +97,9 @@
 				<th class="th_reach">距离</th>
 				<th class="th_multirate">多速率支持</th>
 				<th class="th_manager">产品经理</th>
-				<!--<eq name="position" value="产品经理">
+				<eq name="position" value="产品经理">
 					<th class="th_operation">操作</th>
-				</eq>-->
+				</eq>
 			</tr>
 		</thead>
 		<tbody>
@@ -124,14 +124,14 @@
 					<td>{$value.reach}</td>
 					<td>{$value.multirate}</td>
 					<td>{$value.nickname}</td>
-					<!--<eq name="position" value="产品经理">
+					<eq name="position" value="产品经理">
 						<td>
 							<div class="layui-btn-group">
-								<a href="__ROOT__/Product/update/id/{$value.id}" class="layui-btn layui-btn-small layui-btn-primary" title="编辑"><i class="icon-pencil"></i></a>
-								<a href="__ROOT__/Product/delete/id/{$value.id}" class="layui-btn layui-btn-small layui-btn-primary" title="删除"><i class="icon-trash"></i></a>
+								<a href="__ROOT__/Product/edit/id/{$value.id}" class="layui-btn layui-btn-small layui-btn-primary" title="编辑"><i class="icon-pencil"></i></a>
+								<button class="layui-btn layui-btn-small layui-btn-primary del-btn" del-id="{$value.id}" title="删除"><i class="icon-trash"></i></button>
 							</div>
 						</td>
-					</eq>-->
+					</eq>
 				</tr>
 			</volist>
 		</tbody>

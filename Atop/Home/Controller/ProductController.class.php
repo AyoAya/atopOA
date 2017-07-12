@@ -6,6 +6,7 @@
  * Time: 9:46
  */
 namespace Home\Controller;
+use Think\Model;
 use Think\Page;
 
 class ProductController extends AuthController {
@@ -94,23 +95,43 @@ class ProductController extends AuthController {
 
 
     # 产品修改页面
-    public function update(){
-        if( I('get.id') ){
-
+    public function edit(){
+        if( IS_POST ){
+            $model = new Model();
+            $row = $model->table(C('DB_PREFIX').'productrelationships')->save(I('post.', '', false));
+            if( $row !== false ){
+                $this->ajaxReturn( ['flag'=>1, 'msg'=>'修改成功'] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0, 'msg'=>'修改失败'] );
+            }
         }else{
-            $this->error('参数错误');
-            exit;
+            if( I('get.id') && is_numeric(I('get.id')) ){
+                $model = new Model();
+                $result = $model->table(C('DB_PREFIX').'productrelationships')->find( I('get.id') );
+                //获取筛选数据
+                $filter['types'] = $model->table(C('DB_PREFIX').'productrelationships')->field('type')->distinct(true)->order('type ASC')->select();
+                $filter['connectors'] = $model->table(C('DB_PREFIX').'productrelationships')->field('connector')->distinct(true)->order('connector ASC')->select();
+                $filter['casetemps'] = $model->table(C('DB_PREFIX').'productrelationships')->field('casetemp')->distinct(true)->order('casetemp ASC')->select();
+                $this->assign('filter',$filter);
+                $this->assign('product',$result);
+                $this->display();
+            }else{
+                $this->error('参数错误');
+            }
         }
     }
 
 
     # 产品删除
     public function delete(){
-        if( IS_POST && I('post.id') ){
-
-        }else{
-            $this->error('参数错误');
-            exit;
+        if( IS_POST && I('post.id') && is_numeric(I('post.id')) ){
+            $model = new Model();
+            $row = $model->table(C('DB_PREFIX').'productrelationships')->delete(I('post.id'));
+            if( $row ){
+                $this->ajaxReturn( ['flag'=>1, 'msg'=>'删除成功'] );
+            }else{
+                $this->ajaxReturn( ['flag'=>0, 'msg'=>'删除失败'] );
+            }
         }
     }
 
