@@ -165,7 +165,7 @@ $(function(){
         $('.add-column').click(function(){
             let tableStructure = "<tr>" +
                 "<td>--</td>" +
-                "<td><input type='text' class='layui-input' name='customer_name' placeholder='客诉名称'></td>" +
+                "<td><input type='text' class='layui-input' name='customer_name' placeholder='客户名称'></td>" +
                 "<td><input type='text' class='layui-input' name='feedback' placeholder='客户建议'></td>" +
                 "<td>--</td>" +
                 "<td>" +
