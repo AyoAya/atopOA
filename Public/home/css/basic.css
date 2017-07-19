@@ -273,6 +273,9 @@ span.tag {
 span.tag-primary {
 	background: #428bca;
 }
+span.tag-night {
+	background: #888;
+}
 span.tag-warning {
 	background: #f0ad4e;
 }

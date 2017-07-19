@@ -621,7 +621,7 @@ class RMAController extends AuthController{
         if( C('PAGE_STATUS_INFO') ){
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
-        $satisfactions = $model->table(C('DB_PREFIX').'rma_satisfaction')->limit($page->firstRow.','.$page->listRows)->order('customer_name ASC,years ASC')->select();
+        $satisfactions = $model->table(C('DB_PREFIX').'rma_satisfaction')->limit($page->firstRow.','.$page->listRows)->order('id DESC')->select();
         foreach( $satisfactions as $key=>&$value ){
             if( !empty($value['attachment']) ) $value['attachment'] = json_decode($value['attachment'], true);
         }
