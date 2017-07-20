@@ -86,16 +86,17 @@
 			<tr>
 				<th class="th_number" width="20">#</th>
 				<th class="th_type">封装类型</th>
+				<th class="th_pn">产品阶段</th>
 				<th class="th_pn">产品型号</th>
 				<th class="th_rate">速率</th>
 				<th class="th_wavelength">波长</th>
 				<th class="th_component">光组件</th>
 				<th class="th_txpwr">发端功率</th>
-				<th class="th_rxsens">接收灵敏度</th>
+				<th class="th_rxsens">灵敏度</th>
 				<th class="th_connector">接口</th>
-				<th class="th_casetemp">温度范围</th>
+				<th class="th_casetemp">范围</th>
 				<th class="th_reach">距离</th>
-				<th class="th_multirate">多速率支持</th>
+				<th class="th_multirate">多速率</th>
 				<th class="th_manager">产品经理</th>
 				<eq name="position" value="产品经理">
 					<th class="th_operation">操作</th>
@@ -113,6 +114,7 @@
 						</if>
 					</td>
 					<td>{$value.type}</td>
+					<td>{$value.stage}</td>
 					<td>{$value.pn}</td>
 					<td>{$value.rate}</td>
 					<td>{$value.wavelength}</td>

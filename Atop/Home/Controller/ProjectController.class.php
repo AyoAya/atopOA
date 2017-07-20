@@ -33,7 +33,7 @@ class ProjectController extends AuthController
         if(C('PAGE_STATUS_INFO')){
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
-        $projects = $project->where('pj_child=0')->order('pj_create_time DESC')->limit($page->firstRow.','.$page->listRows)->select();
+        $projects = $project->where('pj_child=0 AND pj_hide=1')->order('pj_create_time DESC')->limit($page->firstRow.','.$page->listRows)->select();
         $pageShow = $page->show();
         if(I('get.p')){
             $this->assign('pagenumber',I('get.p')-1);

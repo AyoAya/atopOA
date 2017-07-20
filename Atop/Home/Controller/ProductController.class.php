@@ -38,11 +38,11 @@ class ProductController extends AuthController {
 
         if( I('get.search') ){
             $proResult = $proModel->table('atop_productrelationships a,atop_user b')
-                ->field('a.id,a.type,a.pn,a.rate,a.wavelength,a.component,a.txpwr,a.rxsens,a.connector,a.casetemp,a.reach,a.multirate,b.nickname')
+                ->field('a.id,a.type,a.stage,a.pn,a.rate,a.wavelength,a.component,a.txpwr,a.rxsens,a.connector,a.casetemp,a.reach,a.multirate,b.nickname')
                 ->where('a.manager=b.id AND a.pn LIKE "%'.I('get.search').'%"')->order('type,pn ASC')->limit($page->firstRow.','.$page->listRows)->select();
         }else{
             $proResult = $proModel->table('atop_productrelationships a,atop_user b')
-                ->field('a.id,a.type,a.pn,a.rate,a.wavelength,a.component,a.txpwr,a.rxsens,a.connector,a.casetemp,a.reach,a.multirate,b.nickname')
+                ->field('a.id,a.type,a.stage,a.pn,a.rate,a.wavelength,a.component,a.txpwr,a.rxsens,a.connector,a.casetemp,a.reach,a.multirate,b.nickname')
                 ->where('a.manager=b.id')->order('type,pn ASC')->limit($page->firstRow.','.$page->listRows)->select();
         }
         $pageShow = $page->show();
