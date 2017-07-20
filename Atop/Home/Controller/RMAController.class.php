@@ -67,7 +67,7 @@ class RMAController extends AuthController{
         }
 
         # 只查询新版本客诉
-        $where .= 'AND a.version="new" AND a.hide=1';   //hide字段 作用于该客诉是否显示
+        $where .= 'AND a.version="new" AND a.show=1';   //show字段 作用于该客诉是否显示
 
         # 用户表实例
         $user = M('User');
