@@ -4,6 +4,7 @@
 <block name="linkcss">
     <link rel="stylesheet" href="__CSS__/sample/detail.css">
     <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
+    <link rel="stylesheet" href="__PUBLIC__/webuploader/css/basic.css">
     <link rel="stylesheet" href="__CSS__/File/reviewDetail.css">
 </block>
 <!-- 【引入javascript文件】 -->
@@ -50,34 +51,28 @@
             <div class="layui-form-label">附　件：</div>
             <div class="layui-input-block review-text">
                 <volist name="person.attachment" id="value">
-                    <!--<in name="value.ext" value="jpg,jpeg,png,gif,bmp">
-                        <p>
-                            <img src="__ROOT__/Uploads/File/{$person.id}/{$value.savename}" alt="" style="width: auto;height: auto;max-width: 40%;max-height: 40%; ">
-                            <p>{$value.savename}</p>
-                        </p>
-                    </in>-->
 
                     <in name="value.ext" value="zip,rar">
                         <p>
-                            <span class="ext-zip"></span><a href="__ROOT__/{$value.path}">{$value.savename}</a>
+                            <i class="file-icon-ext-zip"></i><a href="__ROOT__/{$value.path}">{$value.savename}</a>
                         </p>
                     </in>
 
                     <in name="value.ext" value="xls,xlsx">
                         <p>
-                            <span class="ext-xls"></span><a href="__ROOT__/{$value.path}">{$value.savename}</a>
+                            <i class="file-icon-ext-xls"></i><a href="__ROOT__/{$value.path}">{$value.savename}</a>
                         </p>
                     </in>
 
                     <in name="value.ext" value="doc,docx">
                         <p>
-                            <span class="ext-doc"></span><a href="__ROOT__/{$value.path}">{$value.savename}</a>
+                            <i class="file-icon-ext-doc"></i><a href="__ROOT__/{$value.path}">{$value.savename}</a>
                         </p>
                     </in>
 
                     <in name="value.ext" value="pdf">
                         <p>
-                            <span class="ext-pdf"></span><a href="__ROOT__/{$value.path}">{$value.savename}</a>
+                            <i class="file-icon-ext-pdf"></i><a href="__ROOT__/{$value.path}">{$value.savename}</a>
                         </p>
                     </in>
                 </volist>
@@ -117,8 +112,8 @@
     <table class="layui-table">
         <thead>
         <tr>
-            <th style="width: 120px;">评审人</th>
-            <th style="width: 150px;">评审时间</th>
+            <th style="width: 200px;">评审人</th>
+            <th style="width: 200px;">评审时间</th>
             <th style="width: 120px;">状态</th>
             <th>备注信息</th>
         </tr>

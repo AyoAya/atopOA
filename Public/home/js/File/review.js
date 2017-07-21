@@ -124,6 +124,18 @@ $(function(){
 
         form.on('submit(submit)',function( data ){
 
+
+            if($('.sel-file select option').val() == null){
+                layer.msg('请选择编号，没有请申请！',{time:2000});
+                return false;
+            }
+
+            if(!$('.uploader-attachment-queue').html()){
+                layer.msg('请上传附件！',{time:2000});
+                return false;
+            }
+
+
             if(!$('.email-block-recipient .email-block-cc').html()){
                 layer.msg('评审人不能为空！',{time:2000});
                 return false;

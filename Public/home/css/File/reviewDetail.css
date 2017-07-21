@@ -1,0 +1,11 @@
+.layui-form-label{
+    width: 90px;
+    padding: 0;
+    margin: 0;
+}
+.review-text i{
+    width: 14px;
+    height: 14px;
+    margin: 0 7px 0 0;
+    display: inline-block;
+}

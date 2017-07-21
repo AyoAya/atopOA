@@ -4,6 +4,20 @@
 $(function(){
 
 
+    // 监听滚动，如果添加处理日志存在并且出现返回顶部按钮则将添加日志按钮向上调整
+    $('#content').scroll(function(){
+
+        if( $('.solo_order') ){
+            if( $('#scrollBackTop').hasClass('sr-only') ){
+                $('.solo_order').css({bottom : '60px'});
+            }else{
+                $('.solo_order').css({bottom : '122px'});
+
+            }
+        }
+
+    });
+
     layui.use(['form','layer'],function(){
 
         var form = layui.form(),
@@ -39,6 +53,8 @@ $(function(){
             return false;
 
         });
+
+
 
         // 撤回
         form.on('submit(rollback)',function( data ){
