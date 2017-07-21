@@ -27,11 +27,11 @@
     <div class="pull-left">
         <eq name="Think.session.user.department" value="9">  {//只有当前登录用户为市场部的时候才加载操作按钮}
             <button type="button" class="layui-btn layui-btn-primary add-column"><i class="icon-plus"></i> 添加记录</button>
-            <button type="button" class="layui-btn layui-btn-primary add-issue-btn">添加问题点 <i class="icon-caret-down"></i></button>
+            <!--<button type="button" class="layui-btn layui-btn-primary add-issue-btn">添加问题点 <i class="icon-caret-down"></i></button>-->
         </eq>
     </div>
     <div class="clearfix"></div>
-    <div class="issue-wrapper">
+    <!--<div class="issue-wrapper">
         <form class="layui-form">
             <div class="layui-inline">
                 <div class="layui-input-inline layui-input-inline-rewrite">
@@ -44,7 +44,7 @@
                 </div>
             </div>
         </form>
-    </div>
+    </div>-->
 
     <div class="clearfix" style="margin-bottom: 20px;"></div>
 
@@ -53,9 +53,7 @@
             <tr>
                 <th>#</th>
                 <th>客户</th>
-                <th>问题点</th>
-                <th>年份</th>
-                <th>反馈</th>
+                <th>客户建议</th>
                 <th>附件</th>
                 <eq name="Think.session.user.department" value="9">  {//只有当前登录用户为市场部的时候才加载操作按钮}
                     <th>操作</th>
@@ -78,19 +76,11 @@
                             <span class="stable">{$value.customer_name}</span>
                             <input class="dynamic layui-input" type="hidden" name="customer_name" value="{$value.customer_name}">
                         </td>
-                        <td width="16%">
-                            <span class="stable">{$value.issue_ids}</span>
-                            <input class="dynamic layui-input" type="hidden" name="issue_ids" value="{$value.issue_ids}">
-                        </td>
-                        <td width="12%">
-                            <span class="stable">{$value.years}</span>
-                            <input class="dynamic layui-input" type="hidden" name="years" value="{$value.years}">
-                        </td>
-                        <td width="22%">
+                        <td width="40%">
                             <span class="stable">{$value.feedback}</span>
                             <input class="dynamic layui-input" type="hidden" name="feedback" value="{$value.feedback}">
                         </td>
-                        <td  width="21%">
+                        <td  width="31%">
                             <notempty name="value.attachment">
                                 <volist name="value.attachment" id="vo">
                                     <a href="/{$vo.path}" target="_blank"><i class="file-icon file-icon-ext-{$vo.ext}"></i> {$vo.savename}</a>
@@ -126,7 +116,7 @@
     <!-- 分页 -->
     <ul class="pagination pagination-edit">{$pageShow}</ul>
 
-    <div class="title-bar" style="margin: 0 0 20px 0;">
+    <!--<div class="title-bar" style="margin: 0 0 20px 0;">
         <h4>问题代号 / 说明对照</h4>
     </div>
     
@@ -143,7 +133,7 @@
                 <span><i class="icon-exclamation-sign"></i> 没有数据</span>
             </div>
         </notempty>
-    </div>
+    </div>-->
 
 </block>
 

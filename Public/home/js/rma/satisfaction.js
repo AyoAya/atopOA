@@ -132,8 +132,6 @@ $(function(){
 
             tmpData.id = _tr.find('input[name=id]').val();
             tmpData.customer_name = _tr.find('input[name=customer_name]').val();
-            tmpData.issue_ids = _tr.find('input[name=issue_ids]').val();
-            tmpData.years = _tr.find('input[name=years]').val();
             tmpData.feedback = _tr.find('input[name=feedback]').val();
             if( attachmentList.length > 0 ){
                 tmpData.attachment = JSON.stringify(attachmentList);
@@ -167,10 +165,8 @@ $(function(){
         $('.add-column').click(function(){
             let tableStructure = "<tr>" +
                 "<td>--</td>" +
-                "<td><input type='text' class='layui-input' name='customer_name' placeholder='客诉名称'></td>" +
-                "<td><input type='text' class='layui-input' name='issue_ids' placeholder='问题点'></td>" +
-                "<td><input type='text' class='layui-input' name='years' placeholder='年份'></td>" +
-                "<td><input type='text' class='layui-input' name='feedback' placeholder='反馈'></td>" +
+                "<td><input type='text' class='layui-input' name='customer_name' placeholder='客户名称'></td>" +
+                "<td><input type='text' class='layui-input' name='feedback' placeholder='客户建议'></td>" +
                 "<td>--</td>" +
                 "<td>" +
                     "<div class='edit-active layui-btn-group'>" +
@@ -201,22 +197,10 @@ $(function(){
             let _tr = $(this).parents('tr');
             let tmpData = new Object();
             tmpData.customer_name = _tr.find('input[name=customer_name]').val();
-            tmpData.issue_ids = _tr.find('input[name=issue_ids]').val();
-            tmpData.years = _tr.find('input[name=years]').val();
             tmpData.feedback = _tr.find('input[name=feedback]').val();
             if( $.trim(tmpData.customer_name) == '' ){
                 _tr.find('input[name=customer_name]').focus();
                 layer.msg('请输入客户名称');
-                return false;
-            }
-            if( $.trim(tmpData.issue_ids) == '' ){
-                _tr.find('input[name=issue_ids]').focus();
-                layer.msg('请输入问题点');
-                return false;
-            }
-            if( $.trim(tmpData.years) == '' ){
-                _tr.find('input[name=years]').focus();
-                layer.msg('请输入年份');
                 return false;
             }
             $.ajax({

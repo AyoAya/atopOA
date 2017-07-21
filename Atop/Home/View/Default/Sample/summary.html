@@ -45,7 +45,7 @@
                     <eq name="TWO_KEY" value="1">
                         <tr>
                             <td rowspan="{:count($value['detail'])}"><if condition="$Think.get.p AND $Think.get.p neq 1">
-                                {$pagenumber*$limitsize+$ONE_KEY}
+                                {$pagenumber*10+$ONE_KEY}
                                 <else/>
                                 {$ONE_KEY}
                             </if></td>
