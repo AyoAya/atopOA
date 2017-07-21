@@ -59,7 +59,6 @@
         </div>
     </notempty>
 
-
     <table class="layui-table">
         <thead>
         <tr>
@@ -71,16 +70,38 @@
         <tbody>
         <volist name="numData" id="val">
             <tr>
-                <td>{$val.rule_time|date="Y-m-d H:i",###}</td>
-                <td><a href="__ROOT__/File/reviewDetail/id/{$val.id}">{$val.file_no}</a></td>
-                <eq name="val.status" value="1"><td>未评审</td></eq>
-                <eq name="val.status" value="2"><td>评审中</td></eq>
-                <eq name="val.status" value="3"><td>已归档</td></eq>
+                <td>{$val.time|date="Y-m-d H:i:s",###}</td>
+                <td><a href="__ROOT__/File/fileDetail/id/{$val.id}">{$val.file_no}</a></td>
+                <eq name="val.status" value="1">
+                    <td>
+                        <span style="width: 50px;height: 26px;background: #8a6d3b;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">未评审</span>
+                    </td>
+                </eq>
+                <eq name="val.status" value="2">
+                    <td>
+                        <span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">评审中</span>
+                    </td>
+                </eq>
+                <eq name="val.status" value="0">
+                    <td>
+                        <span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已拒绝</span>
+                    </td>
+                </eq>
+                <eq name="val.status" value="3">
+                    <td>
+                        <span style="width: 50px;height: 26px;background: #5cb85c;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已归档</span>
+                    </td>
+                </eq>
 
             </tr>
         </volist>
 
         </tbody>
     </table>
+
+    <div class="clearfix"></div>
+    <!-- 分页 -->
+    <ul class="pagination pagination-edit">{$page}</ul>
+
 
 </block>

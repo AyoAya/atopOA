@@ -11,7 +11,7 @@ $(function(){
         var form = layui.form(),
             layer = layui.layer;
 
-        var SUB_NAME, attachmentList = new Array();
+        var SUB_NAME, NUM_ID,attachmentList = new Array();
 
         // uploader参数配置
         var logUploaderOption = {
@@ -21,7 +21,7 @@ $(function(){
             fileVal : 'Filedata',
             accept: {
                 title: 'file',
-                extensions: 'zip,rar,jpg,png,jpeg,gif,doc,docx,xls,xlsx,pdf'
+                extensions: 'zip,rar,doc,docx,xls,xlsx,pdf'
             },
             method: 'POST',
         };
@@ -66,7 +66,6 @@ $(function(){
                 attachmentObject.savename = response.savename;
                 attachmentObject.path = response.path;
                 attachmentList.push(attachmentObject);
-                // console.log(attachmentList);
             }else{
                 layer.closeAll();
                 layer.msg(response.msg, { icon : 2,time : 2000 });
@@ -77,6 +76,7 @@ $(function(){
         APRuploader.on('uploadFinished', function( data ){
 
             var sub_name = SUB_NAME,
+                numId = NUM_ID,
                 attachments = JSON.stringify(attachmentList);
 
             $.ajax({
@@ -85,7 +85,8 @@ $(function(){
                 type: 'POST',
                 data: {
                     attachments : attachments,
-                    id : SUB_NAME
+                    id : SUB_NAME,
+                    num : NUM_ID
                 },
                 beforeSend: function(){
                     layer.load(1, {
@@ -96,7 +97,7 @@ $(function(){
                     if(response.flag > 0){
                         layer.msg(response.msg, {icon: 1, time: 2000});
                         setTimeout(function () {
-                            location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/review';
+                            location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/fileDetail/id/'+SUB_NAME+'';
                         })
                     }else{
                         layer.msg(response.msg, {icon: 2, time: 2000});
@@ -121,8 +122,12 @@ $(function(){
             $(this).parent().parent().remove();
         });
 
-
         form.on('submit(submit)',function( data ){
+
+            if(!$('.email-block-recipient .email-block-cc').html()){
+                layer.msg('评审人不能为空！',{time:2000});
+                return false;
+            }
 
             var ccs = [];
 
@@ -138,7 +143,7 @@ $(function(){
 
             var emailObj = JSON.stringify(ccs);
 
-
+            var num = $('.file_num').find("option:selected").attr('num');
 
             $.ajax({
                 url : ThinkPHP['AJAX'] + '/File/review',
@@ -146,7 +151,8 @@ $(function(){
                 type : 'POST',
                 data : {
                     data : data.field,
-                    cc : emailObj
+                    cc : emailObj,
+                    num : num
                 },
                 beforeSend: function(){
                     layer.load(1, {
@@ -158,12 +164,13 @@ $(function(){
                     if( response.flag > 0 ){
                         if( APRuploader.getFiles().length > 0 ){ //检查队列里是否包含文件
                             SUB_NAME = response.flag;
-                            APRuploader.option('formData', {SUB_NAME: SUB_NAME});
+                            NUM_ID = response.num;
+                            APRuploader.option('formData', {SUB_NAME: SUB_NAME,NUM_ID: NUM_ID});
                             APRuploader.upload();
                         }else{
                             layer.msg(response.msg, {icon: 1, time: 1500});
                             setTimeout(function () {
-                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/review';
+                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/fileDetail/id/'+response.flag+'';
                             })
                         }
                     }else{

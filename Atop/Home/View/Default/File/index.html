@@ -27,13 +27,92 @@
 
     <div class="approval-wrapper">
             <ul class="layui-tab-title">
+                <li class="layui-this"><a href="__ROOT__/File/index">文件查询</a></li>
                 <li><a href="__ROOT__/File/apply">编号申请</a></li>
                 <li><a href="__ROOT__/File/review">文件评审</a></li>
-                <li><a href="__ROOT__/File/index">文件查询</a></li>
-                <li><a href="__ROOT__/File/fileDetail">文件详情</a></li>
-                <li><a href="__ROOT__/File/reviewDetail">评审详情</a></li>
             </ul>
     </div>
+
+
+    <div class="pull-left search-box">
+        <form id="SearchHiddenForm" class="layui-form" action="__ROOT__/File" method="get">
+            <input type="text" name="search" id="SearchText" class="layui-input search-input" value="<present name='search'>{$search}</present>" placeholder="搜索文件号或发起人">
+            <button class="layui-btn layui-btn-primary search-btn" id="submitSearch" lay-filter="submitSearch" type="submit"><i class="layui-icon">&#xe615;</i></button>
+        </form>
+    </div>
+
+    <neq name="Think.get.search" value="">
+        <div class="pull-left cle-box" style="position: relative;left: 20px;top: 20px;">
+            <a href="__ROOT__/File" class="layui-btn layui-btn-danger">清除赛选</a>
+        </div>
+    </neq>
+
+
+    <div class="sel-index" style="margin: 80px 0 0 0;">
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="200">
+                <col>
+            </colgroup>
+            <thead>
+            <tr>
+                <th>编号</th>
+                <th>文件号</th>
+                <th>发起人</th>
+                <th>发起时间</th>
+                <th>状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            <notempty name="indexData">
+                <volist name="indexData" id="val">
+                    <tr>
+                        <td>
+                            <if condition="$Think.get.p AND $Think.get.p neq 1">
+                                {$pageNumber*10+$i}
+                                <else/>
+                                {$i}
+                            </if>
+                        </td>
+                        <td><a href="__ROOT__/File/fileDetail/id/{$val.id}">{$val.file_no}</a></td>
+                        <td>{$val.nickname}</td>
+                        <td>{$val.time|date="Y-m-d H:i:s",###}</td>
+                        <eq name="val.status" value="0">
+                            <td><span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已拒绝</span></td>
+                        </eq>
+                        <eq name="val.status" value="1">
+                            <td><span style="width: 50px;height: 26px;background: #8a6d3b;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">未评审</span></td>
+                        </eq>
+                        <eq name="val.status" value="2">
+                            <td><span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">评审中</span></td>
+                        </eq>
+                        <eq name="val.status" value="3">
+                            <td><span style="width: 50px;height: 26px;background: #5cb85c;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已归档</span></td>
+                        </eq>
+                    </tr>
+                </volist>
+            <else/>
+                <tr >
+                    <td colspan="5" style="text-align: center;height:50px;color: #888;">
+                        <i class="  icon-info-sign"></i> 没有数据
+                    </td>
+                </tr>
+
+            </notempty>
+
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <div class="clearfix"></div>
+    <!-- 分页 -->
+    <ul class="pagination pagination-edit">{$page}</ul>
+
+
 </block>
 
 

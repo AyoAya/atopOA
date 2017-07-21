@@ -2,16 +2,14 @@
 <extend name="layout/default"/>
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/sample/detail.css">
     <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
-    <link rel="stylesheet" href="__CSS__/File/index.css">
-    <link rel="stylesheet" href="__CSS__/File/add.css">
     <link rel="stylesheet" href="__CSS__/File/reviewDetail.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
     <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
-    <script src="__JS__/File/index.js"></script>
-    <script src="__JS__/File/add.js"></script>
+    <script src="__JS__/File/reviewDetail.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -36,21 +34,28 @@
         <div class="layui-form-item">
             <div class="layui-form-label">文件号：</div>
             <div class="layui-input-block review-text">
-               {$person.file_no}
+                <a href="__ROOT__/File/fileDetail/id/{$person.id}">{$person.file_no}</a>
             </div>
         </div>
+
+        <div class="layui-form-item">
+            <div class="layui-form-label">评审次数：</div>
+            <div class="layui-input-block review-text">
+                第 {$person.num} 次评审
+            </div>
+        </div>
+
 
         <div class="layui-form-item" >
             <div class="layui-form-label">附　件：</div>
             <div class="layui-input-block review-text">
                 <volist name="person.attachment" id="value">
-                    <in name="value.ext" value="jpg,jpeg,png,gif,bmp">
+                    <!--<in name="value.ext" value="jpg,jpeg,png,gif,bmp">
                         <p>
-                            <!--<span class="ext-img"></span><a href="__ROOT__/{$value.path}">{$value.savename}</a>-->
                             <img src="__ROOT__/Uploads/File/{$person.id}/{$value.savename}" alt="" style="width: auto;height: auto;max-width: 40%;max-height: 40%; ">
                             <p>{$value.savename}</p>
                         </p>
-                    </in>
+                    </in>-->
 
                     <in name="value.ext" value="zip,rar">
                         <p>
@@ -82,7 +87,7 @@
         <div class="layui-form-item">
             <div class="layui-form-label">描述信息：</div>
             <div class="layui-input-block review-text">
-                {$person.description}
+                {$person.log}
             </div>
         </div>
 
@@ -96,7 +101,9 @@
         <div class="layui-form-item"  style="border: 0;">
             <div class="layui-form-label">发起时间：</div>
             <div class="layui-input-block review-text">
-                {$person.rule_time|date="Y-m-d H:i",###}
+                <notempty name="person.time">
+                    {$person.time|date="Y-m-d H:i:s",###}
+                </notempty>
             </div>
         </div>
 
@@ -113,30 +120,114 @@
             <th style="width: 120px;">评审人</th>
             <th style="width: 150px;">评审时间</th>
             <th style="width: 120px;">状态</th>
-            <th>留下信息</th>
+            <th>备注信息</th>
         </tr>
         </thead>
         <tbody>
-        <volist name="reviewData" id="val">
+        <volist name="numData" id="val">
             <tr>
                 <td>{$val.nickname}</td>
-                <td>{$val.time}</td>
                 <td>
-                    <eq name="val.state" value="1">
-                        未评审
+                    <notempty name="val.log.time">
+                        {$val.log.time|date="Y-m-d H:i:s",###}
+                    </notempty>
+                </td>
+                <td>
+                    <eq name="val.status" value="1">
+                        <span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">未评审</span>
                     </eq>
-                    <eq name="val.state" value="2">
-                        未通过
+                    <eq name="val.status" value="2">
+                        <span style="width: 50px;height: 26px;background: #5cb85c;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已通过</span>
                     </eq>
-                    <eq name="val.state" value="3">
-                        已通过
+                    <eq name="val.status" value="0">
+                        <span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已拒绝</span>
                     </eq>
                 </td>
-                <td>{$val.log}</td>
+                <td>{$val.log.log}</td>
             </tr>
         </volist>
         </tbody>
     </table>
 
 
+    <eq name="person.status" value="2">
+        <eq name="person.user_id" value="$Think.session.user.id">
+            <eq name="person.num" value="$num">
+                <div class="rollback" style="margin: 20px 0 0 0;">
+                    <form class="layui-form" action="">
+                        <input type="hidden" value="{$person.num}" name="num">
+                        <input type="hidden" value="{$person.id}" name="id">
+                        <button class="layui-btn" lay-submit lay-filter="rollback"><i class="icon-reply"></i> 撤回</button>
+                    </form>
+                </div>
+            </eq>
+        </eq>
+    </eq>
+
 </block>
+
+
+{//Modal集}
+<block name="modals">
+
+    <in name="Think.session.user.id" value="$arr">
+        <eq name="tmpNumData.status" value="1">
+            <eq name="person.num" value="$num">
+                <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
+                    <p>添加</p>
+                    <p>评审记录</p>
+                </button>
+            </eq>
+        </eq>
+    </in>
+
+    <div class="modal fade" id="Modal-box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel" style="font-size: 18px;">评审操作</h4>
+                </div>
+
+                <form class="layui-form" action="" id="detail_form">
+                    <div class="modal-body">
+
+                        <div class="layui-form-item" style="border: 0;">
+                            <label class="layui-form-label" style="width: 60px;">操作</label>
+                            <div class="layui-input-block" style="margin-left: 70px;">
+                                <select name="type" lay-verify="type">
+                                    <option value="pass">通过</option>
+                                    <option value="refuse">拒绝</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item "  style="border: 0;">
+                            <label class="layui-form-label" style="width: 60px;">备注</label>
+                            <div class="layui-input-block"  style="margin-left: 70px;">
+                                <textarea name="context" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <input type="hidden" id="numberId" name="numberId" value="{$person.id}">
+                    <input type="hidden" id="numberNum" name="numberNum" value="{$person.num}">
+
+                    <div class="modal-footer">
+                        <button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
+                        <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</block>
+

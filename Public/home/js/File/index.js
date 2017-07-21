@@ -17,6 +17,19 @@ $(function(){
 
         })
 
+      /*  //清除筛选
+        $('#submitSearch').on('click',function(){
+            if($(this).prev().val()){
+                alert(1)
+                $('.cle-box').css('display','block')
+            }else{
+                alert(2)
+            }
+        });
+        $('.cle-box').on('click',function(){
+            $(this).css('display','none');
+            location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/Review/index';
+        })*/
 
         // uploader参数配置
         var logUploaderOption = {

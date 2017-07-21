@@ -36,9 +36,9 @@
             <div class="layui-form-item">
                 <div class="layui-form-label">文件号</div>
                 <div class="layui-input-block"  style="width: 520px;">
-                    <select name="file_no" lay-filter="file_no">
+                    <select name="file_no" lay-filter="file_no" class="file_num">
                         <volist name="numberData" id="val">
-                            <option value='{$val.id}'>{$val.file_no}</option>
+                            <option value='{$val.id}' num="{$val.num}">{$val.file_no}</option>
                         </volist>
                     </select>
                 </div>
@@ -59,7 +59,7 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">描述</label>
                 <div class="layui-input-block"  style="width: 520px;">
-                    <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    <textarea name="content" placeholder="请输入内容" class="layui-textarea"></textarea>
                 </div>
             </div>
             <div>
