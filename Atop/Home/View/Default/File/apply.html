@@ -32,8 +32,8 @@
         <form class="layui-form ">
 
             <div class="layui-form-item layui-inline">
-                <div class="layui-form-label">文件类型</div>
-                <div class="layui-input-block"  style="width: 620px;">
+                <div class="layui-form-label" style="padding:10px 0 10px 10px;">文件类型</div>
+                <div class="layui-input-block"  style="width: 420px;">
                     <select name="type" lay-filter="type">
                         <volist name="ruleData" id="val">
                             <option value='{$val.type}'>{$val.type}</option>
@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            <div class="layui-form-item layui-inline">
+            <div class="layui-form-item layui-inline" style="margin: 0 20px 15px 20px;">
                 <button class="layui-btn" lay-submit lay-filter="submit">申请</button>
             </div>
         </form>
