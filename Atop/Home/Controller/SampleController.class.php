@@ -7,66 +7,47 @@ class SampleController extends AuthController {
 
     # 初始化样品管理首页
     public function index(){
-
         $person = M('Sample');
-
         # 是否有查询
         if(I('get.search')){
-            $count = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%" OR order_charge LIKE "%'.I('get.search').'%"')->count();
+            $count = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%" OR order_charge LIKE "%'.I('get.search').'%" AND show=1')->count();
             $this->assign( 'search' , I('get.search') );
-
         }else{
-
             $count = $person->count();
-
         }
-
         # 数据分页
         $page = new Page($count,15);
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
         $page->setConfig('next','<span aria-hidden="true">下一页</span>');
         $page->setConfig('first','<span aria-hidden="true">首页</span>');
         $page->setConfig('last','<span aria-hidden="true">尾页</span>');
-
         if(C('PAGE_STATUS_INFO')){
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
-
         # 根据条件筛选数据
         if(I('get.search')){
-            $sampleResult = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%" OR order_charge LIKE "%'.I('get.search').'%"')->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
+            $sampleResult = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%" OR order_charge LIKE "%'.I('get.search').'%" AND show=1')->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
         }else{
-            $sampleResult = $person->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
+            $sampleResult = $person->where(['show'=>1])->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
         }
-
         $pageShow = $page->show();
-
         $sample_detail = M('Sample_detail');
-
         $user = M('user');
-
         foreach ($sampleResult as $key=>&$value) {
-
             # 获取销售头像
             $value['face'] = $user->field('face')->find( $value['create_person_id'] )['face'];
-
             $num = 0;
             $_num = 0;
-
             # 与订单详情表对接
             $value['child'] = $sample_detail->field('a.id,a.pn,a.detail_assoc,a.product_id,a.count,a.brand,a.model,a.note,a.requirements_date,a.expect_date,a.actual_date,a.manager,a.state,a.now_step,b.type')
                                             ->table(C('DB_PREFIX').'sample_detail a,'.C('DB_PREFIX').'productrelationships b')
                                             ->where('a.detail_assoc="' . $value['id'] . '" AND a.product_id=b.id')
                                             ->select();
-
             foreach( $value['child'] as $k=>&$v ){
-
                 # 如果产品步骤大于6则说明该单已经完成
                 if( $v['now_step'] > 6 ) $num++;
                 if( $v['state'] == 'Y' ) $_num++;
-
             }
-
             # 如果该单的产品数量和产品完成数量一致则说明该单完成
             if( count( $value['child'] ) == $num ){
                 $value['state'] = 'success';
@@ -75,9 +56,7 @@ class SampleController extends AuthController {
             }else{
                 $value['state'] = 'processing';
             }
-
         }
-
         $this->assign('page',$pageShow);
         $this->assign('sampleResult',$sampleResult);
         $this->display();
