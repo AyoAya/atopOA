@@ -35,3 +35,31 @@ kdb{
     padding: 0;
     margin: 0;
 }
+.success{
+    display: inline-block;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background: #5cb85c;
+}
+.refuse{
+    display: inline-block;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background: #d9534f;
+}
+.rule{
+    display: inline-block;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background: #8a6d3b;
+}
+.before{
+    display: inline-block;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    background: #428bca;
+}

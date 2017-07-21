@@ -21,7 +21,6 @@
 <block name="breadcrumb">
     <ol class="breadcrumb breadcrumb-edit">
         <li class="active"><a href="__ROOT__/File">文件管理</a></li>
-        <li class="active"><a href="__ROOT__/File/apply">编号申请</a></li>
         <li class="active">文件详情</li>
     </ol>
 </block>
@@ -37,7 +36,7 @@
 
             <div class="layui-form-item">
                 <div class="layui-form-label">文件号：</div>
-                <div class="layui-input-block review-text">
+                <div class="layui-input-block review-text" style="color: #333;">
                    {$numData.file_no}
                 </div>
             </div>
@@ -46,16 +45,16 @@
                 <div class="layui-form-label">文件状态：</div>
                 <div class="layui-input-block review-text">
                     <eq name="numData.status" value="1">
-                        已申请编号
+                        <span class="rule">已申请编号</span>
                     </eq>
                     <eq name="numData.status" value="2">
-                        第 {$numData.num} 次评审中
+                        <span class="before">第 {$numData.num} 次评审中</span>
                     </eq>
                     <eq name="numData.status" value="0">
-                        第 {$numData.num} 次评审被拒绝
+                        <span class="refuse">第 {$numData.num} 次评审被拒绝</span>
                     </eq>
                     <eq name="numData.status" value="3">
-                        已归档
+                        <span class="success">已归档</span>
                     </eq>
                 </div>
             </div>
@@ -85,8 +84,8 @@
         <table class="layui-table">
             <thead>
             <tr>
-                <th style="width: 120px;">操作时间</th>
-                <th style="width: 150px;">操作人</th>
+                <th style="width: 150px;">操作时间</th>
+                <th style="width: 100px;">操作人</th>
                 <th style="width: 120px;">操作动作</th>
             </tr>
             </thead>
