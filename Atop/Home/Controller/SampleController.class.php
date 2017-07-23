@@ -13,7 +13,7 @@ class SampleController extends AuthController {
             $count = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%" OR order_charge LIKE "%'.I('get.search').'%" AND show=1')->count();
             $this->assign( 'search' , I('get.search') );
         }else{
-            $count = $person->count();
+            $count = $person->where('show=1')->count();
         }
         # 数据分页
         $page = new Page($count,15);

@@ -23,7 +23,7 @@ class ProjectController extends AuthController
         # print_r($userInfo);
         $project = M('Project');
         $plan = M('ProjectPlan');
-        $count = $project->where('pj_child=0')->count();
+        $count = $project->where('pj_child=0 AND pj_show=1')->count();
         //数据分页
         $page = new Page($count,C('LIMIT_SIZE'));
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
