@@ -809,9 +809,9 @@ class SampleController extends AuthController {
     public function Logistics(){
         $model = new model();
         $LogisticsResult = $model
-                            ->table(C('DB_PREFIX').'sample_detail a,'.C('DB_PREFIX').'logistics b')
-                            ->field('a.pn,a.requirements_date,a.waybill,b.logistics_name,b.logistics_code')
-                            ->where('a.id ='.$_GET['id'].' AND a.logistics = b.id')
+                            ->table(C('DB_PREFIX').'sample_detail a,'.C('DB_PREFIX').'logistics b,'.C('DB_PREFIX').'sample c')
+                            ->field('a.pn,a.requirements_date,a.waybill,b.logistics_name,b.logistics_code,c.order_num')
+                            ->where('a.id ='.$_GET['id'].' AND a.logistics = b.id AND c.id = a.detail_assoc')
                             ->select();
         $Logistics_code = $LogisticsResult[0]['logistics_code'];
         $waybill = $LogisticsResult[0]['waybill'];
@@ -831,6 +831,7 @@ class SampleController extends AuthController {
 
         curl_close($ch);
 
+        # print_r($LogisticsResult[0]);
         $this->assign('logisticsData',$logistics_data);
         $this->assign('LogisticsResult',$LogisticsResult[0]);
         $this->display();
