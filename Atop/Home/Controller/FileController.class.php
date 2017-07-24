@@ -76,6 +76,39 @@ class FileController extends AuthController  {
     }
 
     /**
+     * 添加类型
+     */
+    public function add(){
+
+        if(IS_POST){
+            $post = I('post.');
+            $rule['type'] = $post['type'];
+            $rule['length'] = $post['length'];
+            $rule['info'] = $post['info'];
+
+            $tmpRel = M('FileRule')->where("type = '".$post['type']."'")->select();
+
+            if($tmpRel){
+                $this->ajaxReturn(['flag'=>0,'msg'=>'已有此类型文件']);
+                exit();
+            }else{
+                $rule_id =  M('FileRule')->add($rule);
+
+                if($rule_id){
+                    $this->ajaxReturn(['flag'=>1,'msg'=>'添加成功']);
+                }else{
+
+                    $this->ajaxReturn(['flag'=>0,'msg'=>'添加失败']);
+                }
+            }
+
+        }
+
+        $this->display();
+
+    }
+
+    /**
      * 编号申请
      */
     public function apply(){
@@ -285,7 +318,7 @@ class FileController extends AuthController  {
                                 ->order('a.time ASC')
                                 ->select();
 
-        # print_r($numData);
+         print_r($numData);
         $this->assign('numData',$numData);
         $this->display();
 
