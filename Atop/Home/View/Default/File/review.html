@@ -29,35 +29,48 @@
         <h4>添加评审</h4>
     </div>
 
-
     <div class="basic-container">
         <form class="layui-form ">
-
-            <div class="layui-form-item">
-                <div class="layui-form-label">文件号</div>
-                <div class="layui-input-block sel-file"  style="width: 520px;">
-                    <select name="file_no" lay-filter="file_no" class="file_num">
-                        <volist name="numberData" id="val">
-                            <option value='{$val.id}' num="{$val.num}">{$val.file_no}</option>
-                        </volist>
-                    </select>
+            <present name="Think.get.id">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">文件号</label>
+                    <div class="layui-input-block" style="width: 520px;">
+                        <input type="text" name="file_no" required  lay-verify="required"  readonly="readonly" placeholder="请输入文件号" value="{$numberData.file_no}" autocomplete="off" class="layui-input">
+                    </div>
                 </div>
-            </div>
+            <else/>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">文件号</div>
+                    <div class="layui-input-block sel-file"  style="width: 520px;">
+                        <select name="file_no" lay-filter="file_no" class="file_num">
+                            <volist name="numberData" id="val">
+                                <option value='{$val.id}' num="{$val.num}">{$val.file_no}</option>
+                            </volist>
+                        </select>
+                    </div>
+                </div>
+            </present>
 
             <!--<div class="layui-form-item layui-inline" style="margin:0 0 10px 30px;padding: 0;">
                 <button class="layui-btn layui-btn-primary layui-inline" style="width: 100px; padding: 0;" >选择文件号</button>
             </div>-->
             <div class="layui-form-item">
-                <label class="layui-form-label">附件</label>
+                <label class="layui-form-label">附　件</label>
                 <div class="layui-input-block">
                     <div id="filePick"><i class="icon-arrow-up"></i> 上传文件</div>
                     <div class="uploader-attachment-queue"></div>
                 </div>
             </div>
 
+            <div class="layui-form-item">
+                <label class="layui-form-label">版本号</label>
+                <div class="layui-input-block" style="width: 520px;">
+                    <input type="text" name="version" required  lay-verify="required"  placeholder="请输入版本号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
 
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">描述</label>
+                <label class="layui-form-label">描　述</label>
                 <div class="layui-input-block"  style="width: 520px;">
                     <textarea name="content" placeholder="请输入内容" class="layui-textarea"></textarea>
                 </div>
@@ -68,6 +81,16 @@
                     <div class="layui-form-item layui-form-text layui-inline">
                         <label class="layui-form-label">评审人</label>
                             <include file="block:cc"/>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div>
+
+                    <div class="layui-form-item layui-form-text layui-inline">
+                        <label class="layui-form-label" style="padding: 20px 13px 0 0;">二级评审</label>
+                        <include file="block:two"/>
                     </div>
                 </div>
             </div>

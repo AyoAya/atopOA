@@ -3,15 +3,13 @@
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
     <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
-    <link rel="stylesheet" href="__CSS__/File/index.css">
-    <link rel="stylesheet" href="__CSS__/File/add.css">
+    <link rel="stylesheet" href="__CSS__/sample/detail.css">
     <link rel="stylesheet" href="__CSS__/File/fileDetail.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
     <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
-    <script src="__JS__/File/index.js"></script>
-    <script src="__JS__/File/add.js"></script>
+    <script src="__JS__/File/fileDetail.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -42,7 +40,14 @@
             </div>
 
             <div class="layui-form-item">
-                <div class="layui-form-label">文件状态：</div>
+                <div class="layui-form-label">版本号：</div>
+                <div class="layui-input-block review-text" style="color: #333;">
+                    {$numData.version}
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-form-label">进　度：</div>
                 <div class="layui-input-block review-text">
                     <eq name="numData.status" value="1">
                         <span class="rule">已申请编号</span>
@@ -59,9 +64,9 @@
                 </div>
             </div>
 
-            <div class="layui-form-item"  style="border: 0;">
+            <div class="layui-form-item" style="color: #333;" >
                 <div class="layui-form-label">附　件：</div>
-                <div class="layui-input-block review-text">
+                <div class="layui-input-block review-text" style="padding: 0;">
                     <eq name="numData.status" value="3">
                         <notempty name="numData.attachment">
                             <volist name="numData.attachment" id="value">
@@ -73,6 +78,23 @@
                     </eq>
                 </div>
             </div>
+
+            <div class="layui-form-item" >
+                <div class="layui-form-label">描　述：</div>
+                <div class="layui-input-block review-text"style="border: 0;" >
+                    {$content.log}
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="border:0;padding-left:25px;">
+                <eq name="numData.status" value="1">
+                    <a href="__ROOT__/File/review/id/{$numData.id}"><button class="layui-btn layui-btn-primary">评审</button></a>
+                </eq>
+                <eq name="numData.status" value="3">
+                    <a href="__ROOT__/File/review/id/{$numData.id}"><button class="layui-btn layui-btn-primary">升版</button></a>
+                </eq>
+            </div>
+
 
         </div>
     </div>
@@ -107,5 +129,71 @@
             </tbody>
         </table>
     </div>
+
+</block>
+
+
+{//Modal集}
+<block name="modals">
+
+   <!-- <eq name="numData.status" value="3">
+        <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
+            <p>升级</p>
+            <p>版本</p>
+        </button>
+    </eq>-->
+
+    <div class="modal fade" id="Modal-box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel" style="font-size: 18px;">升级版本</h4>
+                </div>
+
+                <form class="layui-form" action="" id="detail_form">
+                    <div class="modal-body">
+
+                        <div class="layui-form-item" style="border: 0;">
+                            <label class="layui-form-label"  style="width: 75px; padding-right: 15px; text-align: right;" >版本号</label>
+                            <div class="layui-input-block" style="margin-left: 75px;">
+                                <input type="text" name="version" required  lay-verify="required" placeholder="请输入版本号" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+<!--
+                        <div class="layui-form-item" style="border: 0;">
+                            <label class="layui-form-label"  style="width: 75px;  padding-right: 15px; text-align: right;">附件</label>
+                            <div class="layui-input-block" style="margin-left: 70px;">
+                                <div id="filePick"><i class="icon-arrow-up"></i> 上传文件</div>
+                                <div class="uploader-attachment-queue"></div>
+                            </div>
+                        </div>-->
+
+
+                        <div class="layui-form-item "  style="border: 0;">
+                            <label class="layui-form-label" style="width: 75px;  padding-right: 15px; text-align: right;">备注</label>
+                            <div class="layui-input-block"  style="margin-left: 75px;">
+                                <textarea name="context" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <input type="hidden" id="file_no" name="file_no" value="{$numData.file_no}">
+                    <input type="hidden" id="numberId" name="numberId" value="{$numData.id}">
+
+                    <div class="modal-footer">
+                        <button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
+                        <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
 
 </block>

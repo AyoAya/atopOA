@@ -6,7 +6,6 @@ $(function(){
     //实例化email推送
     $('.email-block-wrapper').emailBlock();
 
-
     layui.use(['form','layer','upload'], function(){
         var form = layui.form(),
             layer = layui.layer;
@@ -97,7 +96,7 @@ $(function(){
                     if(response.flag > 0){
                         layer.msg(response.msg, {icon: 1, time: 2000});
                         setTimeout(function () {
-                            location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/fileDetail/id/'+SUB_NAME+'';
+                            location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/fileDetail/id/'+SUB_NAME;
                         })
                     }else{
                         layer.msg(response.msg, {icon: 2, time: 2000});
@@ -108,7 +107,6 @@ $(function(){
 
                 }
             })
-
 
         });
 
@@ -142,6 +140,7 @@ $(function(){
             }
 
             var ccs = [];
+            var two = [];
 
             if( $('.email-block-cc').children().length ){
                 $('.email-block-cc .email-block-user-item-span').each(function (index) {
@@ -155,6 +154,18 @@ $(function(){
 
             var emailObj = JSON.stringify(ccs);
 
+            if( $('.email-block-two').children().length ){
+                $('.email-block-two .email-block-user-item-span').each(function (index) {
+                    let tmpObject = new Object();
+                    tmpObject.name = $(this).text();
+                    tmpObject.id = $(this).attr('user-id');
+                    tmpObject.email = $(this).attr('user-email');
+                    two.push(tmpObject);
+                })
+            }
+
+            var twoObj = JSON.stringify(two);
+
             var num = $('.file_num').find("option:selected").attr('num');
 
             $.ajax({
@@ -164,6 +175,7 @@ $(function(){
                 data : {
                     data : data.field,
                     cc : emailObj,
+                    two : twoObj,
                     num : num
                 },
                 beforeSend: function(){
