@@ -68,6 +68,19 @@ class AuthController extends Controller {
         $this->assign('AUAD', $result);
     }
 
+    #获取DCC专员人员数据
+    protected function getDccPostUsers(){
+        $user = M('User');
+        $map['state'] = 1;
+        $result = $user->field('id,nickname,email,post')->where( $map )->select();
+        foreach( $result as $key=>&$value ){
+            if( !in_array(1788, explode(',', $value['post'])) ){
+                unset($result[$key]);
+            }
+        }
+        $this->assign('DccPostUsers', $result);
+    }
+
 
 
     // 获取产品信息

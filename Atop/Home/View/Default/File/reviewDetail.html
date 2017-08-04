@@ -35,7 +35,14 @@
         <div class="layui-form-item">
             <div class="layui-form-label">文件号：</div>
             <div class="layui-input-block review-text">
-                <a href="__ROOT__/File/fileDetail/id/{$person.id}">{$person.file_no}</a>
+                <a href="__ROOT__/File/fileDetail/no/{$person.file_no}/version/{$person.version}">{$person.file_no}</a>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-form-label">版本号：</div>
+            <div class="layui-input-block review-text">
+                {$person.version}
             </div>
         </div>
 
@@ -109,41 +116,112 @@
         <h4>评审记录</h4>
     </div>
 
-    <table class="layui-table">
-        <thead>
-        <tr>
-            <th style="width: 200px;">评审人</th>
-            <th style="width: 200px;">评审时间</th>
-            <th style="width: 120px;">状态</th>
-            <th>备注信息</th>
-        </tr>
-        </thead>
-        <tbody>
-        <volist name="numData" id="val">
-            <tr>
-                <td>{$val.nickname}</td>
-                <td>
-                    <notempty name="val.log.time">
-                        {$val.log.time|date="Y-m-d H:i:s",###}
-                    </notempty>
-                </td>
-                <td>
-                    <eq name="val.status" value="1">
-                        <span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">未评审</span>
-                    </eq>
-                    <eq name="val.status" value="2">
-                        <span style="width: 50px;height: 26px;background: #5cb85c;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已通过</span>
-                    </eq>
-                    <eq name="val.status" value="0">
-                        <span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已拒绝</span>
-                    </eq>
-                </td>
-                <td>{$val.log.log}</td>
-            </tr>
-        </volist>
-        </tbody>
-    </table>
+    {//评审人数据}
+        <div class="dis-person">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th style="width: 200px;">评审步骤</th>
+                    <th style="width: 200px;">评审人</th>
+                    <th style="width: 200px;">评审时间</th>
+                    <th style="width: 120px;">状态</th>
+                    <th>备注信息</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <volist name="allData" id="value" key="k">
+                        <neq name="value.step" value="0">
+                            <tr>
+                                <td>{$value.step} 级评审</td>
+                                <td>{$value.nickname}</td>
 
+                                <td>
+                                    <notempty name="value.log.time">
+                                        {$value.log.time|date="Y-m-d H:i:s",###}
+                                    </notempty>
+                                </td>
+                                <td>
+                                    <eq name="value.status" value="1">
+                                        <span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">未评审</span>
+                                    </eq>
+                                    <eq name="value.status" value="2">
+                                        <span style="width: 50px;height: 26px;background: #5cb85c;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已通过</span>
+                                    </eq>
+                                    <eq name="value.status" value="0">
+                                        <span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已拒绝</span>
+                                    </eq>
+                                </td>
+                                <td>{$value.log.log}</td>
+                            </tr>
+                        </neq>
+                    </volist>
+                    <volist name="DCCData" id="value">
+                            <tr>
+                                <td>DCC评审</td>
+                                <td>{$value.nickname}</td>
+                                <td>
+                                    <notempty name="value.log.time">
+                                        {$value.log.time|date="Y-m-d H:i:s",###}
+                                    </notempty>
+                                </td>
+                                <td>
+                                    <eq name="value.status" value="1">
+                                        <span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">未评审</span>
+                                    </eq>
+                                    <eq name="value.status" value="2">
+                                        <span style="width: 50px;height: 26px;background: #5cb85c;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已通过</span>
+                                    </eq>
+                                    <eq name="value.status" value="0">
+                                        <span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已拒绝</span>
+                                    </eq>
+                                </td>
+                                <td>{$value.log.log}</td>
+                            </tr>
+                    </volist>
+                </tbody>
+            </table>
+        </div>
+
+  <!--  <div class="dis-person">
+        <div class="title-bar" style="margin: 20px 0 30px 0;">
+            <h4>DCC评审</h4>
+        </div>
+
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th style="width: 200px;">评审人</th>
+                <th style="width: 200px;">评审时间</th>
+                <th style="width: 120px;">状态</th>
+                <th>备注信息</th>
+            </tr>
+            </thead>
+            <tbody>
+                <volist name="DCCData" id="value">
+                    <tr>
+                        <td>{$value.nickname}</td>
+                        <td>
+                            <notempty name="value.log.time">
+                                {$value.log.time|date="Y-m-d H:i:s",###}
+                            </notempty>
+                        </td>
+                        <td>
+                            <eq name="value.status" value="1">
+                                <span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">未评审</span>
+                            </eq>
+                            <eq name="value.status" value="2">
+                                <span style="width: 50px;height: 26px;background: #5cb85c;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已通过</span>
+                            </eq>
+                            <eq name="value.status" value="0">
+                                <span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已拒绝</span>
+                            </eq>
+                        </td>
+                        <td>{$value.log.log}</td>
+                    </tr>
+                </volist>
+            </tbody>
+        </table>
+    </div>-->
 
     <eq name="person.status" value="2">
         <eq name="person.user_id" value="$Think.session.user.id">
@@ -152,6 +230,8 @@
                     <form class="layui-form" action="">
                         <input type="hidden" value="{$person.num}" name="num">
                         <input type="hidden" value="{$person.id}" name="id">
+                        <input type="hidden" value="{$person.version}" name="version">
+                        <input type="hidden" value="{$person.step}" name="step">
                         <button class="layui-btn" lay-submit lay-filter="rollback"><i class="icon-reply"></i> 撤回</button>
                     </form>
                 </div>
@@ -165,16 +245,31 @@
 {//Modal集}
 <block name="modals">
 
-    <in name="Think.session.user.id" value="$arr">
-        <eq name="tmpNumData.status" value="1">
-            <eq name="person.num" value="$num">
-                <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
-                    <p>添加</p>
-                    <p>评审记录</p>
-                </button>
+    <eq name="tmpStep" value="0">
+        <in name="Think.session.user.id" value="$arr">
+            <eq name="tmpNumData.status" value="1">
+                <eq name="person.num" value="$num">
+                    <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
+                        <p class="pingshen" style="font-size: 20px;">评审</p>
+                    </button>
+                </eq>
             </eq>
-        </eq>
-    </in>
+        </in>
+    </eq>
+
+    <eq name="tmpStep" value="1">
+        <in name="Think.session.user.id" value="$arr_s">
+            <eq name="tmpNumData.status" value="1">
+                <eq name="person.num" value="$num">
+                    <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
+                        <p class="pingshen" style="font-size: 20px;font-weight: bold;">评审</p>
+                    </button>
+                </eq>
+            </eq>
+        </in>
+    </eq>
+
+
 
 
     <div class="modal fade" id="Modal-box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
@@ -210,6 +305,7 @@
                     </div>
 
                     <input type="hidden" id="numberId" name="numberId" value="{$person.id}">
+                    <input type="hidden" id="step" name="step" value="{$nowData.0.step}">
                     <input type="hidden" id="numberNum" name="numberNum" value="{$person.num}">
 
                     <div class="modal-footer">

@@ -68,7 +68,7 @@
 }
 .email-block-wrapper .email-block-recipient-box .email-block-recipient .email-block-users-box .email-block-users-list {
     padding-right: 10px;
-    height: 395px;
+    max-height: 395px;
     overflow-y: auto;
 }
 .email-block-wrapper .email-block-recipient-box .email-block-recipient .email-block-users-box .email-block-users-list .email-block-department-name {

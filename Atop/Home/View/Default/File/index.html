@@ -26,8 +26,8 @@
 <block name="content">
 
     <div>
-        <li class="layui-btn layui-btn-primary"><a style="color: #888;" href="__ROOT__/File/apply">编号申请</a></li>
-        <li class="layui-btn layui-btn-primary"><a style="color: #888;" href="__ROOT__/File/review">文件评审</a></li>
+        <a style="color: #888;" href="__ROOT__/File/apply"> <li class="layui-btn layui-btn-primary">编号申请</li></a>
+        <a style="color: #888;" href="__ROOT__/File/review"><li class="layui-btn layui-btn-primary">文件评审</li></a>
     </div>
 
 
@@ -56,38 +56,48 @@
             <tr>
                 <th>编号</th>
                 <th>文件号</th>
+                <th>版本</th>
+                <th>状态</th>
                 <th>发起人</th>
                 <th>发起时间</th>
-                <th>状态</th>
             </tr>
             </thead>
             <tbody>
             <notempty name="indexData">
                 <volist name="indexData" id="val">
-                    <tr>
-                        <td>
-                            <if condition="$Think.get.p AND $Think.get.p neq 1">
-                                {$pageNumber*10+$i}
-                                <else/>
-                                {$i}
-                            </if>
-                        </td>
-                        <td><a href="__ROOT__/File/fileDetail/id/{$val.id}">{$val.file_no}</a></td>
-                        <td>{$val.nickname}</td>
-                        <td>{$val.time|date="Y-m-d H:i:s",###}</td>
-                        <eq name="val.status" value="0">
-                            <td><span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已拒绝</span></td>
-                        </eq>
-                        <eq name="val.status" value="1">
-                            <td><span style="width: 50px;height: 26px;background: #8a6d3b;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">未评审</span></td>
-                        </eq>
-                        <eq name="val.status" value="2">
-                            <td><span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">评审中</span></td>
-                        </eq>
-                        <eq name="val.status" value="3">
-                            <td><span style="width: 50px;height: 26px;background: #5cb85c;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已归档</span></td>
-                        </eq>
-                    </tr>
+                    <neq name="val.status" value="4">
+                        <tr>
+                            <td>
+                                <if condition="$Think.get.p AND $Think.get.p neq 1">
+                                    {$pageNumber*10+$i}
+                                    <else/>
+                                    {$i}
+                                </if>
+                            </td>
+                            <td><a href="__ROOT__/File/fileDetail/no/{$val.file_no}/version/{$val.version}">{$val.file_no}</a></td>
+                            <td>{$val.version}</td>
+                            <eq name="val.status" value="0">
+                                <td><span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已拒绝</span></td>
+                            </eq>
+                            <eq name="val.status" value="1">
+                                <td><span class="tag tag-brown">未评审</span></td>
+                            </eq>
+                            <eq name="val.status" value="2">
+                                <td><span class="tag tag-primary">评审中</span></td>
+                            </eq>
+                            <eq name="val.status" value="3">
+                                <td><span class="tag tag-success">已归档</span></td>
+                            </eq>
+                            <eq name="val.status" value="4">
+                                <td><span class="tag tag-danger">不可用</span></td>
+                            </eq>
+                            <eq name="val.status" value="5">
+                                <td><span class="tag tag-black">已废弃</span></td>
+                            </eq>
+                            <td>{$val.nickname}</td>
+                            <td>{$val.time|date="Y-m-d H:i:s",###}</td>
+                        </tr>
+                    </neq>
                 </volist>
             <else/>
                 <tr >

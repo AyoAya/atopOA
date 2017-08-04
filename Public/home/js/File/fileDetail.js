@@ -130,6 +130,31 @@ $(function(){
             $(this).parent().parent().remove();
         });
 
+        // 判断此评审是否有操作按钮权限
+        $('.layui-form-item .btn-lay-orr a').click(function(){
+            if($(this).find('button').hasClass('lay-orr')){
+                layer.alert('该文件正在评审中，不能进行升级！', {
+                    title:'评审未完成',
+                    icon: 5,
+                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                })
+            }
+            if($(this).find('button').hasClass('lay-err')){
+                layer.alert('该文件正在评审中，不能重复发起评审！', {
+                    title:'评审已发起',
+                    icon: 5,
+                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                })
+            }
+            if($(this).find('button').hasClass('lay-nou')){
+                layer.alert('抱歉，只有编号申请人才能发起评审！', {
+                    title:'没有权限',
+                    icon: 5,
+                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                })
+            }
+        })
+
 
         form.on('submit(submit)',function( data ){
 
