@@ -322,7 +322,7 @@ $(function(){
                     return false;
                 }else{
                     var top = $('div[name=floor'+floor+']').offset().top - 90;   //获取到跳转楼层到页面顶部的距离
-                    $('#content-box').mCustomScrollbar('scrollTo',top);
+                    $('#content-box').scroll(top);
                 }
             }
         }
