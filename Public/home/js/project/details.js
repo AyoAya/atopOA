@@ -236,9 +236,9 @@ $(function(){
             $('#loading').removeClass('sr-only');
         },
         //上传成功之后执行回调函数(file:返回文件信息，data：返回服务器回调信息，response：返回真或假)
-        onUploadSuccess : function(file,data,response){
-            if(data){
-                var obj = $.parseJSON(data);
+        onUploadSuccess : function(file,data){
+            var obj = $.parseJSON(data);
+            if(obj){
                 if( obj.flag == 1 ){
                     $('#loading').addClass('sr-only');
                     $('#MessageText').html('<p><i class="icon-ok-sign text-success"></i>&nbsp;' + obj.msg + '</p>' );
@@ -442,7 +442,7 @@ window.onload = function(){
             if( regular.test(floorNum) ){
                 if( floorNum <= floorSize ){
                     var top = $('div[name=floor'+floorNum+']').offset().top - 90;   //获取到跳转楼层到页面顶部的距离
-                    $('#content-box').mCustomScrollbar('scrollTo',top);
+                    $('#content-box').scroll(top)
                 }
             }
         }
