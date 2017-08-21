@@ -14,16 +14,21 @@ class PushEmail {
     private $db_user = 'root';
     private $db_pwd = 'root';
     private $db_name = 'atop';
+	
+	static $http_host = '61.139.89.33:8088';
+	
     static $address = [
+	
         'yangpeiyun@atoptechnology.com',    //杨培云
         'huangzhengyin@atoptechnology.com',   //黄正银
         'xiaoaiyou@atoptechnology.com',     //肖艾佑
         'chenshi@atoptechnology.com',   //陈实
         'haorui@atoptechnology.com',        //郝锐
-        'jonas@atoptechnology.com'         //张炜哲
+        'jonas@atoptechnology.com'         //张炜哲	
 		
 	];
     static $cc = [
+	
         'liuyan@atoptechnology.com',      //刘燕
         'yubo@atoptechnology.com',          //余波
         'sunbin@atoptechnology.com',        //孙彬
@@ -42,8 +47,11 @@ class PushEmail {
 
     # 构造方法
     public function __construct(){
+		echo '1111';
         $this->connect();
+		echo '22222';
         $this->GetOrderSummary();
+		echo '33333';
     }
 
     # 连接数据库并返回实例
@@ -114,7 +122,7 @@ class PushEmail {
 
             sort($value['detail']);
         }
-
+		
         self::output( $sample_data );
 
     }
@@ -220,7 +228,7 @@ STYLE;
 
             $html .= "\t\t\t<td rowspan='".count($value['detail'])."'>".($key+1)."</td>\r\n";
 
-            $html .= "\t\t\t<td rowspan='".count($value['detail'])."'><a href='http://".$_SERVER['HTTP_HOST']."/Sample/overview/id/{$value['detail_assoc']}'>".$value['order_num']."</a></td>\r\n";
+            $html .= "\t\t\t<td rowspan='".count($value['detail'])."'><a href='http://".self::$http_host."/Sample/overview/id/{$value['detail_assoc']}'>".$value['order_num']."</a></td>\r\n";
 
             $html .= "\t\t\t<td rowspan='".count($value['detail'])."'>".$value['create_person_name']."</td>\r\n";
 
@@ -230,7 +238,7 @@ STYLE;
 
                 if( $k == 0 ){
 
-                    $html .= "\t\t\t<td><a href='http://".$_SERVER['HTTP_HOST']."/Sample/detail/id/{$v['detail_id']}'>".$v['pn']."</a></td>\r\n";
+                    $html .= "\t\t\t<td><a href='http://".self::$http_host."/Sample/detail/id/{$v['detail_id']}'>".$v['pn']."</a></td>\r\n";
 
                     $html .= "\t\t\t<td>".$v['requirements_date']."</td>\r\n";
 
@@ -293,7 +301,7 @@ STYLE;
 
                     $html .= "\t\t<tr>\r\n";
 
-                    $html .= "\t\t\t<td><a href='http://".$_SERVER['HTTP_HOST']."/Sample/detail/id/{$v['detail_id']}'>".$v['pn']."</a></td>\r\n";
+                    $html .= "\t\t\t<td><a href='http://".self::$http_host."/Sample/detail/id/{$v['detail_id']}'>".$v['pn']."</a></td>\r\n";
 
                     $html .= "\t\t\t<td>".$v['requirements_date']."</td>\r\n";
 
@@ -361,7 +369,7 @@ STYLE;
         $subject = date('Y',time()).'年第'.date('W',time()).'周样品订单进度汇总';
 
         $html .= "\t</tbody>\r\n</table>";
-
+		
         echo $style.$html;
         self::push_eml($style.$html,$subject);
 
@@ -373,7 +381,7 @@ STYLE;
      */
     private static function push_eml($body,$subject){
 
-        $http_host = $_SERVER['HTTP_HOST'];
+        $http_host = '61.139.89.33:8088';
 
         //设置签名信息
         $sign = <<<SIGN
