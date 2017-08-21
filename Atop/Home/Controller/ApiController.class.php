@@ -15,6 +15,50 @@ class ApiController extends Controller
 {
 
     /**
+     * 检查用户权限
+     */
+    public function checkUserAuth(){
+        $rules = $_REQUEST['rules'];
+        $currentRouterPath = $_REQUEST['currentRouterPath'];
+        $valid = false;
+        $modules = $this->getAllModules($rules);
+        if( !$modules ) $this->ajaxReturn(['flag'=>0, 'EN_msg'=>'You do not have permission to access the page', 'CN_msg'=>'你没有权限访问该页面']);
+        $currentRouterPathArr = explode('/',$currentRouterPath);    // 拆分当前路由指定[2]则可获取到主模块
+        $verifyFilter = ['RD', 'PLM'];  // 如果访问的页面存在子栏目则按3级目录判断
+        if( in_array($currentRouterPathArr[2], $verifyFilter) ){    // 如果当前访问的页面在指定的栏目中
+            foreach( $modules as $key=>&$value ){   // 规则中最多包含一级子栏目，如果需要更多则需手动添加
+                $tmpPath = '/'.$currentRouterPathArr[1].'/'.$currentRouterPathArr[2].'/'.$currentRouterPathArr[3];
+                if( strstr($value['module_router'], $tmpPath) ){
+                    $valid = true;
+                }
+            }
+        }else{
+            foreach( $modules as $key=>&$value ){
+                $tmpPath = '/'.$currentRouterPathArr[1].'/'.$currentRouterPathArr[2];
+                if( strstr($value['module_router'], $tmpPath) ){
+                    $valid = true;
+                }
+            }
+        }
+        if( $valid ){
+            $this->ajaxReturn(['flag'=>1, 'EN_msg'=>'Verification successful', 'CN_msg'=>'验证成功']);
+        }else{
+            $this->ajaxReturn(['flag'=>0, 'EN_msg'=>'You do not have permission to access the page', 'CN_msg'=>'你没有权限访问该页面']);
+        }
+    }
+
+    /**
+     * 获取用户可访问的模块
+     * @return mixed
+     */
+    private function getAllModules($rules){
+        $model = new Model();
+        $map['id'] = ['in', $rules];
+        $result = $model->table(C('DB_PREFIX').'modules')->where($map)->select();
+        return $result;
+    }
+
+    /**
      * 登录后台
      */
     public function login()
@@ -23,7 +67,7 @@ class ApiController extends Controller
         $data = I('get.data', '', false);
         $map['account'] = $data['account'];
         $map['password'] = sha1($data['password']);
-        $UserInfoData = $model->table(C('DB_PREFIX') . 'user')->field('id,account,nickname,email,createtime,lasttime,lastip,face,theme,department,position,report,level,state,sex')->where($map)->find();
+        $UserInfoData = $model->table(C('DB_PREFIX') . 'user')->field('id,account,nickname,email,createtime,lasttime,lastip,face,theme,department,position,report,level,state,sex,rules')->where($map)->find();
         if ($UserInfoData) {
             $this->ajaxReturn(['flag' => 1, 'userdata' => $UserInfoData]);
         } else {
@@ -224,10 +268,6 @@ class ApiController extends Controller
         return $rules;
     }
 
-    public function test(){
-        print_r($this->getProductAttribute());
-    }
-
     /**
      * 获取产品属性
      * @return mixed
@@ -417,7 +457,6 @@ class ApiController extends Controller
             $Result['firmwareTotal'] = (int)$FmCount;
             $Result['ateTotal'] = (int)$AteCount;
             $this->ajaxReturn($Result);
-            //print_r($Result);
         }
     }
 
@@ -445,6 +484,69 @@ class ApiController extends Controller
         if( $result ){
             $this->ajaxReturn( ['flag'=>1, 'msg'=>'项目编号已存在'] );
         }
+    }
+
+    /**
+     * 获取兼容表列表数据
+     */
+    public function getCompatibilityList(){
+        $model = new Model();
+        $pagesize = 15;
+        $page = I('get.page') > 0 ? I('get.page') : 1;
+        $Result['pagesize'] = $pagesize;
+        $Result['total'] = (int)$model->table(C('DB_PREFIX').'compatibility')->count();
+        $Result['compatibilitys'] = $model->table(C('DB_PREFIX').'compatibility')->order('createtime DESC')->limit((($pagesize * ($page - 1))) . ',' . $pagesize)->select();
+        foreach($Result['compatibilitys'] as $key=>&$value){
+            $value['createtime'] = date('Y-m-d H:i', $value['createtime']);
+            switch( $value['state'] ){
+                case 1:
+                    $value['state_name'] = '完全兼容';
+                    $value['tag'] = 'success';
+                    break;
+                case 2:
+                    $value['state_name'] = '能够使用';
+                    $value['tag'] = 'warning';
+                    break;
+                case 3:
+                    $value['state_name'] = '不能兼容';
+                    $value['tag'] = 'danger';
+                    break;
+                default:
+                    $value['state_name'] = 'UNKNOW';
+            }
+        }
+        $this->ajaxReturn($Result);
+    }
+
+    /**
+     * 获取按部门分组的角色(职位)列表
+     */
+    public function getDepartmentGroupPostList(){
+        $model = new Model();
+        $result = $model->table(C('DB_PREFIX').'department')->select();
+        foreach( $result as $key=>&$value ){
+            $positions = $model->table(C('DB_PREFIX').'position')->where( ['belongsto'=>$value['id']] )->select();
+            if( $positions ) $value['positions'] = $positions;
+        }
+        $this->ajaxReturn($result);
+    }
+
+    /**
+     * 获取项目列表
+     */
+    public function getProjectList(){
+        $model = new Model();
+        $pagesize = 15;
+        $page = I('get.page') > 0 ? I('get.page') : 1;
+        $Result['pagesize'] = $pagesize;
+        $Result['total'] = (int)$model->table(C('DB_PREFIX').'project')->where('pj_child = 0')->count();
+        $Result['data'] = $model->table(C('DB_PREFIX').'project')->where('pj_child = 0')->order('pj_create_time DESC')->limit((($pagesize * ($page - 1))) . ',' . $pagesize)->select();
+        foreach( $Result['data'] as $key=>&$value ){
+            $value['pj_update_time'] = date('Y-m-d H:i', $value['pj_update_time']);
+            $state = $model->table(C('DB_PREFIX').'project_plan')->field('gate,mile_stone')->where('plan_project='.$value['id'])->order('save_time DESC')->find();
+            $value['progress'] = 'Gate'.$state['gate'].'-'.$state['mile_stone'];
+        }
+        $this->ajaxReturn($Result);
     }
 
     /**
