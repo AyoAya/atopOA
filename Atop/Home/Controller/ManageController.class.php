@@ -182,7 +182,7 @@ class ManageController extends AuthController {
     //新增用户页面初始化
     public function addManage(){
         $person = D('User');
-        $alluser = $person->field('id,nickname,department')->select();
+        $alluser = $person->field('id,nickname,department')->where('state = 1')->select();
         $person = D('Department');
         $departmentList = $person->field('id,name')->select();
         $department = M('Department');
@@ -191,8 +191,11 @@ class ManageController extends AuthController {
         $level = M('Userlevel');
         $allLevel = $level->select();
         $authruledata = $authrule->field('id,title')->select();
-        $positionData = $position->field('id,name')->where('belongsto=1')->order('id DESC')->select();
+        $positionData = $position->field('id,name')->order('id DESC')->select();
         $departmentData = $department->field('id,name')->select();
+
+        # print_r($positionData);
+
         $this->assign('level',$allLevel);
         $this->assign('departmentList',$departmentList);
         $this->assign('alluser',$alluser);
@@ -243,23 +246,38 @@ HTML;
         if(!IS_POST) return;
         $person = D('User');
         $rules = '';
+        $arr = '';
+        //权限
         foreach(I('post.permissions') as $key=>&$value){
-            $rules .= $value.',';
+            $rules .= $key.',';
         }
+        //多职位
+        foreach(I('post.pos') as $key=>&$val){
+            $arr .= $key.',';
+        }
+
+
         //收集用户数据
+        $userData['post'] = substr($arr,0,-1);
         $rules = substr($rules,0,-1);
         $userData['account'] = I('post.account');
         $userData['password'] = sha1(I('post.password'));
         $userData['nickname'] = I('post.nickname');
         $userData['email'] = I('post.email');
         $userData['department'] = I('post.department');
-        $userData['position'] = I('post.position');
         $userData['level'] = I('post.level');
         $userData['sex'] = I('post.sex');
+
+        $str = explode(",",$userData['post']);
+        $userData['position'] = $str[0];
 
         if($userData['sex'] == '女'){
             $userData['face'] = '/Public/home/img/face/face_01.png';
         }
+
+         /*print_r($rules);
+         print_r($userData);
+         die();*/
 
         if(I('post.report')!=''){
             $userData['report'] = I('post.report');
@@ -299,7 +317,7 @@ HTML;
             $this->error('参数错误');exit;
         };
         $person = D('User');
-        $personData = $person->field('u.id,u.account,u.password,u.nickname,u.email,u.department,u.position,u.report,u.level,u.state,d.name department_name,p.id position_id,p.name position_name')
+        $personData = $person->field('u.id,u.account,u.password,u.nickname,u.email,u.post,u.department,u.position,u.report,u.level,u.state,d.name department_name,p.id position_id,p.name position_name')
                              ->table('__DEPARTMENT__ d,__POSITION__ p,__USER__ u')
                              ->where('u.department=d.id AND u.position=p.id AND u.id='.I('get.id'))
                              ->select()[0];
@@ -318,11 +336,24 @@ HTML;
         //$positionid = $person->field('u.position')->table('__USER__ u')->find(I('get.id'))['position'];
         //echo $personData['position_id'];
         $belongsto = $position->field('belongsto')->find($personData['position_id'])['belongsto'];
-        $positionData = $position->field('id,name')->where('belongsto='.$belongsto)->order('id DESC')->select();
+        $positionData = $position->field('id,name')->order('id DESC')->select();
         $departmentData = $department->field('id,name')->select();
+        $post = $personData['post'];
+        //获取当前操作人的职位
+        $tmpArr = explode(',',$post);
+        //操作人的权限
+        $rule = M('AuthGroup')->field('rules')->where('title ="'.$personData['account'].'"')->find();
+        $tmpRule = explode(',',$rule['rules']);
+
+        # print_r($tmpRule);
+        # print_r($authruledata);
+        # print_r($personData);
+
         $this->assign('level',$allLevel);
         $this->assign('authgroup',$authgroup);
         $this->assign('personData',$personData);
+        $this->assign('tmpArr',$tmpArr);
+        $this->assign('tmpRule',$tmpRule);
         $this->assign('departmentList',$departmentList);
         $this->assign('alluser',$alluser);
         $this->assign('authrule',$authruledata);
@@ -336,22 +367,35 @@ HTML;
         if(!IS_POST) return;
         $person = D('User');
         $rules = '';
+        $tmpArr = '';
         foreach(I('post.permissions') as $key=>&$value){
-            $rules .= $value.',';
+            $rules .= $key.',';
+        }
+        foreach(I('post.pos') as $key=>&$value){
+            $tmpArr .= $key.',';
         }
         //收集用户数据
         $rules = substr($rules,0,-1);
+        $tmpArr = substr($tmpArr,0,-1);
         $userData['id'] = I('post.id');
         $userData['account'] = I('post.account');
         $userData['nickname'] = I('post.nickname');
         $userData['email'] = I('post.email');
         $userData['department'] = I('post.department');
-        $userData['position'] = I('post.position');
+        $userData['position'] = $tmpArr[0];
         $userData['level'] = I('post.level');
         $userData['state'] = I('post.state');
+        $userData['post'] = $tmpArr;
         if(I('post.report')!=''){
             $userData['report'] = I('post.report');
         }
+
+
+        /*print_r(I('post.'));
+        print_r($rules);
+        print_r($tmpArr);
+        die();*/
+
         //收集权限分组数据
         $data['rules'] = $rules;
         //开启事务支持

@@ -28,6 +28,10 @@
     <div>
         <a style="color: #888;" href="__ROOT__/File/apply"> <li class="layui-btn layui-btn-primary">编号申请</li></a>
         <a style="color: #888;" href="__ROOT__/File/review"><li class="layui-btn layui-btn-primary">文件评审</li></a>
+        <eq name="Think.session.user.department" value="1">
+            <a style="color: #888;" href="__ROOT__/File/add"><li class="layui-btn layui-btn-primary">文件规则</li></a>
+        </eq>
+        <a style="color: #888;" href="__ROOT__/File/ecn"><li class="layui-btn layui-btn-primary">评审规则</li></a>
     </div>
 
 
@@ -101,7 +105,7 @@
                 </volist>
             <else/>
                 <tr >
-                    <td colspan="5" style="text-align: center;height:50px;color: #888;">
+                    <td colspan="6" style="text-align: center;height:50px;color: #888;">
                         <i class="  icon-info-sign"></i> 没有数据
                     </td>
                 </tr>

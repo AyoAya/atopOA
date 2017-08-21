@@ -46,7 +46,7 @@ class FileController extends AuthController  {
         # 根据条件筛选数据
         if(I('get.search')){
             $indexData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b')
-                               ->where('(a.id = b.n_id AND b.action = "apply" AND a.file_no LIKE "%'.I('get.search').'%") OR (a.id = b.n_id AND b.action = "apply" AND b.nickname LIKE "%'.I('get.search').'%")')
+                               ->where('(a.id = b.n_id AND b.action = "apply" AND a.file_no LIKE "%'.I('get.search').'%") OR (a.id = b.n_id AND (b.action = "apply" OR b.action = "upgrade") AND b.nickname LIKE "%'.I('get.search').'%")')
                                ->order('a.file_no ASC')
                                ->limit($page->firstRow.','.$page->listRows)
                                ->select();
@@ -54,7 +54,7 @@ class FileController extends AuthController  {
 
             $indexData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'user c')
                                ->field('a.id,a.file_no,a.status,c.nickname,c.face,a.id,b.time,a.version')
-                               ->where('a.id = b.n_id AND b.person = c.id AND b.action = "apply"')
+                               ->where('a.id = b.n_id AND b.person = c.id AND (b.action = "apply" OR b.action = "upgrade")')
                                ->limit($page->firstRow.','.$page->listRows)
                                ->order('a.id DESC')
                                ->select();
@@ -75,13 +75,18 @@ class FileController extends AuthController  {
         $this->display();
     }
 
+
     /**
      * 添加类型
      */
     public function add(){
 
+        $position = M('Position')->field('id,name')->select();
+
         if(IS_POST){
+
             $post = I('post.');
+
             $rule['type'] = $post['type'];
             $rule['length'] = $post['length'];
             $rule['info'] = $post['info'];
@@ -92,6 +97,7 @@ class FileController extends AuthController  {
                 $this->ajaxReturn(['flag'=>0,'msg'=>'已有此类型文件']);
                 exit();
             }else{
+
                 $rule_id =  M('FileRule')->add($rule);
 
                 if($rule_id){
@@ -104,7 +110,87 @@ class FileController extends AuthController  {
 
         }
 
+        $this->assign('position',$position);
         $this->display();
+
+    }
+
+    /**
+     * 评审规则
+     */
+    public function ecn(){
+
+        if(IS_POST){
+
+            $model = new model();
+
+            $positionData = '';
+            $reviewData = '';
+            $post = I('post.');
+            # 抄送职位
+            foreach($post['position'] as $key=>&$value){
+                $positionData .= $value.',';
+            }
+            $tmpArr = [];
+            # 评审职位
+            foreach ($post['revData'] as $key=>&$value){
+                $arr = [];
+                foreach($value as $ke=>&$val){
+                    $arr[] = $val['rev'];
+                }
+                array_push($tmpArr, $arr);
+            }
+
+            foreach ($tmpArr as $value){
+                $tmepArr[] = implode(',',$value);
+            }
+
+            $box = '';
+            foreach ($tmepArr as $k=>&$v){
+                $tmpData = ($k+1).'|'.$v.'@';
+                $data = json_encode($tmpData);
+                $box .= $tmpData;
+            }
+
+            # 抄送职位
+            $ecnRule['notice'] = substr($positionData,0,-1);
+            $ecnRule['review'] = substr($box,0,-1);
+            $ecnRule['name'] = $post['data']['name'];
+
+            $name = $model->table(C('DB_PREFIX').'file_ecn_rule')->where('name ="'.$post['data']['name'].'"')->find();
+
+            if($name){
+                $this->ajaxReturn(['flag'=>0,'msg'=>'名称已存在！']);
+                exit();
+            }else{
+                $ruleId = $model->table(C('DB_PREFIX').'file_ecn_rule')->add($ecnRule);
+                if($ruleId){
+                    $this->ajaxReturn(['flag'=>1,'msg'=>'添加成功!']);
+                }else{
+                    $this->ajaxReturn(['flag'=>0,'msg'=>'添加失败!']);
+                }
+            }
+            # print_r($ecnRule);
+
+
+
+        }else{
+
+            $model = new model();
+
+            $department = M('department')->field('id,name')->select();
+            $position =  M('position')->field('id,name')->select();
+
+
+            foreach ($department as $key=>&$value){
+                $value['position'] = $model->table(C('DB_PREFIX').'position')->where('belongsto ='.$value['id'])->select();
+            }
+
+            $this->assign('department',$department);
+            $this->assign('position',$position);
+            $this->display();
+        }
+
 
     }
 
@@ -222,7 +308,7 @@ class FileController extends AuthController  {
 
         if( IS_POST ){
 
-            $post = I('post.','',false);
+            $post = I('post.','',true);
 
             $id = $post['data']['file_no'];
 
@@ -296,7 +382,7 @@ class FileController extends AuthController  {
                     }
 
                     # 写入日志表
-                    //$logDa_id = $model->table(C('DB_PREFIX').'file_log')->add($logDa);
+                     $logDa_id = $model->table(C('DB_PREFIX').'file_log')->add($logDa);
 
                     # 写入日志表
                     $log_id = $model->table(C('DB_PREFIX').'file_log')->add($logData);
@@ -304,7 +390,7 @@ class FileController extends AuthController  {
                     # 写入review表
                     $dcc_id = $model->table(C('DB_PREFIX').'file_review')->add($dcc);
 
-                    if( $log_id && $dcc_id){
+                    if( $log_id && $dcc_id && $logDa_id){
 
                         # 初次评审人邮箱
                         $email = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
@@ -326,23 +412,17 @@ class FileController extends AuthController  {
                             $cc_names[] = $v['nickname'];
                         }
 
-
-           /* print_r($ccs);
-            print_r($emails);
-            die();*/
-
                         $emailData = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$num_id)->find();
                         $emailData['nickname'] = $names;
 
                         # print_r($emailData);
                         $this->pushEmail('UPGRADE',$emails,$emailData,$ccs);
-                        $model->commit();
-                        $this->ajaxReturn(['flag'=>$emailData['id'],'msg'=>'操作成功！','file_no'=>$emailData['file_no'],'version'=>$emailData['version']]);
+                        $model->commit();$this->ajaxReturn(['flag'=>$emailData['id'],'msg'=>'操作成功！','file_no'=>$emailData['file_no'],'version'=>$emailData['version'],'num'=>$emailData['num']]);
 
-                    }else{
+                    }else {
 
                         $model->rollback();
-                        $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                        $this->ajaxReturn(['flag' => 0, 'msg' => '操作失败！']);
 
                     }
 
@@ -355,6 +435,24 @@ class FileController extends AuthController  {
 
             }else{
 
+                print_r($post);
+
+                foreach ($post['data']['file_no'] as $k=>&$y){
+                    $arr[] = $k;
+                }
+
+                $arr = '';
+                //多职位
+                foreach($post['file_no'] as $key=>&$val){
+                    $arr .= $key.',';
+                }
+
+                $fileEcn['review_id'] = substr($arr,0,-1);
+
+
+                print_r($fileEcn);
+
+                die();
 
                 $a[] = session('user')['email'];
 
@@ -441,7 +539,7 @@ class FileController extends AuthController  {
 
                     $this->pushEmail('INITIATE',$emails,$emailData,$a);
                     $model->commit();
-                    $this->ajaxReturn(['flag'=>$emailData['id'],'msg'=>'操作成功！','file_no'=>$emailData['file_no'],'version'=>$emailData['version'],'num'=>$emailData['num']-1]);
+                    $this->ajaxReturn(['flag'=>$emailData['id'],'msg'=>'操作成功！','file_no'=>$emailData['file_no'],'version'=>$emailData['version'],'num'=>$emailData['num']]);
 
                 }else{
 
@@ -463,7 +561,8 @@ class FileController extends AuthController  {
                                     ->field('id,file_no')
                                     ->where('file_no = "'.I('get.no').'"')
                                     ->select();
-
+                $revRule = $model->table(C('DB_PREFIX').'file_ecn_rule')->select();
+                # print_r($revRule);
                 $this->assign('type',I('get.type'));
 
             }else{
@@ -473,8 +572,12 @@ class FileController extends AuthController  {
                                     ->field('a.file_no,a.id,a.num')
                                     ->where('b.person ='.session('user')['id'].' AND a.status <=1  AND b.n_id=a.id AND b.action = "apply"')
                                     ->select();
+                 $revRule = $model->table(C('DB_PREFIX').'file_ecn_rule')->order('id ASC')->select();
 
-                $this->assign('type',I('get.type'));
+                 $DCC = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'position b')->where()->select();
+
+                 # print_r($revRule);
+                 $this->assign('type',I('get.type'));
 
 
             }
@@ -485,9 +588,68 @@ class FileController extends AuthController  {
         //调用父类注入部门和人员信息(cc)
         $this->getAllUsersAndDepartments();
         $this->getDccPostUsers();
+        $this->assign('revRule',$revRule);
         $this->assign('numberData',$numberData);
         $this->display();
 
+    }
+
+
+    /**
+     * 监听评审规则
+     */
+
+    public function selectReview(){
+        if(IS_POST){
+            $id = I('post.id');
+
+            #print_r($id);
+
+            $selData = M('FileEcnRule')->where('id ='.$id)->find();
+
+
+            $tmpPost = M('User')->field('post')->where()->select();
+
+            # print_r($tmpPost);
+
+            //将用户多职位转换成数组
+            foreach ($tmpPost as $key=>&$value){
+                $tmpP[$key] = explode(',',$value['post']);
+            }
+
+             # print_r($tmpP);
+
+            // 多级评审职位
+            $arr = explode('@',$selData['review']);
+            foreach ($arr as $key=>&$value){
+                $arr[$key] = explode('|',$value);
+                foreach ($value as $k=>&$v){
+                    if($k == 1){
+                        $value[$k] = explode(',',$v);
+                    }else{
+                        $value[$k] = $v;
+                    }
+                }
+            }
+            foreach ($arr as $key=>&$value){
+                $where['id'] = array('in',$value[1]);
+                $value['rel'] = M('Position')->field('id,name')->where($where)->select();
+                foreach ($value[1] as $k=>&$v){
+
+                    $in['post'] = array('like','%'.$v.'%');
+                    $value['user'][] = M('User')->field('email,id,nickname')->where($in)->select();
+
+                }
+            }
+
+            # print_r($arr);
+
+            $this->ajaxReturn(['flag'=>1,'arr'=>$arr]);
+
+
+        }else{
+            return;
+        }
     }
 
     /**
@@ -541,10 +703,13 @@ class FileController extends AuthController  {
                          ->select();
 
         # print_r($content);
+        # print_r($numData);
+        # print_r($content);
         # print_r($context);
         $this->assign('numData',$numData);
         $this->assign('history',$history);
         $this->assign('content',$content);
+        $this->assign('context',$context);
         $this->display();
 
     }
@@ -587,9 +752,9 @@ class FileController extends AuthController  {
 
             # 所有步骤评审人数据
             $allData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_review c,'.C('DB_PREFIX').'user d')
-                             ->field('a.id,c.person,c.step,c.status,c.step,d.email,d.nickname,d.face')
+                             ->field('a.id,c.person,c.step,c.status,c.step,d.email,d.nickname')
                              ->where('a.id='.$id.' AND c.n_id = a.id AND c.person = d.id AND a.version = "'.$version.'" AND c.count ='.$num)
-                             ->group('c.id,c.id')
+                             ->group('c.id')
                              ->order('c.step ASC')
                              ->select();
 
@@ -598,8 +763,6 @@ class FileController extends AuthController  {
                                     ->where('n_id ='.$id.' AND person ='.$val['person'].' AND count ='.$num)
                                     ->find();
             }
-
-            //print_r($allData);
 
             # 当前步骤评审人数据
             $nowData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_review c,'.C('DB_PREFIX').'user d')
@@ -662,7 +825,20 @@ class FileController extends AuthController  {
                 $tmpStep = 0;
             }
 
-            # print_r($allData);
+            # 统计每个步骤出现的次数
+            foreach ($allData as $key=>&$value){
+                $tmpNum = 1;
+                foreach ($allData as $k=>$v){
+                    if( $v['step'] != $currentStep ){   // 对比是否和上一次的步骤相同，如果相同则只会在第一次生效
+                        if( $value['step'] == $v['step'] ){
+                            $value['count'] = $tmpNum++;
+                        }
+                    }
+                }
+                $currentStep = $value['step'];  // 记录上一次的步骤
+            }
+
+            print_r($person);
 
             $this->assign('person',$person);
             $this->assign('allData',$allData);
@@ -1146,7 +1322,7 @@ class FileController extends AuthController  {
 
         $ats['n_id'] = I('post.id');
         $ats['attachment'] = I('post.attachments', '', false);
-        $ats['count'] = I('post.num')+1;
+        $ats['count'] = I('post.num');
 
         $attId = M('FileNumber')->save($att);
         $att_id = M('FileAttachment')->add($ats);

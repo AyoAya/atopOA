@@ -26,7 +26,7 @@
 <block name="content">
 	
 	<div class="wrap" style="margin: 0 auto;width: 700px;">
-		<form id="addForm" role="form">
+		<form id="addForm" class="layui-form" role="form">
 
 			<div class="title-bar" style="margin: 0 0 15px 0;">
 				<h4>基本信息</h4>
@@ -63,56 +63,62 @@
 			</div>
 
 			<div class="form-group form-group-edit">
-				<label>部门&nbsp;</label>
+				<label style="padding-right: 10px;">部门&nbsp;</label>
 				<div class="btn-group">
-					<button class="btn btn-default" type="button" id="department-value">{$personData.department_name}</button>
-					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+
+					<volist name="department" id="value">
+						<eq name="personData.department" value="$value.id">
+							<button class="btn btn-default" type="button" id="department-value">{$value.name}</button>
+						</eq>
+					</volist>
+					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="height: 34px;">
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu" id="department-list">
 						<volist name="department" id="value">
-							<li index="{$value.id}"><a href="javascript:;">{$value.name}</a></li>
+							<li index="{$value.id}"><a href="javascript:void(0);">{$value.name}</a></li>
 						</volist>
 					</ul>
 				</div>
 				<p class="help-block help-block-color"></p>
 			</div>
-			<div class="form-group form-group-edit">
-				<label>级别 </label>
+
+			<div class="form-group ">
+				<label style="padding-right: 14px;">级别 </label>
 				<div class="btn-group">
-					<button class="btn btn-default" type="button" id="level-value">
-						<volist name="level" id="value">
-							<eq name="value.id" value="$personData.level">
-								{$value.levelname}
-							</eq>
-						</volist>
-					</button>
-					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+					<volist name="level" id="val">
+						<eq name="personData.level" value="$val.id">
+							<button class="btn btn-default" type="button" id="level-value">{$val.levelname}</button>
+						</eq>
+					</volist>
+					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="height: 34px;">
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu" id="level-list">
 						<volist name="level" id="value">
-							<li index="{$value.id}"><a href="javascript:;">{$value.levelname}</a></li>
+							<li index="{$value.id}"><a href="javascript:void(0);">{$value.levelname}</a></li>
 						</volist>
 					</ul>
 				</div>
 				<p class="help-block"></p>
 			</div>
-			<div class="form-group form-group-edit">
+
+
+			<div class="layui-form-item">
 				<label>职位&nbsp;</label>
-				<div class="btn-group">
-					<button class="btn btn-default" type="button" id="position-value">{$personData.position_name}</button>
-					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" role="menu" id="position-list">
-						<volist name="position" id="value">
-							<li index="{$value.id}"><a href="javascript:;">{$value.name}</a></li>
-						</volist>
-					</ul>
+				<div class="layui-input-block" style="margin: 5px 0 0 0;">
+					<volist name="position" id="val">
+						<div class="check-box" style="width: 130px; padding: 0 0 10px 0;margin: 0;float: left;">
+								<in name="val.id" value="$tmpArr">
+									<input type="checkbox" checked name="pos[{$val.id}]" title="{$val.name}">
+								<else/>
+									<input type="checkbox" name="pos[{$val.id}]" title="{$val.name}">
+								</in>
+						</div>
+					</volist>
 				</div>
-				<p class="help-block"></p>
 			</div>
+
 
 			<div class="title-bar" style="margin: 20px 0 30px 0;">
 				<h4>汇报关系</h4>
@@ -149,7 +155,7 @@
 						<case value="3">离职</case>
 					</switch>
 				</button>
-				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+				<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"  style="height: 34px;">
 					<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu" id="state-list">
@@ -167,19 +173,18 @@
 				</div>
 			</div>
 
-			<div class="checkbox checkbox-edit">
-				<volist name="authrule" id="value">
-					<label>
-						<neq name="value.title" value="系统">
-						<in name="value.id" value="$authgroup.rules">
-							<input type="checkbox" name="permissions[]" checked="checked" value="{$value.id}">{$value.title}
+			<div class="checkbox-lay-box">
+				<div class="layui-form-item">
+					<volist name="authrule" id="value">
+						<in name="value.id" value="$tmpRule">
+							<input type="checkbox" name="permissions[{$value.id}]" checked title="{$value.title}">
 						<else/>
-							<input type="checkbox" name="permissions[]" value="{$value.id}">{$value.title}
+							<input type="checkbox" name="permissions[{$value.id}]" title="{$value.title}">
 						</in>
-						</neq>
-					</label>
-				</volist>
+					</volist>
+				</div>
 			</div>
+
 			<div class="form-group form-group-submit">
 				<input type="hidden" name="id" value="{$Think.get.id}" id="user-id">
 				<input type="hidden" name="department" value="{$personData.department}" id="department-id">

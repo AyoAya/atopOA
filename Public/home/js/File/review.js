@@ -4,7 +4,7 @@
 $(function(){
 
     //实例化email推送
-    $('.email-block-wrapper').emailBlock();
+    //$('.email-block-wrapper').emailBlock();
 
     $('.add-approval').click(function(){
         var approval_dom = '';
@@ -22,7 +22,109 @@ $(function(){
         var form = layui.form(),
             layer = layui.layer;
 
-        var step_num = 1;
+        // 点击文件号添加队列以及判断
+        $('.file_span').click(function(){
+            let file_id = $(this).attr('file_no');
+            let file_no = $(this).text();
+            let html = "<span class='file-span file-span"+file_id+"' file_id="+file_id+">"+file_no+" <i class='icon-remove close-file' title='移除'></i></span>";
+            let parent = $(this).parent().prev();
+
+            if( parent.find('.file-span'+file_id+'').length ){
+                layer.msg( file_no + '已存在');
+            }else{
+                parent.append(html);
+            }
+
+        })
+        //移除一个文件号
+        $('.file-no-box').on('click','.close-file',function(){
+            $(this).parent().remove();
+        })
+        $('#form .file-no-dis .fileNo').click(function(){
+            $(this).next().show(0);
+            $(this).next().next().show(0);
+        })
+        $('#form .file-no-dis .ok .layui-btn').click(function(){
+            $(this).parent().prev().hide(0);
+            $(this).parent()    .hide(0);
+        })
+
+// 监听评审规则
+        form.on('select(revRules)',function( data ){
+            //console.log(data.value); //得到被选中的值
+            $.ajax({
+
+                url: ThinkPHP['AJAX'] + '/File/selectReview',
+                dataType: 'json',
+                type: 'POST',
+                data: {
+                    id : data.value
+                },
+                success : function( response ){
+                    if(response.flag > 0){
+
+                        let tmpArr = response.arr;
+
+                        let len = tmpArr.length;
+
+                        var inner = '';
+                        var prompt = '';
+                        for (var i=0;i<len;i++){
+                            let relLen = tmpArr[i]['rel'].length;
+                            let userLen = tmpArr[i]['user'].length;
+
+                            var html = '<div class="layui-form-item add-review"><label class="layui-form-label"><span class="num">'+tmpArr[i][0]+'</span> 级评审</label><div class="post-box post-box'+tmpArr[i][0]+'"></div><div class="selected-section pos'+tmpArr[i][0]+'">';
+
+                            for(var j=0;j<relLen;j++){
+                                //console.log(tmpArr[i]['rel'][j]['name']);
+                                html += '<div class="selected-group">'+tmpArr[i]['rel'][j]['name']+'</div>';
+
+                                let userLens = tmpArr[i]['user'][j].length;
+
+                                for(var l=0;l<userLens;l++){
+                                    //console.log(tmpArr[i]['user'][k][l]['nickname']);
+                                    html += '<div class="selected-item" uId="'+tmpArr[i]['user'][j][l]['id']+'" email="'+tmpArr[i]['user'][j][l]['email']+'">'+tmpArr[i]['user'][j][l]['nickname']+'</div>';
+
+                                }
+                            }
+
+                            html +='<div class="btn-ok"><button class="layui-btn close-rev" type="button">确定</button></div></div></div>';
+
+                            inner += html;
+
+                        }
+
+                        for (var i=0;i<len;i++){
+                            let relLen = tmpArr[i]['rel'].length;
+                            let userLen = tmpArr[i]['user'].length;
+
+                            var inHtml = '<span class="num">'+tmpArr[i][0]+'</span> 级评审</label>';
+
+                            for(var j=0;j<relLen;j++){
+                                //console.log(tmpArr[i]['rel'][j]['name']);
+                                inHtml += '<div class="selected-group">'+tmpArr[i]['rel'][j]['name']+'</div>';
+
+                                let userLens = tmpArr[i]['user'][j].length;
+
+                                for(var l=0;l<userLens;l++){
+                                    //console.log(tmpArr[i]['user'][k][l]['nickname']);
+                                    inHtml += '<div class="selected-item" uId="'+tmpArr[i]['user'][j][l]['id']+'" email="'+tmpArr[i]['user'][j][l]['email']+'">'+tmpArr[i]['user'][j][l]['nickname']+'</div>';
+
+                                }
+                            }
+
+                            inHtml +='<div class="btn-ok"></div>';
+
+                            prompt += inHtml;
+
+                        }
+                        $('.reviewGrade').html(inner);
+                        $('.prompt').html(inner);
+
+                    }
+                }
+            })
+        });
 
         // 添加评审人
         $('.layui-form').on('click', '.choice-approval-user', function(){
@@ -42,7 +144,43 @@ $(function(){
            }
        });
 
-       // 移除一列
+        // 隐藏或开启评审选人
+        $('.reviewGrade').on('click','.post-box',function(){
+            if($(this).next().css('display') == 'none'){
+                $(this).next().slideDown();
+            }
+        });
+
+        $('.reviewGrade').on('click','.close-rev',function(){
+            $(this).parents('.selected-section').slideUp();
+        });
+
+        // 将选择人添加进评审框
+        $('.reviewGrade').on('click','.selected-item',function(){
+            let uid = $(this).attr('uId');
+            let email = $(this).attr('email');
+            let nickname = $(this).text();
+            let personHtml = "<div class='person person"+uid+"' email='"+email+"' uid='"+uid+"'>"+nickname+" <i class='icon-remove close-x' title='移除'></i></div>";
+            let _parent = $(this).parents('.selected-section').prev();
+
+            if(_parent.find('.person').length > 0){
+                if(_parent.find('.person' + uid).length){
+                    layer.msg(nickname+'已存在!')
+                }else{
+                    _parent.append(personHtml);
+                }
+            }else{
+                _parent.append(personHtml);
+            }
+
+        });
+        // close 关掉此用户
+        $('.reviewGrade').on('click','.close-x',function(){
+            $(this).parent().remove();
+        });
+
+       /* var step_num = 1;
+        // 移除一列
         $('.approval-wrapper').on('click','.close-review',function(){
             let _parent = $(this).parents('.email-push-selector');
             let children_length = $('.approval-wrapper').children().length;
@@ -58,9 +196,9 @@ $(function(){
                 layer.msg('至少保留一栏', {icon: 2, time: 2000});
             }
         });
+*/
 
-
-        // 添加一列
+       /* // 添加一列
        $('.add-approval').click(function(){
            $('.approval-wrapper').append(ApprovalSlideDownBox);
            $('.approval-wrapper .layui-form-item').each(function(index){
@@ -68,18 +206,11 @@ $(function(){
            });
            $('.email-block-wrapper').emailBlock();
             form.render();
-       });
+       });*/
 
-        /*layer.open({
-            type: 1,
-            skin: 'layui-layer-rim', //加上边框
-            area: ['420px', '240px'], //宽高
-            content: 'html内容'
-        });*/
+       // var SUB_NAME, NUM_ID,FILE_NO,VERSION,attachmentList = new Array();
 
-        var SUB_NAME, NUM_ID,FILE_NO,VERSION,attachmentList = new Array();
-
-        // uploader参数配置
+       /* // uploader参数配置
         var logUploaderOption = {
             auto: false,
             server: ThinkPHP['AJAX'] + '/File/uploadAttachment',
@@ -137,9 +268,20 @@ $(function(){
                 layer.msg(response.msg, { icon : 2,time : 2000 });
             }
 
-        });
+        });*/
+
+
+        // 空白隐藏
+        /*$(document).on("click", function(event) {
+            var $ele = $(".selected-section");
+            var $eve = $(".post-box");
+            if (!$(event.target).closest($ele)[0]) {
+                $ele.hide();
+            }
+        });*/
+
         // 所有文件上传结束时
-        APRuploader.on('uploadFinished', function( data ){
+        /*APRuploader.on('uploadFinished', function( data ){
 
             var sub_name = SUB_NAME,
                 numId = NUM_ID,
@@ -189,30 +331,39 @@ $(function(){
             APRuploader.removeFile( id, true );
             // 删除dom节点
             $(this).parent().parent().remove();
-        });
+        });*/
 
         form.on('submit(submit)',function( data ){
 
-            if($('.file-no-box input').val() == null){
+            //console.log(JSON.stringify(data.field));
+
+            if(!$('.file-no-box span').length){
                 layer.msg('请选择编号，没有请申请！',{time:2000});
                 return false;
             }
 
-            if(!$('.uploader-attachment-queue').html()){
-                layer.msg('请上传附件！',{time:2000});
+            if(!$('.post-box .person').length){
+                layer.msg('请选择评审人！',{time:2000});
                 return false;
             }
 
+
             var AllUserItem = new Array();
+            var AllRules = new Array();
+
+            $('.fileNo .file-span').each(function( index ){
+                var file_no = $(this).attr('file_id');
+                AllRules.push(file_no)
+            })
 
             //获取多级评审评审人数据
-            $('.layui-form .email-push-selector').each(function(index){
+            $('.layui-form .add-review').each(function(index){
                 var userItemsArr = new Array();
-                var emailBlockRecipient = $(this).find('.email-block-recipient');
-                emailBlockRecipient.find('.email-block-user-item-span').each(function(){
+                var emailBlockRecipient = $(this).find('.post-box');
+                emailBlockRecipient.find('.person').each(function(){
                     userItemsArr.push({
-                        userId: $(this).attr('user-id'),
-                        userEmail: $(this).attr('user-email')
+                        userId: $(this).attr('uid'),
+                        userEmail: $(this).attr('email')
                     });
                 });
                 AllUserItem.push(JSON.stringify(userItemsArr));
@@ -220,11 +371,8 @@ $(function(){
 
             var num = $('.file_num').find("option:selected").attr('num');
 
-            var file_no = $('.file-no-box').find('input').val();
-
             data.field.allUserItem = AllUserItem;
             data.field.num = num;
-            data.field.file_text = file_no;
 
             $.ajax({
                 url : ThinkPHP['AJAX'] + '/File/review',
@@ -233,7 +381,7 @@ $(function(){
                 data : {
                     data : data.field,
                     num : num,
-                    file_no : file_no
+                    file_no : AllRules
                 },
                 beforeSend: function(){
                     layer.load(1, {

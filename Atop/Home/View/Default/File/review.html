@@ -3,14 +3,12 @@
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
     <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
-    <link rel="stylesheet" href="__PUBLIC__/home/css/block/email.css">
-    <link rel="stylesheet" href="__CSS__/File/review.css">
+    <link rel="stylesheet" href="__PUBLIC__/Home/css/File/review.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
     <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
-    <script src="__JS__/File/review.js"></script>
-    <script src="__JS__/MyJqueryPlugin/email-block.js"></script>
+    <script src="__PUBLIC__/Home/js/File/review.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -23,134 +21,63 @@
         <li class="active">文件评审</li>
     </ol>
 </block>
-
 <block name="content">
 
     <div class="title-bar" style="margin: 0 0 30px 0;">
-        <h4>添加评审</h4>
+        <h4>文件评审</h4>
     </div>
 
-    <input type="hidden" value="{$Think.get.no}" id="url-no">
-
-    <div class="basic-container">
-        <form class="layui-form " style="width: 700px;">
-                <div class="layui-form-item">
-                    <div class="layui-form-label">文件号</div>
-                    <div class="layui-input-block sel-file file-no-box">
-                        <select name="file_no" lay-filter="file_no" class="file_num">
-                            <volist name="numberData" id="val">
-                                <eq name="Think.get.no" value="$val.file_no">
-                                    <option value='{$val.id}' num="{$val.num}" selected>{$val.file_no}</option>
-                                </eq>
-                                <neq name="Think.get.no" value="$val.file_no">
-                                    <option value='{$val.id}' num="{$val.num}">{$val.file_no}</option>
-                                </neq>
-                            </volist>
-                        </select>
-                    </div>
-                </div>
-
-            <input type="hidden" value="{$type}" name="type">
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">版本号</label>
-                <div class="layui-input-block">
-                    <input type="text" name="version" required  lay-verify="required"  placeholder="请输入版本号" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">描　述</label>
-                <div class="layui-input-block">
-                    <textarea name="content" placeholder="请输入文件简要描述信息" class="layui-textarea"></textarea>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">附　件</label>
-                <div class="layui-input-block">
-                    <div id="filePick"><i class="icon-arrow-up"></i> 上传文件</div>
-                    <div class="uploader-attachment-queue"></div>
-                </div>
-            </div>
-
-            {//多级评审}
-            <div class="approval-wrapper">
-                <div class="layui-form-item email-push-selector">
-                    <label class="layui-form-label"><span class="num">1</span> 级评审</label>
-                    <div class="layui-input-block">
-                        <div class="email-block-wrapper" >
-                            <div class="email-block-recipient-box">
-                                <!-- <label class="email-block-label">抄送人</label>-->
-                                <div class="email-block-recipient">
-                                    <div class="email-block-user-items email-block-cc"></div>
-                                    <div class="email-block-users-box">
-                                        <div class="email-block-users-list">
-                                            <volist name="AUAD.departments" id="value">
-                                                <div class="email-block-department-name"><span>{$value.name} ({$value.summary})</span></div>
-                                                <volist name="AUAD.users" id="val">
-                                                    <eq name="value.id" value="$val.department">
-                                                        <span class="email-block-item" user-id="{$val.id}" user-email="{$val.email}" title="{$val.email}">{$val.nickname}</span>
-                                                    </eq>
-                                                </volist>
-                                            </volist>
-                                        </div>
-                                        <div class="email-block-operation-bar">
-                                            <button type="button" class="layui-btn email-block-done-btn">确定</button>
-                                            <button type="button" class="layui-btn layui-btn-primary email-block-clear-btn">清空</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                        <div class="close-review" style=""> <i class=" icon-remove"></i></div>
-                    </div>
-                </div>
-            </div>
-
-            {//DCC评审}
-            <div class="layui-form-item">
-                <label class="layui-form-label">DCC评审</label>
-                <div class="layui-input-block">
-                    <select name="dcc">
-                        <volist name="DccPostUsers" id="val">
-                            <option value="{$val.id}">{$val.nickname}</option>
-                        </volist>
-                    </select>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="submit">发起评审</button>
-                    <button type="button" class="layui-btn layui-btn-primary add-approval">添加评审</button>
-                </div>
-            </div>
-
-        </form>
-    </div>
-
-    {//评审人选择模态框}
-    <present name="AUAD">
-        <div class="layer-approval-context sr-only">
-            <div class="choice-users-wrapper">
-                <div class="context-box">
-                    <volist name="AUAD.departments" id="value">
-                        <div class="dpmt-title"><span>{$value.name} ({$value.summary})</span></div>
-                        <volist name="AUAD.users" id="val">
-                            <eq name="value.id" value="$val.department">
-                                <span class="user-item" user-id="{$val.id}" user-email="{$val.email}" title="{$val.email}">{$val.nickname}</span>
-                            </eq>
-                        </volist>
-                        <div class="clearfix"></div>
+    <form class="layui-form" id="form">
+      <!--  <div class="layui-form-item">
+            <label class="layui-form-label">文件号</label>
+            <div class="layui-input-block file-no-dis">
+                <div class="file-no-box fileNo"></div>
+                <div class="file-no">
+                    <p>文件号</p>
+                    <volist name="numberData" id="value">
+                        <span class="file_span file_span{$value.id}" file_no="{$value.id}">{$value.file_no}</span>
                     </volist>
                 </div>
-                <div class="complated">
-                    <button type="button" class="layui-btn complate-done-btn">确定</button>
+                <div class="ok">
+                    <button class="layui-btn" type="button">确定</button>
                 </div>
             </div>
         </div>
-    </present>
+-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">评审规则</label>
+            <div class="layui-input-block">
+                <select name="revRules" class="revRules" lay-filter="revRules">
+                    <volist name="revRule" id="value">
+                        <option value="{$value.id}">{$value.name}</option>
+                    </volist>
+                </select>
+            </div>
+        </div>
+
+        <div class="reviewGrade"></div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">DCC评审</label>
+            <div class="layui-input-block">
+                <select name="DCC" class="Dcc" lay-filter="dcc">
+                    <volist name="DccPostUsers" id="value">
+                        <option value="{$value.id}">{$value.nickname}</option>
+                    </volist>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item btn-add">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+
+    </form>
+    <div class="prompt">
+
+    </div>
 
 </block>

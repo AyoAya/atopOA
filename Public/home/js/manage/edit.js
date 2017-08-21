@@ -4,6 +4,36 @@
 
 $(function(){
 
+    layui.use(['form'],function(){
+
+        var form = layui.form();
+
+        //全选
+        $('#checked-all').click(function(){
+            $('#addForm .checkbox-lay-box input[type=checkbox]').each(function(index){
+                $(this).prop('checked',true);
+                form.render('checkbox');
+            })
+        });
+
+        //反选
+        $('#checked-rev').click(function(){
+            $('#addForm .checkbox-lay-box input[type=checkbox]').each(function(index){
+                if($(this).prop('checked')){
+                    $(this).removeAttr('checked');
+                    form.render('checkbox');
+                }else{
+                    $(this).attr('checked');
+                    form.render('checkbox');
+
+                }
+            });
+
+        });
+
+
+    });
+
 	//初始化职位部门默认选择第一项
 	//$('#position-value').text($('#position-list li:first-child a').text());
 	//$('#position-id').val($('#position-list li:first-child').attr('index'));
@@ -113,6 +143,7 @@ $(function(){
 			error.appendTo(element.parent().next()); 
 		},
 		submitHandler : function(form){
+
 			$(form).ajaxSubmit({
 				url : ThinkPHP['AJAX'] + '/Manage/saveEdit',
 				type : 'POST',

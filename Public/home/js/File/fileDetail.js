@@ -153,6 +153,20 @@ $(function(){
                     skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
                 })
             }
+            if($(this).find('button').hasClass('lay-suss')){
+                layer.alert('该文件已经评审完成，不能重复发起评审！', {
+                    title:'评审已完成',
+                    icon: 5,
+                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                })
+            }
+            if($(this).find('button').hasClass('lay-old')){
+                layer.alert('该文件版本过老，不能重复发起评审！', {
+                    title:'版本过旧',
+                    icon: 5,
+                    skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+                })
+            }
         })
 
 

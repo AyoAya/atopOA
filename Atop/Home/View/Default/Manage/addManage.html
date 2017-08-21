@@ -10,6 +10,7 @@
 	<script src="__JS__/jquery.validate.min.js"></script>
 	<script src="__JS__/jquery.form.js"></script>
 	<script src="__JS__/manage/index.js"></script>
+	<script src="__JS__/manage/add.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -27,7 +28,7 @@
 	
 	<div class="wrap" style="margin: 0 auto;width: 700px;">
 
-		<form id="addForm" role="form">
+		<form id="addForm" class="layui-form" role="form">
 
 			<div class="title-bar" style="margin: 0 0 20px 0;">
 				<h4>基本信息</h4>
@@ -64,8 +65,8 @@
 
 			<div class="form-group">
 				<label for="sex" style="width: 100%;">性别</label>
-				<input type="radio" name="sex" class="radio-hover" value="男" title="" checked>男&nbsp;&nbsp;
-				<input type="radio" name="sex" class="radio-hover" value="女" title="">女
+				<input type="radio" name="sex" class="radio-hover" value="男" title="男" checked>&nbsp;&nbsp;
+				<input type="radio" name="sex" class="radio-hover" value="女" title="女">
 			</div>
 
 			<div class="title-bar" style="margin: 30px 0 30px 0;">
@@ -73,10 +74,10 @@
 			</div>
 
 			<div class="form-group form-group-edit">
-				<label>部门&nbsp;</label>
+				<label style="padding-right: 10px;">部门&nbsp;</label>
 				<div class="btn-group">
 					<button class="btn btn-default" type="button" id="department-value">研发部</button>
-					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="height: 34px;">
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu" id="department-list">
@@ -88,11 +89,11 @@
 				<p class="help-block help-block-color"></p>
 			</div>
 
-			<div class="form-group form-group-edit">
-				<label>级别 </label>
+			<div class="form-group ">
+				<label style="padding-right: 14px;">级别 </label>
 				<div class="btn-group">
 					<button class="btn btn-default" type="button" id="level-value">助理/实习生</button>
-					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="height: 34px;">
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu" id="level-list">
@@ -104,21 +105,17 @@
 				<p class="help-block"></p>
 			</div>
 
-			<div class="form-group form-group-edit form-group-edit-last">
+			<div class="layui-form-item">
 				<label>职位&nbsp;</label>
-				<div class="btn-group">
-					<button class="btn btn-default" type="button" id="position-value">销售总监</button>
-					<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-						<span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" role="menu" id="position-list">
-						<volist name="position" id="value">
-							<li index="{$value.id}"><a href="javascript:void(0);">{$value.name}</a></li>
-						</volist>
-					</ul>
+				<div class="layui-input-block" style="margin: 5px 0 0 0;">
+					<volist name="position" id="val">
+						<div class="check-box" style="width: 130px; padding: 0 0 10px 0;margin: 0;float: left;">
+							<input type="checkbox" name="pos[{$val.id}]" title="{$val.name}">
+						</div>
+					</volist>
 				</div>
-				<p class="help-block"></p>
 			</div>
+
 
 			<div class="title-bar" style="margin: 30px 0 30px 0;">
 				<h4>汇报关系 <small class="small-font-size">[ 无需汇报则不选 ]</small></h4>
@@ -143,22 +140,28 @@
 				</div>
 			</div>
 
-			<div class="checkbox checkbox-edit">
-				<volist name="authrule" id="value">
-					<label>
+			<div class="checkbox-lay-box">
+				<div class="layui-form-item">
+					<volist name="authrule" id="value">
 						<if condition="$value.title eq '后台' OR $value.title eq '个人中心' OR $value.title eq '通知中心'">
-							<input type="checkbox" name="permissions[]" checked="checked" value="{$value.id}">{$value.title}
-						<elseif condition="$value.title eq '系统'"/>
-						<else/>
-							<input type="checkbox" name="permissions[]" value="{$value.id}">{$value.title}
-						</if>
-					</label>
-				</volist>
-			</div>
 
+							<div class="check-box" style="width: 140px; padding: 0 0 10px 0;margin: 0;float: left;">
+								<input type="checkbox" name="permissions[{$value.id}]" checked title="{$value.title}">
+							</div>
+
+							<elseif condition="$value.title eq '系统'"/>
+
+							<else/>
+
+							<div class="check-box" style="width: 140px; padding: 0 0 10px 0;margin: 0;float: left;">
+								<input type="checkbox" name="permissions[{$value.id}]" title="{$value.title}">
+							</div>
+						</if>
+					</volist>
+				</div>
+			</div>
 			<div class="form-group form-group-submit">
 				<input type="hidden" name="department" value="1" id="department-id">
-				<input type="hidden" name="position" value="1" id="position-id">
 				<input type="hidden" name="report" value="" id="report-id">
 				<input type="hidden" name="level" value="1" id="level-id">
 				<input type="submit" class="btn btn-primary btn-lg input-reset" value="添加"> 

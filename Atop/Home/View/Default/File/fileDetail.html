@@ -46,7 +46,7 @@
             </div>
 
             <div class="layui-form-item">
-                <div class="layui-form-label">进　度：</div>
+                <div class="layui-form-label">状　态：</div>
                 <div class="layui-input-block review-text">
                     <eq name="numData.status" value="1">
                         <span class="rule" style="position: relative;top: -6px;">已申请编号</span>
@@ -71,12 +71,12 @@
 
             <div class="layui-form-item" style="color: #333;" >
                 <div class="layui-form-label">附　件：</div>
-                <div class="layui-input-block review-text" style="padding: 0;">
+                <div class="layui-input-block review-text" style="padding: 0 0 10px 0;">
                     <egt name="numData.status" value="3">
                         <notempty name="numData.attachment">
                             <volist name="numData.attachment" id="value">
                                 <div class="file-item">
-                                    <div class="file-info" style="position: relative;top: 12px;"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" target="_blank" title="{$value.savename}">{$value.savename}</a></div>
+                                    <div class="file-info" style="position: relative;top: 12px;width:200px;height:18px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" target="_blank" title="{$value.savename}">{$value.savename}</a></div>
                                 </div>
                             </volist>
                         </notempty>
@@ -87,13 +87,14 @@
             <div class="layui-form-item" >
                 <div class="layui-form-label">描　述：</div>
                 <div class="layui-input-block review-text"style="border: 0;" >
-                    {$content.log}
+                    {$context.log}
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <div class="layui-form-label">操　作：</div>
                 <div class="layui-input-block btn-lay-orr">
+
                     <elt name="numData.status" value="1">
                         <eq name="content.person" value="$Think.session.user.id">
                             <a href="__ROOT__/File/review/no/{$numData.file_no}/type/review"><button class="layui-btn layui-btn-primary">评审</button></a>
@@ -101,8 +102,13 @@
                             <a href="##"><button class="layui-btn layui-btn-primary lay-nou">评审</button></a>
                         </eq>
                     <else/>
-                        <a href="##"><button class="layui-btn layui-btn-primary lay-err">评审</button></a>
+                        <eq name="numData.status" value="3">
+                            <a href="##"><button class="layui-btn layui-btn-primary lay-suss">评审</button></a>
+                        <else/>
+                            <a href="##"><button class="layui-btn layui-btn-primary lay-err">评审</button></a>
+                        </eq>
                     </elt>
+
                     <eq name="numData.status" value="3">
                         <a href="__ROOT__/File/review/no/{$numData.file_no}/type/upgrade"><button class="layui-btn layui-btn-primary">升版</button></a>
                     <else/>
@@ -179,6 +185,7 @@
                         <eq name="val.action" value="pass">通过评审</eq>
                         <eq name="val.action" value="rollback">撤回评审</eq>
                         <eq name="val.action" value="refuse">拒绝评审</eq>
+                        <eq name="val.action" value="upgrade">升级版本</eq>
                     </td>
                 </tr>
             </volist>

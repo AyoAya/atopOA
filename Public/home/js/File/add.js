@@ -8,6 +8,7 @@ $(function(){
         var layer = layui.layer,
             form = layui.form();
 
+
         form.on('submit(submit)',function ( data ) {
 
             $.ajax({

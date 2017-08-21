@@ -49,7 +49,7 @@
         <div class="layui-form-item">
             <div class="layui-form-label">评审次数：</div>
             <div class="layui-input-block review-text">
-                第 {$person.num} 次评审
+                第 {$Think.get.num} 次评审
             </div>
         </div>
 
@@ -132,7 +132,9 @@
                     <volist name="allData" id="value" key="k">
                         <neq name="value.step" value="0">
                             <tr>
-                                <td>{$value.step} 级评审</td>
+                                <present name="value.count">    {//如果数据中存在步骤次数则合并相应列}
+                                    <td rowspan="{$value.count}">{$value.step} 级评审</td>
+                                </present>
                                 <td>{$value.nickname}</td>
 
                                 <td>
@@ -181,47 +183,6 @@
                 </tbody>
             </table>
         </div>
-
-  <!--  <div class="dis-person">
-        <div class="title-bar" style="margin: 20px 0 30px 0;">
-            <h4>DCC评审</h4>
-        </div>
-
-        <table class="layui-table">
-            <thead>
-            <tr>
-                <th style="width: 200px;">评审人</th>
-                <th style="width: 200px;">评审时间</th>
-                <th style="width: 120px;">状态</th>
-                <th>备注信息</th>
-            </tr>
-            </thead>
-            <tbody>
-                <volist name="DCCData" id="value">
-                    <tr>
-                        <td>{$value.nickname}</td>
-                        <td>
-                            <notempty name="value.log.time">
-                                {$value.log.time|date="Y-m-d H:i:s",###}
-                            </notempty>
-                        </td>
-                        <td>
-                            <eq name="value.status" value="1">
-                                <span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">未评审</span>
-                            </eq>
-                            <eq name="value.status" value="2">
-                                <span style="width: 50px;height: 26px;background: #5cb85c;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已通过</span>
-                            </eq>
-                            <eq name="value.status" value="0">
-                                <span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已拒绝</span>
-                            </eq>
-                        </td>
-                        <td>{$value.log.log}</td>
-                    </tr>
-                </volist>
-            </tbody>
-        </table>
-    </div>-->
 
     <eq name="person.status" value="2">
         <eq name="person.user_id" value="$Think.session.user.id">

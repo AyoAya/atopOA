@@ -173,23 +173,37 @@ $(function(){
 		$('#position-value').text(positionValue);
 		$('#position-id').val($(this).attr('index'));
 	});
-	
-	//全选
-	var checkedStatus = true;
-	$('#checked-all').click(function(){
-		$('#addForm input[type=checkbox]').prop('checked',true);
-	});
-	//反选
-	$('#checked-rev').click(function(){
-		$('#addForm input[type=checkbox]').each(function(index){
-			if($(this).prop('checked')){
-				$(this).prop('checked',false); 
-			}else{ 
-				$(this).prop("checked",true); 
-			} 
-		});
-	});
-	
+
+	layui.use(['form'],function(){
+
+        var layer = layui.layer,
+            form = layui.form();
+
+        //全选
+        var checkedStatus = true;
+        $('#checked-all').click(function(){
+            $('#addForm .checkbox-lay-box input[type=checkbox]').each(function(index){
+                $(this).prop('checked',true);
+                form.render('checkbox');
+			})
+        });
+
+        //反选
+        $('#checked-rev').click(function(){
+            $('#addForm .checkbox-lay-box input[type=checkbox]').each(function(index){
+                if($(this).prop('checked')){
+                    $(this).prop('checked',false);form.render('checkbox');
+                }else{
+                    $(this).prop("checked",true);form.render('checkbox');
+                }
+            });
+
+        });
+
+
+	})
+
+
 	//自定义验证规则
 	$.validator.addMethod("Letter", function(value, element) {
 		var tel = /^[a-zA-Z]+$/;
@@ -263,9 +277,11 @@ $(function(){
 		},
 		ignore : "",
 		errorElement : 'b',
+
 		errorPlacement : function(error, element) {
 			error.appendTo(element.parent().next()); 
 		},
+
 		submitHandler : function(form){
 			$(form).ajaxSubmit({
 				url : ThinkPHP['AJAX'] + '/Manage/addManageData',
@@ -275,8 +291,9 @@ $(function(){
 					password : $('#form input[name=password]').val(),
 					nickname : $('#form input[name=nickname]').val(),
 					email : $('#form input[name=email]').val(),
+                    pos : $('#form input[name=pos]').val(),
 					department : $('#department-id').val(),
-					position : $('#position-id').val(),
+					//position : $('#position-id').val(),
 					report : $('#report-id').val(),
                     permissions : $('#form input[name=permissions]').val(),
                     sex : $('#form input[name=radio]').val(),
