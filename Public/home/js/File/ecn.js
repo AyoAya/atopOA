@@ -9,7 +9,9 @@ $(function(){
 
         $('.pos-box').on('click','.pos-info',function(){
             if($(this).next().css('display') == 'none'){
-                $(this).next().css('display','block');
+                $(this).next().slideDown();
+            }else{
+                $(this).next().slideUp();
             }
         })
 
@@ -42,7 +44,7 @@ $(function(){
         });
 
         $('.pos-box').on('click','.ok-btn',function(){
-            $(this).parents('.hid-position').css('display','none');
+            $(this).parents('.hid-position').slideUp();
         })
 
         // 点击添加将选择的部门添加进显示框
@@ -62,19 +64,28 @@ $(function(){
 
         })
         //点击X删除队列中的职位
-        $('.position-box').on('click','.x-close',function(){
+        $('.position-box').on('click','.x-close',function(event){
             $(this).parent().remove();
+            event.stopPropagation();
+
+            if($(this).parent().parent().next().css('display') == 'none'){
+                $(this).parent().parent().next().css('display','none')
+            }else{
+                $(this).parent().parent().next().css('display','block')
+            }
         })
 
         //抄送职位
         $('.position-box').on('click','.pos-info',function(){
             if($(this).next().css('display') == 'none'){
-                $(this).next().css('display','block');
+                $(this).next().slideDown();
+            }else{
+                $(this).next().slideUp();
             }
         })
         //抄送职位
         $('.position-box').on('click','.ok-btn',function(){
-            $(this).parents('.hid-position').css('display','none');
+            $(this).parents('.hid-position').slideUp();
         })
 
         // 抄送职位点击添加将选择的部门添加进显示框
@@ -94,8 +105,10 @@ $(function(){
 
         })
         //抄送职位点击X删除队列中的职位
-        $('.position-box').on('click','.x-close',function(){
+        $('.pos-box').on('click','.x-close',function(event){
             $(this).parent().remove();
+            event.stopPropagation();
+
             if($(this).parents('.pos-info').css('display') == 'none'){
                 $(this).parents('.pos-info').css('display','none')
             }else{
@@ -104,6 +117,12 @@ $(function(){
         })
 
         form.on('submit(submit)',function(data){
+
+            if(!(data.field.name)){
+                layer.msg('请输入规则名称!',{time:2000});
+                return false;
+            }
+
             // 抄送职位
             var tmpArr = [];
             $('.position-box').find('.pos-info .act').each(function(index){
@@ -122,6 +141,14 @@ $(function(){
                 review.push(tmpArray);
             })
 
+            if(tmpArr == ''){
+                layer.msg('请选择抄送职位!',{time:2000});
+                return false;
+            }
+            if(review == ''){
+                layer.msg('请选择评审人!',{time:2000});
+                return false;
+            }
 
 
             $.ajax({

@@ -71,37 +71,37 @@
         <tbody>
         <volist name="numData" id="val">
             <tr>
-                <td><a href="__ROOT__/File/fileDetail/no/{$val.file_no}">{$val.file_no}</a></td>
+                <td><a href="__ROOT__/File/fileDetail/no/{$val.file_no}/version/{$val.version}">{$val.file_no}</a></td>
                 <td>{$val.nickname}</td>
                 <td>{$val.time|date="Y-m-d H:i:s",###}</td>
                 <eq name="val.status" value="1">
                     <td>
-                        <span style="width: 50px;height: 26px;background: #8a6d3b;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">未评审</span>
+                        <span class="tag tag-brown">未评审</span>
                     </td>
                 </eq>
                 <eq name="val.status" value="2">
                     <td>
-                        <span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">评审中</span>
+                        <span class="tag tag-brown" >已编辑</span>
                     </td>
                 </eq>
                 <eq name="val.status" value="0">
                     <td>
-                        <span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">不可用</span>
+                        <span class="tag tag-danger">不可用</span>
                     </td>
                 </eq>
                 <eq name="val.status" value="3">
                     <td>
-                        <span style="width: 50px;height: 26px;background: #5cb85c;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">可用</span>
+                        <span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">评审中</span>
                     </td>
                 </eq>
                 <eq name="val.status" value="4">
                     <td>
-                        <span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">不可用</span>
+                        <span class="tag tag-danger">不可用</span>
                     </td>
                 </eq>
                 <eq name="val.status" value="5">
                     <td>
-                        <span style="width: 50px;height: 26px;background: #000;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已废弃</span>
+                        <span class="tag tag-success">可用</span>
                     </td>
                 </eq>
 

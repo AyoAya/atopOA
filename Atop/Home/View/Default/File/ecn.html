@@ -42,12 +42,15 @@
                     <div class="review-box">
                         <div class="pos-info"></div>
                         <div class="hid-position">
-                            <volist name="department" id="val">
-                                <div class="title-depart">{$val.name}</div>
-                                <volist name="val.position" id="v">
-                                    <span class="pos-span" revId="{$v.id}">{$v.name}</span>
+                            <div class="hid-position-department">
+                                <volist name="department" id="val">
+                                    <div class="title-depart">{$val.name}</div>
+                                    <volist name="val.position" id="v">
+                                        <span class="pos-span" revId="{$v.id}">{$v.name}</span>
+                                    </volist>
                                 </volist>
-                            </volist>
+                            </div>
+
                             <div class="btm-btn">
                                 <button type="button" class="layui-btn ok-btn">确定</button>
                             </div>
@@ -65,12 +68,15 @@
                     <div class="review-box">
                         <div class="pos-info"></div>
                         <div class="hid-position">
-                            <volist name="department" id="val">
-                                <div class="title-depart">{$val.name}</div>
-                                <volist name="val.position" id="v">
-                                    <span class="pos-span" revId="{$v.id}">{$v.name}</span>
+                            <div class="hid-position-department">
+                                <volist name="department" id="val">
+                                    <div class="title-depart">{$val.name}</div>
+                                    <volist name="val.position" id="v">
+                                        <span class="pos-span" revId="{$v.id}">{$v.name}</span>
+                                    </volist>
                                 </volist>
-                            </volist>
+                            </div>
+
                             <div class="btm-btn">
                                 <button type="button" class="layui-btn ok-btn">确定</button>
                             </div>

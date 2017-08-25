@@ -18,7 +18,6 @@ class FileController extends AuthController  {
 
         $model = new model();
 
-
         if(I('get.search')){
             $count = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b')
                            ->where('(a.id = b.n_id AND b.action = "apply" AND a.file_no LIKE "%'.I('get.search').'%") OR (a.id = b.n_id AND b.action = "apply" AND b.nickname LIKE "%'.I('get.search').'%")')
@@ -45,19 +44,36 @@ class FileController extends AuthController  {
 
         # 根据条件筛选数据
         if(I('get.search')){
-            $indexData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b')
+            /*$indexData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b')
                                ->where('(a.id = b.n_id AND b.action = "apply" AND a.file_no LIKE "%'.I('get.search').'%") OR (a.id = b.n_id AND (b.action = "apply" OR b.action = "upgrade") AND b.nickname LIKE "%'.I('get.search').'%")')
                                ->order('a.file_no ASC')
+                               ->limit($page->firstRow.','.$page->listRows)
+                               ->select();*/
+            $indexData = $model->table(C('DB_PREFIX').'file_ecn')
                                ->limit($page->firstRow.','.$page->listRows)
                                ->select();
         }else{
 
-            $indexData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'user c')
+            $indexData = $model->table(C('DB_PREFIX').'file_ecn')
+                               ->limit($page->firstRow.','.$page->listRows)
+                               ->select();
+
+            foreach ($indexData as $key=>&$value){
+                $value['tmpArr'] = $tmpFileId = explode(',',$value['n_id']);
+            }
+                print_r($indexData);
+            foreach ($indexData as $key=>&$value){
+                foreach ($value['tmpArr'] as $k=>&$v){
+                    $value['number'][] = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$v)->select();
+                }
+            }
+            print_r($indexData);
+            /*$indexData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'user c')
                                ->field('a.id,a.file_no,a.status,c.nickname,c.face,a.id,b.time,a.version')
                                ->where('a.id = b.n_id AND b.person = c.id AND (b.action = "apply" OR b.action = "upgrade")')
                                ->limit($page->firstRow.','.$page->listRows)
                                ->order('a.id DESC')
-                               ->select();
+                               ->select();*/
 
             # echo $model->getLastSql();
         }
@@ -309,10 +325,90 @@ class FileController extends AuthController  {
         if( IS_POST ){
 
             $post = I('post.','',true);
+            $fileId = '';
 
-            $id = $post['data']['file_no'];
+            foreach ($post['fileId'] as $key=>&$value){
+                $fileId .= $value.',';
+            }
 
-            if( $post['data']['type'] == 'upgrade' ){
+            # print_r($post);
+            # ecn 表数据
+            $ecn['review_id'] = $post['data']['revRules'];
+            $ecn['n_id'] = substr($fileId,0,-1);
+
+            # 将字符串转换成数组
+
+            $tmpFileId = explode(',',$ecn['n_id']);
+
+            foreach ($tmpFileId as $key=>&$val){
+                $numData['status'] = 3;
+                $numId = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$val)->save($numData);
+
+                if( !$numId ){
+
+                    $model->rollback();
+                    $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败!']);
+                    return;
+                }
+
+            }
+
+            $ecn_id = $model->table(C('DB_PREFIX').'file_ecn')->add($ecn);
+
+            # log 表数据
+            $log['n_id'] = $ecn_id;
+            $log['action'] = 'initiate';
+            $log['time'] = time();
+            $log['person'] = session('user')['id'];
+            $log['nickname'] = session('user')['nickname'];
+
+            if( $ecn_id ){
+
+                $tmpReview = [];
+                foreach ($post['data']['allUserItem'] as $key=>&$val){
+                    $arr[] = json_decode($val,true);
+                }
+
+                foreach ($arr as $k=>&$v){
+
+                    $review['step'] = $k+1;
+                    foreach ($v as $kk=>&$vv){
+                        $review['person'] = $vv['userId'];
+                        $review['r_id'] = $ecn_id;
+                        array_push($tmpReview,$review);
+                    }
+                }
+
+                # DCC 评审人
+                $tmpDcc['step'] = 0;
+                $tmpDcc['person'] = $post['data']['DCC'];
+                $tmpDcc['r_id'] = $ecn_id;
+                array_push($tmpReview,$tmpDcc);
+
+                $review_id = $model->table(C('DB_PREFIX').'file_review')->addAll($tmpReview);
+                $log_id = $model->table(C('DB_PREFIX').'file_log')->add($log);
+
+
+                if( $review_id && $log_id ){
+
+                    $model->commit();
+                    $this->ajaxReturn(['flag'=>1,'msg'=>'操作成功！']);
+
+                }
+            }else{
+
+                $model->rollback();
+                $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+
+            }
+
+
+            # print_r($tmpReview);
+
+
+
+            # die();
+/*            if( $post['data']['type'] == 'upgrade' ){
 
                 # 升版
                 # 收件人数据
@@ -550,7 +646,7 @@ class FileController extends AuthController  {
 
                 # print_r($numData);
 
-            }
+            }*/
 
         }else{
 
@@ -569,14 +665,18 @@ class FileController extends AuthController  {
 
                 # 评审
                 $numberData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b')
-                                    ->field('a.file_no,a.id,a.num')
-                                    ->where('b.person ='.session('user')['id'].' AND a.status <=1  AND b.n_id=a.id AND b.action = "apply"')
+                                    ->field('a.file_no,a.id,a.num,a.status,a.content,a.version,a.attachment')
+                                    ->where('b.person ='.session('user')['id'].' AND a.status =2  AND b.n_id=a.id AND b.action = "apply"')
                                     ->select();
-                 $revRule = $model->table(C('DB_PREFIX').'file_ecn_rule')->order('id ASC')->select();
+                $revRule = $model->table(C('DB_PREFIX').'file_ecn_rule')->order('id ASC')->select();
 
-                 $DCC = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'position b')->where()->select();
+                $DCC = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'position b')->where()->select();
 
-                 # print_r($revRule);
+                foreach ($numberData as $key=>&$value){
+                    $value['attachment'] = json_decode($value['attachment'],true);
+                }
+
+                 # print_r($numberData);
                  $this->assign('type',I('get.type'));
 
 
@@ -631,18 +731,18 @@ class FileController extends AuthController  {
                     }
                 }
             }
+            // 根据职位赛选评审人
             foreach ($arr as $key=>&$value){
                 $where['id'] = array('in',$value[1]);
                 $value['rel'] = M('Position')->field('id,name')->where($where)->select();
                 foreach ($value[1] as $k=>&$v){
 
-                    $in['post'] = array('like','%'.$v.'%');
-                    $value['user'][] = M('User')->field('email,id,nickname')->where($in)->select();
+                    $value['user'][] = M('User')->field('email,id,nickname')->where('(post regexp ",'.$v.'&" OR post regexp "^'.$v.'," OR post regexp "^'.$v.'$") AND state = 1')->select();
 
                 }
             }
 
-            # print_r($arr);
+             # print_r($arr);
 
             $this->ajaxReturn(['flag'=>1,'arr'=>$arr]);
 
@@ -661,56 +761,81 @@ class FileController extends AuthController  {
 
         $no = I('get.no');
         $version = I('get.version');
-        # number详情
-        if( $version ){
-            $numData = $model->table(C('DB_PREFIX').'file_number')
-                             ->field('id,version,file_no,attachment,version,status,num')
-                             ->where('file_no ="'.$no.'"'.' AND version = "'.$version.'"' )
-                             ->find();
+        if(IS_POST){
+            $post = I('post.');
+            $firstVersion = $post['firstVersion'];
+            $id = $post['fileId'];
+            $no = $post['getNo'];
+
+            # print_r($post['getNo']);
+            $number['status'] = 2;
+            $number['version'] = $post['version'];
+            $number['content'] = $post['info-content'];
+
+            $saveNumberId = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$id)->save($number);
+
+            if( $saveNumberId !== false ){
+                $model->commit();
+                $this->ajaxReturn(['flag'=>$id,'msg'=>'操作成功！','no'=>$no,'version'=>$post['version']]);
+            }else{
+                $model->rollback();
+                $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+            }
+
         }else{
-            $numData = $model->table(C('DB_PREFIX').'file_number')
-                             ->field('id,version,file_no,attachment,version,status,num')
-                             ->where('file_no ="'.$no.'"')
+
+            if($version){
+                $numData = $model->table(C('DB_PREFIX').'file_number')
+                                 ->field('id,version,file_no,attachment,version,status,num,content')
+                                 ->where('file_no ="'.$no.'"'.' AND version = "'.$version.'"' )
+                                 ->find();
+
+            }else{
+                $numData = $model->table(C('DB_PREFIX').'file_number')
+                                 ->field('id,version,file_no,attachment,version,status,num')
+                                 ->where('file_no ="'.$no.'"')
+                                 ->find();
+            }
+
+            $numData['attachment'] = json_decode($numData['attachment'],true);
+            # number的操作记录
+            $numData['log'] = $model->table(C('DB_PREFIX').'file_log a,'.C('DB_PREFIX').'user b')
+                                    ->field('a.n_id,a.action,a.time,a.person,a.count,a.log,b.face,b.nickname')
+                                    ->where('a.n_id='.$numData['id'].' AND a.person = b.id')
+                                    ->order('a.time ASC')
+                                    ->select();
+
+            $content = $model->table(C('DB_PREFIX').'file_log a,'.C('DB_PREFIX').'user b')
+                             ->field('a.n_id,a.action,a.time,a.person,a.count,a.log,b.face,b.nickname')
+                             ->where('a.n_id='.$numData['id'].' AND a.person =b.id AND a.action = "apply"')
+                             ->order('a.time DESC')
+                             ->limit(1)
                              ->find();
+
+            $context = $model->table(C('DB_PREFIX').'file_log a,'.C('DB_PREFIX').'user b')
+                             ->field('a.n_id,a.action,a.time,a.person,a.count,a.log,b.face,b.nickname')
+                             ->where('a.n_id='.$numData['id'].' AND a.person =b.id AND a.action = "initiate"')
+                             ->order('a.time DESC')
+                             ->limit(1)
+                             ->find();
+            # 历史版本
+            $history = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'user c')
+                             ->field('a.version,a.num,a.status,b.time,c.nickname,a.id,a.file_no')
+                             ->where('a.id = b.n_id AND b.person = c.id AND b.action = "initiate" AND a.file_no ="'.I('get.no').'"')
+                             ->group('a.version')
+                             ->select();
+
+            # print_r($content);
+            print_r($numData);
+            # print_r($content);
+            # print_r($context);
+            $this->assign('numData',$numData);
+            $this->assign('history',$history);
+            $this->assign('content',$content);
+            $this->assign('context',$context);
+            $this->display();
+
         }
-
-        $numData['attachment'] = json_decode($numData['attachment'],true);
-        # number的操作记录
-        $numData['log'] = $model->table(C('DB_PREFIX').'file_log a,'.C('DB_PREFIX').'user b')
-                                ->field('a.n_id,a.action,a.time,a.person,a.count,a.log,b.face,b.nickname')
-                                ->where('a.n_id='.$numData['id'].' AND a.person = b.id')
-                                ->order('a.time ASC')
-                                ->select();
-
-        $content = $model->table(C('DB_PREFIX').'file_log a,'.C('DB_PREFIX').'user b')
-                         ->field('a.n_id,a.action,a.time,a.person,a.count,a.log,b.face,b.nickname')
-                         ->where('a.n_id='.$numData['id'].' AND a.person =b.id AND a.action = "apply"')
-                         ->order('a.time DESC')
-                         ->limit(1)
-                         ->find();
-
-        $context = $model->table(C('DB_PREFIX').'file_log a,'.C('DB_PREFIX').'user b')
-                         ->field('a.n_id,a.action,a.time,a.person,a.count,a.log,b.face,b.nickname')
-                         ->where('a.n_id='.$numData['id'].' AND a.person =b.id AND a.action = "initiate"')
-                         ->order('a.time DESC')
-                         ->limit(1)
-                         ->find();
-        # 历史版本
-        $history = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'user c')
-                         ->field('a.version,a.num,a.status,b.time,c.nickname,a.id,a.file_no')
-                         ->where('a.id = b.n_id AND b.person = c.id AND b.action = "initiate" AND a.file_no ="'.I('get.no').'"')
-                         ->group('a.version')
-                         ->select();
-
-        # print_r($content);
-        # print_r($numData);
-        # print_r($content);
-        # print_r($context);
-        $this->assign('numData',$numData);
-        $this->assign('history',$history);
-        $this->assign('content',$content);
-        $this->assign('context',$context);
-        $this->display();
 
     }
 
@@ -1337,12 +1462,14 @@ class FileController extends AuthController  {
      * 发起审批页附件上传
      */
     public function uploadAttachment(){
+
         $subName = I('post.SUB_NAME');
-        $numId = I('post.NUM_ID');
+        $no = I('post.NO');
+        $version = I('post.VERSION');
 
         // 如果需要按id为子目录则必须填写第二个参数，否则直接保存在当前目录
         if( $subName != '' ){
-            $result = upload( '/File/'.$subName.'/' , $numId);
+            $result = upload( '/File/'.$no.'/'.$version.'/');
             $this->ajaxReturn( $result );
         }
 

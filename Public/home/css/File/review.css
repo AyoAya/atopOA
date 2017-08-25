@@ -56,17 +56,10 @@
 
 .post-box{
     min-height: 38px;
-    border:1px solid #e6e6e6;
     width: 590px;
-    float: right;
-    border-radius: 2px;
-}
-.post-box:hover{
-    border:1px solid #d2d2d2;
-    cursor: pointer;
+    border: 0;
 }
 .selected-section{
-    border:1px solid #e6e6e6;
     margin: 5px 0 0 0;
     width: 590px;
     float: right;
@@ -75,17 +68,39 @@
     display: none;
 }
 .selected-section .selected-group{
-    color: #999;
-    font-size: 12px;
-    padding-right:20px;
+    margin: 5px 5px 5px 7px;
+    height: 30px;
+    padding-left: 10px;
+    font-weight: 600;
+    text-align: left;
+    line-height: 30px;
+    background: #f3f3f3;
+    border-left: 4px solid #ccc;
+}
+.pos-person{
+    min-height: 38px;
+    width: 590px;
+    min-height: 38px;
+    border:1px solid #e6e6e6;
+    width: 590px;
+    float: right;
+    border-radius: 2px;
+}
+.pos-person:hover{
+    border:1px solid #d2d2d2;
+    cursor: pointer;
 }
 .selected-section .selected-item{
-    margin: 5px;
-    padding: 0 10px;
-    display:inline-block;
-    border-radius: 2px;
-    background: #72a8ca;
+    width: 60px;
+    height: 30px;
+    display: inline-block;
+    padding: 0 5px;
+    background: #d2d2d2;
+    text-align: center;
     color: #fff;
+    line-height: 30px;
+    margin: 7px;
+    border-radius: 2px;
 }
 .selected-section .selected-item:hover{
     cursor: pointer;
@@ -232,13 +247,57 @@
     margin-left: 5px;
 }
 .prompt{
-    width: 365px;
+    width: 300px;
     min-height: 300px;
-    border: 1px solid ;
-    margin-left: 40px;
+    margin-left: 20px;
     float: left;
 }
-
+.prompt .rev-pos{
+    text-align: center;
+    color: #555;
+    padding: 2px;
+    display: inline-block;
+    margin: 0 5px;
+}
+.prompt p{
+    color: #428bca;
+    font-size: 22px;
+    text-align: center;
+    margin: 5px;
+}
+.prompt .next-rev{
+    color: #428bca;
+    font-size: 24px;
+    text-align: center;
+    margin: 5px;
+}
+.file_info{
+    width: 100%;
+    height: 40px;
+    float: left;
+}
+.position-box{
+    text-align: center;
+}
+.fileNo-box{
+    width: 100%;
+    min-height: 38px;
+    border: 1px solid #e6e6e6;
+    border-radius: 2px;
+}
+.fileNo-box:hover{
+    border:1px solid #d2d2d2;
+}
+.fileName{
+    width: 97px;
+    background: #edf3f8;
+    color: #286090;
+    text-align: center;
+    line-height: 24px;border-radius: 2px;
+    height: 24px;
+    margin: 5px;
+    display: inline-block;
+}
 
 
 

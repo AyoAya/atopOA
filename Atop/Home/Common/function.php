@@ -216,6 +216,8 @@ function upload($savePath,$subName=''){
     if( $subName != '' ){
         $upload->autoSub = true;
         $upload->subName = $subName;
+    }else{
+        $upload->autoSub = false;
     }
     // 保持上传文件名不变
     $upload->saveName = '';

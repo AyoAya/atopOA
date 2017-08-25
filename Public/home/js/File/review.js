@@ -46,10 +46,32 @@ $(function(){
         })
         $('#form .file-no-dis .ok .layui-btn').click(function(){
             $(this).parent().prev().hide(0);
-            $(this).parent()    .hide(0);
+            $(this).parent().hide(0);
         })
 
-// 监听评审规则
+        $('.add-a').click(function(){
+
+            let fId = $(this).attr('fid');
+            let fileName = $(this).attr('fileName');
+
+            if($(this).text() == '添加'){
+
+                var nameHtml = '<span class="fileName fileName'+fId+'" fid="'+fId+'">'+fileName+'</span>';
+                $('.fileNo-box').append(nameHtml);
+                $(this).text('撤回')
+
+            }else{
+                if($('.fileNo-box').find('.fileName'+fId+'').length){
+                    $('.fileNo-box').find('.fileName'+fId+'').remove();
+                    $(this).text('添加')
+                }
+            }
+
+
+
+        })
+
+        // 监听评审规则
         form.on('select(revRules)',function( data ){
             //console.log(data.value); //得到被选中的值
             $.ajax({
@@ -73,7 +95,7 @@ $(function(){
                             let relLen = tmpArr[i]['rel'].length;
                             let userLen = tmpArr[i]['user'].length;
 
-                            var html = '<div class="layui-form-item add-review"><label class="layui-form-label"><span class="num">'+tmpArr[i][0]+'</span> 级评审</label><div class="post-box post-box'+tmpArr[i][0]+'"></div><div class="selected-section pos'+tmpArr[i][0]+'">';
+                            var html = '<div class="layui-form-item add-review"><label class="layui-form-label"><span class="num">'+tmpArr[i][0]+'</span> 级评审</label><div class="pos-person"><div class="post-box post-box'+tmpArr[i][0]+'"></div><div class="selected-section pos'+tmpArr[i][0]+'">';
 
                             for(var j=0;j<relLen;j++){
                                 //console.log(tmpArr[i]['rel'][j]['name']);
@@ -88,38 +110,30 @@ $(function(){
                                 }
                             }
 
-                            html +='<div class="btn-ok"><button class="layui-btn close-rev" type="button">确定</button></div></div></div>';
+                            html +='<div class="btn-ok"><button class="layui-btn close-rev" type="button">确定</button></div></div></div></div>';
 
                             inner += html;
 
                         }
 
+                        // 提示此规则的岗位等级
                         for (var i=0;i<len;i++){
                             let relLen = tmpArr[i]['rel'].length;
                             let userLen = tmpArr[i]['user'].length;
 
-                            var inHtml = '<span class="num">'+tmpArr[i][0]+'</span> 级评审</label>';
+                            var inHtml = '<p><span class="num">'+tmpArr[i][0]+'</span> 级评审</p><div class="position-box">';
 
                             for(var j=0;j<relLen;j++){
                                 //console.log(tmpArr[i]['rel'][j]['name']);
-                                inHtml += '<div class="selected-group">'+tmpArr[i]['rel'][j]['name']+'</div>';
-
-                                let userLens = tmpArr[i]['user'][j].length;
-
-                                for(var l=0;l<userLens;l++){
-                                    //console.log(tmpArr[i]['user'][k][l]['nickname']);
-                                    inHtml += '<div class="selected-item" uId="'+tmpArr[i]['user'][j][l]['id']+'" email="'+tmpArr[i]['user'][j][l]['email']+'">'+tmpArr[i]['user'][j][l]['nickname']+'</div>';
-
-                                }
+                                inHtml += '<div class="rev-pos">'+tmpArr[i]['rel'][j]['name']+'</div>';
                             }
-
-                            inHtml +='<div class="btn-ok"></div>';
-
+                            inHtml +='</div><div class="next-rev"><i class="glyphicon glyphicon-arrow-down"></i></div>';
                             prompt += inHtml;
 
                         }
+                        prompt += '<p>DCC评审</p>';
                         $('.reviewGrade').html(inner);
-                        $('.prompt').html(inner);
+                        $('.prompt').html(prompt);
 
                     }
                 }
@@ -148,6 +162,8 @@ $(function(){
         $('.reviewGrade').on('click','.post-box',function(){
             if($(this).next().css('display') == 'none'){
                 $(this).next().slideDown();
+            }else{
+                $(this).next().slideUp();
             }
         });
 
@@ -175,170 +191,24 @@ $(function(){
 
         });
         // close 关掉此用户
-        $('.reviewGrade').on('click','.close-x',function(){
+        $('.reviewGrade').on('click','.close-x',function(event){
             $(this).parent().remove();
-        });
 
-       /* var step_num = 1;
-        // 移除一列
-        $('.approval-wrapper').on('click','.close-review',function(){
-            let _parent = $(this).parents('.email-push-selector');
-            let children_length = $('.approval-wrapper').children().length;
-            //如果页面只有一栏则不允许用户再删除并提示
-            if( children_length > 1 ){
-                step_num--;
-                _parent.remove();
-                //为防止用户删除时导致的序号错误，当用户删除任何一栏时重新进行排序
-                $('.approval-wrapper .email-push-selector').each(function(index){
-                    $(this).find('.num').text( index + 1 );
-                });
+            event.stopPropagation();
+
+            if($(this).parent().parent().next().css('display') == 'none'){
+                $(this).parent().parent().next().css('display','none')
             }else{
-                layer.msg('至少保留一栏', {icon: 2, time: 2000});
+                $(this).parent().parent().next().css('display','block')
             }
         });
-*/
-
-       /* // 添加一列
-       $('.add-approval').click(function(){
-           $('.approval-wrapper').append(ApprovalSlideDownBox);
-           $('.approval-wrapper .layui-form-item').each(function(index){
-                $(this).find('.num').text(index+1);
-           });
-           $('.email-block-wrapper').emailBlock();
-            form.render();
-       });*/
-
-       // var SUB_NAME, NUM_ID,FILE_NO,VERSION,attachmentList = new Array();
-
-       /* // uploader参数配置
-        var logUploaderOption = {
-            auto: false,
-            server: ThinkPHP['AJAX'] + '/File/uploadAttachment',
-            pick: '#filePick',
-            fileVal : 'Filedata',
-            accept: {
-                title: 'file',
-                extensions: 'zip,rar,doc,docx,xls,xlsx,pdf'
-            },
-            method: 'POST',
-        };
-        // 实例化uploader
-        APRuploader = WebUploader.create( logUploaderOption );
-        // 添加到队列时
-        APRuploader.on('fileQueued', function( file ){
-            var fileItem = '<div class="file-item" id="'+ file.id +'">' +
-                '<div class="pull-left"><i class="file-icon file-icon-ext-'+ file.ext +'"></i> '+ file.name +'</div>' +
-                '<div class="pull-right"><i class="icon-remove" title="移除该文件"></i></div>' +
-                '<div class="clearfix"></div>' +
-                '</div>';
-            $(logUploaderOption.pick).next().append(fileItem);
-        });
-        // 上传错误时
-        APRuploader.on('error', function( code ){
-            var msg = '';
-            switch(code){
-                case 'Q_EXCEED_NUM_LIMIT':
-                    msg = '只能上传一个文件';
-                    break;
-                case 'Q_EXCEED_SIZE_LIMIT':
-                    msg = '文件大小超出限制';
-                    break;
-                case 'Q_TYPE_DENIED':
-                    msg = '文件格式不允许';
-                    break;
-                case 'F_DUPLICATE':
-                    msg = '文件已存在';
-                    break;
-                default:
-                    msg = code;
-            }
-            layer.msg(msg, {icon: 2, time: 2000});
-        });
-        // 上传成功时
-        APRuploader.on('uploadSuccess', function( file,response ){
-
-            if( response.flag > 0 ){
-                var attachmentObject = new Object();
-                attachmentObject.ext = response.ext;
-                attachmentObject.savename = response.savename;
-                attachmentObject.path = response.path;
-                attachmentList.push(attachmentObject);
-            }else{
-                layer.closeAll();
-                layer.msg(response.msg, { icon : 2,time : 2000 });
-            }
-
-        });*/
-
-
-        // 空白隐藏
-        /*$(document).on("click", function(event) {
-            var $ele = $(".selected-section");
-            var $eve = $(".post-box");
-            if (!$(event.target).closest($ele)[0]) {
-                $ele.hide();
-            }
-        });*/
-
-        // 所有文件上传结束时
-        /*APRuploader.on('uploadFinished', function( data ){
-
-            var sub_name = SUB_NAME,
-                numId = NUM_ID,
-                version = VERSION,
-                attachments = JSON.stringify(attachmentList);
-
-            //console.log(SUB_NAME);
-
-            $.ajax({
-                url: ThinkPHP['AJAX'] + '/File/saveDetailAttachment',
-                dataType: 'json',
-                type: 'POST',
-                data: {
-                    attachments : attachments,
-                    id : SUB_NAME,
-                    num : NUM_ID,
-                    version : VERSION
-                },
-                beforeSend: function(){
-                    layer.load(1, {
-                        shade: [0.5,'#fff'] //0.1透明度的白色背景
-                    });
-                },
-                success : function( response ){
-                    if(response.flag > 0){
-                        layer.msg(response.msg, {icon: 1, time: 2000});
-                        setTimeout(function () {
-                            location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/fileDetail/no/'+FILE_NO+'/version/'+VERSION;
-                        })
-                    }else{
-                        layer.msg(response.msg, {icon: 2, time: 2000});
-                        setTimeout(function () {
-                            location.replace(location.href);
-                        })
-                    }
-
-                }
-            })
-
-        });
-
-
-        // 删除队列文件
-        $('.uploader-attachment-queue').on('click', '.icon-remove', function(){
-            var id = $(this).parent().parent().attr('id');
-            // 删除队列中的文件
-            APRuploader.removeFile( id, true );
-            // 删除dom节点
-            $(this).parent().parent().remove();
-        });*/
 
         form.on('submit(submit)',function( data ){
 
             //console.log(JSON.stringify(data.field));
 
-            if(!$('.file-no-box span').length){
-                layer.msg('请选择编号，没有请申请！',{time:2000});
+            if(!$('.fileNo-box span').length){
+                layer.msg('请添加编号，没有请先申请！',{time:2000});
                 return false;
             }
 
@@ -350,11 +220,18 @@ $(function(){
 
             var AllUserItem = new Array();
             var AllRules = new Array();
+            var AllFileId = new Array();
 
             $('.fileNo .file-span').each(function( index ){
                 var file_no = $(this).attr('file_id');
                 AllRules.push(file_no)
             })
+
+            // 统计选择的文件
+            $('.fileNo-box .fileName').each(function(){
+                var fid = $(this).attr('fid');
+                AllFileId.push(fid);
+            });
 
             //获取多级评审评审人数据
             $('.layui-form .add-review').each(function(index){
@@ -381,7 +258,8 @@ $(function(){
                 data : {
                     data : data.field,
                     num : num,
-                    file_no : AllRules
+                    file_no : AllRules,
+                    fileId : AllFileId
                 },
                 beforeSend: function(){
                     layer.load(1, {

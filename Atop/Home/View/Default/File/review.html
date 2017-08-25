@@ -27,57 +27,93 @@
         <h4>文件评审</h4>
     </div>
 
-    <form class="layui-form" id="form">
-      <!--  <div class="layui-form-item">
-            <label class="layui-form-label">文件号</label>
-            <div class="layui-input-block file-no-dis">
-                <div class="file-no-box fileNo"></div>
-                <div class="file-no">
-                    <p>文件号</p>
-                    <volist name="numberData" id="value">
-                        <span class="file_span file_span{$value.id}" file_no="{$value.id}">{$value.file_no}</span>
-                    </volist>
+    <div style="min-height: 120px ">
+        <form class="layui-form" id="form">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">评审规则</label>
+                <div class="layui-input-block">
+                    <select name="revRules" class="revRules" lay-filter="revRules">
+                        <option value=""></option>
+                        <volist name="revRule" id="value">
+                            <option value="{$value.id}">{$value.name}</option>
+                        </volist>
+                    </select>
                 </div>
-                <div class="ok">
-                    <button class="layui-btn" type="button">确定</button>
+            </div>
+
+            <div class="reviewGrade"></div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">DCC评审</label>
+                <div class="layui-input-block">
+                    <select name="DCC" class="Dcc" lay-filter="dcc">
+                        <volist name="DccPostUsers" id="value">
+                            <option value="{$value.id}">{$value.nickname}</option>
+                        </volist>
+                    </select>
                 </div>
             </div>
-        </div>
--->
-        <div class="layui-form-item">
-            <label class="layui-form-label">评审规则</label>
-            <div class="layui-input-block">
-                <select name="revRules" class="revRules" lay-filter="revRules">
-                    <volist name="revRule" id="value">
-                        <option value="{$value.id}">{$value.name}</option>
-                    </volist>
-                </select>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">文件</label>
+                <div class="layui-input-block">
+                    <div class="fileNo-box"></div>
+                </div>
             </div>
-        </div>
 
-        <div class="reviewGrade"></div>
 
-        <div class="layui-form-item">
-            <label class="layui-form-label">DCC评审</label>
-            <div class="layui-input-block">
-                <select name="DCC" class="Dcc" lay-filter="dcc">
-                    <volist name="DccPostUsers" id="value">
-                        <option value="{$value.id}">{$value.nickname}</option>
-                    </volist>
-                </select>
+            <div class="layui-form-item btn-add">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                </div>
             </div>
+
+        </form>
+        <div class="prompt">
+
         </div>
-
-        <div class="layui-form-item btn-add">
-            <div class="layui-input-block">
-                <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-            </div>
-        </div>
-
-    </form>
-    <div class="prompt">
-
     </div>
+
+    <div class="title-bar file_info" style="margin: 20px 0 20px 0;">
+        <h4>文件信息</h4>
+    </div>
+
+    <div class="file-detail">
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="200">
+                <col>
+            </colgroup>
+            <thead>
+            <tr>
+                <th>文件号</th>
+                <th>附件</th>
+                <th>文件描述</th>
+                <th>版本号</th>
+                <th width="60">选择</th>
+            </tr>
+            </thead>
+            <tbody>
+            <volist name="numberData" id="value" key="key">
+                <tr>
+                    <td>{$value.file_no}</td>
+                    <td>
+                        <volist name="value.attachment" id="val">
+                            <div class="file-item">
+                                <div class="file-info" style="width:200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><i class="file-icon file-icon-ext-{$val.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$val.path}" target="_blank" title="{$val.savename}">{$val.savename}</a></div>
+                            </div>
+                        </volist>
+                    </td>
+                    <td>{$value.content}</td>
+                    <td>{$value.version}</td>
+                    <td><a href="javascript:void(0);" class="add-a" fid="{$value.id}" fileName="{$value.file_no}">添加</a></td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+    </div>
+
 
 </block>
