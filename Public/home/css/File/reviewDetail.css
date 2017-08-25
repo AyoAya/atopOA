@@ -1,3 +1,4 @@
+/*
 .layui-form-label{
     width: 90px;
     padding: 0;
@@ -8,4 +9,48 @@
     height: 14px;
     margin: 0 7px 0 0;
     display: inline-block;
+}*/
+
+
+.layui-table {
+    margin-bottom: 25px;
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s ;
+    -ms-transition: all .5s ;
+    -o-transition: all .5s ;
+    transition: all .5s ;
+}
+.layui-table tbody td, .layui-table thead th {
+    padding: 15px;
+}
+.pswj-rq .layui-table:hover {
+    border: solid 1px #888;
+    box-shadow: 0 0 15px #ccc;
+}
+.pswj-rq .layui-table:hover tr:last-child td {
+    border-bottom: solid 1px #888;
+}
+.pswj-rq .layui-table tbody tr:first-child td {
+    font-size: 20px;
+}
+.pswj-rq .layui-table tbody tr:first-child td .wjbt-fj .fj-mc {
+    font-size: 16px;
+}
+.pswj-rq .layui-table tbody tr:first-child td .wj-ms {
+    font-size: 14px;
+    padding-top: 15px;
+    color: #888;
+}
+.pswj-rq .layui-table tbody tr:nth-child(2) td:nth-child(odd) {
+    text-align: right;
+}
+.pswj-rq .layui-table tbody tr:nth-child(2) td:nth-child(odd):after {
+    content: '：';
+}
+.pswj-rq .layui-table tbody tr:last-child td {
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s ;
+    -ms-transition: all .5s ;
+    -o-transition: all .5s ;
+    transition: all .5s ;
 }

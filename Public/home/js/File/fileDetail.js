@@ -87,12 +87,12 @@ $(function(){
                     attachmentList.push(attachmentObject);
                 }else{
                     layer.closeAll();
-                    layer.msg(response.msg, { icon : 2,time : 2000 });
+                    layer.msg(response.msg, {icon: 2, time: 2000});
                 }
 
             });
 
-            window.uploader.on('uploadFinished', function( data ){
+            window.uploader.on('uploadFinished', function( data ) {
 
                 var sub_name = SUB_NAME,
                     no = NO,
@@ -106,36 +106,47 @@ $(function(){
                     dataType: 'json',
                     type: 'POST',
                     data: {
-                        attachments : attachments,
-                        id : SUB_NAME,
-                        no : NO,
-                        version : VERSION
+                        attachments: attachments,
+                        id: SUB_NAME,
+                        no: NO,
+                        version: VERSION
                     },
-                    beforeSend: function(){
+                    beforeSend: function () {
                         layer.load(1, {
-                            shade: [0.5,'#fff'] //0.1透明度的白色背景
+                            shade: [0.5, '#fff'] //0.1透明度的白色背景
                         });
                     },
-                    success : function( response ){
-                        if(response.flag > 0){
+                    success: function (response) {
+                        if (response.flag > 0) {
                             layer.msg(response.msg, {icon: 1, time: 2000});
                             setTimeout(function () {
-                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/fileDetail/no/'+NO+'/version/'+VERSION;
+                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/fileDetail/no/' + NO + '/version/' + VERSION;
                             })
-                        }else{
+                        } else {
                             layer.msg(response.msg, {icon: 2, time: 2000});
                             setTimeout(function () {
                                 location.replace(location.href);
                             })
                         }
-
                     }
-                })
-
+                });
             });
 
+            $('.close-info-input').click(function(){
+                $('.info-input').css('display','none');
+                $('.info-div').css('display','block');
+                $('.edit-file').css('display','inline-block')
+                //销毁
+                window.uploader.destroy();
+            });
+
+        });
 
 
+        // 删除队列文件
+        $('.uploader-file-queue').on('click', '.icon-remove', function () {
+
+            var id = $(this).parent().parent().attr('id');
 
         });
         $('.close-info-input').click(function(){
@@ -313,6 +324,4 @@ $(function(){
 
 
 
-});/**
- * Created by GCX on 2017/7/25.
- */
+});

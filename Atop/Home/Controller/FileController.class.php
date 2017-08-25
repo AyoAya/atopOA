@@ -843,7 +843,7 @@ class FileController extends AuthController  {
     /**
      * 审批详情
      */
-    public function reviewDetail(){
+    /*public function reviewDetail(){
 
         $model = new model();
 
@@ -983,6 +983,9 @@ class FileController extends AuthController  {
         }
 
 
+    }*/
+    public function reviewDetail(){
+        $this->display();
     }
 
     /**
