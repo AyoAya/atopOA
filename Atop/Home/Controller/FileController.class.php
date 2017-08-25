@@ -569,7 +569,7 @@ class FileController extends AuthController  {
 
                 # 评审
                 $numberData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b')
-                                    ->field('a.file_no,a.id,a.num')
+                                    ->field('a.file_no,a.id,a.num,a.status,a.content,a.version,a.attachment')
                                     ->where('b.person ='.session('user')['id'].' AND a.status <=1  AND b.n_id=a.id AND b.action = "apply"')
                                     ->select();
                  $revRule = $model->table(C('DB_PREFIX').'file_ecn_rule')->order('id ASC')->select();
@@ -631,18 +631,18 @@ class FileController extends AuthController  {
                     }
                 }
             }
+            // 根据职位赛选评审人
             foreach ($arr as $key=>&$value){
                 $where['id'] = array('in',$value[1]);
                 $value['rel'] = M('Position')->field('id,name')->where($where)->select();
                 foreach ($value[1] as $k=>&$v){
 
-                    $in['post'] = array('like','%'.$v.'%');
-                    $value['user'][] = M('User')->field('email,id,nickname')->where($in)->select();
+                    $value['user'][] = M('User')->field('email,id,nickname')->where('(post regexp ",'.$v.'&" OR post regexp "^'.$v.'," OR post regexp "^'.$v.'$") AND state = 1')->select();
 
                 }
             }
 
-            # print_r($arr);
+             # print_r($arr);
 
             $this->ajaxReturn(['flag'=>1,'arr'=>$arr]);
 
@@ -718,7 +718,7 @@ class FileController extends AuthController  {
     /**
      * 审批详情
      */
-    public function reviewDetail(){
+    /*public function reviewDetail(){
 
         $model = new model();
 
@@ -858,6 +858,9 @@ class FileController extends AuthController  {
         }
 
 
+    }*/
+    public function reviewDetail(){
+        $this->display();
     }
 
     /**

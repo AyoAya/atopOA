@@ -232,13 +232,38 @@
     margin-left: 5px;
 }
 .prompt{
-    width: 365px;
+    width: 300px;
     min-height: 300px;
-    border: 1px solid ;
-    margin-left: 40px;
+    margin-left: 20px;
     float: left;
 }
-
+.prompt .rev-pos{
+    text-align: center;
+    color: #555;
+    padding: 2px;
+    display: inline-block;
+    margin: 0 5px;
+}
+.prompt p{
+    color: #428bca;
+    font-size: 22px;
+    text-align: center;
+    margin: 5px;
+}
+.prompt .next-rev{
+    color: #428bca;
+    font-size: 24px;
+    text-align: center;
+    margin: 5px;
+}
+.file_info{
+    width: 100%;
+    height: 40px;
+    float: left;
+}
+.position-box{
+    text-align: center;
+}
 
 
 

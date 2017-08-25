@@ -6,38 +6,72 @@ $(function(){
     layui.use(['form','layer','upload'], function(){
         var form = layui.form(),
             layer = layui.layer;
+        var SUB_NAME,LOG_ID;
+        var num = 0;
 
-        var SUB_NAME, NUM_ID,attachmentList = new Array();
-
-        // uploader参数配置
-        var logUploaderOption = {
+        // 定义webuploader配置
+        var webuploader_option = {
             auto: false,
             server: ThinkPHP['AJAX'] + '/File/uploadAttachment',
-            pick: '#filePick',
-            fileVal : 'Filedata',
+            pick: {
+                id: '#picker',
+                multiple: false
+            },
+            fileVal: 'Filedata',
             accept: {
                 title: 'file',
-                extensions: 'zip,rar,doc,docx,xls,xlsx,pdf'
+                extensions: 'zip,rar,doc,xls,xlsx,docx,pdf'
             },
-            method: 'POST',
+            method: 'POST'
         };
 
-        $('#Modal-box').on('shown.bs.modal', function ( e ) {
-            // 实例化uploader
-            APRuploader = WebUploader.create( logUploaderOption );
+        $('.edit-file').click(function(){
+            $('.info-input').css('display','block');
+            $('.info-div').css('display','none');
+            $(this).css('display','none');
+            // 实例化webuploader
+            window.uploader = WebUploader.create(webuploader_option);
+
             // 添加到队列时
-            APRuploader.on('fileQueued', function( file ){
-                var fileItem = '<div class="file-item" id="'+ file.id +'">' +
-                    '<div class="pull-left"><i class="file-icon file-icon-ext-'+ file.ext +'"></i> '+ file.name +'</div>' +
+            window.uploader.on('fileQueued', function (file) {
+
+                var fileItem = '<div class="file-item" style="width: 100%" id="' + file.id + '" ext = "'+file.ext+'" name="'+file.name+'" path="'+file.path+'">' +
+                    '<div class="pull-left"><i class="file-icon file-icon-ext-' + file.ext + '"></i> ' + file.name + '</div>' +
                     '<div class="pull-right"><i class="icon-remove" title="移除该文件"></i></div>' +
                     '<div class="clearfix"></div>' +
                     '</div>';
-                $(logUploaderOption.pick).next().append(fileItem);
+                $(webuploader_option.pick.id).next().append(fileItem);
+/*
+
+                var arr = ['zip', 'rar', 'doc', 'xls', 'xlsx', 'docx', 'pdf'];
+
+                // 判断非图片文件是否大于1个
+                if ($.inArray(file.ext, arr) >= 0) {
+
+                    num++;
+                }
+
+                if (num > 1) {
+
+                    num--;
+                    window.uploader.removeFile( file.id, true );
+                    layer.msg('非图像文件只能上传一个!');
+                }
+*/
+
             });
+
+            // 上传之前
+            window.uploader.on('uploadBeforeSend', function (block, data, headers) {
+                console.log(data);
+                data.SUB_NAME = $('#subName').val();
+                data.PATH = '/File/';
+            });
+
             // 上传错误时
-            APRuploader.on('error', function( code ){
+            window.uploader.on('error', function (code) {
                 var msg = '';
-                switch(code){
+                switch (code) {
                     case 'Q_EXCEED_NUM_LIMIT':
                         msg = '只能上传一个文件';
                         break;
@@ -54,78 +88,66 @@ $(function(){
                         msg = code;
                 }
                 layer.msg(msg, {icon: 2, time: 2000});
-            });
-            // 上传成功时
-            APRuploader.on('uploadSuccess', function( file,response ){
 
-                if( response.flag > 0 ){
-                    var attachmentObject = new Object();
-                    attachmentObject.ext = response.ext;
-                    attachmentObject.savename = response.savename;
-                    attachmentObject.path = response.path;
-                    attachmentList.push(attachmentObject);
-                }else{
+            });
+
+            window.uploader.on('fileDequeued', function(file){
+                console.log(window.uploader.getFiles());
+            });
+
+            // 上传成功时
+            window.uploader.on('uploadSuccess', function (file, response) {
+
+                if (response.flag > 0) {
+
+
+                } else {
                     layer.closeAll();
-                    layer.msg(response.msg, { icon : 2,time : 2000 });
+                    layer.msg(response.msg, {icon: 2, time: 2000});
                 }
 
             });
-            // 所有文件上传结束时
-            APRuploader.on('uploadFinished', function( data ){
-
-                var sub_name = SUB_NAME,
-                    numId = NUM_ID,
-                    attachments = JSON.stringify(attachmentList);
-
-                $.ajax({
-                    url: ThinkPHP['AJAX'] + '/File/saveDetailAttachment',
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {
-                        attachments : attachments,
-                        id : SUB_NAME,
-                        num : NUM_ID
-                    },
-                    beforeSend: function(){
-                        layer.load(1, {
-                            shade: [0.5,'#fff'] //0.1透明度的白色背景
-                        });
-                    },
-                    success : function( response ){
-                        if(response.flag > 0){
-                            layer.msg(response.msg, {icon: 1, time: 2000});
-                            setTimeout(function () {
-                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/fileDetail/id/'+SUB_NAME+'';
-                            })
-                        }else{
-                            layer.msg(response.msg, {icon: 2, time: 2000});
-                            setTimeout(function () {
-                                location.replace(location.href);
-                            })
-                        }
-
-                    }
-                })
-
-
-            });
-
-
-
 
         });
+        $('.close-info-input').click(function(){
+            $('.info-input').css('display','none');
+            $('.info-div').css('display','block');
+            $('.edit-file').css('display','inline-block')
+            //销毁
+            window.uploader.destroy();
+        });
 
+        var attachmentData = new Array();	//定义存放附件的对象
+
+        //var filter_content =$('#Modal-box').html();
+
+
+        // 删除队列文件
+        $('.uploader-file-queue').on('click', '.icon-remove', function () {
+
+            var id = $(this).parent().parent().attr('id');
+
+            $('.file-item').each(function (index) {
+                console.log($(this).parent().parent()[index]);
+            })
+
+            // 删除队列中的文件
+            window.uploader.removeFile( id, true );
+            // 删除dom节点
+            $(this).parent().parent().remove();
+
+        })
 
 
         $('#Modal-box').on('hidden.bs.modal', function (e) {
-            APRuploader.destroy();
+            window.uploader.destroy();
         })
 
         // 删除队列文件
         $('.uploader-attachment-queue').on('click', '.icon-remove', function(){
             var id = $(this).parent().parent().attr('id');
             // 删除队列中的文件
-            APRuploader.removeFile( id, true );
+            window.uploader.removeFile( id, true );
             // 删除dom节点
             $(this).parent().parent().remove();
         });

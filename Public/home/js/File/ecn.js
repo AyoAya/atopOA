@@ -94,7 +94,7 @@ $(function(){
 
         })
         //抄送职位点击X删除队列中的职位
-        $('.position-box').on('click','.x-close',function(){
+        $('.pos-box').on('click','.x-close',function(){
             $(this).parent().remove();
             if($(this).parents('.pos-info').css('display') == 'none'){
                 $(this).parents('.pos-info').css('display','none')
@@ -104,6 +104,12 @@ $(function(){
         })
 
         form.on('submit(submit)',function(data){
+
+            if(!(data.field.name)){
+                layer.msg('请输入规则名称!',{time:2000});
+                return false;
+            }
+
             // 抄送职位
             var tmpArr = [];
             $('.position-box').find('.pos-info .act').each(function(index){
@@ -122,6 +128,14 @@ $(function(){
                 review.push(tmpArray);
             })
 
+            if(tmpArr == ''){
+                layer.msg('请选择抄送职位!',{time:2000});
+                return false;
+            }
+            if(review == ''){
+                layer.msg('请选择评审人!',{time:2000});
+                return false;
+            }
 
 
             $.ajax({

@@ -26,259 +26,132 @@
 
 <block name="content">
 
-    <div class="title-bar" style="margin: 0 0 30px 0;">
-        <h4>基本信息</h4>
-    </div>
+    <div class="title-bar" style="margin-bottom: 25px;">文件列表</div>
 
-    <div class="review-info-box">
-
-        <div class="layui-form-item">
-            <div class="layui-form-label">文件号：</div>
-            <div class="layui-input-block review-text">
-                <a href="__ROOT__/File/fileDetail/no/{$person.file_no}/version/{$person.version}">{$person.file_no}</a>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-form-label">版本号：</div>
-            <div class="layui-input-block review-text">
-                {$person.version}
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-form-label">评审次数：</div>
-            <div class="layui-input-block review-text">
-                第 {$Think.get.num} 次评审
-            </div>
-        </div>
-
-
-        <div class="layui-form-item" >
-            <div class="layui-form-label">附　件：</div>
-            <div class="layui-input-block review-text">
-                <volist name="person.attachment" id="value">
-
-                    <in name="value.ext" value="zip,rar">
-                        <p>
-                            <i class="file-icon-ext-zip"></i><a href="__ROOT__/{$value.path}">{$value.savename}</a>
-                        </p>
-                    </in>
-
-                    <in name="value.ext" value="xls,xlsx">
-                        <p>
-                            <i class="file-icon-ext-xls"></i><a href="__ROOT__/{$value.path}">{$value.savename}</a>
-                        </p>
-                    </in>
-
-                    <in name="value.ext" value="doc,docx">
-                        <p>
-                            <i class="file-icon-ext-doc"></i><a href="__ROOT__/{$value.path}">{$value.savename}</a>
-                        </p>
-                    </in>
-
-                    <in name="value.ext" value="pdf">
-                        <p>
-                            <i class="file-icon-ext-pdf"></i><a href="__ROOT__/{$value.path}">{$value.savename}</a>
-                        </p>
-                    </in>
-                </volist>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-form-label">备注信息：</div>
-            <div class="layui-input-block review-text">
-                {$person.log}
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-form-label">发起人：</div>
-            <div class="layui-input-block review-text">
-                {$person.nickname}
-            </div>
-        </div>
-
-        <div class="layui-form-item"  style="border: 0;">
-            <div class="layui-form-label">发起时间：</div>
-            <div class="layui-input-block review-text">
-                <notempty name="person.time">
-                    {$person.time|date="Y-m-d H:i:s",###}
-                </notempty>
-            </div>
-        </div>
-
-    </div>
-
-
-    <div class="title-bar" style="margin: 20px 0 30px 0;">
-        <h4>评审记录</h4>
-    </div>
-
-    {//评审人数据}
-        <div class="dis-person">
-            <table class="layui-table">
-                <thead>
+    <div class="pswj-rq">
+        <table class="layui-table" lay-skin="line" width="100%">
+            <tbody>
                 <tr>
-                    <th style="width: 200px;">评审步骤</th>
-                    <th style="width: 200px;">评审人</th>
-                    <th style="width: 200px;">评审时间</th>
-                    <th style="width: 120px;">状态</th>
-                    <th>备注信息</th>
+                    <td colspan="8">
+                        <div class="wjbt-fj">
+                            <a href="#" class="pull-left">PTR0000001</a>
+                            <a href="#" class="fj-mc"><small class="pull-right"><i class="file-icon file-icon-ext-docx"></i> PTR0000001_V1.0_APSPC59WM3CDL70C.docx</small></a>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="wj-ms">
+                            APSPC59WM3CDL70C 定制品 PTR评审
+                        </div>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                    <volist name="allData" id="value" key="k">
-                        <neq name="value.step" value="0">
-                            <tr>
-                                <present name="value.count">    {//如果数据中存在步骤次数则合并相应列}
-                                    <td rowspan="{$value.count}">{$value.step} 级评审</td>
-                                </present>
-                                <td>{$value.nickname}</td>
+                <tr>
+                    <td>版本</td>
+                    <td>V1.0</td>
+                    <td>评审次数</td>
+                    <td>第 1 次评审</td>
+                    <td>发起人</td>
+                    <td>肖艾佑</td>
+                    <td>发起时间</td>
+                    <td>2017-08-25 14:00:34</td>
+                </tr>
+            </tbody>
+        </table>
 
-                                <td>
-                                    <notempty name="value.log.time">
-                                        {$value.log.time|date="Y-m-d H:i:s",###}
-                                    </notempty>
-                                </td>
-                                <td>
-                                    <eq name="value.status" value="1">
-                                        <span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">未评审</span>
-                                    </eq>
-                                    <eq name="value.status" value="2">
-                                        <span style="width: 50px;height: 26px;background: #5cb85c;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已通过</span>
-                                    </eq>
-                                    <eq name="value.status" value="0">
-                                        <span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已拒绝</span>
-                                    </eq>
-                                </td>
-                                <td>{$value.log.log}</td>
-                            </tr>
-                        </neq>
-                    </volist>
-                    <volist name="DCCData" id="value">
-                            <tr>
-                                <td>DCC评审</td>
-                                <td>{$value.nickname}</td>
-                                <td>
-                                    <notempty name="value.log.time">
-                                        {$value.log.time|date="Y-m-d H:i:s",###}
-                                    </notempty>
-                                </td>
-                                <td>
-                                    <eq name="value.status" value="1">
-                                        <span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">未评审</span>
-                                    </eq>
-                                    <eq name="value.status" value="2">
-                                        <span style="width: 50px;height: 26px;background: #5cb85c;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已通过</span>
-                                    </eq>
-                                    <eq name="value.status" value="0">
-                                        <span style="width: 50px;height: 26px;background: #d9534f;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">已拒绝</span>
-                                    </eq>
-                                </td>
-                                <td>{$value.log.log}</td>
-                            </tr>
-                    </volist>
-                </tbody>
-            </table>
-        </div>
+        <table class="layui-table" lay-skin="line" width="100%">
+            <tbody>
+                <tr>
+                    <td colspan="8">
+                        <div class="wjbt-fj">
+                            <a href="#" class="pull-left">PTR0000001</a>
+                            <a href="#" class="fj-mc"><small class="pull-right"><i class="file-icon file-icon-ext-xls"></i> PTR0000001_V1.0_APSPC59WM3CDL70C.xls</small></a>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="wj-ms">
+                            APSPC59WM3CDL70C 定制品 PTR评审
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>版本</td>
+                    <td>V1.0</td>
+                    <td>评审次数</td>
+                    <td>第 1 次评审</td>
+                    <td>发起人</td>
+                    <td>肖艾佑</td>
+                    <td>发起时间</td>
+                    <td>2017-08-25 14:00:34</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <eq name="person.status" value="2">
-        <eq name="person.user_id" value="$Think.session.user.id">
-            <eq name="person.num" value="$num">
-                <div class="rollback" style="margin: 20px 0 0 0;">
-                    <form class="layui-form" action="">
-                        <input type="hidden" value="{$person.num}" name="num">
-                        <input type="hidden" value="{$person.id}" name="id">
-                        <input type="hidden" value="{$person.version}" name="version">
-                        <input type="hidden" value="{$person.step}" name="step">
-                        <button class="layui-btn" lay-submit lay-filter="rollback"><i class="icon-reply"></i> 撤回</button>
-                    </form>
-                </div>
-            </eq>
-        </eq>
-    </eq>
+
+    <div class="title-bar" style="margin: 50px 0 25px 0;">评审进度</div>
+
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>评审步骤</th>
+                <th>评审人</th>
+                <th>评审时间</th>
+                <th>状态</th>
+                <th>备注信息</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td rowspan="3">1 级评审</td>
+                <td>肖艾佑</td>
+                <td>2017-08-09 16:22:29</td>
+                <td><span class="tag tag-success">已通过</span></td>
+                <td>1.经确认EED为客户定制要求；</td>
+            </tr>
+            <tr>
+                <td>胡磊</td>
+                <td>2017-08-04 16:30:02</td>
+                <td><span class="tag tag-success">已通过</span></td>
+                <td>此产品需要新建成品料号和产品BOM，标签定制。</td>
+            </tr>
+            <tr>
+                <td>何志贤</td>
+                <td>2017-08-04 16:30:02</td>
+                <td><span class="tag tag-success">已通过</span></td>
+                <td>产品性能无定制要求。</td>
+            </tr>
+            <tr>
+                <td rowspan="2">2 级评审</td>
+                <td>肖艾佑</td>
+                <td>2017-08-09 16:22:29</td>
+                <td><span class="tag tag-success">已通过</span></td>
+                <td>1.经确认EED为客户定制要求；</td>
+            </tr>
+            <tr>
+                <td>胡磊</td>
+                <td>2017-08-04 16:30:02</td>
+                <td><span class="tag tag-success">已通过</span></td>
+                <td>此产品需要新建成品料号和产品BOM，标签定制。</td>
+            </tr>
+            <tr>
+                <td>3 级评审</td>
+                <td>何志贤</td>
+                <td>2017-08-10 11:49:39</td>
+                <td><span class="tag tag-success">已通过</span></td>
+                <td>产品性能无定制要求。</td>
+            </tr>
+            <tr>
+                <td>DCC评审</td>
+                <td>邓丽</td>
+                <td>2017-08-10 13:30:12</td>
+                <td><span class="tag tag-success">已通过</span></td>
+                <td>同意归档。</td>
+            </tr>
+        </tbody>
+    </table>
 
 </block>
 
 
 {//Modal集}
 <block name="modals">
-
-    <eq name="tmpStep" value="0">
-        <in name="Think.session.user.id" value="$arr">
-            <eq name="tmpNumData.status" value="1">
-                <eq name="person.num" value="$num">
-                    <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
-                        <p class="pingshen" style="font-size: 20px;">评审</p>
-                    </button>
-                </eq>
-            </eq>
-        </in>
-    </eq>
-
-    <eq name="tmpStep" value="1">
-        <in name="Think.session.user.id" value="$arr_s">
-            <eq name="tmpNumData.status" value="1">
-                <eq name="person.num" value="$num">
-                    <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
-                        <p class="pingshen" style="font-size: 20px;font-weight: bold;">评审</p>
-                    </button>
-                </eq>
-            </eq>
-        </in>
-    </eq>
-
-
-
-
-    <div class="modal fade" id="Modal-box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel" style="font-size: 18px;">评审操作</h4>
-                </div>
-
-                <form class="layui-form" action="" id="detail_form">
-                    <div class="modal-body">
-
-                        <div class="layui-form-item" style="border: 0;">
-                            <label class="layui-form-label" style="width: 60px;">操作</label>
-                            <div class="layui-input-block" style="margin-left: 70px;">
-                                <select name="type" lay-verify="type">
-                                    <option value="pass">通过</option>
-                                    <option value="refuse">拒绝</option>
-                                </select>
-                            </div>
-                        </div>
-
-
-                        <div class="layui-form-item "  style="border: 0;">
-                            <label class="layui-form-label" style="width: 60px;">备注</label>
-                            <div class="layui-input-block"  style="margin-left: 70px;">
-                                <textarea name="context" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
-                            </div>
-                        </div>
-
-
-                    </div>
-
-                    <input type="hidden" id="numberId" name="numberId" value="{$person.id}">
-                    <input type="hidden" id="step" name="step" value="{$nowData.0.step}">
-                    <input type="hidden" id="numberNum" name="numberNum" value="{$person.num}">
-
-                    <div class="modal-footer">
-                        <button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
-                        <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
-                    </div>
-
-                </form>
-
-            </div>
-        </div>
-    </div>
 
 
 

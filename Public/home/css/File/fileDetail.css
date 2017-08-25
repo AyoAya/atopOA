@@ -56,10 +56,28 @@ kdb{
     border-radius: 3px;
     background: #827a4b;
 }
+.btn-lay-orr a{
+    display: inline-block;
+    float: left;
+    margin-right: 15px;
+}
 .before{
     display: inline-block;
     color: #fff;
     padding: 5px 10px;
     border-radius: 3px;
     background: #428bca;
+}
+.info-input-atta{
+    width: 100%;
+    float: left;
+}
+.info-input{
+    display: none;
+}
+.info-div{
+}
+.ok-btn{
+    display: none;
+    float: left;
 }

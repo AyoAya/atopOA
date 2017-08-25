@@ -255,6 +255,13 @@ class ApiController extends Controller
     }
 
     /**
+     * DCC获取部门数据
+     */
+    public function getAllDepartmentList(){
+        $this->ajaxReturn($this->getAllDepartment());
+    }
+
+    /**
      * 获取用户的权限组
      * @param $id 用户id
      * @return array
@@ -490,6 +497,7 @@ class ApiController extends Controller
      * 获取兼容表列表数据
      */
     public function getCompatibilityList(){
+        sleep(2);
         $model = new Model();
         $pagesize = 15;
         $page = I('get.page') > 0 ? I('get.page') : 1;
@@ -523,12 +531,23 @@ class ApiController extends Controller
      */
     public function getDepartmentGroupPostList(){
         $model = new Model();
-        $result = $model->table(C('DB_PREFIX').'department')->select();
-        foreach( $result as $key=>&$value ){
+        $CClist = $model->table(C('DB_PREFIX').'department')->select();
+        foreach( $CClist as $key=>&$value ){
             $positions = $model->table(C('DB_PREFIX').'position')->where( ['belongsto'=>$value['id']] )->select();
             if( $positions ) $value['positions'] = $positions;
         }
+        $result['ccList'] = $CClist;
+        $result['DccList'] = $this->getDccUserList();
         $this->ajaxReturn($result);
+    }
+
+    /**
+     * 获取DCC职位列表
+     */
+    public function getDccUserList(){
+        $model = new Model();
+        $result = $model->table(C('DB_PREFIX').'user')->where('post REGEXP ",1788$" OR post REGEXP "^1788," OR post REGEXP ",1788," OR "^1788$"')->select();
+        return $result;
     }
 
     /**

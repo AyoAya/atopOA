@@ -30,97 +30,107 @@
         </div>
 
         <div class="review-info-box">
+            <form class="layui-form" action="">
 
-            <div class="layui-form-item">
-                <div class="layui-form-label">文件号：</div>
-                <div class="layui-input-block review-text" style="color: #333;">
-                   {$numData.file_no}
+                <div class="layui-form-item">
+                    <div class="layui-form-label">文件号：</div>
+                    <div class="layui-input-block review-text" style="color: #333;">
+                       {$numData.file_no}
+                    </div>
                 </div>
-            </div>
 
-            <div class="layui-form-item">
-                <div class="layui-form-label">版本号：</div>
-                <div class="layui-input-block review-text" style="color: #333;">
-                    {$numData.version}
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <div class="layui-form-label">状　态：</div>
-                <div class="layui-input-block review-text">
-                    <eq name="numData.status" value="1">
-                        <span class="rule" style="position: relative;top: -6px;">已申请编号</span>
-                    </eq>
-                    <eq name="numData.status" value="2">
-                        <span class="before" style="position: relative;top: -6px;">第 {$numData.num} 次评审中</span>
-                    </eq>
-                    <eq name="numData.status" value="0">
-                        <span class="refuse" style="position: relative;top: -6px;">第 {$numData.num} 次评审被拒绝</span>
-                    </eq>
-                    <eq name="numData.status" value="3">
-                        <span class="success" style="position: relative;top: -6px;">已归档</span>
-                    </eq>
-                    <eq name="numData.status" value="4">
-                        <span class="tag tag-danger" style="position: relative;top: -6px;">不可用</span>
-                    </eq>
-                    <eq name="numData.status" value="5">
-                        <span class="tag tag-black" style="position: relative;top: -6px;">已废弃</span>
-                    </eq>
-                </div>
-            </div>
-
-            <div class="layui-form-item" style="color: #333;" >
-                <div class="layui-form-label">附　件：</div>
-                <div class="layui-input-block review-text" style="padding: 0 0 10px 0;">
-                    <egt name="numData.status" value="3">
-                        <notempty name="numData.attachment">
-                            <volist name="numData.attachment" id="value">
-                                <div class="file-item">
-                                    <div class="file-info" style="position: relative;top: 12px;width:200px;height:18px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" target="_blank" title="{$value.savename}">{$value.savename}</a></div>
-                                </div>
-                            </volist>
-                        </notempty>
-                    </egt>
-                </div>
-            </div>
-
-            <div class="layui-form-item" >
-                <div class="layui-form-label">描　述：</div>
-                <div class="layui-input-block review-text"style="border: 0;" >
-                    {$context.log}
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <div class="layui-form-label">操　作：</div>
-                <div class="layui-input-block btn-lay-orr">
-
-                    <elt name="numData.status" value="1">
-                        <eq name="content.person" value="$Think.session.user.id">
-                            <a href="__ROOT__/File/review/no/{$numData.file_no}/type/review"><button class="layui-btn layui-btn-primary">评审</button></a>
-                        <else/>
-                            <a href="##"><button class="layui-btn layui-btn-primary lay-nou">评审</button></a>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">状　态：</div>
+                    <div class="layui-input-block review-text">
+                        <eq name="numData.status" value="1">
+                            <span class="rule" style="position: relative;top: -6px;">已申请编号</span>
                         </eq>
-                    <else/>
+                        <eq name="numData.status" value="2">
+                            <span class="before" style="position: relative;top: -6px;">第 {$numData.num} 次评审中</span>
+                        </eq>
+                        <eq name="numData.status" value="0">
+                            <span class="refuse" style="position: relative;top: -6px;">第 {$numData.num} 次评审被拒绝</span>
+                        </eq>
                         <eq name="numData.status" value="3">
-                            <a href="##"><button class="layui-btn layui-btn-primary lay-suss">评审</button></a>
-                        <else/>
-                            <a href="##"><button class="layui-btn layui-btn-primary lay-err">评审</button></a>
+                            <span class="success" style="position: relative;top: -6px;">已归档</span>
                         </eq>
-                    </elt>
-
-                    <eq name="numData.status" value="3">
-                        <a href="__ROOT__/File/review/no/{$numData.file_no}/type/upgrade"><button class="layui-btn layui-btn-primary">升版</button></a>
-                    <else/>
-                        <a href="##"><button class="layui-btn layui-btn-primary lay-orr">升版</button></a>
-                    </eq>
+                        <eq name="numData.status" value="4">
+                            <span class="tag tag-danger" style="position: relative;top: -6px;">不可用</span>
+                        </eq>
+                        <eq name="numData.status" value="5">
+                            <span class="tag tag-black" style="position: relative;top: -6px;">已废弃</span>
+                        </eq>
+                    </div>
                 </div>
-            </div>
 
-            <div class="layui-form-item" style="border:0;padding-left:25px;">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">版本号：</div>
+                    <div class="layui-input-block review-text" style="color: #333;">
+                        <div class="info-div">{$numData.version}</div>
+                        <div class="info-input">
+                            <input type="text" class="layui-input" name="version" value="{$numData.version}">
+                        </div>
+                    </div>
+                </div>
 
-            </div>
+                <div class="layui-form-item" style="color: #333;" >
+                    <div class="layui-form-label">附　件：</div>
+                    <div class="layui-input-block review-text" style="padding: 0 0 10px 0;">
+                        <volist name="numData.attachment" id="value">
+                            <div class="file-item">
+                                <div class="file-info" style="width:200px;height:38px;line-height:38px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><i class="file-icon file-icon-ext-{$value.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$value.path}" target="_blank" title="{$value.savename}">{$value.savename}</a></div>
+                            </div>
+                        </volist>
+                        <div class="info-input info-input-atta">
+                            <div id="picker">上传附件</div>
+                            <div class="uploader-file-queue"></div>
+                            <p style="font-size: 12px;color: #d9534f;">注：当存在附件时重新上传附件将会替换历史附件！</p>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="layui-form-item" >
+                    <div class="layui-form-label">描　述：</div>
+                    <div class="layui-input-block review-text" style="border: 0;" >
+                        <div class="info-div"> {$context.log}</div>
+                        <div class="info-input ">
+                            <textarea name="info-content" placeholder="" class="layui-textarea info-input">{$context.log}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-form-label">操　作：</div>
+                    <div class="layui-input-block btn-lay-orr">
+
+                        <elt name="numData.status" value="1">
+                            <eq name="content.person" value="$Think.session.user.id">
+                                <a href="__ROOT__/File/review/no/{$numData.file_no}/type/review"><button class="layui-btn layui-btn-primary">评审</button></a>
+                            <else/>
+                                <a href="##"><button class="layui-btn layui-btn-primary lay-nou">评审</button></a>
+                            </eq>
+                        <else/>
+                            <eq name="numData.status" value="3">
+                                <a href="##"><button class="layui-btn layui-btn-primary lay-suss">评审</button></a>
+                            <else/>
+                                <a href="##"><button class="layui-btn layui-btn-primary lay-err">评审</button></a>
+                            </eq>
+                        </elt>
+
+                        <button type="button" class="layui-btn layui-btn-primary edit-file">编辑</button>
+
+                        <div class="info-input ok-btn">
+                            <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                            <button class="layui-btn layui-btn-primary close-info-input" type="button">取消</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="border:0;padding-left:25px;">
+
+                </div>
+
+            </form>
 
         </div>
     </div>

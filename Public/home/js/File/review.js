@@ -49,7 +49,7 @@ $(function(){
             $(this).parent()    .hide(0);
         })
 
-// 监听评审规则
+        // 监听评审规则
         form.on('select(revRules)',function( data ){
             //console.log(data.value); //得到被选中的值
             $.ajax({
@@ -94,32 +94,24 @@ $(function(){
 
                         }
 
+                        // 提示此规则的岗位等级
                         for (var i=0;i<len;i++){
                             let relLen = tmpArr[i]['rel'].length;
                             let userLen = tmpArr[i]['user'].length;
 
-                            var inHtml = '<span class="num">'+tmpArr[i][0]+'</span> 级评审</label>';
+                            var inHtml = '<p><span class="num">'+tmpArr[i][0]+'</span> 级评审</p><div class="position-box">';
 
                             for(var j=0;j<relLen;j++){
                                 //console.log(tmpArr[i]['rel'][j]['name']);
-                                inHtml += '<div class="selected-group">'+tmpArr[i]['rel'][j]['name']+'</div>';
-
-                                let userLens = tmpArr[i]['user'][j].length;
-
-                                for(var l=0;l<userLens;l++){
-                                    //console.log(tmpArr[i]['user'][k][l]['nickname']);
-                                    inHtml += '<div class="selected-item" uId="'+tmpArr[i]['user'][j][l]['id']+'" email="'+tmpArr[i]['user'][j][l]['email']+'">'+tmpArr[i]['user'][j][l]['nickname']+'</div>';
-
-                                }
+                                inHtml += '<div class="rev-pos">'+tmpArr[i]['rel'][j]['name']+'</div>';
                             }
-
-                            inHtml +='<div class="btn-ok"></div>';
-
+                            inHtml +='</div><div class="next-rev"><i class="glyphicon glyphicon-arrow-down"></i></div>';
                             prompt += inHtml;
 
                         }
+                        prompt += '<p>DCC评审</p>';
                         $('.reviewGrade').html(inner);
-                        $('.prompt').html(inner);
+                        $('.prompt').html(prompt);
 
                     }
                 }
