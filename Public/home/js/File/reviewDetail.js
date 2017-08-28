@@ -27,7 +27,7 @@ $(function(){
 
 
             $.ajax({
-                url : ThinkPHP['AJAX'] + '/File/saveDetail',
+                url : ThinkPHP['AJAX'] + '/File/reviewDetail',
                 dataType : 'json',
                 type : 'POST',
                 data : data.field,
@@ -82,12 +82,10 @@ $(function(){
                         }
                     }
 
-
                 });
             });
 
             return false;
-
 
 
         });

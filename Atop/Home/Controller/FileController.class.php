@@ -18,19 +18,20 @@ class FileController extends AuthController  {
 
         $model = new model();
 
-        if(I('get.search')){
-            $count = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b')
-                           ->where('(a.id = b.n_id AND b.action = "apply" AND a.file_no LIKE "%'.I('get.search').'%") OR (a.id = b.n_id AND b.action = "apply" AND b.nickname LIKE "%'.I('get.search').'%")')
+        /*if(I('get.search')){
+            $count = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'file_ecn c')
+                           ->where('(c.id = b.n_id AND b.action = "initiate" AND a.file_no LIKE "%'.I('get.search').'%") OR (c.id = b.n_id AND b.action = "initiate" AND b.nickname LIKE "%'.I('get.search').'%")')
                            ->count();
 
             $this->assign( 'search' , I('get.search') );
 
         }else{
 
-            $count = $model->table(C('DB_PREFIX').'file_number')->count();
+            $count = $model->table(C('DB_PREFIX').'file_ecn')->count();
 
-        }
+        }*/
 
+        $count = $model->table(C('DB_PREFIX').'file_ecn')->count();
         # 数据分页
         $page = new Page($count,10);
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
@@ -58,24 +59,58 @@ class FileController extends AuthController  {
                                ->limit($page->firstRow.','.$page->listRows)
                                ->select();
 
+
             foreach ($indexData as $key=>&$value){
-                $value['tmpArr'] = $tmpFileId = explode(',',$value['n_id']);
+                $value['tmpArr'] = explode(',',$value['n_id']);
+                $value['log'] = $model->table(C('DB_PREFIX').'file_log')
+                                      ->where('n_id ='.$value['id'].' AND action = "initiate"')
+                                      ->field('time,nickname')
+                                      ->find();
             }
-                print_r($indexData);
+             #   print_r($indexData);
             foreach ($indexData as $key=>&$value){
                 foreach ($value['tmpArr'] as $k=>&$v){
-                    $value['number'][] = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$v)->select();
+                    $value['number'][] = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$v)->find();
+                }
+                $value['colSpan'] = count($value['number']);
+                $len = 10;
+                $type = 'ECN';
+                $ecnId = $value['id'];
+                $bit = $len-strlen($type);
+                $num_len = strlen($ecnId);
+                $zero = '';
+                for($i=$num_len; $i<$bit; $i++){
+                    $zero .= "0";
+                }
+
+                $value['ecn'] = $type.$zero.$ecnId;
+                # echo $real_num;
+            }
+
+            $tmpIndexData = [];
+            foreach ($indexData as $kk=>&$vv){
+                foreach ($vv['number'] as $ke=>&$va){
+                    $tmpIndex = [];
+                    $tmpIndex['eid'] = $vv['id'];
+                    $tmpIndex['id'] = $va['id'];
+                    $tmpIndex['file_no'] = $va['file_no'];
+                    $tmpIndex['status'] = $va['status'];
+                    $tmpIndex['attachment'] = $va['attachment'];
+                    $tmpIndex['num'] = $va['num'];
+                    $tmpIndex['version'] = $va['version'];
+                    $tmpIndex['content'] = $va['content'];
+                    $tmpIndex['step'] = $va['step'];
+                    $tmpIndex['time'] = $vv['log']['time'];
+                    $tmpIndex['nickname'] = $vv['log']['nickname'];
+                    if($ke < 1 ){
+                        $tmpIndex['colSpan'] = $vv['colSpan'];
+                    }
+                    $tmpIndex['ecn'] = $vv['ecn'];
+                    array_push($tmpIndexData,$tmpIndex);
                 }
             }
-            print_r($indexData);
-            /*$indexData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'user c')
-                               ->field('a.id,a.file_no,a.status,c.nickname,c.face,a.id,b.time,a.version')
-                               ->where('a.id = b.n_id AND b.person = c.id AND (b.action = "apply" OR b.action = "upgrade")')
-                               ->limit($page->firstRow.','.$page->listRows)
-                               ->order('a.id DESC')
-                               ->select();*/
 
-            # echo $model->getLastSql();
+
         }
 
         $pageShow = $page->show();
@@ -84,9 +119,10 @@ class FileController extends AuthController  {
             $this->assign('pageNumber',I('get.p')-1);
         }
 
-        # print_r($indexData);
+        print_r($indexData);
+        print_r($tmpIndexData);
 
-        $this->assign('indexData',$indexData);
+        $this->assign('indexData',$tmpIndexData);
         $this->assign('page',$pageShow);
         $this->display();
     }
@@ -985,7 +1021,77 @@ class FileController extends AuthController  {
 
     }*/
     public function reviewDetail(){
-        $this->display();
+
+        $model = new model();
+
+        if(IS_POST){
+
+            print_r(I('post.'));
+
+
+        }else{
+            $id = I('get.id');
+            if($id){
+
+                # 评审文件数据
+                $ecnData = $model->table(C('DB_PREFIX').'file_ecn')->where('id = '.$id)->find();
+
+                $ecnData['tmpArr'] = explode(',',$ecnData['n_id']);
+                $ecnData['log'] = $model->table(C('DB_PREFIX').'file_log')
+                                        ->where('n_id ='.$ecnData['id'].' AND action = "initiate"')
+                                        ->field('time,nickname')
+                                        ->find();
+
+                foreach ($ecnData['tmpArr'] as $k=>&$v){
+                    $ecnData['number'][] = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$v)->find();
+                }
+                foreach ($ecnData['number'] as $key=>&$value){
+                    $value['attachment'] = json_decode($value['attachment'],true);
+                }
+
+                # 所有评审人数据
+                $reviewData = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
+                                    ->field('a.person,a.status,a.step,b.nickname,b.email')
+                                    ->where('r_id = '.$id.' AND b.id = a.person')
+                                    ->select();
+
+                foreach ($reviewData as $Key=>&$value){
+                    $count = 0;
+                    foreach($reviewData as $k=>&$v){
+                        if( $value['step'] == $v['step'] ){
+                            $count++;
+                            $value['rowSpan'] = $count;
+                        }else{
+                            $count = 0;
+                        }
+                    }
+                }
+                foreach ($reviewData as $Key=>&$value){
+                    $count = 0;
+                    foreach($reviewData as $k=>&$v){
+                        if( $value['rowSpan'] == $v['rowSpan'] ){
+                            $count++;
+                        }else{
+                            $count = 0;
+                        }
+                        if( $count > 1 ){
+                            unset($v['rowSpan']);
+                        }
+                    }
+                }
+                print_r($reviewData);
+                $this->assign('ecnData',$ecnData);
+                $this->assign('reviewData',$reviewData);
+                $this->display();
+
+            }else{
+
+                $this->error('参数错误!');
+
+            }
+
+        }
+
     }
 
     /**

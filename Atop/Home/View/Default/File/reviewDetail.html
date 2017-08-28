@@ -28,59 +28,30 @@
     <div class="title-bar" style="margin-bottom: 25px;">文件列表</div>
 
     <div class="pswj-rq">
-        <table class="layui-table" lay-skin="line" width="100%">
-            <tbody>
-                <tr>
-                    <td colspan="8">
-                        <div class="wjbt-fj">
-                            <a href="#" class="pull-left">PTR0000001</a>
-                            <a href="#" class="fj-mc"><small class="pull-right"><i class="file-icon file-icon-ext-docx"></i> PTR0000001_V1.0_APSPC59WM3CDL70C.docx</small></a>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="wj-ms">
-                            APSPC59WM3CDL70C 定制品 PTR评审
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>版本</td>
-                    <td>V1.0</td>
-                    <td>评审次数</td>
-                    <td>第 1 次评审</td>
-                    <td>发起人</td>
-                    <td>肖艾佑</td>
-                    <td>发起时间</td>
-                    <td>2017-08-25 14:00:34</td>
-                </tr>
-            </tbody>
-        </table>
 
-        <table class="layui-table" lay-skin="line" width="100%">
-            <tbody>
-                <tr>
-                    <td colspan="8">
-                        <div class="wjbt-fj">
-                            <a href="#" class="pull-left">PTR0000001</a>
-                            <a href="#" class="fj-mc"><small class="pull-right"><i class="file-icon file-icon-ext-xls"></i> PTR0000001_V1.0_APSPC59WM3CDL70C.xls</small></a>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="wj-ms">
-                            APSPC59WM3CDL70C 定制品 PTR评审
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>版本</td>
-                    <td>V1.0</td>
-                    <td>评审次数</td>
-                    <td>第 1 次评审</td>
-                    <td>发起人</td>
-                    <td>肖艾佑</td>
-                    <td>发起时间</td>
-                    <td>2017-08-25 14:00:34</td>
-                </tr>
-            </tbody>
-        </table>
+            <table class="layui-table" lay-skin="line" width="100%">
+                <thead>
+                    <th width="150">文件号</th>
+                    <th width="120">版本号</th>
+                    <th width="360">附件</th>
+                    <th>文件描述</th>
+                </thead>
+                <tbody>
+                    <volist name="ecnData.number" id="value">
+                        <tr>
+                            <td><a href="__ROOT__/file/fileDetail/no/{$value.file_no}/version/{$value.version}">{$value.file_no}</a></td>
+                            <td>{$value.version}</td>
+                            <td>
+                                <volist name="value.attachment" id="val">
+                                    <div class="file-info"><i class="file-icon file-icon-ext-{$val.ext}"></i>&nbsp;&nbsp;<a href="__ROOT__/{$val.path}" target="_blank" title="{$val.savename}">{$val.savename}</a></div>
+                                </volist>
+                            </td>
+                            <td>{$value.content}</td>
+                        </tr>
+                    </volist>
+                </tbody>
+            </table>
+
     </div>
 
 
@@ -97,52 +68,31 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td rowspan="3">1 级评审</td>
-                <td>肖艾佑</td>
-                <td>2017-08-09 16:22:29</td>
-                <td><span class="tag tag-success">已通过</span></td>
-                <td>1.经确认EED为客户定制要求；</td>
-            </tr>
-            <tr>
-                <td>胡磊</td>
-                <td>2017-08-04 16:30:02</td>
-                <td><span class="tag tag-success">已通过</span></td>
-                <td>此产品需要新建成品料号和产品BOM，标签定制。</td>
-            </tr>
-            <tr>
-                <td>何志贤</td>
-                <td>2017-08-04 16:30:02</td>
-                <td><span class="tag tag-success">已通过</span></td>
-                <td>产品性能无定制要求。</td>
-            </tr>
-            <tr>
-                <td rowspan="2">2 级评审</td>
-                <td>肖艾佑</td>
-                <td>2017-08-09 16:22:29</td>
-                <td><span class="tag tag-success">已通过</span></td>
-                <td>1.经确认EED为客户定制要求；</td>
-            </tr>
-            <tr>
-                <td>胡磊</td>
-                <td>2017-08-04 16:30:02</td>
-                <td><span class="tag tag-success">已通过</span></td>
-                <td>此产品需要新建成品料号和产品BOM，标签定制。</td>
-            </tr>
-            <tr>
-                <td>3 级评审</td>
-                <td>何志贤</td>
-                <td>2017-08-10 11:49:39</td>
-                <td><span class="tag tag-success">已通过</span></td>
-                <td>产品性能无定制要求。</td>
-            </tr>
-            <tr>
-                <td>DCC评审</td>
-                <td>邓丽</td>
-                <td>2017-08-10 13:30:12</td>
-                <td><span class="tag tag-success">已通过</span></td>
-                <td>同意归档。</td>
-            </tr>
+            <volist name="reviewData" id="value">
+                <tr>
+                    <neq name="value.step" value="0">
+                        <present name="value.rowSpan">
+                            <td rowspan="{$value.rowSpan}">{$value.step} 级评审</td>
+                        </present>
+                    <else/>
+                        <td>DCC评审</td>
+                    </neq>
+                    <td>{$value.nickname}</td>
+                    <td></td>
+                    <td>
+                        <eq name="value.status" value="1">
+                            <span class="tag tag-brown">未评审</span>
+                        </eq>
+                        <eq name="value.status" value="2">
+                            <span class="tag tag-success">已通过</span>
+                        </eq>
+                        <eq name="value.status" value="0">
+                            <span class="tag tag-danger">已拒绝</span>
+                        </eq>
+                    </td>
+                    <td></td>
+                </tr>
+            </volist>
         </tbody>
     </table>
 
@@ -152,6 +102,51 @@
 {//Modal集}
 <block name="modals">
 
+    <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
+        <p>评审</p>
+    </button>
+
+
+    <div class="modal fade" id="Modal-box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel" style="font-size: 18px;">评审</h4>
+                </div>
+
+                <form class="layui-form" action="" id="detail_form">
+                    <div class="modal-body">
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label" style="padding-left: 0;width: 60px;">操作</label>
+                            <div class="layui-input-block" style="margin-left: 60px;">
+                                <select name="type" lay-verify="type">
+                                    <option value="1">通过</option>
+                                    <option value="0">拒绝</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label" style="padding-left: 0;width: 60px;">日志</label>
+                            <div class="layui-input-block" style="margin-left: 60px;">
+                                <textarea name="context" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
+                        <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
 
 
 </block>
