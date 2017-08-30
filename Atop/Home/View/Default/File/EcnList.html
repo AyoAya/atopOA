@@ -1,0 +1,114 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>评审规则</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/File">文件管理</a></li>
+        <li class="active">评审规则</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="pull-right">
+        <a href="__ROOT__/File/EcnEdit" class="layui-btn layui-btn-primary">
+            <span class="icon-plus"></span> 添加评审规则
+        </a>
+    </div>
+
+    <div class="clearfix" style="margin-bottom: 20px;"></div>
+
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>规则名称</th>
+                <th>规则描述</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>第一条评审规则</td>
+                <td>这是第一条评审规则的描述信息。</td>
+                <td>2017-08-27</td>
+                <td>
+                    <div class="layui-btn-group">
+                        <a href="__ROOT__/File/EcnEdit" type="button" class="layui-btn layui-btn-primary layui-btn-small">编辑</a>
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-small">删除</button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>第二条评审规则</td>
+                <td>这是第二条评审规则的描述信息。</td>
+                <td>2017-08-28</td>
+                <td>
+                    <div class="layui-btn-group">
+                        <a href="__ROOT__/File/EcnEdit" type="button" class="layui-btn layui-btn-primary layui-btn-small">编辑</a>
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-small">删除</button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>第三条评审规则</td>
+                <td>这是第三条评审规则的描述信息。</td>
+                <td>2017-08-29</td>
+                <td>
+                    <div class="layui-btn-group">
+                        <a href="__ROOT__/File/EcnEdit" type="button" class="layui-btn layui-btn-primary layui-btn-small">编辑</a>
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-small">删除</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

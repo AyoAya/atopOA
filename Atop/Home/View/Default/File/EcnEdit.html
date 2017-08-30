@@ -1,0 +1,95 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
+    <link rel="stylesheet" href="__PUBLIC__/Home/css/File/ecn.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
+    <script src="__PUBLIC__/Home/js/File/ecn.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>评审规则</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/File">文件管理</a></li>
+        <li><a href="__ROOT__/File/EcnList">评审规则列表</a></li>
+        <li class="active">编辑评审规则</li>
+    </ol>
+</block>
+<block name="content">
+
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">规则名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" placeholder="请输入规则名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="position-box">
+            <div class="layui-form-item">
+                <label class="layui-form-label">抄送职位</label>
+                <div class="layui-input-block">
+                    <div class="review-box">
+                        <div class="pos-info"></div>
+                        <div class="hid-position">
+                            <div class="hid-position-department">
+                                <volist name="department" id="val">
+                                    <div class="title-depart">{$val.name}</div>
+                                    <volist name="val.position" id="v">
+                                        <span class="pos-span" revId="{$v.id}">{$v.name}</span>
+                                    </volist>
+                                </volist>
+                            </div>
+
+                            <div class="btm-btn">
+                                <button type="button" class="layui-btn ok-btn">确定</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pos-box">
+            <div class="layui-form-item">
+                <div class="close-rev"><i class="icon-remove"></i></div>
+                <label class="layui-form-label"><span class="num">1</span> 级评审</label>
+                <div class="layui-input-block">
+                    <div class="review-box">
+                        <div class="pos-info"></div>
+                        <div class="hid-position">
+                            <div class="hid-position-department">
+                                <volist name="department" id="val">
+                                    <div class="title-depart">{$val.name}</div>
+                                    <volist name="val.position" id="v">
+                                        <span class="pos-span" revId="{$v.id}">{$v.name}</span>
+                                    </volist>
+                                </volist>
+                            </div>
+
+                            <div class="btm-btn">
+                                <button type="button" class="layui-btn ok-btn">确定</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item btn-add">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                <button type="button" class="layui-btn add-hid layui-btn-primary">添加评审</button>
+            </div>
+        </div>
+
+    </form>
+
+</block>

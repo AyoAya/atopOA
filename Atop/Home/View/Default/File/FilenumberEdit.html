@@ -1,0 +1,64 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
+    <link rel="stylesheet" href="__PUBLIC__/Home/css/File/add.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
+    <script src="__PUBLIC__/Home/js/File/add.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>编辑文件号规则</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/File">文件管理</a></li>
+        <li><a href="__ROOT__/File/FilenumberList">文件号规则</a></li>
+        <li class="active">编辑文件号规则</li>
+    </ol>
+</block>
+<block name="content">
+
+    <div class="title-bar" style="margin: 0 0 30px 0;">
+        <h4>基本信息</h4>
+    </div>
+
+    <div style="width: 800px;">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="padding: 9px 0;margin: 0;">文件类型</label>
+                <div class="layui-input-block">
+                    <input type="text" name="type" required  lay-verify="required" placeholder="请输入文件的类型" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="padding: 9px 0;margin: 0;">编号长度</label>
+                <div class="layui-input-block">
+                    <input type="text" name="length" required  lay-verify="number" placeholder="请输入文件编号的长度" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label" style="padding: 9px 0;margin: 0;">文件描述</label>
+                <div class="layui-input-block">
+                    <textarea name="info" placeholder="请输入此类文件描述" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+</block>
