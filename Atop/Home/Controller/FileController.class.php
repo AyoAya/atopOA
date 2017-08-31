@@ -1616,7 +1616,6 @@ class FileController extends AuthController  {
     /**
      * 邮件推送
      */
-
     public function pushEmail( $type, $address, $data,$cc){
 
         $model = new Model();
