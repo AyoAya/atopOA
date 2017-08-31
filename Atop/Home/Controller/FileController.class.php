@@ -94,7 +94,7 @@ class FileController extends AuthController  {
                     $tmpIndex['eid'] = $vv['id'];
                     $tmpIndex['id'] = $va['id'];
                     $tmpIndex['file_no'] = $va['file_no'];
-                    $tmpIndex['status'] = $va['status'];
+                    $tmpIndex['status'] = $vv['status'];
                     $tmpIndex['attachment'] = $va['attachment'];
                     $tmpIndex['num'] = $va['num'];
                     $tmpIndex['version'] = $va['version'];
@@ -119,10 +119,11 @@ class FileController extends AuthController  {
             $this->assign('pageNumber',I('get.p')-1);
         }
 
-        print_r($indexData);
-        print_r($tmpIndexData);
+        # print_r($indexData);
+        # print_r($tmpIndexData);
 
-        $this->assign('indexData',$tmpIndexData);
+        $this->assign('indexData',$indexData);
+        $this->assign('tmpIndexData',$tmpIndexData);
         $this->assign('page',$pageShow);
         $this->display();
     }
@@ -334,7 +335,7 @@ class FileController extends AuthController  {
             # 默认加载的apply页面数据
             $numData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'user c')
                              ->field('a.file_no,b.time,b.person,a.id,a.status,a.version,c.nickname')
-                             ->where("a.id = b.n_id AND c.state = 1 AND b.action = 'apply' AND c.id = b.person AND b.person =".session('user')['id'])
+                             ->where("a.id = b.n_id AND c.state = 1 AND (b.action = 'apply' OR b.action = 'upgrade') AND c.id = b.person AND b.person =".session('user')['id'])
                              ->limit($page->firstRow.','.$page->listRows)
                              ->order('b.time DESC')
                              ->select();
@@ -361,349 +362,15 @@ class FileController extends AuthController  {
         if( IS_POST ){
 
             $post = I('post.','',true);
-            $fileId = '';
 
-            foreach ($post['fileId'] as $key=>&$value){
-                $fileId .= $value.',';
-            }
-
-            # print_r($post);
-            # ecn 表数据
-            $ecn['review_id'] = $post['data']['revRules'];
-            $ecn['n_id'] = substr($fileId,0,-1);
-
-            # 将字符串转换成数组
-
-            $tmpFileId = explode(',',$ecn['n_id']);
-
-            foreach ($tmpFileId as $key=>&$val){
-                $numData['status'] = 3;
-                $numId = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$val)->save($numData);
-
-                if( !$numId ){
-
-                    $model->rollback();
-                    $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败!']);
-                    return;
-                }
-
-            }
-
-            $ecn_id = $model->table(C('DB_PREFIX').'file_ecn')->add($ecn);
-
-            # log 表数据
-            $log['n_id'] = $ecn_id;
-            $log['action'] = 'initiate';
-            $log['time'] = time();
-            $log['person'] = session('user')['id'];
-            $log['nickname'] = session('user')['nickname'];
-
-            if( $ecn_id ){
-
-                $tmpReview = [];
-                foreach ($post['data']['allUserItem'] as $key=>&$val){
-                    $arr[] = json_decode($val,true);
-                }
-
-                foreach ($arr as $k=>&$v){
-
-                    $review['step'] = $k+1;
-                    foreach ($v as $kk=>&$vv){
-                        $review['person'] = $vv['userId'];
-                        $review['r_id'] = $ecn_id;
-                        array_push($tmpReview,$review);
-                    }
-                }
-
-                # DCC 评审人
-                $tmpDcc['step'] = 0;
-                $tmpDcc['person'] = $post['data']['DCC'];
-                $tmpDcc['r_id'] = $ecn_id;
-                array_push($tmpReview,$tmpDcc);
-
-                $review_id = $model->table(C('DB_PREFIX').'file_review')->addAll($tmpReview);
-                $log_id = $model->table(C('DB_PREFIX').'file_log')->add($log);
-
-
-                if( $review_id && $log_id ){
-
-                    $model->commit();
-                    $this->ajaxReturn(['flag'=>1,'msg'=>'操作成功！']);
-
-                }
-            }else{
-
-                $model->rollback();
-                $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
-
-            }
-
-
-            # print_r($tmpReview);
-
-
-
-            # die();
-/*            if( $post['data']['type'] == 'upgrade' ){
-
-                # 升版
-                # 收件人数据
-                foreach ( $post['data']['allUserItem'] as $key=>&$value ){
-                    $post['email'][] = json_decode($value,true);
-                }
-
-                # 当前number数据(已发起)
-                $numData['file_no'] = $post['file_no'];
-                $numData['version'] = $post['data']['version'];
-                $numData['content'] = $post['data']['content'];
-                $numData['num'] = $post['num']+1;
-                $numData['status'] = 2;
-
-                # 修改上个版本的数据
-                $save_num['status'] = 4;
-
-                # 写入number表
-                $num_id = $model->table(C('DB_PREFIX').'file_number')->add($numData);
-                # 修改上个版本的状态
-                $save_num_id = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$id)->save($save_num);
-
-                if($num_id && $save_num_id ){
-
-                    # 日志表数据
-                    $logData['log'] = $post['data']['content'];
-                    $logData['action'] = 'initiate';
-                    $logData['n_id'] = $num_id;
-                    $logData['person'] = session('user')['id'];
-                    $logData['nickname'] = session('user')['nickname'];
-                    $logData['time'] = time();
-                    $logData['count'] = $post['num']+1;
-                    # 日志表数据
-                    $logDa['log'] = $post['data']['content'];
-                    $logDa['action'] = 'upgrade';
-                    $logDa['n_id'] = $num_id;
-                    $logDa['person'] = session('user')['id'];
-                    $logDa['nickname'] = session('user')['nickname'];
-                    $logDa['time'] = time();
-                    $logDa['count'] = $post['num']+1;
-
-                    # DCC 数据(review表)
-                    $dcc['n_id'] = $num_id;
-                    $dcc['person'] = $post['data']['dcc'];
-                    $dcc['count'] = $post['num']+1;
-                    $dcc['step'] = 0;
-                    # 评审人数据 review表
-                    foreach ($post['email'] as $key=>&$val){
-                        foreach ($val as $k=>&$v){
-                            $review['n_id'] = $num_id;
-                            $review['person'] = $v['userId'];
-                            $review['count'] = $post['num']+1;
-                            $review['step'] = $key+1;
-
-                            $tmpArr[] = $review;
-                        }
-
-                        $review_id = $model->table(C('DB_PREFIX').'file_review')->addAll($tmpArr);
-
-                        if(!$review_id){
-                            $model->rollback();
-                            $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
-                            exit();
-                        }
-
-                        $tmpArr = '';
-                    }
-
-                    # 写入日志表
-                     $logDa_id = $model->table(C('DB_PREFIX').'file_log')->add($logDa);
-
-                    # 写入日志表
-                    $log_id = $model->table(C('DB_PREFIX').'file_log')->add($logData);
-
-                    # 写入review表
-                    $dcc_id = $model->table(C('DB_PREFIX').'file_review')->add($dcc);
-
-                    if( $log_id && $dcc_id && $logDa_id){
-
-                        # 初次评审人邮箱
-                        $email = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
-                                       ->field('b.email,b.nickname')
-                                       ->where('a.person = b.id AND a.n_id ='.$num_id.' AND a.count ='.($post['num']+1).' AND a.step = 1')
-                                       ->select();
-                        foreach ( $email as $k=>&$v){
-                            $emails[] = $v['email'];
-                            $names[] = $v['nickname'];
-                        }
-
-                        # 操作人
-                        $persons = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'user c')
-                                        ->field('c.email')
-                                        ->where('a.id = b.n_id AND a.id ='.$num_id.' AND b.action = "initiate" AND c.id = b.person')
-                                        ->select();
-                        foreach ( $persons as $k=>&$v){
-                            $ccs[] = $v['email'];
-                            $cc_names[] = $v['nickname'];
-                        }
-
-                        $emailData = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$num_id)->find();
-                        $emailData['nickname'] = $names;
-
-                        # print_r($emailData);
-                        $this->pushEmail('UPGRADE',$emails,$emailData,$ccs);
-                        $model->commit();$this->ajaxReturn(['flag'=>$emailData['id'],'msg'=>'操作成功！','file_no'=>$emailData['file_no'],'version'=>$emailData['version'],'num'=>$emailData['num']]);
-
-                    }else {
-
-                        $model->rollback();
-                        $this->ajaxReturn(['flag' => 0, 'msg' => '操作失败！']);
-
-                    }
-
-                }else{
-
-                    $model->rollback();
-                    $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
-                }
-
-
-            }else{
-
-                print_r($post);
-
-                foreach ($post['data']['file_no'] as $k=>&$y){
-                    $arr[] = $k;
-                }
-
-                $arr = '';
-                //多职位
-                foreach($post['file_no'] as $key=>&$val){
-                    $arr .= $key.',';
-                }
-
-                $fileEcn['review_id'] = substr($arr,0,-1);
-
-
-                print_r($fileEcn);
-
-                die();
-
-                $a[] = session('user')['email'];
-
-                # 评审
-                # 收件人数据
-                foreach ( $post['data']['allUserItem'] as $key=>&$value ){
-                    $post['email'][] = json_decode($value,true);
-                }
-
-                # 日志表数据
-                $logData['log'] = $post['data']['content'];
-                $logData['action'] = 'initiate';
-                $logData['n_id'] = $post['data']['file_no'];
-                $logData['person'] = session('user')['id'];
-                $logData['nickname'] = session('user')['nickname'];
-                $logData['time'] = time();
-                $logData['count'] = $post['num']+1;
-                # 当前number数据(已发起)
-                $numData['status'] = 2;
-                $numData['version'] = $post['data']['version'];
-                $numData['content'] = $post['data']['content'];
-                $numData['num'] = $post['num']+1;
-                # DCC 数据(review表)
-                $dcc['n_id'] = $post['data']['file_no'];
-                $dcc['person'] = $post['data']['dcc'];
-                $dcc['count'] = $post['num']+1;
-                $dcc['step'] = 0;
-                # 评审人数据 review表
-                foreach ($post['email'] as $key=>&$val){
-                    foreach ($val as $k=>&$v){
-                        $review['n_id'] = $post['data']['file_no'];
-                        $review['person'] = $v['userId'];
-                        $review['count'] = $post['num']+1;
-                        $review['step'] = $key+1;
-
-                        $tmpArr[] = $review;
-                    }
-
-                    $review_id = $model->table(C('DB_PREFIX').'file_review')->addAll($tmpArr);
-
-                    if(!$review_id){
-                        $model->rollback();
-                        $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
-                        exit();
-                    }
-
-                    $tmpArr = '';
-                }
-
-                # 写入日志表
-                $log_id = $model->table(C('DB_PREFIX').'file_log')->add($logData);
-
-                # 写入number表
-                $num_id = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$id)->save($numData);
-
-                # 写入review表
-                $dcc_id = $model->table(C('DB_PREFIX').'file_review')->add($dcc);
-
-                if( $log_id && $num_id && $dcc_id ){
-
-                    # 初次评审人邮箱
-                    $email = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
-                                   ->field('b.email,b.nickname')
-                                   ->where('a.person = b.id AND a.n_id ='.$id.' AND a.count ='.($post['num']+1).' AND a.step = 1')
-                                   ->select();
-                    foreach ( $email as $k=>&$v){
-                        $emails[] = $v['email'];
-                        $names[] = $v['nickname'];
-                    }
-
-                    $person = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'user c')
-                        ->field('c.email')
-                        ->where('a.id = b.n_id AND a.id ='.$num_id.' AND b.action = "initiate" AND c.id = b.person')
-                        ->select();
-                    foreach ( $person as $k=>&$v){
-                        $ccs[] = $v['email'];
-                        $cc_names[] = $v['nickname'];
-                    }
-
-                    $cc = array_merge($emails,$ccs);
-
-                    $emailData = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$id)->find();
-                    $emailData['nickname'] = $names;
-
-                    $this->pushEmail('INITIATE',$emails,$emailData,$a);
-                    $model->commit();
-                    $this->ajaxReturn(['flag'=>$emailData['id'],'msg'=>'操作成功！','file_no'=>$emailData['file_no'],'version'=>$emailData['version'],'num'=>$emailData['num']]);
-
-                }else{
-
-                    $model->rollback();
-                    $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
-
-                }
-
-                # print_r($numData);
-
-            }*/
-
-        }else{
-
-            if( I('get.type') == 'upgrade' ){
-
-                # 升版操作
-                $numberData = $model->table(C('DB_PREFIX').'file_number')
-                                    ->field('id,file_no')
-                                    ->where('file_no = "'.I('get.no').'"')
-                                    ->select();
-                $revRule = $model->table(C('DB_PREFIX').'file_ecn_rule')->select();
-                # print_r($revRule);
-                $this->assign('type',I('get.type'));
-
-            }else{
+            if($post['type'] == 'file_info'){
 
                 # 评审
                 $numberData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b')
-                                    ->field('a.file_no,a.id,a.num,a.status,a.content,a.version,a.attachment')
-                                    ->where('b.person ='.session('user')['id'].' AND a.status =2  AND b.n_id=a.id AND b.action = "apply"')
-                                    ->select();
+                    ->field('a.file_no,a.id,a.num,a.status,a.content,a.version,a.attachment')
+                    ->where('b.person ='.session('user')['id'].' AND (a.status =2 OR a.status=0)  AND b.n_id=a.id')
+                    ->select();
+
                 $revRule = $model->table(C('DB_PREFIX').'file_ecn_rule')->order('id ASC')->select();
 
                 $DCC = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'position b')->where()->select();
@@ -712,21 +379,181 @@ class FileController extends AuthController  {
                     $value['attachment'] = json_decode($value['attachment'],true);
                 }
 
-                 # print_r($numberData);
-                 $this->assign('type',I('get.type'));
+                $this->ajaxReturn($numberData);
 
+            }else{
+
+                $post = I('post.','',true);
+                $fileId = '';
+
+                foreach ($post['data']['selected'] as $key=>&$value){
+                    $fileId .= $value['id'].',';
+                }
+
+
+                # ecn 表数据
+                $ecn['review_id'] = $post['data']['revRules'];
+                $ecn['n_id'] = substr($fileId,0,-1);
+
+                # 将字符串转换成数组
+
+                $tmpFileId = explode(',',$ecn['n_id']);
+
+                foreach ($tmpFileId as $key=>&$val){
+                    # 获取当前是第几次评审
+                    //$tmpNumData = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$val)->find();
+                    //$numData['num'] = $tmpNumData['num']+1;
+
+                    $numData['status'] = 3;
+
+                    $numId = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$val)->save($numData);
+
+                    if( !$numId ){
+
+                        $model->rollback();
+                        $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败!']);
+                        return;
+                    }
+
+                }
+
+                //die();
+
+                $ecn_id = $model->table(C('DB_PREFIX').'file_ecn')->add($ecn);
+
+                # log 表数据
+                $log['n_id'] = $ecn_id;
+                $log['action'] = 'initiate';
+                $log['time'] = time();
+                $log['log'] = $post['data']['title'];
+                $log['person'] = session('user')['id'];
+                $log['nickname'] = session('user')['nickname'];
+
+                if( $ecn_id ){
+
+                    $tmpReview = [];
+                    foreach ($post['data']['allUserItem'] as $key=>&$val){
+                        $arr[] = json_decode($val,true);
+                    }
+
+                    foreach ($arr as $k=>&$v){
+
+                        $review['step'] = $k+1;
+                        foreach ($v as $kk=>&$vv){
+                            $review['person'] = $vv['userId'];
+                            $review['r_id'] = $ecn_id;
+                            array_push($tmpReview,$review);
+                        }
+                    }
+
+                    # DCC 评审人
+                    $tmpDcc['step'] = 0;
+                    $tmpDcc['person'] = $post['data']['DCC'];
+                    $tmpDcc['r_id'] = $ecn_id;
+                    array_push($tmpReview,$tmpDcc);
+
+                    $review_id = $model->table(C('DB_PREFIX').'file_review')->addAll($tmpReview);
+                    $log_id = $model->table(C('DB_PREFIX').'file_log')->add($log);
+
+                    # 收集初级评审人邮件
+                    $emails = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')->field('b.email,b.nickname')->where('a.r_id ='.$ecn_id.' AND a.person =b.id AND a.step = 1')->select();
+                    foreach ($emails as $key=>&$value){
+                        $email[] = $value['email'];
+                        $emailPersons['nickname'] = $value['nickname'];
+                    }
+                    $emailData = $model->table(C('DB_PREFIX').'file_ecn')->where('id ='.$ecn_id)->find();
+                    # 自动填充
+                    $len = 10;
+                    $n = 'ECN';
+                    $bit = $len-strlen($n);
+                    $num_len = strlen($ecn_id);
+                    $zero = '';
+                    for($i=$num_len; $i<$bit; $i++){
+                        $zero .= "0";
+                    }
+                    $real_num = $n.$zero.$ecn_id;  # 自动填充
+                    $len = 10;
+                    $n = 'ECN';
+                    $bit = $len-strlen($n);
+                    $num_len = strlen($ecn_id);
+                    $zero = '';
+                    for($i=$num_len; $i<$bit; $i++){
+                        $zero .= "0";
+                    }
+                    $real_num = $n.$zero.$ecn_id;
+
+                    $emailData['ecn'] = $real_num;
+                    $emailData['firstNickname'] = $emailPersons['nickname'];
+                    # print_r($emailData);
+                    # print_r($email);
+
+                    # 抄送此规则的抄送职位
+                    $ccData = $model->table(C('DB_PREFIX').'file_ecn_rule')->where('id ='.$emailData['review_id'])->find();
+
+                    $ccArr = explode(',',$ccData['notice']);
+                    foreach ($ccArr as $key=>&$value){
+                        $ccPerson[] = $model->table(C('DB_PREFIX').'user')->field('nickname,email')->where('post REGEXP "^'.$value.'," OR post REGEXP ",'.$value.'$" OR post REGEXP ",'.$value.'," OR post REGEXP "^'.$value.'$"')->select();
+                    }
+
+                    $ccArr = [];
+                    foreach ($ccPerson as $k=>&$v){
+                        foreach ($v as $kk=>&$vv){
+                            $ccs['email'] = $vv['email'];
+                            $ccs['nickname'] = $vv['nickname'];
+                            array_push($ccArr,$ccs);
+                        }
+                    }
+
+                    foreach ($ccArr as $key=>&$val){
+                        $cc[] = $val['email'];
+                    }
+
+                    array_push($cc,session('user')['email']);
+
+                    if( $review_id && $log_id ){
+
+                        $this->pushEmail('INITIATE',$email,$emailData,session('user')['email']);
+                        $model->commit();
+                        $this->ajaxReturn(['flag'=>$ecn_id,'msg'=>'操作成功！']);
+
+                    }
+                }else{
+
+                    $model->rollback();
+                    $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+
+                }
 
             }
+
+
+        }else{
+
+            # 评审
+            $numberData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b')
+                                ->field('a.file_no,a.id,a.num,a.status,a.content,a.version,a.attachment')
+                                ->where('b.person ='.session('user')['id'].' AND (a.status =2 OR a.status=0)  AND b.n_id=a.id')
+                                ->select();
+
+            $revRule = $model->table(C('DB_PREFIX').'file_ecn_rule')->order('id ASC')->select();
+
+            $DCC = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'position b')->where()->select();
+
+            foreach ($numberData as $key=>&$value){
+                $value['attachment'] = json_decode($value['attachment'],true);
+            }
+
+             $this->assign('type',I('get.type'));
+
+
+            //print_r($numberData);
+            //调用父类注入部门和人员信息(cc)
+            $this->getAllUsersAndDepartments();
+            $this->getDccPostUsers();
+            $this->assign('revRule',$revRule);
+            $this->assign('numberData',$numberData);
+            $this->display();
         }
-
-        # print_r($numberData);
-
-        //调用父类注入部门和人员信息(cc)
-        $this->getAllUsersAndDepartments();
-        $this->getDccPostUsers();
-        $this->assign('revRule',$revRule);
-        $this->assign('numberData',$numberData);
-        $this->display();
 
     }
 
@@ -797,25 +624,73 @@ class FileController extends AuthController  {
 
         $no = I('get.no');
         $version = I('get.version');
+
         if(IS_POST){
+
             $post = I('post.');
             $firstVersion = $post['firstVersion'];
             $id = $post['fileId'];
             $no = $post['getNo'];
 
-            # print_r($post['getNo']);
-            $number['status'] = 2;
-            $number['version'] = $post['version'];
-            $number['content'] = $post['info-content'];
+            if( $post['type'] == 'upgrade' ){
 
-            $saveNumberId = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$id)->save($number);
+                $rel = $model->table(C('DB_PREFIX').'file_number')->where('file_no ="'.$post['getNo'].'" AND version = "'.$post['version'].'"')->select();
 
-            if( $saveNumberId !== false ){
-                $model->commit();
-                $this->ajaxReturn(['flag'=>$id,'msg'=>'操作成功！','no'=>$no,'version'=>$post['version']]);
+                if( $rel ){
+                    $this->ajaxReturn(['flag'=>0,'msg'=>'版本号已存在，请重新输入！']);
+
+                }else{
+
+                    $number['status'] = 2;
+                    $number['version'] = $post['version'];
+                    $number['content'] = $post['info-content'];
+                    $number['file_no'] = $post['getNo'];
+
+                    $oldNumber['status'] = 6;
+
+                    $saveOldNumberId = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$id)->save($oldNumber);
+                    $saveNumberId = $model->table(C('DB_PREFIX').'file_number')->add($number);
+
+                    if( $saveOldNumberId !== false && $saveNumberId){
+
+                        $log['action'] = 'upgrade';
+                        $log['n_id'] = $saveNumberId;
+                        $log['time'] = time();
+                        $log['person'] = session('user')['id'];
+                        $log['nickname'] = session('user')['nickname'];
+                        $log['log'] = $post['info-content'];
+
+                        $log_id = $model->table(C('DB_PREFIX').'file_log')->add($log);
+
+                        if( $log_id ){
+                            $model->commit();
+                            $this->ajaxReturn(['flag'=>$saveNumberId,'msg'=>'操作成功！','no'=>$no,'version'=>$post['version']]);
+                        }else{
+                            $model->rollback();
+                            $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                        }
+
+                    }else{
+                        $model->rollback();
+                        $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                    }
+                }
+
             }else{
-                $model->rollback();
-                $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                $number['status'] = 2;
+                $number['version'] = $post['version'];
+                $number['content'] = $post['info-content'];
+
+                $saveNumberId = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$id)->save($number);
+
+                if( $saveNumberId !== false ){
+                    $model->commit();
+                    $this->ajaxReturn(['flag'=>$id,'msg'=>'操作成功！','no'=>$no,'version'=>$post['version']]);
+                }else{
+                    $model->rollback();
+                    $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                }
+
             }
 
         }else{
@@ -833,13 +708,15 @@ class FileController extends AuthController  {
                                  ->find();
             }
 
+            # print_r($numData);
+
             $numData['attachment'] = json_decode($numData['attachment'],true);
             # number的操作记录
             $numData['log'] = $model->table(C('DB_PREFIX').'file_log a,'.C('DB_PREFIX').'user b')
                                     ->field('a.n_id,a.action,a.time,a.person,a.count,a.log,b.face,b.nickname')
                                     ->where('a.n_id='.$numData['id'].' AND a.person = b.id')
                                     ->order('a.time ASC')
-                                    ->select();
+                                    ->find();
 
             $content = $model->table(C('DB_PREFIX').'file_log a,'.C('DB_PREFIX').'user b')
                              ->field('a.n_id,a.action,a.time,a.person,a.count,a.log,b.face,b.nickname')
@@ -862,7 +739,7 @@ class FileController extends AuthController  {
                              ->select();
 
             # print_r($content);
-            print_r($numData);
+            # print_r($numData);
             # print_r($content);
             # print_r($context);
             $this->assign('numData',$numData);
@@ -879,162 +756,317 @@ class FileController extends AuthController  {
     /**
      * 审批详情
      */
-    /*public function reviewDetail(){
 
-        $model = new model();
-
-        $version = I('get.version');
-        $id = I('get.id');
-        $num = I('get.num');
-
-        if($num){
-            # 发起的数据
-            $person = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'user c,'.C('DB_PREFIX').'file_attachment d')
-                            ->field('a.id,a.step,a.file_no,a.version,b.log,c.nickname,a.status,c.face,b.time,a.num,c.id user_id')
-                            ->where('a.id='.$id.' AND b.n_id = a.id AND c.id = b.person AND b.action = "initiate" AND a.version = "'.$version.'" AND b.count ='.$num)
-                            ->find();
-            $person['attachment'] = $model->table(C('DB_PREFIX').'file_attachment')->field('attachment')->where('n_id ='.$id.' AND count='.$num)->find();
-            $person['attachment'] = json_decode($person['attachment']['attachment'],true);
-
-            # 初级评审人数据
-            $numData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_review c,'.C('DB_PREFIX').'user d')
-                             ->field('a.id,c.person,c.status,c.step,d.email,d.nickname,d.face')
-                             ->where('a.id='.$id.' AND c.n_id = a.id AND c.n_id = a.id AND c.person = d.id AND a.version = "'.$version.'" AND c.count ='.$num.' AND c.step =1')
-                             ->group('c.person')
-                             ->select();
-
-
-            foreach($numData as $key=>&$val){
-                $val['log'] = $model->table(C('DB_PREFIX').'file_log')
-                                    ->where('n_id ='.$id.' AND person ='.$val['person'].' AND count ='.$num)
-                                    ->find();
-
-            }
-
-            # 所有步骤评审人数据
-            $allData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_review c,'.C('DB_PREFIX').'user d')
-                             ->field('a.id,c.person,c.step,c.status,c.step,d.email,d.nickname')
-                             ->where('a.id='.$id.' AND c.n_id = a.id AND c.person = d.id AND a.version = "'.$version.'" AND c.count ='.$num)
-                             ->group('c.id')
-                             ->order('c.step ASC')
-                             ->select();
-
-            foreach($allData as $key=>&$val){
-                $val['log'] = $model->table(C('DB_PREFIX').'file_log')
-                                    ->where('n_id ='.$id.' AND person ='.$val['person'].' AND count ='.$num)
-                                    ->find();
-            }
-
-            # 当前步骤评审人数据
-            $nowData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_review c,'.C('DB_PREFIX').'user d')
-                             ->field('a.id,c.person,c.status,d.email,c.step,d.nickname')
-                             ->where('a.id='.$id.' AND c.n_id = a.id AND c.person = d.id AND c.count ='.$num.' AND c.step ='.$person['step'])
-                             ->select();
-
-            # 下一级评审人数据
-            $nextData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_review c,'.C('DB_PREFIX').'user d')
-                              ->field('a.id,c.person,c.status,d.email,c.step,d.nickname')
-                              ->where('a.id='.$id.' AND c.n_id = a.id AND c.person = d.id AND c.count ='.$num.' AND c.step ='.($person['step']+1))
-                              ->select();
-
-            # DCC 评审人数据
-            $DCCData  = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_review c,'.C('DB_PREFIX').'user d')
-                              ->field('a.id,c.person,c.status,d.email,d.nickname')
-                              ->where('a.id='.$id.' AND c.n_id = a.id AND c.person = d.id AND c.count ='.$num.' AND c.step = 0')
-                              ->select();
-
-            foreach($DCCData as $key=>&$val){
-                $val['log'] = $model->table(C('DB_PREFIX').'file_log')
-                                    ->where('n_id ='.$id.' AND person ='.$val['person'].' AND count ='.$num.' AND (action="pass" OR action="refuse")')
-                                    ->find();
-            }
-
-            foreach($nowData as $key=>&$val){
-                $val['log'] = $model->table(C('DB_PREFIX').'file_log')
-                                    ->where('n_id ='.$id.' AND person ='.$val['person'].' AND count ='.$num)
-                                    ->find();
-            }
-
-            $tmpNumData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'file_review c,'.C('DB_PREFIX').'user d')
-                                ->field('a.id,c.person,c.status,d.email,b.log,d.nickname,c.step')
-                                ->where('a.id='.$id.' AND c.n_id = a.id AND c.n_id = a.id AND c.person = d.id AND c.person ='.session('user')['id'].' AND b.count ='.$num.' AND c.count ='.$num)
-                                ->group('c.person')
-                                ->find();
-            # 统计评审人
-            foreach ($numData as $key=>&$value){
-                $arr[] = $value['person'];
-            }
-            foreach ($nowData as $key=>&$value){
-                $arr_s[] = $value['person'];
-            }
-
-            # 判断当前评审是第几步
-            $nowStep = $model->table(C('DB_PREFIX').'file_review')->where('n_id ='.$id.' AND count ='.$num.' AND step ='.($person['step']-1))->select();
-            $count = $model->table(C('DB_PREFIX').'file_review')->where('n_id ='.$id.' AND count ='.$num.' AND step ='.($person['step']-1))->count();
-
-            $tmpNum = 0;
-
-            foreach ($nowStep as $key=>&$v){
-                if($v['status'] != 1){
-                    $tmpNum += 1;
-                }
-            }
-
-            if($count == $tmpNum){
-                $tmpStep = 1;
-            }else{
-                $tmpStep = 0;
-            }
-
-            # 统计每个步骤出现的次数
-            foreach ($allData as $key=>&$value){
-                $tmpNum = 1;
-                foreach ($allData as $k=>$v){
-                    if( $v['step'] != $currentStep ){   // 对比是否和上一次的步骤相同，如果相同则只会在第一次生效
-                        if( $value['step'] == $v['step'] ){
-                            $value['count'] = $tmpNum++;
-                        }
-                    }
-                }
-                $currentStep = $value['step'];  // 记录上一次的步骤
-            }
-
-            print_r($person);
-
-            $this->assign('person',$person);
-            $this->assign('allData',$allData);
-            $this->assign('tmpStep',$tmpStep);
-            $this->assign('num',$num);
-            $this->assign('tmpNumData',$tmpNumData);
-            $this->assign('arr',$arr);
-            $this->assign('arr_s',$arr_s);
-            $this->assign('numData',$numData);
-            $this->assign('nextData',$nextData);
-            $this->assign('nowData',$nowData);
-            $this->assign('DCCData',$DCCData);
-            $this->display();
-
-        }else{
-            $this->error('参数错误！');
-        }
-
-
-    }*/
     public function reviewDetail(){
 
         $model = new model();
 
         if(IS_POST){
 
-            print_r(I('post.'));
+            $model->startTrans();
+
+            $post = I('post.');
+            $id = $post['rId'];
+
+
+
+            # 评审文件数据
+            $ecnData = $model->table(C('DB_PREFIX').'file_ecn')->where('id ='.$id)->find();
+            $ecnData['tmpArr'] = explode(',',$ecnData['n_id']);
+            $ecnData['log'] = $model->table(C('DB_PREFIX').'file_log')
+                                    ->where('n_id ='.$ecnData['id'].' AND action = "initiate"')
+                                    ->field('time,nickname')
+                                    ->find();
+
+            foreach ($ecnData['tmpArr'] as $k=>&$v){
+                $ecnData['number'][] = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$v)->find();
+            }
+
+            # 当前步骤操作人数据
+            $nowEcnData = $model->table(C('DB_PREFIX').'file_ecn')->where('id ='.$id)->find();
+
+            $nowReviewData = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
+                                   ->field('a.person,a.count,a.status,b.nickname,b.email,a.step')
+                                   ->where('r_id ='.$nowEcnData['id'].' AND step ='.$nowEcnData['step'].' AND a.person =b.id')
+                                   ->select();
+
+            $count = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
+                           ->field('a.person,a.count,a.status,b.nickname,b.email,a.step')
+                           ->where('r_id ='.$nowEcnData['id'].' AND step ='.$nowEcnData['step'].' AND a.person =b.id')
+                           ->count();
+
+            # 当前步骤的所有操作人数据
+            foreach ($nowReviewData as $key=>&$value){
+                $tmpNowPerson[] = $value['person'];
+            }
+
+            # 下一步步骤的操作人数据
+            $nextReviewData = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
+                                    ->field('a.person,a.count,a.status,b.nickname,b.email,a.step')
+                                    ->where('r_id ='.$nowEcnData['id'].' AND step ='.($nowEcnData['step']+1).' AND a.person =b.id')
+                                    ->select();
+            # DCC评审人数据
+            $DCCReviewData = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
+                                   ->field('a.person,a.count,a.status,b.nickname,b.email,a.step')
+                                   ->where('r_id ='.$nowEcnData['id'].' AND step = 0 AND a.person =b.id')
+                                   ->select();
+            # 发起人数据
+            $firstPerson = $model->table(C('DB_PREFIX').'file_log a,'.C('DB_PREFIX').'user b')->where('n_id ='.$id.' AND action = "initiate" AND a.person = b.id')->field('b.email,b.nickname')->find();
+
+            $email[] = $firstPerson['email'];
+            $nowEcnData['firstNickname'] = $firstPerson['nickname'];
+
+            # 自动填充
+            $len = 10;
+            $n = 'ECN';
+            $bit = $len-strlen($n);
+            $num_len = strlen($nowEcnData['id']);
+            $zero = '';
+            for($i=$num_len; $i<$bit; $i++){
+                $zero .= "0";
+            }
+            $real_num = $n.$zero.$nowEcnData['id'];
+            $nowEcnData['ecn'] = $real_num;
+            $nowEcnData['info'] = $post['context'];
+
+            # 抄送此规则的抄送职位
+            $ccData = $model->table(C('DB_PREFIX').'file_ecn_rule')->where('id ='.$nowEcnData['review_id'])->find();
+
+            $ccArr = explode(',',$ccData['notice']);
+            foreach ($ccArr as $key=>&$value){
+                $ccPerson[] = $model->table(C('DB_PREFIX').'user')->field('nickname,email')->where('post REGEXP "^'.$value.'," OR post REGEXP ",'.$value.'$" OR post REGEXP ",'.$value.'," OR post REGEXP "^'.$value.'$"')->select();
+            }
+            # 当前职位需要抄送人
+            $ccArr = [];
+            foreach ($ccPerson as $k=>&$v){
+                foreach ($v as $kk=>&$vv){
+                    $ccs['email'] = $vv['email'];
+                    $ccs['nickname'] = $vv['nickname'];
+                    array_push($ccArr,$ccs);
+                }
+            }
+
+            foreach ($ccArr as $key=>&$val){
+                $cc[] = $val['email'];
+            }
+
+            foreach ($nowReviewData as $k=>&$v){
+                $tmpArr[] = $v['email'];
+            }
+
+            # 抄送人
+            array_merge($cc,$tmpArr);
+
+
+            foreach ($nextReviewData as $key=>&$value){
+                $tmpCc[] = $value['email'];
+                $tmpNickname[] = $value['nickname'];
+            }
+
+            $dcc[] = $DCCReviewData[0]['email'];
+            $nowEcnData['dcc'] = $DCCReviewData[0]['nickname'];
+            $nowEcnData['tmpNickname'] = $tmpNickname;
+
+            /*print_r($nowEcnData);
+            die();*/
+
+            if($post['type'] == 'pass'){
+                # 通过操作
+
+                # review表数据
+                $reviewStatus['status'] = 2;
+
+                #log表数据
+                $log['log'] = $post['context'];
+                $log['action'] = $post['type'];
+                $log['time'] = time();
+                $log['nickname'] = session('user')['nickname'];
+                $log['person'] = session('user')['id'];
+                $log['n_id'] = $post['rId'];
+                $log['step'] = $nowReviewData[0]['step'];
+
+                $reviewStatus_Id = $model->table(C('DB_PREFIX').'file_review')->where('r_id ='.$post['rId'].' AND step ='.$post['step'].' AND person ='.$post['uId'])->save($reviewStatus);
+                $log_id = $model->table(C('DB_PREFIX').'file_log')->add($log);
+
+                if($reviewStatus_Id && $log_id) {
+                    $num = 1;
+                    $int = 0;
+                    foreach ($nowReviewData as $key => &$value) {
+                        if ($value['status'] != 1) {
+                            $num++;
+                        }
+                    }
+
+
+                    if($nowReviewData[0]['step'] > 0){
+                        # 判断是否此步骤全部操作完成
+                        if ($num == $count) {
+                            # 判断是否有拒绝
+                            foreach ($nowReviewData as $key => &$value) {
+                                if ($value['status'] == 0) {
+                                    $int++;
+                                }
+                            }
+
+                            if ( $int ) {
+                                # 此步骤全部完成且有拒绝
+
+                                $ecnStatus['status'] = 0;
+
+                                $number['status'] = 0;
+                                foreach ($ecnData['tmpArr'] as $key=>&$value){
+                                    $number_id = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$value)->save($number);
+                                    if( !$number_id ){
+                                        $model->rollback();
+                                        $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                                        exit();
+                                    }
+                                }
+
+                                $ecnStatus_id = $model->table(C('DB_PREFIX').'file_ecn')->where('id ='.$id)->save($ecnStatus);
+                                if( $ecnStatus_id ){
+                                    $model->commit();
+                                    $this->pushEmail('PASS',$email,$nowEcnData,$tmpArr);
+                                    $this->ajaxReturn(['flag'=>1,'msg'=>'操作成功！']);
+                                }else{
+                                    $model->rollback();
+                                    $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                                }
+
+                            } else {
+                                # 此步骤全部完成且全部通过
+
+                                if( $nextReviewData ){
+                                    $ecnStep['step'] = $nextReviewData[0]['step'];
+                                    /*foreach ( $nextReviewData as $ke=>&$val){
+                                        $email[] = $val['email'];
+                                    }
+                                    array_merge($cc,$email);*/
+
+                                    $ecnStep_id = $model->table(C('DB_PREFIX').'file_ecn')->where('id ='.$id)->save($ecnStep);
+
+                                    if($ecnStep_id){
+                                        $model->commit();
+                                        $this->pushEmail('INITIATE_OVER',$tmpCc,$nowEcnData,$email);
+                                        $this->pushEmail('PASS',$email,$nowEcnData,$tmpArr);
+                                        $this->ajaxReturn(['flag'=>2,'msg'=>'操作成功！']);
+                                    }else{
+                                        $model->rollback();
+                                        $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                                    }
+
+                                }else{
+
+                                    $ecnStep['step'] = 0;
+                                    $ecnStep_id = $model->table(C('DB_PREFIX').'file_ecn')->where('id ='.$id)->save($ecnStep);
+
+                                    if( $ecnStep_id ){
+                                        $model->commit();
+                                        $this->pushEmail('INITIATE_DCC',$dcc,$nowEcnData,$email);
+                                        $this->pushEmail('PASS',$email,$nowEcnData,$tmpArr);
+                                        $this->ajaxReturn(['flag'=>3,'msg'=>'操作成功！']);
+                                    }else{
+                                        $model->rollback();
+                                        $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                                    }
+
+                                }
+
+                            }
+
+                        }else{
+
+                            $model->commit();
+                            $this->pushEmail('PASS',$email,$nowEcnData,$tmpArr);
+                            $this->ajaxReturn(['flag'=>4,'msg'=>'操作成功！']);
+                        }
+                    }else{
+                        # dcc 评审
+
+                        $ecnStatus['status'] = 2;
+
+                        $number['status'] = 5;
+
+                        foreach ( $ecnData['tmpArr'] as $key=>&$value ){
+                            $number_id = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$value)->save($number);
+                            if( !$number_id ){
+                                $model->rollback();
+                                $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                                exit();
+                            }
+                        }
+
+                        $ecnStatus_id = $model->table(C('DB_PREFIX').'file_ecn')->where('id ='.$id)->save($ecnStatus);
+                        if( $ecnStatus_id ){
+                            $model->commit();
+                            $this->pushEmail('PASS_S',$email,$nowEcnData,$cc);
+                            $this->ajaxReturn(['flag'=>5,'msg'=>'操作成功！']);
+                        }else{
+                            $model->rollback();
+                            $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                        }
+
+                    }
+                }
+
+            }else{
+                # 拒绝操作
+
+                # print_r($post);
+
+                # review表数据
+                $reviewStatus['status'] = 0;
+                # ecn表数据
+                $ecnStatus['status'] = 0;
+
+                #log表数据
+                $log['log'] = $post['context'];
+                $log['action'] = $post['type'];
+                $log['time'] = time();
+                $log['nickname'] = session('user')['nickname'];
+                $log['person'] = session('user')['id'];
+                $log['n_id'] = $post['rId'];
+                $log['step'] = $nowReviewData[0]['step'];
+
+
+                $number['status'] = 0;
+
+                foreach ($ecnData['tmpArr'] as $key=>&$value){
+                    $number_id = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$value)->save($number);
+                    if( !$number_id ){
+                        $model->rollback();
+                        $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                        exit();
+                    }
+                }
+
+                $reviewStatus_Id = $model->table(C('DB_PREFIX').'file_review')->where('r_id ='.$post['rId'].' AND step ='.$post['step'].' AND person ='.$post['uId'])->save($reviewStatus);
+                $log_id = $model->table(C('DB_PREFIX').'file_log')->add($log);
+                $ecnStatus_id = $model->table(C('DB_PREFIX').'file_ecn')->where('id ='.$id)->save($ecnStatus);
+
+                if($reviewStatus_Id && $log_id && $ecnStatus_id){
+
+                    $model->commit();
+                    $this->pushEmail('REFUSE',$email,$nowEcnData,$tmpArr);
+                    $this->ajaxReturn(['flag'=>1,'msg'=>'操作成功！']);
+                }else{
+                    $model->rollback();
+                    $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                }
+
+
+
+            }
 
 
         }else{
+
             $id = I('get.id');
             if($id){
 
                 # 评审文件数据
                 $ecnData = $model->table(C('DB_PREFIX').'file_ecn')->where('id = '.$id)->find();
+
 
                 $ecnData['tmpArr'] = explode(',',$ecnData['n_id']);
                 $ecnData['log'] = $model->table(C('DB_PREFIX').'file_log')
@@ -1049,13 +1081,42 @@ class FileController extends AuthController  {
                     $value['attachment'] = json_decode($value['attachment'],true);
                 }
 
+                # 当前步骤操作人数据
+                $nowEcnData = $model->table(C('DB_PREFIX').'file_ecn')->where('id ='.$id)->find();
+
+                $nowReviewData = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
+                                       ->field('a.person,a.count,a.status,b.nickname,b.email,a.step')
+                                       ->where('r_id ='.$nowEcnData['id'].' AND step ='.$nowEcnData['step'].' AND a.person =b.id')
+                                       ->select();
+
+                # 当前步骤的所有操作人数据
+                foreach ($nowReviewData as $key=>&$value){
+                    $tmpNowPerson[] = $value['person'];
+                    if(session('user')['id'] == $value['person']){
+                        $status = $value['status'];
+                    }
+                }
+
+                # 下一步步骤的操作人数据
+                $nextReviewData = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
+                                        ->field('a.person,a.count,a.status,b.nickname,b.email,a.step')
+                                        ->where('r_id ='.$nowEcnData['id'].' AND step ='.($nowEcnData['step']+1).' AND a.person =b.id')
+                                        ->select();
+
                 # 所有评审人数据
                 $reviewData = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
                                     ->field('a.person,a.status,a.step,b.nickname,b.email')
                                     ->where('r_id = '.$id.' AND b.id = a.person')
+                                    ->order('a.id ASC')
                                     ->select();
 
                 foreach ($reviewData as $Key=>&$value){
+
+                    $fileLog = $model->table(C('DB_PREFIX').'file_log')->where('n_id ='.$id.' AND person ='.$value['person'].' AND step ='.$value['step'])->field('log')->find();
+                    $value['log'] = $fileLog['log'];
+                    $fileTime = $model->table(C('DB_PREFIX').'file_log')->where('n_id ='.$id.' AND person ='.$value['person'].' AND step ='.$value['step'])->field('time')->find();
+                    $value['time'] = $fileTime['time'];
+                    # 为每一个节点计算出合并行
                     $count = 0;
                     foreach($reviewData as $k=>&$v){
                         if( $value['step'] == $v['step'] ){
@@ -1066,21 +1127,44 @@ class FileController extends AuthController  {
                         }
                     }
                 }
+
+                # 检查当前节点的步骤和上一节点的步骤和rowSpan是否相同，如果相同则保留第一节点，反之则删除后续节点相同的rowSpan
                 foreach ($reviewData as $Key=>&$value){
-                    $count = 0;
-                    foreach($reviewData as $k=>&$v){
-                        if( $value['rowSpan'] == $v['rowSpan'] ){
-                            $count++;
-                        }else{
-                            $count = 0;
-                        }
-                        if( $count > 1 ){
-                            unset($v['rowSpan']);
+                    if($value['step'] == $reviewData[$Key-1]['step']  ){
+                        if( isset($reviewData[$Key-1]['rowSpan']) ){    # 避免重复步骤出现两次以上，每次遍历时检查上一节点是否存在rowSpan，如果存在并且rowSpan相等则移除
+                            if( $value['rowSpan'] == $reviewData[$Key-1]['rowSpan'] ){  # 排除掉不等于情况
+                                unset($reviewData[$Key]['rowSpan']);
+                            }
+                        }else{  # 如果上一节点不存在rowSpan也移除
+                            unset($reviewData[$Key]['rowSpan']);
                         }
                     }
                 }
-                print_r($reviewData);
+
+                $ecn_Data = $model->table(C('DB_PREFIX').'file_ecn a,'.C('DB_PREFIX').'file_log b')
+                                  ->field('b.time,b.log,b.nickname,a.status,b.person,a.step')
+                                  ->where('a.id ='.$id.' AND a.id = b.n_id AND b.action = "initiate" AND b.n_id ='.$id)
+                                  ->find();
+                # 自动填充
+                $len = 10;
+                $n = 'ECN';
+                $bit = $len-strlen($n);
+                $num_len = strlen($id);
+                $zero = '';
+                for($i=$num_len; $i<$bit; $i++){
+                    $zero .= "0";
+                }
+                $real_num = $n.$zero.$id;
+                $ecn_Data['ecn'] = $real_num;
+
+                print_r($ecnData);
                 $this->assign('ecnData',$ecnData);
+                $this->assign('ecn_Data',$ecn_Data);
+                $this->assign('nextReviewData',$nextReviewData);
+                $this->assign('status',$status);
+                $this->assign('nowEcnData',$nowEcnData);
+                $this->assign('nowReviewData',$nowReviewData);
+                $this->assign('tmpNowPerson',$tmpNowPerson);
                 $this->assign('reviewData',$reviewData);
                 $this->display();
 
@@ -1118,9 +1202,9 @@ class FileController extends AuthController  {
             $emailData['content'] = $emailData['log'];
             $emailData['info'] = $post['context'];
             $emailD = $model->table(C('DB_PREFIX') . 'file_number a,' . C('DB_PREFIX') . 'file_log b,' . C('DB_PREFIX') . 'user c')
-                                            ->field('c.nickname')
-                                            ->where('a.id=' . $post['numberId'] . ' AND a.id =b.n_id AND a.num = ' . $post['numberNum'] . ' AND b.count =' . $post['numberNum'] . ' AND b.action ="initiate" AND c.id = b.person')
-                                            ->select();
+                            ->field('c.nickname')
+                            ->where('a.id=' . $post['numberId'] . ' AND a.id =b.n_id AND a.num = ' . $post['numberNum'] . ' AND b.count =' . $post['numberNum'] . ' AND b.action ="initiate" AND c.id = b.person')
+                            ->select();
 
             foreach ($emailD as $key=>&$value){
 
@@ -1465,84 +1549,94 @@ class FileController extends AuthController  {
      */
     public function rollbackDetail(){
 
-        $model = new model();
-        $model->startTrans();
-        $num = I('post.num');
-        $id = I('post.id');
-        $version = I('post.version');
-        $step = I('post.step');
-
-        # print_r(I('post.'));
-
-        # 当前需要通知的人邮箱
-        if( $step == 0 ){
-            $email = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
-                ->field('b.email,b.nickname')
-                ->where('a.n_id ='.$id.' AND a.person = b.id AND a.step <= '.$step.' AND a.count ='.$num)
-                ->select();
-        }else{
-            $email = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
-                ->field('b.email,b.nickname')
-                ->where('a.n_id ='.$id.' AND a.person = b.id AND a.step <= '.$step.' AND a.step != 0 AND a.count ='.$num)
-                ->select();
-        }
-
-        foreach ($email as $key=>&$val){
-            $allReceive[] = $val['email'];
-        }
-
-        # 发起人邮箱
-        $ccEmail = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'file_log b,'.C('DB_PREFIX').'user c')
-                         ->field('c.email,c.nickname')
-                         ->where('a.id ='.$id.' AND b.person = c.id AND a.num ='.$num.' AND b.action = "initiate" AND a.id = b.n_id')
-                         ->select();
-
-
-        $emailData = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$id)->find();
-
-
-        foreach ($email as $key=>&$val){
-            $emails[] = $val['email'];
-        }
-        foreach ($email as $key=>&$val){
-            $names[] = $val['nickname'];
-        }
-        foreach ($ccEmail as $key=>&$val){
-            $ccs[] = $val['email'];
-        }
-
-        /*print_r($email);
-        print_r($ccEmail);*/
-
-        $cc = array_merge($emails,$ccs);
-
-        $emailData['nickname'] = $names;
-
         if(IS_POST){
-            $tmpData['num'] = $num;
-            $tmpData['status'] = 1;
-            $tmpData['step'] = 1;
+            $post = (I('post.'));
 
-            $tmpLog['n_id'] = $id;
+
+            $model = new model();
+            $model->startTrans();
+
+            $ecn = I('post.ecn');
+            $step = I('post.step');
+
+            # 当前需要通知的人邮箱
+            if( $step == 0 ){
+                $email = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
+                               ->field('b.email,b.nickname')
+                               ->where('a.r_id ='.$ecn.' AND a.person = b.id AND a.step <= '.$step)
+                               ->select();
+            }else{
+                $email = $model->table(C('DB_PREFIX').'file_review a,'.C('DB_PREFIX').'user b')
+                               ->field('b.email,b.nickname')
+                               ->where('a.r_id ='.$ecn.' AND a.person = b.id AND a.step <= '.$step.' AND a.step != 0')
+                               ->select();
+            }
+
+            # 收件人
+            foreach ($email as $key=>&$val){
+                $allReceive[] = $val['email'];
+            }
+            foreach ($email as $key=>&$val){
+                $allPerson[] = $val['nickname'];
+            }
+
+
+            # 发起人邮箱
+
+            $emailData = $model->table(C('DB_PREFIX').'file_ecn')->where('id ='.$ecn)->find();
+
+            # 自动填充
+            $len = 10;
+            $n = 'ECN';
+            $bit = $len-strlen($n);
+            $num_len = strlen($ecn);
+            $zero = '';
+            for($i=$num_len; $i<$bit; $i++){
+                $zero .= "0";
+            }
+            $real_num = $n.$zero.$ecn;
+            $emailData['ecn'] = $real_num;
+            $emailData['nickname'] = $allPerson;
+
+            $cc = session('user')['email'];
+
+            $tmpData['status'] = 3;
+
+            $tmpLog['n_id'] = $ecn;
             $tmpLog['action'] = 'rollback';
             $tmpLog['time'] = time();
             $tmpLog['person'] = session('user')['id'];
-            $tmpLog['count'] = $num;
             $tmpLog['nickname'] = session('user')['nickname'];
 
-            $tmpId = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$id)->save($tmpData);
+            $numberData['status'] = 2;
+            foreach ($post['flNum'] as $key=>&$val){
+                $num_id = $model->table(C('DB_PREFIX').'file_number')->where('id ='.$val)->save($numberData);
+                if( !$num_id ){
+                    $model->rollback();
+                    $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                    exit();
+                }
+            }
+
+            $tmpId = $model->table(C('DB_PREFIX').'file_ecn')->where('id ='.$ecn)->save($tmpData);
 
             $tmp_id = $model->table(C('DB_PREFIX').'file_log')->add($tmpLog);
 
             if($tmpId && $tmp_id){
-                $this->pushEmail('ROLLBACK',$allReceive,$emailData,$ccs);
+                $this->pushEmail('ROLLBACK',$allReceive,$emailData,$cc);
                 $model->commit();
                 $this->ajaxReturn(['flag'=>1,',msg'=>'撤回成功']);
-            }else{
+            }else {
                 $model->rollback();
-                $this->ajaxReturn(['flag'=>0,',msg'=>' 操作失败']);
+                $this->ajaxReturn(['flag' => 0, ',msg' => ' 操作失败']);
             }
+
+        }else{
+
+            $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败!']);
         }
+
+
     }
 
     /**
@@ -1595,18 +1689,10 @@ class FileController extends AuthController  {
 
         $model = new Model();
 
-        if( is_array($address) ){
-            if( count($address) == 1 ){
-                $map['email'] = $address[0];
-                $userData = $model->table( C('DB_PREFIX'). 'user' )->field('nickname')->where($map)->find();
-                $call = $userData['nickname'];
-            }elseif( count($address) > 1 ){
-                $call = 'All';
-            }
+        if( count($address) > 1 ){
+            $call = 'ALL';
         }else{
-            $map['email'] = $address;
-            $userData = $model->table( C('DB_PREFIX'). 'user' )->field('nickname')->where($map)->find();
-            $call = $userData['nickname'];
+            $call = $data['firstNickname'];
         }
 
         $users = session('user')['nickname'];
@@ -1616,12 +1702,6 @@ class FileController extends AuthController  {
         extract($data);
 
         $count = count($data['nickname']);
-
-        # 如果是单人则显示收件人姓名否则群发显示All
-        /*if( $count == 1 ){
-        }else{
-            $call = 'All';
-        }*/
 
         $count_s = count($data['nextPerson']);
         if( $count_s == 1 ){
@@ -1635,32 +1715,60 @@ class FileController extends AuthController  {
 
         $title = '<p>Dear '.$call.', </p>';
 
-        $order_basic = '<p>详情请点击链接：<a href="http://'.$http_host.'/File/reviewDetail/id/'.$data['id'].'/version/'.$data['version'].'/num/'.$data['num'].'" target="_blank">http://'.$http_host.'/File/reviewDetail/id/'.$data['id'].'/version/'.$data['version'].'/num/'.$data['num'].'</a></p>';
+        $order_basic = '<p>详情请点击链接：<a href="http://'.$http_host.'/File/reviewDetail/id/'.$data['id'].'" target="_blank">http://'.$http_host.'/File/reviewDetail/id/'.$data['id'].'</a></p>';
 
         switch( $type ) {
 
             # 通过
             case 'PASS':
 
-                    $body = '<p>['.$users.'] 通过了您发起的编号为 <b>'.$data['file_no'].'</b> '.$data['version'].' 的文件评审请求。</p>
+                    $body = '<p>['.$users.'] 通过了您发起的编号为 <b>'.$data['ecn'].'</b> '.$data['version'].' 的文件评审请求。</p>
                              <p>备注：'.$data['info'].'</p>';
 
                 break;
             # 所有评审完成
             case 'PASS_S':
 
-                    $body = '<p>['.$users.'] 通过了 ['. $data['nickname'][0] .'] 发起的编号为 <b>'.$data['file_no'].'</b> '.$data['version'].' 的文件评审，此文件已归档。</p>
+                    $body = '<p>['.$data['dcc'].'] 通过了你发起的编号为 <b>'.$data['ecn'].'</b> 的文件评审，此文件已归档。</p>
                              <p>备注：'.$data['info'].'</p>';
 
                 break;
             # 发起
             case 'INITIATE':
-                $nnn = $data['num'];
 
-                $body = '<p>['.$users.'] 发起了编号为 <b>'.$data['file_no'].'</b> '.$data['version'].' 的文件评审，请及时处理。</p>';
+                $body = '<p>['.$users.'] 发起了编号为 <b>'.$data['ecn'].'</b> '.$data['version'].' 的文件评审，请及时处理。</p>';
 
-                $order_basic = '<span>描述：'.$data['content'].'</span><br>
-                        <p>详情请点击链接：<a href="http://'.$http_host.'/File/reviewDetail/id/'.$data['id'].'/version/'.$data['version'].'/num/'.$data['num'].'" target="_blank">http://'.$http_host.'/File/reviewDetail/id/'.$data['id'].'/version/'.$data['version'].'/num/'.$data['num'].'</a></p>
+                $order_basic = '<p>详情请点击链接：<a href="http://'.$http_host.'/File/reviewDetail/id/'.$data['id'].'" target="_blank">http://'.$http_host.'/File/reviewDetail/id/'.$data['id'].'</a></p>
+';
+
+                break; # 发起
+            case 'INITIATE_OVER':
+
+                if( count($address) > 1 ){
+                    $calls = 'ALL';
+                }else{
+                    $calls = $data['tmpNickname'][0];
+                }
+
+
+                $title = '<p>Dear '.$calls.', </p>';
+
+                $body = '<p>['.$data['firstNickname'].'] 发起了编号为 <b>'.$data['ecn'].'</b> '.$data['version'].' 的文件评审，请及时处理。</p>';
+
+                $order_basic = '<p>详情请点击链接：<a href="http://'.$http_host.'/File/reviewDetail/id/'.$data['id'].'" target="_blank">http://'.$http_host.'/File/reviewDetail/id/'.$data['id'].'</a></p>
+';
+
+                break;
+            # 发起
+            case 'INITIATE_DCC':
+
+                $call = $data['dcc'];
+
+                $title = '<p>Dear '.$call.', </p>';
+
+                $body = '<p>['.$data['firstNickname'].'] 发起了编号为 <b>'.$data['ecn'].'</b> '.$data['version'].' 的文件评审，请及时处理。</p>';
+
+                $order_basic = '<p>详情请点击链接：<a href="http://'.$http_host.'/File/reviewDetail/id/'.$data['id'].'" target="_blank">http://'.$http_host.'/File/reviewDetail/id/'.$data['id'].'</a></p>
 ';
 
                 break;
@@ -1675,30 +1783,25 @@ class FileController extends AuthController  {
                         <p>备注：'.$data['info'].'</p>';
 
                 break;
-            # DCC
-            case 'DCC':
-                $nnn = $data['num'];
-
-                $body = '<p>[' . session('user')['nickname'] . '] 通过了 [' . $data['nickname'][0] . '] 发起的编号为 <b>'.$data['file_no'].'</b> '.$data['version'].' 的文件评审，请及时处理。</p>
-                        <p>备注：'.$data['info'].'</p>';
-
-                break;
-
-            # 升版
-            case 'UPGRADE':
-                $body = '<p>['.$users.'] 发起了编号为 <b>'.$data['file_no'].'</b> 的文件升版评审，新版本号为 ' . $data['version'] . '，请及时处理。</p>';
-                break;
 
             #拒绝
             case 'REFUSE':
 
-                $body = '<p>['.$users.'] 拒绝了您发起的编号为 <b>'.$data['file_no'].'</b> '.$data['version'].' 的文件评审，请知悉。</p>
+                $body = '<p>['.$users.'] 拒绝了您发起的编号为 <b>'.$data['ecn'].'</b> 的文件评审，请知悉。</p>
                          <p>备注：'.$data['info'].'</p>';
                 break;
             #回退
             case 'ROLLBACK':
 
-                $body = '<p>['.$users.'] 撤回了编号为 <b>'.$data['file_no'].'</b> '.$data['version'].' 的文件评审，请知悉。</p>
+                if( count($address) > 1 ){
+                    $calls = 'ALL';
+                }else{
+                    $calls = $data['nickname'][0];
+                }
+
+                $title = '<p>Dear '.$calls.', </p>';
+
+                $body = '<p>['.$users.'] 撤回了编号为 <b>'.$data['ecn'].'</b> 的文件评审，请知悉。</p>
                 
 ';
                 break;

@@ -25,6 +25,71 @@
 
 <block name="content">
 
+
+    <div class="left-h4">
+        <div class="title-bar">
+            <h4>基本信息</h4>
+        </div>
+
+        <div class="review-info-box">
+            <form class="layui-form" action="">
+
+                <div class="layui-form-item">
+                    <div class="layui-form-label ly-lab">ECN号：</div>
+                    <div class="layui-input-block review-text no-update" style="color: #333;">
+                        {$ecn_Data.ecn}
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-form-label ly-lab">状　态：</div>
+                    <div class="layui-input-block review-text no-update">
+                        <eq name="ecn_Data.status" value="1">
+                            <span class="rule tag tag-primary">评审中</span>
+                        </eq>
+                        <eq name="ecn_Data.status" value="2">
+                            <span class="rule tag tag-success">已归档</span>
+                        </eq>
+                        <eq name="ecn_Data.status" value="0">
+                            <span class="refuse tag tag-danger">已拒绝</span>
+                        </eq>
+                        <eq name="ecn_Data.status" value="3">
+                            <span class="refuse tag tag-danger">已撤回</span>
+                        </eq>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" >
+                    <div class="layui-form-label ly-lab">描　述：</div>
+                    <div class="layui-input-block review-text" style="border: 0;margin-top: 10px;" >
+                        <div class="info-div">{$ecn_Data.log}</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-form-label ly-lab">发起人：</div>
+                    <div class="layui-input-block review-text no-update" style="color: #333;">
+                        {$ecn_Data.nickname}
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-form-label ly-lab">发起时间：</div>
+                    <div class="layui-input-block review-text no-update" style="color: #333;">
+                        {$ecn_Data.time|date="Y-m-d H:i:s",###}
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="border:0;padding-left:25px;">
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
     <div class="title-bar" style="margin-bottom: 25px;">文件列表</div>
 
     <div class="pswj-rq">
@@ -78,7 +143,11 @@
                         <td>DCC评审</td>
                     </neq>
                     <td>{$value.nickname}</td>
-                    <td></td>
+                    <td>
+                        <notempty name="value.time">
+                            {$value.time|date="Y-m-d H:i:s",###}
+                        </notempty>
+                    </td>
                     <td>
                         <eq name="value.status" value="1">
                             <span class="tag tag-brown">未评审</span>
@@ -90,11 +159,28 @@
                             <span class="tag tag-danger">已拒绝</span>
                         </eq>
                     </td>
-                    <td></td>
+                    <td>{$value.log}</td>
                 </tr>
             </volist>
         </tbody>
     </table>
+
+    <form action="" class="layui-form">
+
+        <input type="hidden" value="{$Think.get.id}" name="ecn">
+        <input type="hidden" value="{$ecn_Data.step}" name="step">
+
+        <volist name="ecnData.number" id="val">
+            <input type="hidden" value="{$val.id}" class="fl-num" >
+        </volist>
+
+        <eq name="ecn_Data.person" value="$Think.session.user.id">
+            <eq name="ecn_Data.status" value="1">
+                <button class="layui-btn" lay-submit lay-filter="rollback">撤回</button>
+            </eq>
+        </eq>
+
+    </form>
 
 </block>
 
@@ -102,10 +188,13 @@
 {//Modal集}
 <block name="modals">
 
-    <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
-        <p>评审</p>
-    </button>
-
+    <in name="Think.session.user.id" value="$tmpNowPerson">
+        <eq name="$ecn_Data.status" value="1">
+            <button type="button" class="btn btn-primary btn-lg solo_order" data-toggle="modal" data-target="#Modal-box" id="log-table">
+                <p>评审</p>
+            </button>
+        </eq>
+    </in>
 
     <div class="modal fade" id="Modal-box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -122,8 +211,8 @@
                             <label class="layui-form-label" style="padding-left: 0;width: 60px;">操作</label>
                             <div class="layui-input-block" style="margin-left: 60px;">
                                 <select name="type" lay-verify="type">
-                                    <option value="1">通过</option>
-                                    <option value="0">拒绝</option>
+                                    <option value="pass">通过</option>
+                                    <option value="refuse">拒绝</option>
                                 </select>
                             </div>
                         </div>
@@ -134,6 +223,10 @@
                                 <textarea name="context" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
                             </div>
                         </div>
+
+                        <input type="hidden" value="{$Think.get.id}" name="rId">
+                        <input type="hidden" value="{$Think.session.user.id}" name="uId">
+                        <input type="hidden" value="{$nowReviewData.0.step}" name="step">
 
                     </div>
 

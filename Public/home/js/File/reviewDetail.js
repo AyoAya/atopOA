@@ -62,6 +62,11 @@ $(function(){
             layer.confirm('确定撤回？', {
                 btn: ['撤回','取消'] //按钮
             }, function(){
+                var flNum = [];
+                $('.fl-num').each(function( index ){
+                    flNum.push($(this).val());
+                })
+                data.field.flNum = flNum;
                 $.ajax({
                     url : ThinkPHP['AJAX'] + '/File/rollbackDetail',
                     dataType : 'json',

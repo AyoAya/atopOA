@@ -56,13 +56,13 @@
 
 .post-box{
     min-height: 38px;
-    width: 590px;
+    width: 468px;
     border: 0;
 }
 .selected-section{
     margin: 5px 0 0 0;
-    width: 590px;
-    float: right;
+    width: 468px;
+    float: left;
     padding: 10px;
     line-height: 30px;
     display: none;
@@ -79,12 +79,11 @@
 }
 .pos-person{
     min-height: 38px;
-    width: 590px;
-    min-height: 38px;
     border:1px solid #e6e6e6;
-    width: 590px;
-    float: right;
+    width: 468px;
+    float: left;
     border-radius: 2px;
+    margin-left: 30px;
 }
 .pos-person:hover{
     border:1px solid #d2d2d2;
@@ -162,10 +161,16 @@
 .choice-users-wrapper > .complated > .complate-done-btn {
 
 }
+.item-box{
+    border:1px solid #e6e6e6;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 2px;
+}
 
 
 #form{
-    width: 700px;
+    width: 1080px;
     display: inline-block;
     float: left;
 }
@@ -246,31 +251,42 @@
     margin-top: 15px;
     margin-left: 5px;
 }
-.prompt{
+.step{
     width: 300px;
-    min-height: 300px;
     margin-left: 20px;
     float: left;
 }
-.prompt .rev-pos{
+.step .rev-pos{
     text-align: center;
     color: #555;
     padding: 2px;
     display: inline-block;
     margin: 0 5px;
 }
-.prompt p{
+.step p{
     color: #428bca;
     font-size: 22px;
     text-align: center;
     margin: 5px;
 }
-.prompt .next-rev{
+.step .next-rev{
     color: #428bca;
     font-size: 24px;
     text-align: center;
     margin: 5px;
 }
+.item-flt{
+    display: inline-block !important;
+    width: 1080px;
+    min-height: 200px !important;
+}
+.step-box{
+    width: 650px;
+    float: left;
+
+}
+
+
 .file_info{
     width: 100%;
     height: 40px;
@@ -282,12 +298,12 @@
 .fileNo-box{
     width: 100%;
     min-height: 38px;
-    border: 1px solid #e6e6e6;
-    border-radius: 2px;
+    /*border: 1px solid #e6e6e6;
+    border-radius: 2px;*/
 }
-.fileNo-box:hover{
+/*.fileNo-box:hover{
     border:1px solid #d2d2d2;
-}
+}*/
 .fileName{
     width: 97px;
     background: #edf3f8;
@@ -297,6 +313,40 @@
     height: 24px;
     margin: 5px;
     display: inline-block;
+}
+.layui-table{
+    margin:0 ;
+}
+.file-detail{
+    padding: 20px;
+}
+.add-a:hover{
+    cursor: pointer;
+}
+.add-fl{
+    text-align: center;
+    color: #bbb;
+    font-size: 16px;
+    line-height: 36px;
+    border: solid 1px #e6e6e6;
+    height: 36px;
+    margin-top: 0;
+    cursor: pointer;
+}
+.add-fl:hover{
+    color: #009688;
+    border: solid 1px #009688;
+}
+lay .hd-text{
+    width:200px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    padding: 0;
+    margin: 0;
+}
+.fl-tab{
+    max-width: 948px;
 }
 
 

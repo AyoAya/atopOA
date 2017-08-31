@@ -246,6 +246,25 @@ $(function(){
 
         })
 
+        $('.layui-form-item .btn-lay-orr .edit-no').click(function(){
+
+            layer.alert('该文件不能编辑，请自行申请编号！', {
+                title:'非本人操作',
+                icon: 5,
+                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+            })
+
+        })
+
+        $('.layui-form-item .btn-lay-orr .edit-old').click(function(){
+
+            layer.alert('该文件版本过于陈旧，不能编辑！', {
+                title:'版本过旧',
+                icon: 5,
+                skin: 'layer-ext-moon' //该皮肤由layer.seaning.com友情扩展。关于皮肤的扩展规则，去这里查阅
+            })
+
+        })
         $('.layui-form-item .btn-lay-orr .edit-ygd').click(function(){
 
             layer.alert('该文件已归档，不能进行编辑！', {
@@ -272,11 +291,27 @@ $(function(){
 
             }
 
+            if($('#detail_form input[name="type"]').val() != ''){
+
+                if($('.info-input input[name="version"]').val() == $('.nowVersion').text()){
+                    layer.msg('请升级版本号！',{time:2000})
+                    return false;
+                }
+                if(!$('.uploader-file-queue').html()){
+                    layer.msg('请上传附件！',{time:2000})
+                    return false;
+                }
+
+            }
+
             var getNo = $('#detail_form input[name="getNo"]').val();
+            var num = $('#detail_form input[name="num"]').val();
 
             data.field.getNo = getNo;
+            data.field.num = num;
 
             var version = VERSION;
+
 
             $.ajax({
                 url : ThinkPHP['AJAX'] + '/File/fileDetail',
@@ -303,13 +338,14 @@ $(function(){
                         }else{
                             layer.msg(response.msg, {icon: 1, time: 1500});
                             setTimeout(function () {
-                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/fileDetail/no/'+response.no+'/version/'+response.version+'';
+                                 location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/fileDetail/no/'+response.no+'/version/'+response.version+'';
                             })
                         }
                     }else{
-
-                        location.replace(location.href);
-                        layer.msg('ERROR', {icon: 2, time: 2000});
+                        layer.msg(response.msg, {icon: 2, time: 2000});
+                        setTimeout(function(){
+                            layer.closeAll();
+                        },2000)
                     }
                 }
             });

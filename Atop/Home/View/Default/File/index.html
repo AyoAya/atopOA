@@ -66,22 +66,23 @@
             </tr>
             </thead>
             <tbody>
-            <notempty name="indexData">
-                <volist name="indexData" id="val" key="key">
+            <notempty name="tmpIndexData">
+                <volist name="tmpIndexData" id="val" key="key">
                     <tr>
                         <notempty name="val.colSpan">
                             <td rowspan="{$val.colSpan}"><a href="__ROOT__/file/reviewDetail/id/{$val.eid}">{$val.ecn}</a></td>
                         </notempty>
                         <td><a href="__ROOT__/file/fileDetail/no/{$val.file_no}/version/{$val.version}">{$val.file_no}</a></td>
                         <td>{$val.version}</td>
-                        <td>
-                            <eq name="val.status" value="0"><span class="tag tag-danger">不可用</span></eq>
-                            <eq name="val.status" value="1"><span class="tag tag-brown">未编辑</span></eq>
-                            <eq name="val.status" value="2"><span class="tag tag-brown">已编辑</span></eq>
-                            <eq name="val.status" value="3"><span class="tag tag-primary">评审中</span></eq>
-                            <eq name="val.status" value="4"><span class="tag tag-danger">不可用</span></eq>
-                            <eq name="val.status" value="5"><span class="tag tag-success">可用</span></eq>
-                        </td>
+
+                        <notempty name="val.colSpan">
+                            <td rowspan="{$val.colSpan}">
+                                <eq name="val.status" value="0"><span class="tag tag-danger">不可用</span></eq>
+                                <eq name="val.status" value="1"><span class="tag tag-primary">评审中</span></eq>
+                                <eq name="val.status" value="2"><span class="tag tag-success">可用</span></eq>
+                                <eq name="val.status" value="3"><span class="tag tag-danger">已撤回</span></eq>
+                            </td>
+                        </notempty>
                         <notempty name="val.colSpan">
                             <td rowspan="{$val.colSpan}">{$val.nickname}</td>
                         </notempty>

@@ -49,7 +49,7 @@
                             <span class="rule tag tag-brown">已编辑待评审</span>
                         </eq>
                         <eq name="numData.status" value="0">
-                            <span class="refuse tag tag-danger">第 {$numData.num} 次评审被拒绝</span>
+                            <span class="refuse tag tag-danger">已拒绝</span>
                         </eq>
                         <eq name="numData.status" value="3">
                             <span class="success tag tag-primary">评审中</span>
@@ -58,7 +58,10 @@
                             <span class="tag tag-danger">不可用</span>
                         </eq>
                         <eq name="numData.status" value="5">
-                            <span class="tag tag-black">可用</span>
+                            <span class="tag tag-success">可用</span>
+                        </eq>
+                        <eq name="numData.status" value="6">
+                            <span class="tag tag-danger">不可用</span>
                         </eq>
                     </div>
                 </div>
@@ -105,12 +108,20 @@
                     <div class="layui-form-label">操　作：</div>
                     <div class="layui-input-block btn-lay-orr">
 
+                        <eq name="numData.status" value="0">
+                            <eq name="numData.log.person" value="$Think.session.user.id">
+                                <a href="__ROOT__/File/review"><button type="button" class="layui-btn layui-btn-primary">评审</button></a>
+                                <else/>
+                                <a href="javascript:"><button type="button"  class="layui-btn layui-btn-primary lay-nou">评审</button></a>
+                            </eq>
+                        </eq>
+
                         <eq name="numData.status" value="1">
-                            <a href="##"><button class="layui-btn layui-btn-primary lay-edit">评审</button></a>
+                            <a href="##"><button type="button" class="layui-btn layui-btn-primary lay-edit">评审</button></a>
                         </eq>
 
                         <eq name="numData.status" value="2">
-                            <eq name="content.person" value="$Think.session.user.id">
+                            <eq name="numData.log.person" value="$Think.session.user.id">
                                 <a href="__ROOT__/File/review"><button type="button" class="layui-btn layui-btn-primary">评审</button></a>
                             <else/>
                                 <a href="javascript:"><button type="button"  class="layui-btn layui-btn-primary lay-nou">评审</button></a>
@@ -125,24 +136,52 @@
                             <a href="##"><button type="button"  class="layui-btn layui-btn-primary lay-suss">评审</button></a>
                         </eq>
 
+                        <eq name="numData.status" value="6">
+                            <a href="##"><button type="button"  class="layui-btn layui-btn-primary lay-old">评审</button></a>
+                        </eq>
 
 
+
+
+                        <eq name="numData.status" value="0">
+                            <eq name="Think.session.user.id" value="$numData.log.person">
+                                <button type="button" type="button"  class="layui-btn layui-btn-primary edit-file">编辑</button>
+                            <else/>
+                                <button type="button" type="button"  class="layui-btn layui-btn-primary edit-no">编辑</button>
+                            </eq>
+                        </eq>
 
                         <eq name="numData.status" value="1">
-                            <button type="button" type="button"  class="layui-btn layui-btn-primary edit-file">编辑</button>
+                            <eq name="Think.session.user.id" value="$numData.log.person">
+                                <button type="button" type="button"  class="layui-btn layui-btn-primary edit-file">编辑</button>
+                            <else/>
+                                <button type="button" type="button"  class="layui-btn layui-btn-primary edit-no">编辑</button>
+                            </eq>
                         </eq>
 
                         <eq name="numData.status" value="2">
-                            <button type="button" type="button"  class="layui-btn layui-btn-primary edit-file">编辑</button>
+                            <eq name="numData.log.person" value="$Think.session.user.id">
+                                <button type="button" type="button"  class="layui-btn layui-btn-primary edit-file">编辑</button>
+                                <else/>
+                                <button type="button" type="button"  class="layui-btn layui-btn-primary edit-no">编辑</button>
+                            </eq>
                         </eq>
 
                         <eq name="numData.status" value="3">
                             <button type="button" type="button"  class="layui-btn layui-btn-primary edit-yfq">编辑</button>
                         </eq>
 
-                        <eq name="numData.status" value="5">
-                            <button type="button" type="button"  class="layui-btn layui-btn-primary edit-ygd">编辑</button>
+                        <eq name="numData.status" value="6">
+                            <button type="button" type="button"  class="layui-btn layui-btn-primary edit-old">编辑</button>
                         </eq>
+
+                        <eq name="numData.status" value="5">
+                            <button type="button" type="button"  class="layui-btn layui-btn-primary edit-file">升版</button>
+                        </eq>
+
+                        <input type="hidden" value="{$numData.version}" name="nowVersion">
+                        <input type="hidden" value="upgrade" name="type">
+                        <div class="nowVersion" style="display: none;">{$numData.version}</div>
 
                         <div class="info-input ok-btn">
                             <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
@@ -186,7 +225,7 @@
                             <eq name="val.status" value="3"><span class="tag tag-primary">评审中</span></eq>
                             <eq name="val.status" value="4"><span class="tag tag-danger">不可用</span></eq>
                             <eq name="val.status" value="0"><span class="tag tag-danger">不可用</span></eq>
-                            <eq name="val.status" value="5"><span class="tag tag-black">可用</span></eq>
+                            <eq name="val.status" value="5"><span class="tag tag-success">可用</span></eq>
                         </td>
                     </tr>
                 </neq>
@@ -195,39 +234,6 @@
             </tbody>
         </table>
     </div>
-
-    <!--<div class="history" style="float: left;width: 100%;">
-        <div class="title-bar" style="margin: 20px 0 20px 0;">
-            <h4>操作记录</h4>
-        </div>
-
-        <table class="layui-table">
-            <thead>
-            <tr>
-                <th style="width: 20%">操作时间</th>
-                <th style="width: 20%;">操作人</th>
-                <th style="width: 60%;">操作动作</th>
-            </tr>
-            </thead>
-            <tbody>
-            <volist name="numData.log" id="val">
-                <tr>
-                    <td>{$val.time|date="Y-m-d H:i:s",###}</td>
-                    <td>{$val.nickname}</td>
-                    <td>
-                        <eq name="val.action" value="apply">申请编号</eq>
-                        <eq name="val.action" value="initiate"><a href="__ROOT__/File/reviewDetail/id/{$numData.id}/version/{$numData.version}/num/{$val.count}">发起了第 {$val.count} 次评审</a></eq>
-                        <eq name="val.action" value="pass">通过评审</eq>
-                        <eq name="val.action" value="rollback">撤回评审</eq>
-                        <eq name="val.action" value="refuse">拒绝评审</eq>
-                        <eq name="val.action" value="upgrade">升级版本</eq>
-                    </td>
-                </tr>
-            </volist>
-
-            </tbody>
-        </table>
-    </div>-->
 
 </block>
 
@@ -266,6 +272,7 @@
 
                     <input type="hidden" id="file_no" name="file_no" value="{$numData.file_no}">
                     <input type="hidden" id="numberId" name="numberId" value="{$numData.id}">
+                    <input type="hidden" id="num" name="num" value="{$numData.num}">
                     <input type="hidden" id="getVersion" name="getVersion" value="{$Think.get.version}">
                     <input type="hidden" id="getNo" name="getNo" value="{$Think.get.no}">
 

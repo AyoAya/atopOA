@@ -133,7 +133,7 @@ $(function(){
                         }
                         prompt += '<p>DCC评审</p>';
                         $('.reviewGrade').html(inner);
-                        $('.prompt').html(prompt);
+                        $('.step').html(prompt);
 
                     }
                 }
@@ -150,13 +150,108 @@ $(function(){
             });
         });
 
-       $(document).on('click', '.user-item', function(){
-           if( $(this).hasClass('active') ){
+        $(document).on('click', '.user-item', function(){
+            if( $(this).hasClass('active') ){
                 $(this).removeClass('active');
-           }else{
+            }else{
                $(this).addClass('active');
-           }
-       });
+            }
+        });
+
+        // 点击添加将此条信息添加进文件列
+        /*$(document).on('click','.add-a',function(){
+
+            /!*!//console.log($(this).attr('filename'));
+            let fileHtml = $(this).parents('tr');
+            let file_id = $(this).attr('file_id');
+            let filetable = $(this).parents('table');
+            let _par = $(this).parent().prev();
+                fileHtml.find('.add-a').parent().remove();
+
+
+            let _fl = _par.parents('tr');
+            filetable.css('border','none')
+            _fl.find('.fl-ctx').addClass('hd-text');
+            _fl.find('tr').css('border','none');
+
+            //console.log(fl_html);
+            //let fileHtml = '<tr><td>'+$(this)+'</td><td></td><td></td><td></td></tr>';
+            let fl_html = _par.parents('tr').html();
+            $('.fl-tab').append('<tr>'+fl_html+'</tr>');
+            $(this).parents('tr').remove();
+            layer.closeAll();*!/
+
+
+
+        })*/
+
+
+
+        $('.add-fl').click(function(){
+
+
+
+            layer.open({
+                type: 1,
+                area: ['1200px','500px'], //宽高
+                title : '请选择文件',
+                shade: [0.5 ,'#000'],
+                content: refushFileList(numberData,true,true)
+            });
+
+            /*$.ajax({
+                url : ThinkPHP['AJAX'] + '/File/review',
+                dataType : 'json',
+                type : 'POST',
+                data : {
+                   type : 'file_info',
+                },
+                success: function( response ){
+                   // 根据返回的结果检查队列里是否包含文件，如果有则上传，没有则直接跳转到详情页
+
+                    console.log(response);
+
+                    var html = '<div class="file-box"><table class="layui-table"><thead><tr><th>文件号</th><th>版本号</th><th>附件</th><th>文件描述</th><th width="60">选择</th></tr></thead>';
+
+                    if( response ){
+
+                        for( var i=0;i<response.length;i++ ){
+                            html += '<tr><td>'+response[i].file_no+'</td><td>'+response[i].version+'</td><td>';
+
+                            for(var j=0;j<response[i]['attachment'].length;j++){
+                                console.log(j<response[i]['attachment']);
+                                html += '<div class="file-item"><div class="file-info" style="width:200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><i class="file-icon file-icon-ext-'+response[i]['attachment'][j].ext+'"></i>&nbsp;&nbsp;<a href="'+ThinkPHP['ROOT']+'/'+response[i]['attachment'][j].path+'" target="_blank" title="'+response[i]['attachment'][j].savename+'">'+response[i]['attachment'][j].savename+'</a></div></div>'
+                            }
+
+                            html += '</td> <td>'+response[i].content+'</td><td><a href="javascript:void(0);" class="add-a" fid="'+response[i].id+'" fileName="'+response[i].file_no+'">添加</a></td></tr>'
+                        }
+
+                        html += '</table></div>';
+
+                        layer.open({
+                            type: 1,
+                            skin: 'layui-layer-rim', //加上边框
+                            area: ['1200px', '450px'], //宽高
+                            title : '请选择文件',
+                            content: html
+                        });
+
+                    }else{
+                       location.replace(location.href);
+                       layer.msg('ERROR', {icon: 2, time: 2000});
+                    }
+
+                }
+
+            });*/
+
+
+
+
+        })
+
+
+
 
         // 隐藏或开启评审选人
         $('.reviewGrade').on('click','.post-box',function(){
@@ -205,12 +300,10 @@ $(function(){
 
         form.on('submit(submit)',function( data ){
 
-            //console.log(JSON.stringify(data.field));
-
-            if(!$('.fileNo-box span').length){
+            /*if(!$('.fileNo-box span').length){
                 layer.msg('请添加编号，没有请先申请！',{time:2000});
                 return false;
-            }
+            }*/
 
             if(!$('.post-box .person').length){
                 layer.msg('请选择评审人！',{time:2000});
@@ -250,6 +343,7 @@ $(function(){
 
             data.field.allUserItem = AllUserItem;
             data.field.num = num;
+            data.field.selected = selecteds;
 
             $.ajax({
                 url : ThinkPHP['AJAX'] + '/File/review',
@@ -270,22 +364,12 @@ $(function(){
                     // 根据返回的结果检查队列里是否包含文件，如果有则上传，没有则直接跳转到详情页
                     if( response.flag > 0 ){
 
-                        if( APRuploader.getFiles().length > 0 ){ //检查队列里是否包含文件
+                        layer.msg(response.msg, {icon: 1, time: 1500});
+                        setTimeout(function () {
+                            location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/reviewDetail/id/'+response.flag;
+                        })
 
-                            SUB_NAME = response.flag;
-                            NUM_ID = response.num;
-                            FILE_NO = response.file_no;
-                            VERSION = response.version;
-                            APRuploader.option('formData', {SUB_NAME: SUB_NAME,NUM_ID: NUM_ID,FILE_NO:FILE_NO,VERSION:VERSION});
-                            APRuploader.upload();
-                        }else{
-                            layer.msg(response.msg, {icon: 1, time: 1500});
-                            setTimeout(function () {
-                                location.href = 'http://' + ThinkPHP['HTTP_HOST'] + '/File/fileDetail/no/'+response.file_no+'/version/'+response.version;
-                            })
-                        }
                     }else{
-
                         location.replace(location.href);
                         layer.msg('ERROR', {icon: 2, time: 2000});
                     }
