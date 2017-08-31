@@ -1,0 +1,105 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>文件号规则</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/File">文件管理</a></li>
+        <li class="active">文件号规则</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="pull-right">
+        <a href="__ROOT__/File/add" class="layui-btn layui-btn-primary">
+            <span class="icon-plus"></span> 添加文件号规则
+        </a>
+    </div>
+
+    <div class="clearfix" style="margin-bottom: 20px;"></div>
+
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>文件类型</th>
+                <th>编号长度</th>
+                <th>文件描述</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>EVT</td>
+                <td>15</td>
+                <td>这是EVT文件类型的描述信息。</td>
+                <td>2017-08-27</td>
+                <td>
+                    <div class="layui-btn-group">
+                        <a href="__ROOT__/File/FilenumberEdit" type="button" class="layui-btn layui-btn-primary layui-btn-small">编辑</a>
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-small">删除</button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>PCS</td>
+                <td>10</td>
+                <td>这是PCS文件类型的描述信息。</td>
+                <td>2017-08-27</td>
+                <td>
+                    <div class="layui-btn-group">
+                        <a href="__ROOT__/File/FilenumberEdit" type="button" class="layui-btn layui-btn-primary layui-btn-small">编辑</a>
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-small">删除</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

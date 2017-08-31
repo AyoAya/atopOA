@@ -1678,13 +1678,38 @@ class FileController extends AuthController  {
 
     }
 
+    /**
+     * ecn评审规则列表页
+     */
+    public function EcnList(){
+        $this->display();
+    }
 
+    /**
+     * ecn评审规则编辑页
+     */
+    public function EcnEdit(){
+        $this->display();
+    }
+
+    /**
+     * 文件号规则列表页
+     */
+    public function FilenumberList(){
+        $this->display();
+    }
+
+    /**
+     * 文件号规则编辑页
+     */
+    public function FilenumberEdit(){
+        $this->display();
+    }
 
 
     /**
      * 邮件推送
      */
-
     public function pushEmail( $type, $address, $data,$cc){
 
         $model = new Model();

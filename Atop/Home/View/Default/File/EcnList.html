@@ -1,0 +1,338 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link href="__CSS__/File/EcnList.css" type="text/css" rel="stylesheet"></link>
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/File/EcnList.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>评审规则</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/File">文件管理</a></li>
+        <li class="active">评审规则</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="pull-right">
+        <a href="__ROOT__/File/EcnEdit" class="layui-btn layui-btn-primary">
+            <span class="icon-plus"></span> 添加评审规则
+        </a>
+    </div>
+
+    <div class="clearfix" style="margin-bottom: 20px;"></div>
+
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>规则名称</th>
+                <th>规则描述</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>
+                    <span class="gz-xq">第一条评审规则</span>
+                    <div class="ly-md sr-only">
+                        <div class="md-bd">
+                            <fieldset>
+                                <legend>规则详情<small>各级评审通知到的收件人职位</small></legend>
+                                <div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>1 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">PE工程师</span>
+                                        </div>
+                                    </div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>2 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">结构经理</span>
+                                            <span class="js-zw">硬件工程师</span>
+                                            <span class="js-zw">PE工程师</span>
+                                        </div>
+                                    </div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>3 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">结构经理</span>
+                                            <span class="js-zw">硬件工程师</span>
+                                            <span class="js-zw">测试工程师</span>
+                                            <span class="js-zw">PE工程师</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset style="margin-top: 20px;">
+                                <legend>抄送列表<small>该规则将通知到的抄送人职位</small></legend>
+                                <div>
+                                    <div class="lv-row">
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">结构经理</span>
+                                            <span class="js-zw">硬件工程师</span>
+                                            <span class="js-zw">测试工程师</span>
+                                            <span class="js-zw">PE工程师</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </td>
+                <td>这是第一条评审规则的描述信息。</td>
+                <td>2017-08-27</td>
+                <td>
+                    <div class="layui-btn-group">
+                        <a href="__ROOT__/File/EcnEdit" type="button" class="layui-btn layui-btn-primary layui-btn-small">编辑</a>
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-small">删除</button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>
+                    <span class="gz-xq">第二条评审规则</span>
+                    <div class="ly-md sr-only">
+                        <div class="md-bd">
+                            <fieldset>
+                                <legend>规则详情<small>各级评审通知到的收件人职位</small></legend>
+                                <div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>1 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">PE工程师</span>
+                                        </div>
+                                    </div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>2 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">结构经理</span>
+                                            <span class="js-zw">硬件工程师</span>
+                                            <span class="js-zw">PE工程师</span>
+                                        </div>
+                                    </div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>3 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">结构经理</span>
+                                            <span class="js-zw">硬件工程师</span>
+                                            <span class="js-zw">测试工程师</span>
+                                            <span class="js-zw">PE工程师</span>
+                                        </div>
+                                    </div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>4 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">结构经理</span>
+                                        </div>
+                                    </div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>5 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                        </div>
+                                    </div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>6 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">结构经理</span>
+                                            <span class="js-zw">硬件工程师</span>
+                                            <span class="js-zw">软件工程师</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset style="margin-top: 20px;">
+                                <legend>抄送列表<small>该规则将通知到的抄送人职位</small></legend>
+                                <div>
+                                    <div class="lv-row">
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">结构经理</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </td>
+                <td>这是第二条评审规则的描述信息。</td>
+                <td>2017-08-28</td>
+                <td>
+                    <div class="layui-btn-group">
+                        <a href="__ROOT__/File/EcnEdit" type="button" class="layui-btn layui-btn-primary layui-btn-small">编辑</a>
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-small">删除</button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>
+                    <span class="gz-xq">第三条评审规则</span>
+                    <div class="ly-md sr-only">
+                        <div class="md-bd">
+                            <fieldset>
+                                <legend>规则详情<small>各级评审通知到的收件人职位</small></legend>
+                                <div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>1 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">PE工程师</span>
+                                        </div>
+                                    </div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>2 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">结构经理</span>
+                                            <span class="js-zw">硬件工程师</span>
+                                            <span class="js-zw">PE工程师</span>
+                                        </div>
+                                    </div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>3 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">结构经理</span>
+                                            <span class="js-zw">硬件工程师</span>
+                                            <span class="js-zw">测试工程师</span>
+                                            <span class="js-zw">PE工程师</span>
+                                        </div>
+                                    </div>
+                                    <div class="lv-row">
+                                        <div class="lv-top">
+                                            <p>4 级评审：</p>
+                                        </div>
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">结构经理</span>
+                                            <span class="js-zw">硬件工程师</span>
+                                            <span class="js-zw">软件工程师</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset style="margin-top: 20px;">
+                                <legend>抄送列表<small>该规则将通知到的抄送人职位</small></legend>
+                                <div>
+                                    <div class="lv-row">
+                                        <div class="lv-btm">
+                                            <span class="js-zw">研发总监</span>
+                                            <span class="js-zw">产品经理</span>
+                                            <span class="js-zw">结构经理</span>
+                                            <span class="js-zw">硬件工程师</span>
+                                            <span class="js-zw">测试工程师</span>
+                                            <span class="js-zw">PE工程师</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </td>
+                <td>这是第三条评审规则的描述信息。</td>
+                <td>2017-08-29</td>
+                <td>
+                    <div class="layui-btn-group">
+                        <a href="__ROOT__/File/EcnEdit" type="button" class="layui-btn layui-btn-primary layui-btn-small">编辑</a>
+                        <button type="button" class="layui-btn layui-btn-primary layui-btn-small">删除</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
