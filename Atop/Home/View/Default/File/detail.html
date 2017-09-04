@@ -1,0 +1,174 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
+    <link rel="stylesheet" href="__CSS__/file/detail.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
+    <script src="__JS__/file/detail.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>文件详情</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/File">文件管理</a></li>
+        <li class="active">文件详情</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="section-grey-table preview-condition">
+        <div class="section-title">基本信息</div>
+        <div class="section-body">
+            <table class="layui-table">
+                <tbody>
+                    <tr>
+                        <td>文件号</td>
+                        <td>{$result.filenumber}</td>
+                    </tr>
+                    <tr>
+                        <td>创建人</td>
+                        <td>{$result.nickname}</td>
+                    </tr>
+                    <tr>
+                        <td>创建时间</td>
+                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
+                    </tr>
+                    <tr>
+                        <td>状态</td>
+                        <td>
+                            <span class="{$result.className}">{$result.stateName}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>版本</td>
+                        <td>{$result.version}</td>
+                    </tr>
+                    <tr>
+                        <td>附件</td>
+                        <td>
+                            <a href="__ROOT__/{$result.file.path}" target="_blank"><i class="file-icon file-icon-ext-{$result.file.ext}"></i> {$result.file.name}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>描述</td>
+                        <td>{$result.description}</td>
+                    </tr>
+                    <tr>
+                        <td>操作</td>
+                        <td>
+                            <eq name="result.state" value="InReview">
+                                <button type="button" class="layui-btn layui-btn-primary layui-btn-disabled">编辑</button>
+                            <else/>
+                                <button type="button" class="layui-btn layui-btn-primary xq-edit-btn">编辑</button>
+                            </eq>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-grey-table edit-condition sr-only">
+        <input type="hidden" name="id" value="{$result.id}" id="fileID">
+        <div class="section-title">编辑文件</div>
+        <div class="section-body">
+            <table class="layui-table">
+                <tbody>
+                    <tr>
+                        <td>文件号</td>
+                        <td>{$result.filenumber}</td>
+                    </tr>
+                    <tr>
+                        <td>创建人</td>
+                        <td>{$result.nickname}</td>
+                    </tr>
+                    <tr>
+                        <td>创建时间</td>
+                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
+                    </tr>
+                    <tr>
+                        <td>状态</td>
+                        <td>
+                            <span class="{$result.className}">{$result.stateName}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>版本</td>
+                        <td>
+                            <input type="text" class="layui-input pull-left" name="version" id="version" value="{$result.version}">
+                            <span class="tswb ipt-yc pull-left">请确保版本的正确格式（忽略大小写），例：V1.25</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>附件</td>
+                        <td>
+                            <a href="__ROOT__/{$result.file.path}" target="_blank"><i class="file-icon file-icon-ext-{$result.file.ext}"></i> {$result.file.name}</a>
+                            <div id="FilePick"><i class="icon-arrow-up"></i> 上传文件</div>
+                            <div class="uploader-attachment-queue"></div>
+                            <div class="tswb">注：一个文件号只能对应一个文件（文件上传只能单选），在有文件的情况下重新上传附件将会被替换。</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>描述</td>
+                        <td>
+                            <textarea id="layedit-description" style="display: none;">
+                                {$result.description}
+                            </textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>操作</td>
+                        <td>
+                            <button type="button" id="saveFileData" class="layui-btn">保存</button>
+                            <button type="button" class="layui-btn layui-btn-primary xq-cancel-btn">取消</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-grey-table">
+        <div class="section-title">以往版本</div>
+        <div class="section-body">
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <th>版本号</th>
+                        <th>附件</th>
+                        <th>创建人</th>
+                        <th>创建时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <notempty name="beforeVersions">
+                        <volist name="beforeVersions" id="value">
+                            <tr>
+                                <td><a href="#">{$value.version}</a></td>
+                                <td>
+                                    <a href="__ROOT__/{$result.file.path}" target="_blank"><i class="file-icon file-icon-ext-{$result.file.ext}"></i> {$result.file.name}</a>
+                                </td>
+                                <td>{$value.nickname}</td>
+                                <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
+                            </tr>
+                        </volist>
+                    <else/>
+                        <tr><td colspan="4" style="text-align: center;padding: 40px 0;">没有数据</td></tr>
+                    </notempty>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</block>
+
+
+

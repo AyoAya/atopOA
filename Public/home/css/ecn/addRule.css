@@ -1,0 +1,40 @@
+/* 复写layui的部分表单样式 */
+.layui-form .layui-form-label {
+    text-align: left;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 30px;
+    width: 100px;
+}
+.layui-form .layui-form-item {
+    margin-bottom: 30px;
+}
+.layui-form .layui-input-block {
+    margin-left: 100px;
+}
+
+
+.tswb {
+    color: #999;
+    font-size: 12px;
+    padding-top: 8px;
+}
+
+
+
+.ps-wrapper {
+    border: solid 1px #e6e6e6;
+    padding: 15px;
+}
+.ps-wrapper .gw-mc {
+    margin: 25px 0 10px 0;
+}
+.ps-wrapper .gw-mc:first-child {
+    margin-top: 0;
+}
+.ps-wrapper .layui-form-checkbox span {
+    width: 145px;
+}
+.ps-wrapper .layui-form-checkbox {
+    margin: 7px 0 !important;
+}

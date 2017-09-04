@@ -1,0 +1,64 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/ecn/index.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/ecn/index.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>ECN</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">ECN</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="pull-left">
+        <a href="__ROOT__/ECN/add" class="layui-btn layui-btn-primary">
+            创建ECN
+        </a>
+        <a href="__ROOT__/ECN/rules" class="layui-btn layui-btn-primary">
+            ECN规则
+        </a>
+    </div>
+
+    <div class="clearfix" style="margin-bottom: 25px;"></div>
+
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>ECN号</th>
+                <th>状态</th>
+                <th>创建人</th>
+                <th>创建时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            <volist name="result" id="value">
+                <tr>
+                    <td><a href="__ROOT__/ECN/detail/id/{$value.id}">{$value.ecn_number}</a></td>
+                    <td>
+                        <span class="{$value.className}">{$value.stateName}</span>
+                    </td>
+                    <td>{$value.nickname}</td>
+                    <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
+                </tr>
+            </volist>
+        </tbody>
+    </table>
+
+    <!-- 分页 -->
+    <ul class="pagination pagination-edit">{$pageShow}</ul>
+
+</block>
+
+
+

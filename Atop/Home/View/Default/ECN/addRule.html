@@ -1,0 +1,140 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/ECN/addRule.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/ecn/addRule.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>添加ECN规则</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/ECN">ECN</a></li>
+        <li><a href="__ROOT__/ECN/rules">ECN规则</a></li>
+        <li class="active">添加ECN规则</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <form class="layui-form" action="" style="margin-top: 10px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">规则名</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" required  lay-verify="required" placeholder="请输入规则名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">规则描述</label>
+            <div class="layui-input-block">
+                <input type="text" name="description" placeholder="请输入规则描述" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="cc-container"></div>    <!--抄送人选择容器-->
+        <div class="lv-container"></div>    <!--收件人选择容器-->
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="addRuleSubmit">提交数据</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="addLvGroup">增加一级评审</button>
+                <button type="button" class="layui-btn layui-btn-danger" id="removeLastGroup">移除最后一级评审</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        layui.use(['form', 'layer', 'layedit'], function(){
+            // init layui components.
+            var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit;
+
+            var positions = {$positions};
+            var _container = $('.lv-container');
+            var _cc_container = $('.cc-container');
+            var lvGroupHtml = '';
+            addLvGroup();  // 初始化抄送
+            addLvGroup(1);  // 初始化收件
+
+            // 增加一级评审
+            $('#addLvGroup').click(function(){
+                let current = $('.lv-container .layui-form-item').length;
+                lvGroupHtml = '';   // 每次清空已有的html
+                addLvGroup((current + 1));  // 当前索引+1
+            });
+
+            // 移除最后一组
+            $('#removeLastGroup').click(function(){
+                let childLength = $('.lv-container').children().length;
+                if( childLength > 1 ){
+                    $('.lv-container .layui-form-item').eq(childLength-1).remove();
+                }else{
+                    layer.msg('至少保留一级评审', { icon: 2, time: 1000});
+                }
+            });
+
+            // 监听提交
+            form.on('submit(addRuleSubmit)', function(data){
+                console.log(data.field);
+                $.post(ThinkPHP['AJAX'] + '/ECN/addRule', data.field, function(response){
+                    if( response.flag ){
+                        layer.msg(response.msg, { icon: 1, time: 1000});
+                        setTimeout(function(){
+                            location.href = 'http://'+ ThinkPHP['HTTP_HOST'] +'/ECN/rules';
+                        }, 1000)
+                    }else{
+                        layer.msg(response.msg, { icon: 2, time: 1000});
+                    }
+                });
+                return false;
+            });
+
+            /**
+             * 增加一级评审
+             * @param index 级索引
+             */
+            function addLvGroup(index = ''){
+                lvGroupHtml += '<div class="layui-form-item">';
+                if( index == '' ){
+                    lvGroupHtml += '<label class="layui-form-label">抄送职位</label>';
+                }else{
+                    lvGroupHtml += '<label class="layui-form-label">'+ index +' 级评审</label>';
+                }
+                lvGroupHtml += '<div class="layui-input-block">';
+                lvGroupHtml += '<div class="ps-wrapper">';
+                for( let item in positions ){
+                    if( index == '' ){
+                        lvGroupHtml += '<input type="checkbox" name="cc['+ positions[item].id +']" title="'+ positions[item].name +'" lay-skin="primary">';
+                    }else{
+                        lvGroupHtml += '<input type="checkbox" name="positionGroup'+ index +'['+ positions[item].id +']" title="'+ positions[item].name +'" lay-skin="primary">';
+                    }
+                }
+                lvGroupHtml += '</div>';
+                if( index == '' ){
+                    lvGroupHtml += '<div class="tswb">抄送列表将通知到包含该职位的所有人员</div>';
+                }else{
+                    lvGroupHtml += '<div class="tswb">您所有选定的职位将决定套用该规则的ECN只能从设定的职位中选择人员</div>';
+                }
+                lvGroupHtml += '</div>';
+                lvGroupHtml += '</div>';
+                if( index == '' ){
+                    _cc_container.html(lvGroupHtml);
+                }else{
+                    _container.append(lvGroupHtml);
+                }
+                lvGroupHtml = '';   // 添加完之后清空避免叠加
+                form.render('checkbox');
+            }
+
+        });
+    </script>
+
+</block>
+
+
+

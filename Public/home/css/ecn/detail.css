@@ -1,0 +1,317 @@
+/* 复写layui的部分表单样式 */
+.layui-form .layui-form-label {
+    text-align: right;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 30px;
+    width: 150px;
+}
+.layui-form .layui-form-item {
+    margin-bottom: 25px;
+}
+.layui-form .layui-input-block {
+    margin-left: 150px;
+}
+
+.layui-btn-disabled:hover {
+    color: #c9c9c9 !important;
+}
+
+/* 隐藏layedit编辑器的工具栏 */
+.layui-layedit .layui-layedit-tool {
+    display: none;
+}
+
+.edit-condition, .preview-condition {
+    padding-bottom: 200px;
+}
+
+
+.syx-wjlb .layui-table tbody td, .psjd-bg .layui-table tbody td {
+    padding: 15px;
+}
+@media (max-width: 1440px) {
+    .syx-wjlb .layui-table tbody td:last-child {
+        width: 500px;
+    }
+    .syx-wjlb .layui-table tbody td:last-child p.wrap {
+        width: 500px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .syx-wjlb .layui-table tbody td:nth-child(3) {
+        width: 300px;
+    }
+    .syx-wjlb .layui-table tbody td:nth-child(3) a {
+        display: block;
+        width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+@media (min-width: 1440px) {
+    .syx-wjlb .layui-table tbody td:last-child {
+        width: 900px;
+    }
+    .syx-wjlb .layui-table tbody td:last-child p.wrap {
+        width: 900px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .syx-wjlb .layui-table tbody td:nth-child(3) {
+        width: 300px;
+    }
+    .syx-wjlb .layui-table tbody td:nth-child(3) a {
+        display: block;
+        width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+
+@media (max-width: 1440px) {
+    .psjd-bg .layui-table tbody td:last-child {
+        width: 500px;
+    }
+    .psjd-bg .layui-table tbody td:last-child p {
+        width: 500px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+@media (min-width: 1440px) {
+    .psjd-bg .layui-table tbody td:last-child {
+        width: 900px;
+    }
+    .psjd-bg .layui-table tbody td:last-child p {
+        width: 900px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+
+
+
+.ecn-itm {
+    height: 38px;
+    line-height: 38px;
+}
+
+.choose-btn {
+    margin-top: 20px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    border: solid 1px #e6e6e6;
+    border-radius: 2px;
+    cursor: pointer;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s ;
+    -ms-transition: all .3s ;
+    -o-transition: all .3s ;
+    transition: all .3s ;
+}
+.choose-btn:hover {
+    background: #1aa194;
+    color: #fff;
+}
+.rule-preview {
+    display: none;
+    clear: both;
+    border-radius: 2px;
+    padding-top: 5px;
+    border: solid 1px #e6e6e6;
+}
+.rule-preview .lv-row {
+    margin: 15px;
+}
+.rule-preview .lv-row .lv-mc {
+    padding-bottom: 10px;
+    font-weight: bold;
+}
+.rule-preview .lv-row .lv-mc small {
+    color: #999;
+    font-size: 12px;
+    margin-left: 10px;
+    font-weight: normal;
+}
+.rule-preview .lv-row .lv-itm {
+    padding-left: 15px;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+.rule-preview .lv-row .lv-itm .js-zw {
+    width: 12.5%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    float: left;
+    cursor: default;
+    border-radius: 40px;
+    -webkit-transition: all .6s;
+    -moz-transition: all .6s;
+    -ms-transition: all .6s;
+    -o-transition: all .6s;
+    transition: all .6s;
+}
+.rule-preview .lv-row .lv-itm:after {
+    content: '';
+    clear: both;
+}
+.rule-preview .lv-row .lv-itm .js-zw:hover {
+    border-radius: 0;
+    background: #f2f2f2;
+}
+.rule-preview .rule-preview-loading {
+    min-height: 100px;
+    text-align: center;
+    line-height: 100px;
+}
+.filelist-box .layui-table {
+    margin: 0;
+}
+.filelist-box .layui-table tbody td:nth-child(4) {
+    width: 300px;
+}
+.filelist-box .layui-table tbody td:nth-child(4) p {
+    width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.filelist-box .layui-table tbody td:nth-child(3) {
+    width: 250px;
+}
+.filelist-box .layui-table tbody td:nth-child(3) a {
+    display: block;
+    width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.filelist-box .layui-table tbody td:last-child, #LAYER_CONTAINER .layui-table tbody td:last-child {
+    width: 66px;
+}
+
+#LAYER_CONTAINER .layui-table {
+    margin: 0;
+}
+
+
+.review-selected .layui-table {
+    margin: 0;
+}
+@media (max-width: 1440px) {
+    .review-selected .layui-table tbody td:nth-child(4) {
+        width: 300px;
+    }
+    .review-selected .layui-table tbody td:nth-child(4) p {
+        width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .review-selected .layui-table tbody td:nth-child(3) {
+        width: 250px;
+    }
+    .review-selected .layui-table tbody td:nth-child(3) a {
+        display: block;
+        width: 250px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+@media (min-width: 1440px) {
+    .review-selected .layui-table tbody td:nth-child(4) {
+        width: 700px;
+    }
+    .review-selected .layui-table tbody td:nth-child(4) p {
+        width: 700px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .review-selected .layui-table tbody td:nth-child(3) {
+        width: 300px;
+    }
+    .review-selected .layui-table tbody td:nth-child(3) a {
+        display: block;
+        width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+.review-selected .layui-table tbody td:last-child {
+    width: 66px;
+}
+
+
+.ps-wrapper {
+    border: solid 1px #e6e6e6;
+    padding: 20px;
+}
+.ps-wrapper .gw-mc {
+    margin: 15px 0 10px 0;
+    font-weight: bold;
+}
+.ps-wrapper .gw-mc:first-child {
+    margin-top: 0;
+}
+.ps-wrapper .layui-form-checkbox span {
+    width: 90px;
+}
+.ps-wrapper .layui-form-checkbox {
+    margin: 7px 0 !important;
+}
+
+
+
+
+
+
+/*** 定义多选组件 ***/
+/*.multi-select {
+    position: relative;
+}
+.multi-select .pv-items {
+    min-height: 38px;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: solid 1px #e6e6e6;
+    border-radius: 2px;
+    transition: all .3s;
+}
+.multi-select .pv-items:hover {
+    border: solid 1px #d2d2d2;
+}
+.multi-select .pv-items .atv-item {
+    font-size: 12px;
+    padding: 5px 10px;
+    display: inline-block;
+    text-align: center;
+    border: solid 1px pink;
+}
+.multi-select .pv-items .atv-item i {
+    margin-left: 5px;
+    cursor: pointer;
+}
+.multi-select .ms-options {
+    margin-top: 5px;
+    width: 100%;
+    z-index: 100;
+    min-height: 300px;
+    overflow-y: auto;
+    border: solid 1px #e6e6e6;
+    background: #fff;
+}*/

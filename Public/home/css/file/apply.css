@@ -1,0 +1,19 @@
+.layui-form .layui-form-label {
+    text-align: left;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+.layui-form .layui-input-inline {
+    margin-right: 15px;
+}
+
+.tswb {
+    color: #999;
+    font-size: 12px;
+    padding: 5px 0;
+}
+
+.section-grey-table {
+    margin-top: 20px;
+}

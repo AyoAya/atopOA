@@ -2,6 +2,8 @@
 namespace Home\Controller;
 use Think\Controller;
 use Think\Auth;
+use Think\Model;
+
 /**
  * 权限认证
  * @author Fulwin
@@ -208,6 +210,17 @@ class AuthController extends Controller {
                 $this->ajaxReturn( ['flag'=>0, 'msg'=>'没有相应型号'] );
             }
         }
+    }
+
+    /**
+     * 插入通知数据
+     * @param $data 通知的数据
+     * @return mixed 插入的结果
+     */
+    protected function insertNotice($data){
+        $model = new Model();
+        $insertId = $model->table(C('DB_PREFIX').'notice')->add($data);
+        return $insertId;
     }
 
 
