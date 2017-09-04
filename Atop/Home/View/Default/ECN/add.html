@@ -271,7 +271,7 @@
             // 渲染评审项
             function renderReviewItem(reviews, inLayer = false){
                 var renderHtml = '';
-                if( reviews.length > 0 ){
+                if( Object.keys(reviews).length > 0 ){
                     for( let type in reviews ){
                         if( type == 'file' ){
                             if( reviews[type].length ){
@@ -337,6 +337,3 @@
     </script>
 
 </block>
-
-
-
