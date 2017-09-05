@@ -6,7 +6,7 @@
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
-    <script src="__JS__/ecn/ecn.js"></script>
+    <!-- <script src="__JS__/ecn/ecn.js"></script> -->
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -60,7 +60,7 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item">
+            <div class="layui-form-item" id="affect">
                 <label class="layui-form-label">受影响的文件列表</label>
                 <div class="layui-input-block">
                     <div class="selected-files">
@@ -88,7 +88,7 @@
                     <div class="layui-form-mid layui-word-aux">注：将已经编辑好的文件添加到此处 [支持多选]</div>
                 </div>
             </div>
-            <div class="layui-form-item">
+            <div class="layui-form-item" id="review-rule">
                 <label class="layui-form-label">评审规则</label>
                 <div class="layui-input-block">
                     <select name="quote_rule" id="rule" lay-filter="rule" lay-verify="required">
@@ -122,7 +122,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
+                    <button class="layui-btn" lay-submit lay-filter="saveECN">保存</button>
                     <button type="reset" class="layui-btn layui-btn-primary cancel-edit-btn">取消</button>
                 </div>
             </div>
@@ -256,7 +256,7 @@
         </div>
     </div>
 
-    <div class="filelist-wrapper sr-only">
+    <!-- <div class="filelist-wrapper sr-only">
         <div class="filelist-box">
             <table class="layui-table">
                 <thead>
@@ -328,7 +328,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </div> -->
 
     <script>
         layui.use(['form', 'layer', 'layedit'], function() {
@@ -337,18 +337,44 @@
                     layer = layui.layer,
                     layedit = layui.layedit;
 
+            // 定义layedit编辑器配置
+            var layeditOptions = {
+                height: 150
+            }
+
+            // 实例化layedit编辑器
+            var layeditDescription = layedit.build('layedit-description', layeditOptions);
+            var layeditReason = layedit.build('layedit-reason', layeditOptions);
+
+            // 编辑
+            $('.edit-ecn-btn').click(function(){
+                $('.preview-condition').addClass('sr-only');
+                $('.edit-condition').removeClass('sr-only');
+            });
+
+            // 取消编辑
+            $('.cancel-edit-btn').click(function(){
+                $('.edit-condition').addClass('sr-only');
+                $('.preview-condition').removeClass('sr-only');
+                $('#content').scrollTop(0);
+            });
+
             var reviews = null;   // 评审项数据
 
             var Checkeds = <php>echo json_encode($result['Checkeds']);</php>;
             var reviewItems = <php>echo json_encode($reviewItems);</php>;
+            var _id = <php>echo  $result['id'];</php>;
+            var _ecnType = '<php>echo  $result['ecn_type'];</php>';
 
-            //console.log(reviewItems);
+            //console.log(_id, _ecnType);
 
             var reviewSelected = [];    // 被添加到显示的评审项(初始化结构)
 
             for( let key in reviewItems.InReviews ){
                 reviewSelected.push(reviewItems.InReviews[key]);
             }
+
+            console.log(reviewSelected);
 
             $('.selected-files').html( renderReviewItemList('{$result.ecn_type}', reviewSelected, false) );
 
@@ -372,19 +398,19 @@
             });
 
             // 监听提交
-            form.on('submit(createECN)', function(data){
+            form.on('submit(saveECN)', function(data){
                 // 验证表单提交时数据的合法性
-                if( !layedit.getText(layeditDescription).length ){
+                if( $.trim(layedit.getText(layeditDescription)) == '' ){
                     $('#content').scrollTop(0);
                     layer.msg('请输入变更描述', {icon: 2, time: 1500});
                     return false;
                 }
-                if( !layedit.getText(layeditReason).length ){
+                if( $.trim(layedit.getText(layeditReason)) == '' ){
                     $('#content').scrollTop(0);
                     layer.msg('请输入变更原因', {icon: 2, time: 1500});
                     return false;
                 }
-                if( !reviewSelected.file.length ){
+                if( Object.keys(reviewSelected).length < 1 ){
                     let top = $('#affect')[0].offsetTop;
                     $('#content').scrollTop(top-20);
                     layer.msg('请添加文件', {icon: 2, time: 1500});
@@ -431,22 +457,25 @@
                         dcc_review.push(val);
                     }
                 });
-                // 组装数据并提交
-                $.post(ThinkPHP['AJAX'] + '/ECN/add', {
+                var postData = {
+                    id: _id,
+                    ecn_type: _ecnType,
                     change_description: layedit.getContent(layeditDescription),
                     change_reason: layedit.getContent(layeditReason),
                     quote_rule: data.field.quote_rule,
                     reviewSelected: reviewSelected,
                     review_group: review_group,
                     dcc_review: dcc_review
-                }, function(response){
+                }
+                // 组装数据并提交
+                $.post(ThinkPHP['AJAX'] + '/ECN/detail', postData, function(response){
                     if( response.flag ){
                         layer.msg(response.msg, {icon: 1, time: 1500});
                         setTimeout(function(){
-                            location.href = 'http://'+ ThinkPHP['HTTP_HOST'] +'/ECN';
+                            location.replace(location.href);
                         }, 1500);
                     }else{
-                        layer.msg(response.msg, {icon: 2, time: 1500});
+                        layer.msg(response.msg, {icon: 2, time: 3000});
                     }
                 });
                 return false;
@@ -604,7 +633,7 @@
                     assoc: actv
                 }, function(response){
                     if( !response.flag ){
-                        layer.msg(response.msg, {icon: 2, time: 2000});
+                        layer.msg(response.msg, {icon: 2, time: 3000});
                     }
                 });
                 let idx = reviewItems.InReviewIds.indexOf(actv);
@@ -637,6 +666,3 @@
 
 
 </block>
-
-
-

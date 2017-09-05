@@ -188,12 +188,12 @@
             // 监听提交
             form.on('submit(createECN)', function(data){
                 // 验证表单提交时数据的合法性
-                if( !layedit.getText(layeditDescription).length ){
+                if( $.trim(layedit.getText(layeditDescription)) == '' ){
                     $('#content').scrollTop(0);
                     layer.msg('请输入变更描述', {icon: 2, time: 1500});
                     return false;
                 }
-                if( !layedit.getText(layeditReason).length ){
+                if( $.trim(layedit.getText(layeditReason)) == '' ){
                     $('#content').scrollTop(0);
                     layer.msg('请输入变更原因', {icon: 2, time: 1500});
                     return false;
@@ -261,7 +261,7 @@
                             location.href = 'http://'+ ThinkPHP['HTTP_HOST'] +'/ECN';
                         }, 1500);
                     }else{
-                        layer.msg(response.msg, {icon: 2, time: 1500});
+                        layer.msg(response.msg, {icon: 2, time: 3000});
                     }
                 });
                 return false;

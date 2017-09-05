@@ -282,11 +282,74 @@ class ECNController extends AuthController {
     # ECN详情
     public function detail(){
         if( IS_POST ){
-
+            $model = M('', '', 'MYSQL_CRSAPI');
+            $model->startTrans();
+            try{
+                $postData = I('post.','',false);
+                // 拼装ecn表数据
+                $ecnData['id'] = $postData['id'];
+                $ecnData['change_description'] = $postData['change_description'];
+                $ecnData['change_reason'] = $postData['change_reason'];
+                $ecnData['quote_rule'] = $postData['quote_rule'];
+                $ecnData['ecn_type'] = $postData['ecn_type'];
+                $ecnData['lastedit_time'] = time();
+                $ecnData['createuser'] = session('user')['id'];
+                $ecn_row = $model->table(C('DB_PREFIX').'ecn')->save($ecnData);
+                if( $ecn_id === false ) throw new \Exception('保存失败');
+                $ecnReviewDel_row = $model->table(C('DB_PREFIX').'ecn_review')->where('ecn_id='.$postData['id'])->delete();
+                if( !$ecnReviewDel_row ) throw new \Exception('保存失败');
+                // 拼装ecn_review表的评审组数据
+                foreach( $postData['review_group'] as $key=>&$value ){
+                    foreach( $value as $k=>$v ){
+                        $ecnReviewData['review_user'] = $v;
+                        $ecnReviewData['ecn_id'] = $postData['id'];
+                        $ecnReviewData['along'] = ($key + 1);
+                        $ecnReviewId = $model->table(C('DB_PREFIX').'ecn_review')->add($ecnReviewData);
+                        if( !$ecnReviewId ) throw new \Exception('保存失败');
+                    }
+                }
+                // 拼装ecn_review表的dcc数据
+                foreach( $postData['dcc_review'] as $key=>&$value ){
+                    $dccReviewData['review_user'] = $value;
+                    $dccReviewData['ecn_id'] = $postData['id'];
+                    $dccReviewData['along'] = 0;
+                    $dccReviewData['is_dcc'] = 'Y';
+                    $dccReviewId = $model->table(C('DB_PREFIX').'ecn_review')->add($dccReviewData);
+                    if( !$dccReviewId ) throw new \Exception('保存失败');
+                }
+                $ecnReviewItemDel_row = $model->table(C('DB_PREFIX').'ecn_review_item')->where('ecn_id='.$postData['id'])->delete();
+                if( !$ecnReviewItemDel_row ) throw new \Exception('保存失败');
+                // 拼装ecn_review_item表数据
+                foreach( $postData['reviewSelected'] as $key=>&$value ){
+                    $ecnReviewItemData['assoc'] = $value['id'];
+                    $ecnReviewItemData['ecn_id'] = $postData['id'];
+                    // 写入评审项数据
+                    $ecnReviewItemId = $model->table(C('DB_PREFIX').'ecn_review_item')->add($ecnReviewItemData);
+                    if( !$ecnReviewItemId ) throw new \Exception('保存失败');
+                }
+            }catch (\Exception $exception){
+                $model->rollback();
+                $this->ajaxReturn(['flag'=>0, 'msg'=>$exception->getMessage()]);
+            }
+            $model->commit();
+            $this->ajaxReturn(['flag'=>1, 'msg'=>'保存成功']);
         }else{
             if( I('get.id') && is_numeric(I('get.id')) ){
                 $EcnModel = D('Ecn');
                 $result = $EcnModel->relation(true)->find(I('get.id'));
+                // 将评审人数据提取出来重新排序
+                $sortEcnReview = $result['EcnReview'];
+                $sort = [];
+                foreach ($result['EcnReview'] as $key=>&$value) {
+                    $sort[] = $value['along'];
+                }
+                array_multisort($sort, SORT_ASC, $sortEcnReview);
+                $result['EcnReview'] = $sortEcnReview;  // 将排序后的数组重新替换原来的数组
+                // 解决dcc排序样式问题，将dcc数组提取出来保存之后删除掉再重新添加进去
+                $firstDccReview = $result['EcnReview'][0];
+                unset($result['EcnReview'][0]);
+                array_push($result['EcnReview'], $firstDccReview);
+                sort($result['EcnReview']); // 重新添加之后再排一次序
                 $result['className'] = $this->fetchClassStyle($result['state']);
                 $result['stateName'] = $this->fetchStateName($result['state']);
                 if( $result['ecn_type'] == 'file' ){    // 如果评审类型是file
