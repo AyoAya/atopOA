@@ -30,14 +30,12 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
 
     // 编辑
     $('.edit-ecn-btn').click(function(){
-        console.log('hide current node and show next node.');
         $('.preview-condition').addClass('sr-only');
         $('.edit-condition').removeClass('sr-only');
     });
 
     // 取消编辑
     $('.cancel-edit-btn').click(function(){
-        console.log('hide current node and show prev node.');
         $('.edit-condition').addClass('sr-only');
         $('.preview-condition').removeClass('sr-only');
         $('#content').scrollTop(0);
