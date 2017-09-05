@@ -29,6 +29,16 @@ class EcnModel extends RelationModel {
         ]
     ];
 
+    // 将附件的json格式转换为数组
+    public function jsonToArray($data, $field = 'attachment'){
+        foreach( $data as $key=>&$value ){
+            if( $value[$field] ){
+                $value[$field] = json_decode($value[$field], true);
+            }
+        }
+        return $data;
+    }
+
 
 }
 

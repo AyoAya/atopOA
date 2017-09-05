@@ -110,7 +110,9 @@
                     <tr>
                         <td>附件</td>
                         <td>
-                            <a href="__ROOT__/{$result.file.path}" target="_blank"><i class="file-icon file-icon-ext-{$result.file.ext}"></i> {$result.file.name}</a>
+                            <notempty name="result.file">
+                                <a href="__ROOT__/{$result.file.path}" target="_blank"><i class="file-icon file-icon-ext-{$result.file.ext}"></i> {$result.file.name}</a>
+                            </notempty>
                             <div id="FilePick"><i class="icon-arrow-up"></i> 上传文件</div>
                             <div class="uploader-attachment-queue"></div>
                             <div class="tswb">注：一个文件号只能对应一个文件（文件上传只能单选），在有文件的情况下重新上传附件将会被替换。</div>

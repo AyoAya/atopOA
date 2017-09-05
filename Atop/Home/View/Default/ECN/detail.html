@@ -6,7 +6,7 @@
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
-    <script src="__JS__/file/ecn.js"></script>
+    <script src="__JS__/ecn/ecn.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -64,7 +64,7 @@
                 <label class="layui-form-label">受影响的文件列表</label>
                 <div class="layui-input-block">
                     <div class="selected-files">
-                        <table class="layui-table">
+                        {/*<table class="layui-table">
                             <tbody>
                                 <volist name="result.EcnReviewItem" id="value">
                                     <tr>
@@ -82,7 +82,7 @@
                                     </tr>
                                 </volist>
                             </tbody>
-                        </table>
+                        </table>*/}
                     </div>
                     <div class="choose-btn"><i class="layui-icon">&#xe61f;</i> 添加文件</div>
                     <div class="layui-form-mid layui-word-aux">注：将已经编辑好的文件添加到此处 [支持多选]</div>
@@ -111,7 +111,11 @@
                     <div class="ps-wrapper">
                         <div class="gw-mc">dcc专员</div>
                         <volist name="dccUsers" id="value">
-                            <input type="checkbox" name="dcc[{$value.id}]" lay-verify="required" title="{$value.nickname}" value="{$value.id}" lay-skin="primary">
+                            <in name="value.id" value="$result.Checkeds.dcc">
+                                <input type="checkbox" name="dcc[{$value.id}]" lay-verify="required" title="{$value.nickname}" value="{$value.id}" lay-skin="primary" checked>
+                            <else/>
+                                <input type="checkbox" name="dcc[{$value.id}]" lay-verify="required" title="{$value.nickname}" value="{$value.id}" lay-skin="primary">
+                            </in>
                         </volist>
                     </div>
                 </div>
@@ -252,7 +256,6 @@
         </div>
     </div>
 
-
     <div class="filelist-wrapper sr-only">
         <div class="filelist-box">
             <table class="layui-table">
@@ -327,7 +330,6 @@
         </div>
     </div>
 
-
     <script>
         layui.use(['form', 'layer', 'layedit'], function() {
             // init layui components.
@@ -335,11 +337,26 @@
                     layer = layui.layer,
                     layedit = layui.layedit;
 
+            var reviews = null;   // 评审项数据
+
+            var Checkeds = <php>echo json_encode($result['Checkeds']);</php>;
+            var reviewItems = <php>echo json_encode($reviewItems);</php>;
+
+            //console.log(reviewItems);
+
+            var reviewSelected = [];    // 被添加到显示的评审项(初始化结构)
+
+            for( let key in reviewItems.InReviews ){
+                reviewSelected.push(reviewItems.InReviews[key]);
+            }
+
+            $('.selected-files').html( renderReviewItemList('{$result.ecn_type}', reviewSelected, false) );
+
             $.post(ThinkPHP['AJAX'] + '/ECN/listenEcnRuleChange', {
                 ruleid: {$result.quote_rule}
             }, function(response){
                 renderReviewRule(response);
-                renderReviewGroup(response);
+                renderReviewGroup(response, Checkeds);
             });
 
             // 监听规则变动
@@ -356,7 +373,6 @@
 
             // 监听提交
             form.on('submit(createECN)', function(data){
-                //console.log(data.field);
                 // 验证表单提交时数据的合法性
                 if( !layedit.getText(layeditDescription).length ){
                     $('#content').scrollTop(0);
@@ -468,11 +484,11 @@
             }
 
             // 渲染评审组
-            function renderReviewGroup(data){
+            function renderReviewGroup(data, checkeds = []){
                 var reviewGroupHTML = '';
                 var reviewGroup = $('.review-group');
 
-                for( let group in data.recipients ){
+                for( var group in data.recipients ){
                     reviewGroupHTML += '<div class="layui-form-item">';
                     reviewGroupHTML += '<label class="layui-form-label">'+ (Number(group) + 1) +' 级评审</label>';
                     reviewGroupHTML += '<div class="layui-input-block">';
@@ -483,7 +499,15 @@
                         }
                         if( data.recipients[group][item].recipient_2D ){
                             for( let key in data.recipients[group][item].recipient_2D ){
-                                reviewGroupHTML += '<input type="checkbox" lay-verify="required" name="reviewGroup'+ key +'['+ data.recipients[group][item].recipient_2D[key].id +']" title="'+ data.recipients[group][item].recipient_2D[key].nickname +'" lay-skin="primary" value="'+ data.recipients[group][item].recipient_2D[key].id +'" title="'+ data.recipients[group][item].recipient_2D[key].nickname +'">';
+                                if( Object.keys(checkeds).length > 0 ) {
+                                    if ( contains(checkeds[group], data.recipients[group][item].recipient_2D[key].id) ) {
+                                        reviewGroupHTML += '<input type="checkbox" lay-verify="required" name="reviewGroup' + key + '[' + data.recipients[group][item].recipient_2D[key].id + ']" title="' + data.recipients[group][item].recipient_2D[key].nickname + '" lay-skin="primary" value="' + data.recipients[group][item].recipient_2D[key].id + '" title="' + data.recipients[group][item].recipient_2D[key].nickname + '" checked>';
+                                    } else {
+                                        reviewGroupHTML += '<input type="checkbox" lay-verify="required" name="reviewGroup' + key + '[' + data.recipients[group][item].recipient_2D[key].id + ']" title="' + data.recipients[group][item].recipient_2D[key].nickname + '" lay-skin="primary" value="' + data.recipients[group][item].recipient_2D[key].id + '" title="' + data.recipients[group][item].recipient_2D[key].nickname + '">';
+                                    }
+                                }else{
+                                    reviewGroupHTML += '<input type="checkbox" lay-verify="required" name="reviewGroup'+ key +'['+ data.recipients[group][item].recipient_2D[key].id +']" title="'+ data.recipients[group][item].recipient_2D[key].nickname +'" lay-skin="primary" value="'+ data.recipients[group][item].recipient_2D[key].id +'" title="'+ data.recipients[group][item].recipient_2D[key].nickname +'">';
+                                }
                             }
                         }
                     }
@@ -494,6 +518,119 @@
                     form.render();
                 }
             }
+
+            // 添加文件
+            $('.choose-btn').click(function(){
+                $.post(ThinkPHP['AJAX'] + '/ECN/getDataOfCurrentEcnType', {
+                    currentType: '{$result.ecn_type}'
+                }, function(response){
+                    var HTML = renderReviewItemList('{$result.ecn_type}', response);
+                    reviews = response;
+                    layer.open({
+                        type: 1,
+                        id: 'LAYER_CONTAINER',
+                        title: '选择文件',
+                        area: ['1000px', '500px'],
+                        shade: [0.5, '#000'],
+                        shadeClose: true,
+                        content: HTML
+                    })
+                });
+            });
+
+            // 渲染受影响的数据列
+            function renderReviewItemList(type, data, InLayer = true){
+                var RenderHTML = '';
+                var head = '<thead><tr><th>文件号</th><th>版本号</th><th>附件</th><th>文件描述</th><th>操作</th></tr></thead>';
+                if( type === 'file' ){
+                    if( Object.keys(data).length ){
+                        RenderHTML += '<table class="layui-table">';
+                        if( InLayer ) RenderHTML += head;
+                        RenderHTML += '<tbody>';
+                        for( let key in data ){
+                            RenderHTML += '<tr>';
+                            RenderHTML += '<td>'+ data[key].filenumber +'</td>';
+                            RenderHTML += '<td>'+ data[key].version +'</td>';
+                            RenderHTML += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/'+ data[key].attachment.path +'" target="_blank" title="'+ data[key].attachment.name +'"><i class="file-icon file-icon-ext-'+ data[key].attachment.ext +'"></i> '+ data[key].attachment.name +'</a></td>';
+                            RenderHTML += '<td title="'+ data[key].description +'"><p>'+ data[key].description +'</p></td>';
+                            //console.log(data[key].description);
+                            if( InLayer ){  // 如果渲染在弹出层中则按钮显示为添加，反之则为移除
+                                if( Object.keys(reviewSelected).length ){   // 检查已选择的数据是否为空
+                                    if( contains(reviewItems.InReviewIds, data[key].id) ){     // 检查已选择的数据里面是否已经存在对应的item
+                                        RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-normal layui-btn-disabled addReviewItem" index="'+ key +'" ecnType="'+ type +'" actv="'+ data[key].id +'">添加</button></td>';
+                                    }else{
+                                        RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-normal addReviewItem" index="'+ key +'" ecnType="'+ type +'" actv="'+ data[key].id +'">添加</button></td>';
+                                    }
+                                }else{
+                                    RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-normal addReviewItem" index="'+ key +'" ecnType="'+ type +'" actv="'+ data[key].id +'">添加</button></td>';
+                                }
+                            }else{
+                                RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-danger removeReviewItem" index="'+ key +'" ecnType="'+ type +'" actv="'+ data[key].id +'">移除</button></td>';
+                            }
+                            RenderHTML += '</tr>';
+                        }
+                        RenderHTML += '</tbody>';
+                        RenderHTML += '</table>';
+                    }else{
+                        RenderHTML = '';
+                    }
+                }else{
+                    // 当评审类型为非文件时的处理方案...
+                }
+                return RenderHTML;
+            }
+
+            // 添加评审项button
+            $(document).on('click', '#LAYER_CONTAINER .addReviewItem', function(){
+                if( !$(this).hasClass('layui-btn-disabled') ){
+                    let index = $(this).attr('index');
+                    let ecnType = $(this).attr('ecnType');
+                    let actv = $(this).attr('actv');
+                    reviewItems.InReviewIds.push(actv);
+                    reviewSelected.push(reviews[index]);
+                    $('.selected-files').html(renderReviewItemList(ecnType, reviewSelected, false));
+                    $(this).addClass('layui-btn-disabled');
+                }
+            });
+
+            // 移除评审项button
+            $(document).on('click', '.selected-files .removeReviewItem', function(){
+                let index = $(this).attr('index');
+                let ecnType = $(this).attr('ecnType');
+                let actv = $(this).attr('actv');
+                $.post(ThinkPHP['AJAX'] + '/ECN/removeOriginEcnItem', {
+                    ecnType: ecnType,
+                    ecn_id: {$result.id},
+                    assoc: actv
+                }, function(response){
+                    if( !response.flag ){
+                        layer.msg(response.msg, {icon: 2, time: 2000});
+                    }
+                });
+                let idx = reviewItems.InReviewIds.indexOf(actv);
+                if( idx > -1 ) reviewItems.InReviewIds.splice(idx, 1);
+                reviewSelected.splice(index, 1);
+                let resultHtml = renderReviewItemList(ecnType, reviewSelected, false);
+                $('.selected-files').html(resultHtml);
+            });
+
+
+            /**
+             * 判断值是否在数组中，$.inArray存在一些问题
+             * @param arr 目标数组
+             * @param obj 查找值
+             * @returns {boolean}
+             */
+            function contains(arr, obj) {
+                let i = arr.length;
+                while (i--) {
+                    if (arr[i] === obj) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
 
         });
     </script>

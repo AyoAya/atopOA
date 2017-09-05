@@ -25,6 +25,16 @@
     <div class="edit-condition">
         <form class="layui-form" action="" style="margin-top: 10px;">
             <div class="layui-form-item">
+                <label class="layui-form-label">评审类型</label>
+                <div class="layui-input-block">
+                    <select name="ecn_type" id="ecn-type">
+                        <option value="file">文件</option>
+                        <option value="bom">BOM</option>
+                    </select>
+                    <div class="layui-form-mid layui-word-aux">择该评审的类型</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <label class="layui-form-label">变更描述</label>
                 <div class="layui-input-block">
                     <textarea id="layedit-description" style="display: none;"></textarea>
@@ -87,9 +97,9 @@
                 layer = layui.layer,
                 layedit = layui.layedit;
 
-            var reviewSelected = {
-                file: []
-            };    // 被添加到显示的评审项(初始化结构)
+            var defaultEcnType = 'file';
+
+            var reviewSelected = [];  // 被添加到显示的评审项(初始化结构)
 
             // 定义layedit编辑器配置
             var layeditOptions = {
@@ -100,20 +110,68 @@
             var layeditDescription = layedit.build('layedit-description', layeditOptions);
             var layeditReason = layedit.build('layedit-reason', layeditOptions);
 
-            var reviews = {$reviews};   // 评审项数据
+            var reviews = null;   // 评审项数据
 
             // 添加文件
             $('.choose-btn').click(function(){
-                layer.open({
-                    type: 1,
-                    id: 'LAYER_CONTAINER',
-                    title: '选择文件',
-                    area: ['1000px', '500px'],
-                    shade: [0.5, '#000'],
-                    shadeClose: true,
-                    content: renderReviewItem(reviews, true)
-                })
+                var currentEcnType = $('#ecn-type').next().find('dl .layui-this').attr('lay-value');
+                $.post(ThinkPHP['AJAX'] + '/ECN/getDataOfCurrentEcnType', {
+                    currentType: currentEcnType
+                }, function(response){
+                    var HTML = renderReviewItemList(currentEcnType, response);
+                    reviews = response;
+                    layer.open({
+                        type: 1,
+                        id: 'LAYER_CONTAINER',
+                        title: '选择文件',
+                        area: ['1000px', '500px'],
+                        shade: [0.5, '#000'],
+                        shadeClose: true,
+                        content: HTML
+                    })
+                });
             });
+
+            // 渲染受影响的数据列
+            function renderReviewItemList(type, data, InLayer = true){
+                var RenderHTML = '';
+                var head = '<thead><tr><th>文件号</th><th>版本号</th><th>附件</th><th>文件描述</th><th>操作</th></tr></thead>';
+                if( type === 'file' ){
+                    if( Object.keys(data).length ){
+                        RenderHTML += '<table class="layui-table">';
+                        if( InLayer ) RenderHTML += head;
+                        RenderHTML += '<tbody>';
+                        for( let key in data ){
+                            RenderHTML += '<tr>';
+                            RenderHTML += '<td>'+ data[key].filenumber +'</td>';
+                            RenderHTML += '<td>'+ data[key].version +'</td>';
+                            RenderHTML += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/'+ data[key].attachment.path +'" target="_blank" title="'+ data[key].attachment.name +'"><i class="file-icon file-icon-ext-'+ data[key].attachment.ext +'"></i> '+ data[key].attachment.name +'</a></td>';
+                            RenderHTML += '<td title="'+ data[key].description +'"><p>'+ data[key].description +'</p></td>';
+                            if( InLayer ){  // 如果渲染在弹出层中则按钮显示为添加，反之则为移除
+                                if( Object.keys(reviewSelected).length ){   // 检查已选择的数据是否为空
+                                    if( reviewSelected[key] ){     // 检查已选择的数据里面是否已经存在对应的item
+                                        RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-normal layui-btn-disabled addReviewItem" index="'+ key +'" ecnType="'+ type +'">添加</button></td>';
+                                    }else{
+                                        RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-normal addReviewItem" index="'+ key +'" ecnType="'+ type +'">添加</button></td>';
+                                    }
+                                }else{
+                                    RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-normal addReviewItem" index="'+ key +'" ecnType="'+ type +'">添加</button></td>';
+                                }
+                            }else{
+                                RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-danger removeReviewItem" index="'+ key +'" ecnType="'+ type +'">移除</button></td>';
+                            }
+                            RenderHTML += '</tr>';
+                        }
+                        RenderHTML += '</tbody>';
+                        RenderHTML += '</table>';
+                    }else{
+                        RenderHTML = '';
+                    }
+                }else{
+                    // 当评审类型为非文件时的处理方案...
+                }
+                return RenderHTML;
+            }
 
             // 监听规则变动
             form.on('select(rule)', function(data){
@@ -129,7 +187,6 @@
 
             // 监听提交
             form.on('submit(createECN)', function(data){
-                //console.log(data.field);
                 // 验证表单提交时数据的合法性
                 if( !layedit.getText(layeditDescription).length ){
                     $('#content').scrollTop(0);
@@ -141,7 +198,7 @@
                     layer.msg('请输入变更原因', {icon: 2, time: 1500});
                     return false;
                 }
-                if( !reviewSelected.file.length ){
+                if( !Object.keys(reviewSelected).length ){
                     let top = $('#affect')[0].offsetTop;
                     $('#content').scrollTop(top-20);
                     layer.msg('请添加文件', {icon: 2, time: 1500});
@@ -193,6 +250,7 @@
                     change_description: layedit.getContent(layeditDescription),
                     change_reason: layedit.getContent(layeditReason),
                     quote_rule: data.field.quote_rule,
+                    ecn_type: data.field.ecn_type,
                     reviewSelected: reviewSelected,
                     review_group: review_group,
                     dcc_review: dcc_review
@@ -268,54 +326,13 @@
                 }
             }
 
-            // 渲染评审项
-            function renderReviewItem(reviews, inLayer = false){
-                var renderHtml = '';
-                if( Object.keys(reviews).length > 0 ){
-                    for( let type in reviews ){
-                        if( type == 'file' ){
-                            if( reviews[type].length ){
-                                if( inLayer ){
-                                    renderHtml += '<thead><tr><th>文件号</th><th>版本号</th><th>附件</th><th>文件描述</th><th>操作</th></tr></thead>';
-                                }
-                                for( let item in reviews[type] ){
-                                    renderHtml += '<tr>';
-                                    renderHtml += '<td>'+ reviews[type][item].filenumber +'</td>';
-                                    renderHtml += '<td>'+ reviews[type][item].version +'</td>';
-                                    renderHtml += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/'+ reviews[type][item].attachment.path +'" target="_blank" title="'+ reviews[type][item].attachment.name +'"><i class="file-icon file-icon-ext-'+ reviews[type][item].attachment.ext +'"></i> '+ reviews[type][item].attachment.name +'</a></td>';
-                                    renderHtml += '<td title="'+ reviews[type][item].description +'"><p>'+ reviews[type][item].description +'</p></td>';
-                                    if( inLayer ){
-                                        if( reviewSelected.file[item] ){    // 如果已经被添加到选中，下次激活时则被禁用
-                                            renderHtml += '<td width="66"><button type="button" class="layui-btn layui-btn-normal layui-btn-disabled addReviewItem" index="'+ item +'">添加</button></td>';
-                                        }else{
-                                            renderHtml += '<td width="66"><button type="button" class="layui-btn layui-btn-normal addReviewItem" index="'+ item +'">添加</button></td>';
-                                        }
-                                    }else{
-                                        renderHtml += '<td width="66"><button type="button" class="layui-btn layui-btn-danger removeReviewItem" index="'+ item +'">移除</button></td>';
-                                    }
-                                    renderHtml += '</tr>';
-                                }
-                            }else{
-                                renderHtml = null;
-                            }
-                        }
-                    }
-                }else{
-                    renderHtml += '<tr><td style="text-align: center;padding: 219px 0;border: none;">没有数据</td></tr>';
-                }
-                if( renderHtml == '' || renderHtml == null ){
-                    return '';
-                }else{
-                    return '<table class="layui-table"><tbody>'+ renderHtml +'</tbody></table>';
-                }
-            }
-
             // 添加评审项button
             $(document).on('click', '#LAYER_CONTAINER .addReviewItem', function(){
                 if( !$(this).hasClass('layui-btn-disabled') ){
                     let index = $(this).attr('index');
-                    reviewSelected.file.push(reviews.file[index]);
-                    $('.review-selected').html(renderReviewItem(reviewSelected, false));
+                    let ecnType = $(this).attr('ecnType');
+                    reviewSelected.push(reviews[index]);
+                    $('.review-selected').html(renderReviewItemList(ecnType, reviewSelected, false));
                     $(this).addClass('layui-btn-disabled');
                 }
             });
@@ -323,14 +340,10 @@
             // 移除评审项button
             $(document).on('click', '.review-selected .removeReviewItem', function(){
                 let index = $(this).attr('index');
-                reviewSelected.file.splice(index, 1);
-                let resultHtml = renderReviewItem(reviewSelected, false);
-                if( resultHtml ) {
-                    $('.review-selected').html(renderReviewItem(reviewSelected, false));
-                }else{
-                    $('.review-selected').html('');
-                }
-                //$('.review-selected').append(renderReviewItem(reviewSelected, false));
+                let ecnType = $(this).attr('ecnType');
+                reviewSelected.splice(index, 1);
+                let resultHtml = renderReviewItemList(ecnType, reviewSelected, false);
+                $('.review-selected').html(resultHtml);
             });
 
         });

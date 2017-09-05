@@ -17,17 +17,6 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
     var layeditDescription = layedit.build('layedit-description', layeditOptions);
     var layeditReason = layedit.build('layedit-reason', layeditOptions);
 
-    // 添加文件
-    $('.choose-btn').click(function(){
-        layer.open({
-            type: 1,
-            title: '选择文件',
-            area: ['1000px', '500px'],
-            shade: [0.5, '#000'],
-            content: $('.filelist-wrapper').html()
-        })
-    });
-
     // 编辑
     $('.edit-ecn-btn').click(function(){
         $('.preview-condition').addClass('sr-only');

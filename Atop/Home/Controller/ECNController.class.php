@@ -54,6 +54,7 @@ class ECNController extends AuthController {
                 $ecnData['change_description'] = $postData['change_description'];
                 $ecnData['change_reason'] = $postData['change_reason'];
                 $ecnData['quote_rule'] = $postData['quote_rule'];
+                $ecnData['ecn_type'] = $postData['ecn_type'];
                 $ecnData['createtime'] = time();
                 $ecnData['createuser'] = session('user')['id'];
                 $ecn_id = $model->table(C('DB_PREFIX').'ecn')->add($ecnData);
@@ -70,7 +71,6 @@ class ECNController extends AuthController {
                         $ecnReviewData['review_user'] = $v;
                         $ecnReviewData['ecn_id'] = $ecn_id;
                         $ecnReviewData['along'] = ($key + 1);
-                        $ecnReviewData['review_time'] = time();
                         $ecnReviewId = $model->table(C('DB_PREFIX').'ecn_review')->add($ecnReviewData);
                         if( !$ecnReviewId ) throw new \Exception('创建失败');
                     }
@@ -81,28 +81,26 @@ class ECNController extends AuthController {
                     $dccReviewData['ecn_id'] = $ecn_id;
                     $dccReviewData['along'] = 0;
                     $dccReviewData['is_dcc'] = 'Y';
-                    $dccReviewData['review_time'] = time();
                     $dccReviewId = $model->table(C('DB_PREFIX').'ecn_review')->add($dccReviewData);
                     if( !$dccReviewId ) throw new \Exception('创建失败');
                 }
                 // 拼装ecn_review_item表数据
                 foreach( $postData['reviewSelected'] as $key=>&$value ){
-                    foreach( $value as $k=>&$v ){
-                        if( $key === 'file' ){  // 如果类型是file
-                            $ecnReviewItemData['type'] = $key;
-                            // 拼装评审文件的状态数据
-                            $changeFileStateData['id'] = $v['id'];
-                            $changeFileStateData['state'] = 'InReview';
-                            // 修改评审文件的状态为评审中
-                            $changeFileStateId = $model->table(C('DB_PREFIX').'file_number')->save($changeFileStateData);
-                            if( $changeFileStateId === false ) throw new \Exception('创建失败');
-                        }
-                        $ecnReviewItemData['assoc'] = $v['id'];
-                        $ecnReviewItemData['ecn_id'] = $ecn_id;
-                        // 写入评审项数据
-                        $ecnReviewItemId = $model->table(C('DB_PREFIX').'ecn_review_item')->add($ecnReviewItemData);
-                        if( !$ecnReviewItemId ) throw new \Exception('创建失败');
+                    if( $postData['ecn_type'] === 'file' ){  // 如果类型是file
+                        // 拼装评审文件的状态数据
+                        $changeFileStateData['id'] = $value['id'];
+                        $changeFileStateData['state'] = 'InReview';
+                        // 修改评审文件的状态为评审中
+                        $changeFileStateId = $model->table(C('DB_PREFIX').'file_number')->save($changeFileStateData);
+                        if( $changeFileStateId === false ) throw new \Exception('创建失败');
+                    }else{
+                        // 非文件ecn类型的处理方式...
                     }
+                    $ecnReviewItemData['assoc'] = $value['id'];
+                    $ecnReviewItemData['ecn_id'] = $ecn_id;
+                    // 写入评审项数据
+                    $ecnReviewItemId = $model->table(C('DB_PREFIX').'ecn_review_item')->add($ecnReviewItemData);
+                    if( !$ecnReviewItemId ) throw new \Exception('创建失败');
                 }
             }catch (\Exception $exception){
                 $model->rollback();
@@ -218,6 +216,20 @@ class ECNController extends AuthController {
         return $result;
     }
 
+    // 获取指定ecn类型的数据
+    public function getDataOfCurrentEcnType(){
+        if( IS_POST ){
+            $model = D('Ecn');
+            if( I('post.currentType') == 'file' ){
+                $result = $model->table(C('DB_PREFIX').'file_number')->where('createuser='.session('user')['id'].' AND state <> "InReview"')->order('createtime DESC')->select();
+                $result = $model->jsonToArray($result);
+                $this->ajaxReturn($result);
+            }else{
+                // 如果不是file类型的ecn数据获取...
+            }
+        }
+    }
+
     # 监听ecn规则改变
     public function listenEcnRuleChange(){
         if( IS_POST ){
@@ -277,17 +289,25 @@ class ECNController extends AuthController {
                 $result = $EcnModel->relation(true)->find(I('get.id'));
                 $result['className'] = $this->fetchClassStyle($result['state']);
                 $result['stateName'] = $this->fetchStateName($result['state']);
-                foreach( $result['EcnReviewItem'] as $key=>&$value ){
-                    if( $value['type'] == 'file' ){ // 如果评审类型是file
-                        $tableName = 'file_number';
+                if( $result['ecn_type'] == 'file' ){    // 如果评审类型是file
+                    $tableName = 'file_number';
+                    foreach( $result['EcnReviewItem'] as $key=>&$value ){
+                        $itemData = D('Ecn')->table(C('DB_PREFIX').$tableName)->find($value['assoc']);
+                        $itemData['attachment'] = json_decode($itemData['attachment'], true);
+                        $value['item'] = $itemData;
                     }
-                    $itemData = D('Ecn')->table(C('DB_PREFIX').$tableName)->find($value['assoc']);
-                    $itemData['attachment'] = json_decode($itemData['attachment'], true);
-                    $value['item'] = $itemData;
+                }else{
+                    // 非文件ecn类型的处理方式...
                 }
                 // 计算合并行、获取审批人姓名、获取样式名和状态名
                 if( count($result['EcnReview']) > 1 ){
+                    $checkeds = [];
                     foreach( $result['EcnReview'] as $key=>&$value ){
+                        if( $value['is_dcc'] != 'Y' ){
+                            $checkeds[$value['along']-1][] = $value['review_user'];
+                        }else{
+                            $checkeds['dcc'][] = $value['review_user'];
+                        }
                         $value['user'] = D('Ecn')->table(C('DB_PREFIX').'user')->find($value['review_user']);
                         $value['className'] = $this->fetchClassStyle($value['review_state']);
                         $value['stateName'] = $this->fetchStateName($value['review_state']);
@@ -311,11 +331,12 @@ class ECNController extends AuthController {
                         }
                     }
                 }
-                //print_r($result);
+                $result['Checkeds'] = $checkeds;
                 $dccUsers = $this->getDccPostAllUsers();
                 $this->assign('dccUsers', $dccUsers);
                 $this->assign('result', $result);
                 $this->assign('rules', $this->getAllEcnRules());
+                $this->assign('reviewItems', $this->getEcnReviewItems(I('get.id')));
                 $this->display();
             }
         }
@@ -435,6 +456,49 @@ class ECNController extends AuthController {
         }else{
             $this->assign('positions', json_encode($this->getAllPositions()));
             $this->display();
+        }
+    }
+
+    // 获取指定项目中包含的文件
+    public function getEcnReviewItems($id){
+        $model = new Model();
+        $result['InReviews'] = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'ecn b,'.C('DB_PREFIX').'ecn_review_item c')
+                        ->field('a.id,a.type,a.filenumber,a.state,a.version,a.attachment,a.description')
+                        ->where('b.id=c.ecn_id AND c.assoc=a.id AND b.id='.$id)
+                        ->order('a.createtime DESC')
+                        ->select();
+        $InReviewIds = [];
+        foreach( $result['InReviews'] as $key=>&$value ){
+            array_push($InReviewIds, $value['id']);
+            if( $value['attachment'] ){
+                $value['attachment'] = json_decode($value['attachment']);
+            }
+            $value['description'] = strip_tags(trim($value['description']));
+        }
+        $filenumbers = $model->table(C('DB_PREFIX').'file_number')->where('createuser='.session('user')['id'].' AND state <> "InReview"')->order('createtime DESC')->select();
+        foreach( $filenumbers as $key=>&$value ){
+            if( $value['attachment'] ){
+                $value['attachment'] = json_decode($value['attachment']);
+            }
+            $value['description'] = strip_tags(trim($value['description']));
+        }
+        $result['All'] = $filenumbers;
+        $result['InReviewIds'] = $InReviewIds;
+        return $result;
+    }
+
+    // 删除ecn的评审项
+    public function removeOriginEcnItem(){
+        if( IS_POST ){
+            $postData = I('post.');
+            $model = new Model();
+            if( $postData['ecnType'] == 'file' ){
+                $numRow = $model->table(C('DB_PREFIX').'file_number')->save(['id'=>$postData['assoc'], 'state'=>'WaitingReview']);
+                $itemRow = $model->table(C('DB_PREFIX').'ecn_review_item')->where('ecn_id = '.$postData['ecn_id'].' AND assoc = '.$postData['assoc'])->delete();
+                $itemRow !== false && $numRow !== false ? $this->ajaxReturn(['flag'=>1, 'msg'=>'成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'错误']);
+            }else{
+                // 非文件ecn类型的处理方式...
+            }
         }
     }
 
