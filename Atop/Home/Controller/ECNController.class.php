@@ -26,7 +26,7 @@ class ECNController extends AuthController {
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
         $result = $model->table(C('DB_PREFIX').'ecn a,'.C('DB_PREFIX').'user b')
-                        ->field('a.id,a.ecn_number,a.state,a.disable,a.createtime,b.nickname')
+                        ->field('a.id,a.ecn_number,a.state,a.disable,a.createtime,a.lastedit_time,b.nickname')
                         ->where('a.createuser = b.id AND a.disable = "N"')
                         ->order('a.createtime DESC')
                         ->limit($page->firstRow.','.$page->listRows)
@@ -381,8 +381,6 @@ class ECNController extends AuthController {
                                     $value['colspan'] = $num++;
                                 }
                             }
-                        }elseif( $key == (count($result['EcnReview']) - 1) ){
-                            $value['colspan'] = 1;
                         }else{
                             if( $value['along'] != $result['EcnReview'][$key-1]['along'] ){
                                 foreach( $result['EcnReview'] as $k=>&$v ){
@@ -403,6 +401,119 @@ class ECNController extends AuthController {
                 $this->display();
             }
         }
+    }
+
+    # 发起评审
+    public function InitiateReview(){
+        if( IS_POST ){
+            $model = D('Ecn');
+            if( I('post.ecn_type') == 'file' ){
+                try {
+                    $ecnAllData = $this->getEcnData(I('post.id'));
+                    if( !$ecnAllData ) throw new \Exception('发起失败');
+                    $changeEcnStateRow = $model->save(['id'=>I('post.id'), 'state'=>'InReview']);   // 修改ecn状态
+                    if( !$changeEcnStateRow ) throw new \Exception('发起失败');
+                    foreach( $ecnAllData['EcnReviewItem'] as $key=>&$value ){   // 修改文件状态
+                        $ecnItemRow = $model->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['assoc'], 'state'=>'InReview']);
+                        if( !$ecnItemRow ) throw new \Exception('发起失败');
+                    }
+                    $pushUsersData = $this->getAlongOfPushUsers(1, $ecnAllData['EcnReview']);   // 获取收件人数据
+                    $ccUsersData = $this->getAllCcUsers($ecnAllData['quote_rule']);     // 获取抄送人数据
+                    $sendResult = $this->pushEmail('InitiateReview', I('post.ecn_type'), $pushUsersData, $ecnAllData, $ccUsersData);
+                    $sendResult ? $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功']) : $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功，部分邮件未发送']);
+                } catch (\Exception $e) {
+                    $this->ajaxReturn(['flag'=>0, 'msg'=>$e->getMessage()]);
+                }
+            }else{
+                // 非文件ecn类型的处理方式...
+            }
+            $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功']);
+        }
+    }
+
+    private function pushEmail($type, $ecnType, $address, $data, $cc = []){
+        $httphost = $_SERVER['HTTP_HOST'];
+        $dear = count($address) == 1 ? $data['recipient_name'] : 'All';
+        if( $ecnType == 'file' ){
+            if( $type == 'InitiateReview' ){
+                $subject = '['.session('user')['nickname'].'] 发起了编号为【'.$data['ecn_number'].'】的文件评审，请关注';
+                $body = '<p class="sm-dear">Dear '.$dear.',</p>';
+                $body .= '<p>['.session('user')['nickname'].'] 发起了编号为【'.$data['ecn_number'].'】的文件评审，请关注</p>';
+                $body .= '<p>详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
+            }else{
+                // code...
+            }
+        }else{
+            // 非文件ecn类型的处理方式...
+        }
+        $sendResult = send_email([['email'=>'vinty_email@163.com','name'=>'蒋明']], '', $subject, $body, [['email'=>'2737583968@qq.com','name'=>'蒋明']]);
+        return is_integer($sendResult) ? true : false;
+    }
+
+    /**
+     * 获取抄送人员数据[姓名/邮箱]
+     * @param  [type] $ecnid 规则id
+     * @return array
+     */
+    private function getAllCcUsers($ecnid){
+        $model = new Model();
+        $ruleData = $model->table(C('DB_PREFIX').'ecn_rule')->find($ecnid);
+        $ccIds = explode(',', $ruleData['cc']);
+        $TmpCcUsersData = [];
+        foreach( $ccIds as $value ){
+            $userData = $model->table(C('DB_PREFIX').'user')->field('nickname name,email')->where('post REGEXP "^'.$value.'," OR post REGEXP ",'.$value.'$" OR post REGEXP ",'.$value.'," OR post REGEXP "^'.$value.'$"')->select();
+            array_push($TmpCcUsersData, $userData);
+        }
+        $ccUsersData = [];
+        foreach( $TmpCcUsersData as $key=>&$value ){
+            foreach( $value as $k=>&$v ){
+                array_push($ccUsersData, $v);
+            }
+        }
+        return $ccUsersData;
+    }
+
+
+    /**
+     * 获取制定顺序的推送人姓名和邮箱数据
+     * @param  [type] $along 顺序[along]
+     * @param  [type] $data  数据
+     * @return array
+     */
+    private function getAlongOfPushUsers($along, $data){
+        $pushUsersData = [];
+        foreach( $data as $key=>&$value ){
+            if( $value['along']  == $along ){
+                array_push($pushUsersData, [
+                    'name' => $value['user']['nickname'],
+                    'email' => $value['user']['email']
+                ]);
+            }
+        }
+        return $pushUsersData;
+    }
+
+    /**
+     * 获取Ecn数据
+     * @param  string $id 如果指定id则获取数据该id的所有数据，如果不指定则获取所有数据
+     * @return mixed
+     */
+    private function getEcnData($id = ''){
+        $model = D('Ecn');
+        if( $id ){
+            $ecnAllData = $model->relation(true)->find(I('post.id'));
+            foreach( $ecnAllData['EcnReview'] as $key=>&$value ){
+                $value['user'] = $model->table(C('DB_PREFIX').'user')->find($value['review_user']);
+            }
+        }else{
+            $ecnAllData = $model->relation(true)->select();
+            foreach( $ecnAllData as $key=>&$value ){
+                foreach( $value['EcnReview'] as $k=>&$v ){
+                    $v['user'] = $model->table(C('DB_PREFIX').'user')->find($v['review_user']);
+                }
+            }
+        }
+        return $ecnAllData;
     }
 
     # ECN规则列表

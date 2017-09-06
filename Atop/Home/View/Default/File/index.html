@@ -55,9 +55,11 @@
                         <td>{$value.nickname}</td>
                         <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
                         <td>
-                            <div class="layui-btn-group">
+                            <in name="value.state" value="WaitingEdit,WaitingReview">
                                 <a href="__ROOT__/File/delete/id/{$value.id}" class="layui-btn layui-btn-primary layui-btn-small">删除</a>
-                            </div>
+                            <else/>
+                                <button type="button" class="layui-btn layui-btn-primary layui-btn-small layui-btn-disabled">删除</button>
+                            </in>
                         </td>
                     </tr>
                 </volist>
@@ -73,6 +75,3 @@
 
 
 </block>
-
-
-

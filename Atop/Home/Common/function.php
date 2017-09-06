@@ -584,9 +584,10 @@ function object_to_array($array) {
  * @param $subject 邮件标题
  * @param $body 邮件内容
  */
-function send_Email($address,$nickname='',$subject,$body,$cc=''){
+function send_Email($address, $nickname='', $subject, $body,$cc = []){
 
     $http_host = $_SERVER['HTTP_HOST'];
+    $currentYear = date('Y', time());
 
     $email_host=C('EMAIL_HOST');
     $email_port=C('EMAIL_PORT');
@@ -594,42 +595,40 @@ function send_Email($address,$nickname='',$subject,$body,$cc=''){
     $email_password=C('EMAIL_PASSWORD');
     $email_from_name=C('EMAIL_FROM_NAME');
 
-    //设置签名信息
-    $sign = <<<SIGN
+    // 样式
+    $style = <<<STYLE
 <style>
-    .sign {
-        width: 98%;
-        padding: 15px;
-        margin-top: 50px;
-        background: #2a3542;
-        color: #fff;
+    p {
+        line-height: 100%;
     }
-    .sign .logo {
-        height: 40px;
-    }
-    .sign .info {
-    
-    }
-    .sign .info p {
-        margin: 0;
-        padding: 0;
-        line-height: 26px;
-    }
-    .clearfix {
-        clear: both;
+    p.sm-dear {
+        margin-bottom: 24px;
     }
 </style>
-<div class="sign">
-    <div class="logo">
-        <img src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/>
+STYLE;
+
+    // 头部
+    $head = <<<HEAD
+<div style="color: #555;border: solid 1px #e2e2e2;font-size: 14px;margin: 40px;">
+    <div style="padding: 20px 20px 10px 20px;background: #393d49;">
+        <a href="http://61.139.89.33:8088" target="_blank" title="华拓光通信股份有限公司"><img height="30" src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/></a>
     </div>
-    <div class="info">
-        <p>该邮件由程序自动发送，请勿回复</p>
-        <p>华拓光通信OA系统&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL：61.139.89.33:8088</p>
+    <div style="padding: 30px 20px 10px 20px;">
+HEAD;
+
+    //设置签名信息
+    $sign = <<<SIGN
+    <div style="padding: 15px 0;border-top: dashed 1px #e2e2e2;font-size: 14px;margin-top: 50px;">$email_from_name</div>
     </div>
-    <div class="clearfix"></div>
+    <div>
+        <div style="padding: 10px 20px;background: #f2f2f2;font-size: 12px;color: #888;">
+            <p style="line-height: 100%;">此为系统邮件请勿回复</p>
+            <p style="line-height: 100%;">Copyright &copy; 华拓光通信 $currentYear All Right Reserved.</p>
+        </div>
+    </div>
 </div>
 SIGN;
+
 
     vendor('phpmailer.class#phpmailer');
     vendor('phpmailer.class#smtp');
@@ -646,16 +645,28 @@ SIGN;
     $mail->setFrom($email_username,$email_from_name);// 设置发件人信息，如邮件格式说明中的发件人，这里会显示为Mailer(xxxx@163.com），Mailer是当做名字显示
     //$mail->addAddress($address,$nickname);// 设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
     if( is_array($address) ){
-        foreach($address as $value){
-            $mail->addAddress($value);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+        if (count($address) == count($address, 1)) {  // 一维数组
+            foreach($address as $value){
+                $mail->addAddress($value);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+            }
+        } else {    // 二维数组
+            foreach($address as $value){
+                $mail->addAddress($value['email'], $value['name']);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+            }
         }
     }else{
         $mail->addAddress($address,$nickname);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
     }
-    if( $cc!='' ){
+    if( !$cc ){
         if(is_array($cc)){
-            foreach($cc as $ccperson){
-                $mail->addCC($ccperson);
+            if (count($cc) == count($cc, 1)) {  // 一维数组
+                foreach($cc as $ccperson){
+                    $mail->addCC($ccperson);
+                }
+            } else {    // 二维数组
+                foreach($cc as $value){
+                    $mail->addAddress($value['email'], $value['name']);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+                }
             }
         }else{
             $mail->addCC($cc);
@@ -668,7 +679,7 @@ SIGN;
 
     $mail->IsHTML(true);
     $mail->Subject = $subject;// 邮件标题
-    $mail->Body = '<div style="color: #000;padding: 0 20px;">'.$body.$sign.'</div>';// 邮件正文加签名
+    $mail->Body = $style.$head.$body.$sign;// 邮件正文加签名
     //$mail->AltBody = "This is the plain text纯文本";// 这个是设置纯文本方式显示的正文内容，如果不支持Html方式，就会用到这个，基本无用
     if($mail->Send()){
         return 1;

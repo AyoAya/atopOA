@@ -21,113 +21,114 @@
 </block>
 <!-- 【正文区域】 -->
 <block name="content">
-
-    <div class="edit-condition sr-only">
-        <form class="layui-form" action="" style="margin-top: 10px;">
-            <!--<div class="layui-form-item">
-                <label class="layui-form-label">ECN号</label>
-                <div class="layui-input-block">
-                    <div class="ecn-itm">ECN000001254</div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">创建人</label>
-                <div class="layui-input-block">
-                    <div class="ecn-itm">李平</div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">创建时间</label>
-                <div class="layui-input-block">
-                    <div class="ecn-itm">2017-09-01 21:16</div>
-                </div>
-            </div>-->
-            <div class="layui-form-item">
-                <label class="layui-form-label">变更描述</label>
-                <div class="layui-input-block">
-                    <textarea id="layedit-description" style="display: none;">{$result.change_description}</textarea>
-                    <div class="layui-form-mid layui-word-aux">例：TEKTRONIX and TEK are registered trademarks of
-                        Tektronix, Inc.
+    <neq name="result.state" value="InReview">
+        <div class="edit-condition sr-only">
+            <form class="layui-form" action="" style="margin-top: 10px;">
+                <!--<div class="layui-form-item">
+                    <label class="layui-form-label">ECN号</label>
+                    <div class="layui-input-block">
+                        <div class="ecn-itm">ECN000001254</div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">变更原因</label>
-                <div class="layui-input-block">
-                    <textarea id="layedit-reason" style="display: none;">{$result.change_reason}</textarea>
-                    <div class="layui-form-mid layui-word-aux">例：TEKTRONIX and TEK are registered trademarks of
-                        Tektronix, Inc.
+                <div class="layui-form-item">
+                    <label class="layui-form-label">创建人</label>
+                    <div class="layui-input-block">
+                        <div class="ecn-itm">李平</div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item" id="affect">
-                <label class="layui-form-label">受影响的文件列表</label>
-                <div class="layui-input-block">
-                    <div class="selected-files">
-                        {/*<table class="layui-table">
-                            <tbody>
-                                <volist name="result.EcnReviewItem" id="value">
-                                    <tr>
-                                        <td>{$value.item.filenumber}</td>
-                                        <td>{$value.item.version}</td>
-                                        <td>
-                                            <a href="http://{$Think.SERVER.http_host}/{$value.item.attachment.path}" target="_blank" title="{$value.item.attachment.name}"><i class="file-icon file-icon-ext-{$value.item.attachment.ext}"></i> {$value.item.attachment.name}</a>
-                                        </td>
-                                        <td title="{:strip_tags($value['item']['description'])}">
-                                            <p class="wrap">{:strip_tags($value['item']['description'])}</p>
-                                        </td>
-                                        <td width="64">
-                                            <button type="button" class="layui-btn layui-btn-danger">移除</button>
-                                        </td>
-                                    </tr>
-                                </volist>
-                            </tbody>
-                        </table>*/}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">创建时间</label>
+                    <div class="layui-input-block">
+                        <div class="ecn-itm">2017-09-01 21:16</div>
                     </div>
-                    <div class="choose-btn"><i class="layui-icon">&#xe61f;</i> 添加文件</div>
-                    <div class="layui-form-mid layui-word-aux">注：将已经编辑好的文件添加到此处 [支持多选]</div>
-                </div>
-            </div>
-            <div class="layui-form-item" id="review-rule">
-                <label class="layui-form-label">评审规则</label>
-                <div class="layui-input-block">
-                    <select name="quote_rule" id="rule" lay-filter="rule" lay-verify="required">
-                        <volist name="rules" id="value">
-                            <eq name="result.quote_rule" value="$value.id">
-                                <option value="{$value.id}" checked>{$value.name}</option>
-                            <else/>
-                                <option value="{$value.id}">{$value.name}</option>
-                            </eq>
-                        </volist>
-                    </select>
-                    <div class="layui-form-mid layui-word-aux">注：您可在此处可预览当前选中评审规则的详细信息，当您确认规则后便只能从该规则中所配置的岗位选择人员。</div>
-                    <div class="rule-preview"></div>
-                </div>
-            </div>
-            <div class="review-group"></div>    <!--评审组-->
-            <div class="layui-form-item" id="dcc">
-                <label class="layui-form-label">DCC评审</label>
-                <div class="layui-input-block">
-                    <div class="ps-wrapper">
-                        <div class="gw-mc">dcc专员</div>
-                        <volist name="dccUsers" id="value">
-                            <in name="value.id" value="$result.Checkeds.dcc">
-                                <input type="checkbox" name="dcc[{$value.id}]" lay-verify="required" title="{$value.nickname}" value="{$value.id}" lay-skin="primary" checked>
-                            <else/>
-                                <input type="checkbox" name="dcc[{$value.id}]" lay-verify="required" title="{$value.nickname}" value="{$value.id}" lay-skin="primary">
-                            </in>
-                        </volist>
+                </div>-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">变更描述</label>
+                    <div class="layui-input-block">
+                        <textarea id="layedit-description" style="display: none;">{$result.change_description}</textarea>
+                        <div class="layui-form-mid layui-word-aux">例：TEKTRONIX and TEK are registered trademarks of
+                            Tektronix, Inc.
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="saveECN">保存</button>
-                    <button type="reset" class="layui-btn layui-btn-primary cancel-edit-btn">取消</button>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">变更原因</label>
+                    <div class="layui-input-block">
+                        <textarea id="layedit-reason" style="display: none;">{$result.change_reason}</textarea>
+                        <div class="layui-form-mid layui-word-aux">例：TEKTRONIX and TEK are registered trademarks of
+                            Tektronix, Inc.
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </form>
-    </div>
+                <div class="layui-form-item" id="affect">
+                    <label class="layui-form-label">受影响的文件列表</label>
+                    <div class="layui-input-block">
+                        <div class="selected-files">
+                            {/*<table class="layui-table">
+                                <tbody>
+                                    <volist name="result.EcnReviewItem" id="value">
+                                        <tr>
+                                            <td>{$value.item.filenumber}</td>
+                                            <td>{$value.item.version}</td>
+                                            <td>
+                                                <a href="http://{$Think.SERVER.http_host}/{$value.item.attachment.path}" target="_blank" title="{$value.item.attachment.name}"><i class="file-icon file-icon-ext-{$value.item.attachment.ext}"></i> {$value.item.attachment.name}</a>
+                                            </td>
+                                            <td title="{:strip_tags($value['item']['description'])}">
+                                                <p class="wrap">{:strip_tags($value['item']['description'])}</p>
+                                            </td>
+                                            <td width="64">
+                                                <button type="button" class="layui-btn layui-btn-danger">移除</button>
+                                            </td>
+                                        </tr>
+                                    </volist>
+                                </tbody>
+                            </table>*/}
+                        </div>
+                        <div class="choose-btn"><i class="layui-icon">&#xe61f;</i> 添加文件</div>
+                        <div class="layui-form-mid layui-word-aux">注：将已经编辑好的文件添加到此处 [支持多选]</div>
+                    </div>
+                </div>
+                <div class="layui-form-item" id="review-rule">
+                    <label class="layui-form-label">评审规则</label>
+                    <div class="layui-input-block">
+                        <select name="quote_rule" id="rule" lay-filter="rule" lay-verify="required">
+                            <volist name="rules" id="value">
+                                <eq name="result.quote_rule" value="$value.id">
+                                    <option value="{$value.id}" checked>{$value.name}</option>
+                                <else/>
+                                    <option value="{$value.id}">{$value.name}</option>
+                                </eq>
+                            </volist>
+                        </select>
+                        <div class="layui-form-mid layui-word-aux">注：您可在此处可预览当前选中评审规则的详细信息，当您确认规则后便只能从该规则中所配置的岗位选择人员。</div>
+                        <div class="rule-preview"></div>
+                    </div>
+                </div>
+                <div class="review-group"></div>    <!--评审组-->
+                <div class="layui-form-item" id="dcc">
+                    <label class="layui-form-label">DCC评审</label>
+                    <div class="layui-input-block">
+                        <div class="ps-wrapper">
+                            <div class="gw-mc">dcc专员</div>
+                            <volist name="dccUsers" id="value">
+                                <in name="value.id" value="$result.Checkeds.dcc">
+                                    <input type="checkbox" name="dcc[{$value.id}]" lay-verify="required" title="{$value.nickname}" value="{$value.id}" lay-skin="primary" checked>
+                                <else/>
+                                    <input type="checkbox" name="dcc[{$value.id}]" lay-verify="required" title="{$value.nickname}" value="{$value.id}" lay-skin="primary">
+                                </in>
+                            </volist>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="saveECN">保存</button>
+                        <button type="reset" class="layui-btn layui-btn-primary cancel-edit-btn">取消</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </neq>
 
     <div class="preview-condition">
         <div class="section-grey-table">
@@ -140,6 +141,7 @@
                         <th>状态</th>
                         <th>创建人</th>
                         <th>创建时间</th>
+                        <th>最后编辑时间</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -152,17 +154,16 @@
                         <td>{$result.User.nickname}</td>
                         <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
                         <td>
-                            <eq name="result.state" value="InReview">
-                                <button type="button" class="layui-btn layui-btn-small layui-btn-disabled">编辑</button>
-                                <button type="button" class="layui-btn layui-btn-normal layui-btn-small layui-btn-disabled">发起评审</button>
-                            <else/>
-                                <button type="button" class="layui-btn layui-btn-small edit-ecn-btn">编辑</button>
-                                <button type="button" class="layui-btn layui-btn-normal layui-btn-small">发起评审</button>
-                            </eq>
+                            <notempty name="result.lastedit_time">
+                                {$result.lastedit_time|date="Y-m-d H:i", ###}
+                            </notempty>
+                        </td>
+                        <td>
                             <eq name="result.state" value="InReview">
                                 <button type="button" class="layui-btn layui-btn-danger layui-btn-small">撤回</button>
                             <else/>
-                                <button type="button" class="layui-btn layui-btn-danger layui-btn-small layui-btn-disabled">撤回</button>
+                                <button type="button" class="layui-btn layui-btn-small edit-ecn-btn">编辑</button>
+                                <button type="button" class="layui-btn layui-btn-normal layui-btn-small start-review-btn">发起评审</button>
                             </eq>
                         </td>
                     </tr>
@@ -374,7 +375,7 @@
                 reviewSelected.push(reviewItems.InReviews[key]);
             }
 
-            console.log(reviewSelected);
+            //console.log(reviewSelected);
 
             $('.selected-files').html( renderReviewItemList('{$result.ecn_type}', reviewSelected, false) );
 
@@ -608,6 +609,29 @@
                 }
                 return RenderHTML;
             }
+
+            // 发起评审
+            $('.start-review-btn').click(function(){
+                var loading = layer.load(1, {   // 提交时创建loading层
+                    shade: [0.5,'#fff']     //0.5透明度的白色背景
+                });
+                $.post(ThinkPHP['AJAX'] + '/ECN/InitiateReview',{
+                    id: {$result.id},
+                    ecn_type: '{$result.ecn_type}'
+                }, function(response){
+                    if( response.flag ){
+                        layer.msg(response.msg, {icon: 1, time: 1000});
+                        setTimeout(function(){
+                            location.replace(location.href);
+                        }, 1000);
+                    }else{
+                        layer.msg(response.msg, {icon: 2, time: 3000});
+                        setTimeout(function(){
+                            layer.close(loading);
+                        }, 3000);
+                    }
+                });
+            });
 
             // 添加评审项button
             $(document).on('click', '#LAYER_CONTAINER .addReviewItem', function(){
