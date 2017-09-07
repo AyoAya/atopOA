@@ -142,7 +142,9 @@
                         <th>创建人</th>
                         <th>创建时间</th>
                         <th>最后编辑时间</th>
-                        <th>操作</th>
+                        <eq name="result.createuser" value="$Think.session.user.id">
+                            <th>操作</th>
+                        </eq>
                     </tr>
                     </thead>
                     <tbody>
@@ -158,14 +160,18 @@
                                 {$result.lastedit_time|date="Y-m-d H:i", ###}
                             </notempty>
                         </td>
-                        <td>
-                            <eq name="result.state" value="InReview">
-                                <button type="button" class="layui-btn layui-btn-danger layui-btn-small">撤回</button>
-                            <else/>
-                                <button type="button" class="layui-btn layui-btn-small edit-ecn-btn">编辑</button>
-                                <button type="button" class="layui-btn layui-btn-normal layui-btn-small start-review-btn">发起评审</button>
-                            </eq>
-                        </td>
+                        <eq name="result.createuser" value="$Think.session.user.id">
+                            <td>
+                                <eq name="result.state" value="InReview">
+                                    <eq name="result.createuser" value="$Think.session.user.id">
+                                        <button type="button" class="layui-btn layui-btn-danger layui-btn-small">撤回</button>
+                                    </eq>
+                                <else/>
+                                    <button type="button" class="layui-btn layui-btn-small edit-ecn-btn">编辑</button>
+                                    <button type="button" class="layui-btn layui-btn-normal layui-btn-small start-review-btn">发起评审</button>
+                                </eq>
+                            </td>
+                        </eq>
                     </tr>
                     </tbody>
                 </table>
@@ -256,80 +262,6 @@
             </div>
         </div>
     </div>
-
-    <!-- <div class="filelist-wrapper sr-only">
-        <div class="filelist-box">
-            <table class="layui-table">
-                <thead>
-                <tr>
-                    <th>文件号</th>
-                    <th>版本号</th>
-                    <th>附件</th>
-                    <th>文件描述</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>EVT00000157</td>
-                    <td>V1.63</td>
-                    <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                            class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a></td>
-                    <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                        <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                            即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                            Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                    </td>
-                    <td>
-                        <button type="button" class="layui-btn layui-btn-primary">添加</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>EVT00000157</td>
-                    <td>V1.63</td>
-                    <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                            class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a></td>
-                    <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                        <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                            即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                            Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                    </td>
-                    <td>
-                        <button type="button" class="layui-btn layui-btn-primary">添加</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>EVT00000157</td>
-                    <td>V1.63</td>
-                    <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                            class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a></td>
-                    <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                        <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                            即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                            Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                    </td>
-                    <td>
-                        <button type="button" class="layui-btn layui-btn-primary">添加</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>EVT00000157</td>
-                    <td>V1.63</td>
-                    <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                            class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a></td>
-                    <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                        <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                            即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                            Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                    </td>
-                    <td>
-                        <button type="button" class="layui-btn layui-btn-primary">添加</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div> -->
 
     <script>
         layui.use(['form', 'layer', 'layedit'], function() {
@@ -602,7 +534,7 @@
                         RenderHTML += '</tbody>';
                         RenderHTML += '</table>';
                     }else{
-                        RenderHTML = '';
+                        RenderHTML = '<div style="padding: 219px 0;text-align: center;">没有数据</div>';
                     }
                 }else{
                     // 当评审类型为非文件时的处理方案...
@@ -667,6 +599,81 @@
                 $('.selected-files').html(resultHtml);
             });
 
+            // 监听滚动
+            $('#content').scroll(function(){
+                if( $('#ReviewBtn') ){
+                    if( $('#scrollBackTop').hasClass('sr-only') ){
+                        $('#ReviewBtn').css({bottom : '60px'});
+                    }else{
+                        $('#ReviewBtn').css({bottom : '122px'});
+                    }
+                }
+            });
+
+            var extra = false;  // 添加评审人开关
+
+            // 点击打开评审模态框
+            $('#ReviewBtn').click(function(){
+                var reviewBoxHtml = $('.review-box-wrapper').html();
+                layer.open({
+                    type: 1,
+                    id: 'REVIEW_CONTAINER',
+                    title: '评审',
+                    area: ['700px','480px'],
+                    shade: [0.5, '#000'],
+                    shadeClose: true,
+                    content: reviewBoxHtml,
+                    end: function(){
+                        extra = false;  // 重置开关
+                    }
+                });
+                form.render();  // 解决layui组件被添加到layer中的失效问题
+            });
+
+            // 监听是否开启了选择额外的评审人
+            form.on('checkbox(Extra)', function(data){
+                let _next = $(data.elem).parent().next();
+                if( !extra ){
+                    _next.removeClass('sr-only');
+                    extra = true;
+                }else{
+                    _next.addClass('sr-only');
+                    extra = false;
+                }
+            });
+
+            // 监听评审结果提交
+            form.on('submit(submitReview)', function(data){
+                var SRloading = layer.load( 1, {   // 创建loading层
+                    shade: [0.5, '#fff']     //0.5透明度的白色背景
+                });
+                data.field.ecn_id = _id;
+                data.field.along = {$result.current_along};
+                data.field.ecn_type = _ecnType;
+                $.post(ThinkPHP['AJAX'] + '/ECN/postReview', data.field, function(response){
+                    if( response.flag ){
+                        layer.msg(response.msg, {icon: 1, time: 1000});
+                        setTimeout(function(){
+                            location.replace(location.href);
+                        }, 1000);
+                    }else{
+                        layer.msg(response.msg, {icon: 2, time: 3000});
+                        setTimeout(function(){
+                            layer.close(SRloading);
+                        }, 3000);
+                    }
+                });
+                return false;
+            });
+
+            // 监听评审状态，控制添加评审人是否显示
+            form.on('radio(reviewState)', function(data){
+                if( data.value == 'REFUSE' ){
+                    $('#REVIEW_CONTAINER .tj-psr').addClass('sr-only');
+                }else{
+                    $('#REVIEW_CONTAINER .tj-psr').removeClass('sr-only');
+                }
+            });
 
             /**
              * 判断值是否在数组中，$.inArray存在一些问题
@@ -687,6 +694,55 @@
 
         });
     </script>
+
+
+</block>
+
+
+<block name="modals">
+
+    <if condition="in_array($_SESSION['user']['id'], $result['Checkeds'][$result['current_along']-1])">
+        <div id="ReviewBtn">评审</div>
+        <div class="review-box-wrapper">
+            <div class="review-box">
+                <form class="layui-form">
+                    <div class="layui-form-item" style="margin-bottom: 15px;">
+                        <label class="layui-form-label" style="width: auto;">状态</label>
+                        <div class="layui-input-block" style="margin-left: 100px;">
+                            <input type="radio" name="review_state" value="PASS" title="通过" lay-filter="reviewState" checked>
+                            <input type="radio" name="review_state" value="REFUSE" title="拒绝" lay-filter="reviewState">
+                        </div>
+                    </div>
+                    <div class="layui-form-item tj-psr">
+                        <label class="layui-form-label" style="width: auto;">添加评审人</label>
+                        <div class="layui-input-inline" style="width: 30px;">
+                            <input type="checkbox" name="extra" title="" lay-skin="primary" lay-filter="Extra">
+                        </div>
+                        <div class="layui-input-inline sr-only" style="width:500px;">
+                            <select name="review_user" lay-verify="required" lay-search style="width: 100px;">
+                                <volist name="AllUsers" id="value">
+                                    <option value="{$value.id}">{$value.nickname}</option>
+                                </volist>
+                            </select>
+                            <div class="layui-form-mid layui-word-aux" style="padding-bottom: 0;">选择需要添加的额外的评审人并与您当前处于同一级</div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label" style="width: auto;">备注</label>
+                        <div class="layui-input-block" style="margin-left: 100px;">
+                            <textarea name="remark" placeholder="" class="layui-textarea" style="min-height: 150px;max-height: 180px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom: 10px;">
+                        <div class="layui-input-block" style="margin-left: 100px;">
+                            <button class="layui-btn" lay-submit lay-filter="submitReview">提交数据</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </if>
+
 
 
 </block>

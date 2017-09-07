@@ -65,6 +65,7 @@ class ECNController extends AuthController {
                 $ecnNumber = str_pad($ecnNumber, $ecnNumLen, '0', STR_PAD_RIGHT).$ecn_id;
                 $saveEcnNum = $model->table(C('DB_PREFIX').'ecn')->save(['id'=>$ecn_id, 'ecn_number'=>$ecnNumber]);   // 保存生成的ecn号()
                 if( $saveEcnNum === false ) throw new \Exception('创建失败');
+                $uniqueReviewUserId = null;
                 // 拼装ecn_review表的评审组数据
                 foreach( $postData['review_group'] as $key=>&$value ){
                     foreach( $value as $k=>$v ){
@@ -295,7 +296,7 @@ class ECNController extends AuthController {
                 $ecnData['lastedit_time'] = time();
                 $ecnData['createuser'] = session('user')['id'];
                 $ecn_row = $model->table(C('DB_PREFIX').'ecn')->save($ecnData);
-                if( $ecn_id === false ) throw new \Exception('保存失败');
+                if( $ecn_row === false ) throw new \Exception('保存失败');
                 $ecnReviewDel_row = $model->table(C('DB_PREFIX').'ecn_review')->where('ecn_id='.$postData['id'])->delete();
                 if( !$ecnReviewDel_row ) throw new \Exception('保存失败');
                 // 拼装ecn_review表的评审组数据
@@ -346,10 +347,17 @@ class ECNController extends AuthController {
                 array_multisort($sort, SORT_ASC, $sortEcnReview);
                 $result['EcnReview'] = $sortEcnReview;  // 将排序后的数组重新替换原来的数组
                 // 解决dcc排序样式问题，将dcc数组提取出来保存之后删除掉再重新添加进去
-                $firstDccReview = $result['EcnReview'][0];
-                unset($result['EcnReview'][0]);
-                array_push($result['EcnReview'], $firstDccReview);
-                sort($result['EcnReview']); // 重新添加之后再排一次序
+                $dccArray = [];
+                foreach( $result['EcnReview'] as $key=>&$value){
+                    if( $value['is_dcc'] == 'Y' ){
+                        array_push($dccArray, $value);
+                        unset($result['EcnReview'][$key]);
+                    }
+                }
+                foreach( $dccArray as $key=>&$value ){
+                    array_push($result['EcnReview'], $value);
+                }
+                array_values($result['EcnReview']); // 重新添加之后再排一次序
                 $result['className'] = $this->fetchClassStyle($result['state']);
                 $result['stateName'] = $this->fetchStateName($result['state']);
                 if( $result['ecn_type'] == 'file' ){    // 如果评审类型是file
@@ -393,10 +401,19 @@ class ECNController extends AuthController {
                     }
                 }
                 $result['Checkeds'] = $checkeds;
+                $MapNotIn = [];
+                foreach( $result['Checkeds'] as $key=>&$value ){    // 过滤掉已在评审当中的参与人
+                    foreach( $value as $k=>&$v ){
+                        array_push($MapNotIn, $v);
+                    }
+                }
+                $MapNotIn = implode(',', $MapNotIn);
+                $allUsers = $EcnModel->table(C('DB_PREFIX').'user')->field('id,nickname')->where('id <> 1 AND state = 1 AND id NOT IN ('.$MapNotIn.')')->select();
                 $dccUsers = $this->getDccPostAllUsers();
                 $this->assign('dccUsers', $dccUsers);
                 $this->assign('result', $result);
                 $this->assign('rules', $this->getAllEcnRules());
+                $this->assign('AllUsers', $allUsers);
                 $this->assign('reviewItems', $this->getEcnReviewItems(I('get.id')));
                 $this->display();
             }
@@ -431,20 +448,102 @@ class ECNController extends AuthController {
         }
     }
 
+    # 提交评审数据
+    public function postReview(){
+        if( IS_POST ){
+            $postData = I('post.');
+            $model = D('Ecn');
+            try {
+                $ecnAllData = $this->getEcnData($postData['ecn_id']);
+                if( !$ecnAllData ) throw new \Exception('评审失败');
+                $model->startTrans();   // 开启事务
+                $map['review_user'] = session('user')['id'];
+                $map['ecn_id'] = $postData['ecn_id'];
+                $map['along'] = $postData['along'];
+                $ecnReviewRow = $model->table(C('DB_PREFIX').'ecn_review')->where($map)->save([
+                    'already_review' => 'Y',
+                    'review_state' => $postData['review_state'],
+                    'remark' => $postData['remark'],
+                    'review_time' => time()
+                ]);
+                if( !$ecnReviewRow ) throw new \Exception('评审失败');
+                // 如果存在额外的评审人，则在同级插入一条新纪录
+                if( isset($postData['extra']) && $postData['extra'] == 'on' ){
+                    $ecnReviewAddId = $model->table(C('DB_PREFIX').'ecn_review')->add([
+                        'review_user' => $postData['review_user'],
+                        'ecn_id' => $postData['ecn_id'],
+                        'along' => $postData['along']
+                    ]);
+                    if( !$ecnReviewAddId ) throw new \Exception('评审失败');
+                }
+                // 如果评审状态为拒绝则修改ecn主表状态为BeRejected
+                if( $postData['review_state']  != 'PASS' ){
+                    $ecnRow = $model->table(C('DB_PREFIX').'ecn')->save([
+                        'id' => $postData['ecn_id'],
+                        'state' => 'BeRejected'
+                    ]);
+                    if( !$ecnRow ) throw new \Exception('评审失败');
+                }else{
+                    // 检查当前评审级是否已经走完
+                    $compMap['ecn_id'] = $postData['ecn_id'];
+                    $compMap['along'] = $postData['along'];
+                    $compMap['review_state'] = 'PASS';
+                    $compCount['ecn_id'] = $postData['ecn_id'];
+                    $compCount['along'] = $postData['ecn_id'];
+                    $completeCountNum = $model->table(C('DB_PREFIX').'ecn_review')->where($compCount)->count();
+                    $alongCompleteNum = $model->table(C('DB_PREFIX').'ecn_review')->where($compMap)->count();
+                    if( $alongCompleteNum >= $completeCountNum ){
+                        // 判断顺位along是否存在评审人数据，如果存在则给下一级评审人员推送邮件，不存在则给DCC人员发送邮件
+                        $nextAlongCount = $model->table(C('DB_PREFIX').'ecn_review')->where([
+                            'ecn_id' => $postData['ecn_id'],
+                            'along' => ($postData['along'] + 1),
+                        ])->count();
+                        $alongNumber = $nextAlongCount ? ($postData['along'] + 1) : 0;
+                        $pushUsersData = $this->getAlongOfPushUsers($alongNumber, $ecnAllData['EcnReview']);   // 获取收件人数据
+                        $ccUsersData = $this->getAllCcUsers($ecnAllData['quote_rule']);     // 获取抄送人数据
+                        $sendResult = $this->pushEmail('PushDown', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccUsersData);
+                        $sendResult ? $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功']) : $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功，部分邮件未发送']);
+                    }
+                }
+            } catch (Exception $e) {
+                $model->rollback();
+                $this->ajaxReturn(['flag'=>0, 'msg'=>$e->getMessage()]);
+            }
+            $model->commit();
+            $this->ajaxReturn(['flag'=>1, 'msg'=>'评审成功']);
+        }
+    }
+
+    /**
+     * 拼装邮件数据并发送
+     * @param  [string] $type    邮件类型
+     * @param  [string] $ecnType    ecn类型
+     * @param  [array] $address     收件人
+     * @param  [array] $data    邮件内容数据
+     * @param  [array]  $cc      抄送人
+     * @return bool
+     */
     private function pushEmail($type, $ecnType, $address, $data, $cc = []){
         $httphost = $_SERVER['HTTP_HOST'];
         $dear = count($address) == 1 ? $data['recipient_name'] : 'All';
-        if( $ecnType == 'file' ){
-            if( $type == 'InitiateReview' ){
+        if( $type == 'InitiateReview' ){    // 发起评审
+            if( $ecnType == 'file' ){
                 $subject = '['.session('user')['nickname'].'] 发起了编号为【'.$data['ecn_number'].'】的文件评审，请关注';
                 $body = '<p class="sm-dear">Dear '.$dear.',</p>';
                 $body .= '<p>['.session('user')['nickname'].'] 发起了编号为【'.$data['ecn_number'].'】的文件评审，请关注</p>';
                 $body .= '<p>详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
             }else{
-                // code...
+                // 非文件ecn类型的处理方式...
             }
-        }else{
-            // 非文件ecn类型的处理方式...
+        }elseif( $type == 'PushDown' ){     // 向下推送
+            if( $ecnType == 'file' ){
+                $subject = '['.session('user')['nickname'].'] 推送了 ['.$data['User']['nickname'].'] 发起的编号为【'.$data['ecn_number'].'】的文件评审，请关注';
+                $body = '<p class="sm-dear">Dear '.$dear.',</p>';
+                $body .= '<p>['.session('user')['nickname'].'] 推送了 ['.$data['User']['nickname'].'] 发起的编号为【'.$data['ecn_number'].'】的文件评审，请关注</p>';
+                $body .= '<p>详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
+            }else{
+                // 非文件ecn类型的处理方式...
+            }
         }
         $sendResult = send_email([['email'=>'vinty_email@163.com','name'=>'蒋明']], '', $subject, $body, [['email'=>'2737583968@qq.com','name'=>'蒋明']]);
         return is_integer($sendResult) ? true : false;
@@ -501,7 +600,7 @@ class ECNController extends AuthController {
     private function getEcnData($id = ''){
         $model = D('Ecn');
         if( $id ){
-            $ecnAllData = $model->relation(true)->find(I('post.id'));
+            $ecnAllData = $model->relation(true)->find($id);
             foreach( $ecnAllData['EcnReview'] as $key=>&$value ){
                 $value['user'] = $model->table(C('DB_PREFIX').'user')->find($value['review_user']);
             }
