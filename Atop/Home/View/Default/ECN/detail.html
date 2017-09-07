@@ -142,9 +142,7 @@
                         <th>创建人</th>
                         <th>创建时间</th>
                         <th>最后编辑时间</th>
-                        <eq name="result.createuser" value="$Think.session.user.id">
-                            <th>操作</th>
-                        </eq>
+                        <th width="217">操作</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -160,18 +158,19 @@
                                 {$result.lastedit_time|date="Y-m-d H:i", ###}
                             </notempty>
                         </td>
-                        <eq name="result.createuser" value="$Think.session.user.id">
-                            <td>
-                                <eq name="result.state" value="InReview">
-                                    <eq name="result.createuser" value="$Think.session.user.id">
-                                        <button type="button" class="layui-btn layui-btn-danger layui-btn-small">撤回</button>
-                                    </eq>
-                                <else/>
-                                    <button type="button" class="layui-btn layui-btn-small edit-ecn-btn">编辑</button>
-                                    <button type="button" class="layui-btn layui-btn-normal layui-btn-small start-review-btn">发起评审</button>
+                        <td>
+                            <eq name="result.state" value="InReview">
+                                <eq name="result.createuser" value="$Think.session.user.id">
+                                    <button type="button" class="layui-btn layui-btn-small layui-btn-disabled">编辑</button>
+                                    <button type="button" class="layui-btn layui-btn-normal layui-btn-small layui-btn-disabled">发起评审</button>
+                                    <button type="button" class="layui-btn layui-btn-danger layui-btn-small">撤回</button>
                                 </eq>
-                            </td>
-                        </eq>
+                            <else/>
+                                <button type="button" class="layui-btn layui-btn-small edit-ecn-btn">编辑</button>
+                                <button type="button" class="layui-btn layui-btn-normal layui-btn-small start-review-btn">发起评审</button>
+                                <button type="button" class="layui-btn layui-btn-danger layui-btn-small layui-btn-disabled">撤回</button>
+                            </eq>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -511,7 +510,7 @@
                         RenderHTML += '<tbody>';
                         for( let key in data ){
                             RenderHTML += '<tr>';
-                            RenderHTML += '<td>'+ data[key].filenumber +'</td>';
+                            RenderHTML += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/File/detail/id/'+ data[key].id +'">'+ data[key].filenumber +'</a></td>';
                             RenderHTML += '<td>'+ data[key].version +'</td>';
                             RenderHTML += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/'+ data[key].attachment.path +'" target="_blank" title="'+ data[key].attachment.name +'"><i class="file-icon file-icon-ext-'+ data[key].attachment.ext +'"></i> '+ data[key].attachment.name +'</a></td>';
                             RenderHTML += '<td title="'+ data[key].description +'"><p>'+ data[key].description +'</p></td>';
@@ -701,7 +700,7 @@
 
 <block name="modals">
 
-    <if condition="in_array($_SESSION['user']['id'], $result['Checkeds'][$result['current_along']-1])">
+    <present name="reviewAuth">
         <div id="ReviewBtn">评审</div>
         <div class="review-box-wrapper">
             <div class="review-box">
@@ -724,7 +723,7 @@
                                     <option value="{$value.id}">{$value.nickname}</option>
                                 </volist>
                             </select>
-                            <div class="layui-form-mid layui-word-aux" style="padding-bottom: 0;">选择需要添加的额外的评审人并与您当前处于同一级</div>
+                            <div class="layui-form-mid layui-word-aux" style="padding-bottom: 0;">选择需要添加的额外的评审人并与您当前处于同一级评审</div>
                         </div>
                     </div>
                     <div class="layui-form-item layui-form-text">
@@ -741,7 +740,7 @@
                 </form>
             </div>
         </div>
-    </if>
+    </present>
 
 
 

@@ -76,7 +76,8 @@
         </div>
     </div>
 
-    <div class="section-grey-table edit-condition sr-only">
+    <neq name="result.state" value="BeRejected">
+        <div class="section-grey-table edit-condition sr-only">
         <input type="hidden" name="id" value="{$result.id}" id="fileID">
         <div class="section-title">编辑文件</div>
         <div class="section-body">
@@ -137,6 +138,7 @@
             </table>
         </div>
     </div>
+    </neq>
 
     <div class="section-grey-table">
         <div class="section-title">以往版本</div>

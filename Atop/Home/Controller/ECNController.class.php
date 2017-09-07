@@ -137,7 +137,7 @@ class ECNController extends AuthController {
             case 'InReview':        // 评审中
                 $className = 'tag tag-info';
                 break;
-            case 'BeRejected':      // 驳回
+            case 'BeRejected':      // 已拒绝
                 $className = 'tag tag-danger';
                 break;
             case 'NotReview':      // 待评审
@@ -145,6 +145,12 @@ class ECNController extends AuthController {
                 break;
             case 'WAIT':      // 待评审
                 $className = 'tag tag-warning';
+                break;
+            case 'PASS':      // 已通过
+                $className = 'tag tag-success';
+                break;
+            case 'REFUSE':      // 已拒绝
+                $className = 'tag tag-danger';
                 break;
             default:                // 如果都不是则直接返回错误的class样式
                 $className = 'tag tag-danger';
@@ -168,14 +174,20 @@ class ECNController extends AuthController {
             case 'InReview':        // 评审中
                 $stateName = '评审中';
                 break;
-            case 'BeRejected':      // 驳回
-                $stateName = '驳回';
+            case 'BeRejected':      // 已拒绝
+                $stateName = '已拒绝';
                 break;
             case 'NotReview':      // 待评审
                 $stateName = '待评审';
                 break;
             case 'WAIT':      // 待评审
                 $stateName = '待评审';
+                break;
+            case 'PASS':      // 已通过
+                $stateName = '已通过';
+                break;
+            case 'REFUSE':      // 已拒绝
+                $stateName = '已拒绝';
                 break;
             default:                // 如果都不是则直接返回错误的class样式
                 $stateName = 'UNKNOW';
@@ -415,6 +427,10 @@ class ECNController extends AuthController {
                 $this->assign('rules', $this->getAllEcnRules());
                 $this->assign('AllUsers', $allUsers);
                 $this->assign('reviewItems', $this->getEcnReviewItems(I('get.id')));
+                // 查看当前登陆用户是否有评审该ecn的权限
+                $ecnRV = $EcnModel->table(C('DB_PREFIX').'ecn_review')->where(['ecn_id'=>$result['id'], 'along'=>$result['current_along'], 'review_user'=>session('user')['id']])->find();
+                // 当前登陆用户在评审列表中并且没有评审记录才可以评审
+                if( in_array(session('user')['id'], $result['Checkeds'][$result['current_along']-1]) && $ecnRV['already_review'] == 'N' && $result['state'] != 'BeRejected' ) $this->assign('reviewAuth', true);
                 $this->display();
             }
         }
@@ -456,6 +472,8 @@ class ECNController extends AuthController {
             try {
                 $ecnAllData = $this->getEcnData($postData['ecn_id']);
                 if( !$ecnAllData ) throw new \Exception('评审失败');
+                if( $ecnAllData['state'] === 'BeRejected' ) throw new \Exception('评审已被拒绝');
+                $ccUsersData = $this->getAllCcUsers($ecnAllData['quote_rule']);     // 获取抄送人数据
                 $model->startTrans();   // 开启事务
                 $map['review_user'] = session('user')['id'];
                 $map['ecn_id'] = $postData['ecn_id'];
@@ -483,25 +501,42 @@ class ECNController extends AuthController {
                         'state' => 'BeRejected'
                     ]);
                     if( !$ecnRow ) throw new \Exception('评审失败');
+                    $pushUsersData = [ ['email'=>$ecnAllData['User']['email'], 'name'=>$ecnAllData['User']['nickname']] ];  // 通知该ecn创建人
+                    $sendResult = $this->pushEmail('ReviewAction', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccUsersData, ['reviewState'=>$postData['review_state'], 'remark'=>$postData['remark']]);
+                    $sendResult ? $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功']) : $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功，部分邮件未发送']);
                 }else{
                     // 检查当前评审级是否已经走完
                     $compMap['ecn_id'] = $postData['ecn_id'];
                     $compMap['along'] = $postData['along'];
                     $compMap['review_state'] = 'PASS';
-                    $compCount['ecn_id'] = $postData['ecn_id'];
-                    $compCount['along'] = $postData['ecn_id'];
-                    $completeCountNum = $model->table(C('DB_PREFIX').'ecn_review')->where($compCount)->count();
+                    $currentAlongMap['ecn_id'] = $postData['ecn_id'];
+                    $currentAlongMap['along'] = $ecnAllData['current_along'];
+                    $currentAlongCount = $model->table(C('DB_PREFIX').'ecn_review')->where($currentAlongMap)->count();
                     $alongCompleteNum = $model->table(C('DB_PREFIX').'ecn_review')->where($compMap)->count();
-                    if( $alongCompleteNum >= $completeCountNum ){
+                    if( $alongCompleteNum == $currentAlongCount ){   // 检查当前级已通过的评审是否等于当前级的总长度，
                         // 判断顺位along是否存在评审人数据，如果存在则给下一级评审人员推送邮件，不存在则给DCC人员发送邮件
                         $nextAlongCount = $model->table(C('DB_PREFIX').'ecn_review')->where([
                             'ecn_id' => $postData['ecn_id'],
                             'along' => ($postData['along'] + 1),
                         ])->count();
                         $alongNumber = $nextAlongCount ? ($postData['along'] + 1) : 0;
-                        $pushUsersData = $this->getAlongOfPushUsers($alongNumber, $ecnAllData['EcnReview']);   // 获取收件人数据
-                        $ccUsersData = $this->getAllCcUsers($ecnAllData['quote_rule']);     // 获取抄送人数据
-                        $sendResult = $this->pushEmail('PushDown', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccUsersData);
+                        $ecnRow = $model->table(C('DB_PREFIX').'ecn')->save(['id'=>$postData['ecn_id'], 'current_along'=>$alongNumber]);    // 更新当前ecn顺位
+                        if( !$ecnRow ) throw new \Exception('评审失败');
+                        // 如果当前级已经进行完毕，则通知下一级评审人和该ecn创建人
+                        // 如果当前级已经处于dcc评审并且审核已全部通过则告知该ecn创建人该ecn评审已经完成
+                        if( !$postData['along'] ){   // 如果当前along已经是dcc评审
+                            $pushUsersData = [ ['email'=>$ecnAllData['User']['email'], 'name'=>$ecnAllData['User']['nickname']] ];  // 如果当前是dcc评审并且步骤也已经走完，则通知该ecn创建人
+                            $sendResult_Complete = $this->pushEmail('Complete', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccUsersData);
+                        }else{
+                            $pushUsersData = $this->getAlongOfPushUsers($alongNumber, $ecnAllData['EcnReview']);   // 获取收件人数据
+                            $sendResult_Complete = $this->pushEmail('PushDown', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccUsersData);
+                        }
+                        $pushUsersData = [ ['email'=>$ecnAllData['User']['email'], 'name'=>$ecnAllData['User']['nickname']] ];  // 通知该ecn创建人
+                        $sendResult = $this->pushEmail('ReviewAction', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccUsersData, ['reviewState'=>$postData['review_state'], 'remark'=>$postData['remark']]);
+                        $sendResult && $sendResult_Complete ? $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功']) : $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功，部分邮件未发送']);
+                    }else{
+                        $pushUsersData = [ ['email'=>$ecnAllData['User']['email'], 'name'=>$ecnAllData['User']['nickname']] ];  // 通知该ecn创建人
+                        $sendResult = $this->pushEmail('ReviewAction', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccUsersData, ['reviewState'=>$postData['review_state'], 'remark'=>$postData['remark']]);
                         $sendResult ? $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功']) : $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功，部分邮件未发送']);
                     }
                 }
@@ -523,15 +558,16 @@ class ECNController extends AuthController {
      * @param  [array]  $cc      抄送人
      * @return bool
      */
-    private function pushEmail($type, $ecnType, $address, $data, $cc = []){
+    private function pushEmail($type, $ecnType, $address, $data, $cc = [], $reviewData){
         $httphost = $_SERVER['HTTP_HOST'];
-        $dear = count($address) == 1 ? $data['recipient_name'] : 'All';
+        $stateText = $reviewData['reviewState'] === 'PASS' ? '通过' : '拒绝';
+        $dear = count($address) == 1 ? $data['User']['nickname'] : 'All';
         if( $type == 'InitiateReview' ){    // 发起评审
             if( $ecnType == 'file' ){
                 $subject = '['.session('user')['nickname'].'] 发起了编号为【'.$data['ecn_number'].'】的文件评审，请关注';
                 $body = '<p class="sm-dear">Dear '.$dear.',</p>';
-                $body .= '<p>['.session('user')['nickname'].'] 发起了编号为【'.$data['ecn_number'].'】的文件评审，请关注</p>';
-                $body .= '<p>详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
+                $body .= '<p>['.session('user')['nickname'].'] 发起了编号为【'.$data['ecn_number'].'】的文件评审，请关注。</p>';
+                $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
             }else{
                 // 非文件ecn类型的处理方式...
             }
@@ -539,11 +575,26 @@ class ECNController extends AuthController {
             if( $ecnType == 'file' ){
                 $subject = '['.session('user')['nickname'].'] 推送了 ['.$data['User']['nickname'].'] 发起的编号为【'.$data['ecn_number'].'】的文件评审，请关注';
                 $body = '<p class="sm-dear">Dear '.$dear.',</p>';
-                $body .= '<p>['.session('user')['nickname'].'] 推送了 ['.$data['User']['nickname'].'] 发起的编号为【'.$data['ecn_number'].'】的文件评审，请关注</p>';
-                $body .= '<p>详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
+                $body .= '<p>['.session('user')['nickname'].'] 推送了 ['.$data['User']['nickname'].'] 发起的编号为【'.$data['ecn_number'].'】的文件评审，请关注。</p>';
+                $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
             }else{
                 // 非文件ecn类型的处理方式...
             }
+        }elseif( $type == 'ReviewAction' ){   // 评审
+            if( $ecnType == 'file' ){
+                $subject = '['.session('user')['nickname'].'] 已'.$stateText.'了您发起的编号为【'.$data['ecn_number'].'】的文件评审';
+                $body = '<p class="sm-dear">Dear '.$dear.',</p>';
+                $body .= '<p>['.session('user')['nickname'].'] 已'.$stateText.'了您发起的编号为【'.$data['ecn_number'].'】的文件评审。</p>';
+                $body .= trim($reviewData['remark']) != '' ? '<p class="remark">备注：'.replaceEnterWithBr($reviewData['remark']).'</p>' : '';
+                $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
+            }else{
+                // 非文件ecn类型的处理方式...
+            }
+        }elseif( $type == 'Complete' ){
+            $subject = '您发起的编号为【'.$data['ecn_number'].'】的文件评审已结束，请知悉';
+            $body = '<p class="sm-dear">Dear '.$dear.',</p>';
+            $body .= '<p>您发起的编号为【'.$data['ecn_number'].'】的文件评审已结束，请知悉。</p>';
+            $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
         }
         $sendResult = send_email([['email'=>'vinty_email@163.com','name'=>'蒋明']], '', $subject, $body, [['email'=>'2737583968@qq.com','name'=>'蒋明']]);
         return is_integer($sendResult) ? true : false;

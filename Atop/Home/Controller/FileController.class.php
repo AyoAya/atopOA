@@ -261,7 +261,7 @@ class FileController extends AuthController {
 
     # 上传文件
     public function upload(){
-        $result = upload( I('post.PATH') );
+        $result = upload( I('post.PATH') , time().uniqid()); // 防止上传文件同名覆盖，生成时间戳加uniqid为二级目录
         $this->ajaxReturn( $result );
     }
 

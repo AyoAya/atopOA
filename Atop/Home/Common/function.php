@@ -604,6 +604,9 @@ function send_Email($address, $nickname='', $subject, $body,$cc = []){
     p.sm-dear {
         margin-bottom: 24px;
     }
+    p.ck-lj, p.remark {
+        margin-top: 24px;
+    }
 </style>
 STYLE;
 
