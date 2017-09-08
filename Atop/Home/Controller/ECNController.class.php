@@ -623,7 +623,7 @@ class ECNController extends AuthController {
                             if( $changeECNStateRow === false ) throw new \Exception('评审失败');
                             if( $ecnAllData['ecn_type'] == 'file' ){  // 如果当前ecn类型是file并且评审流程已走完，则修改文件状态为已归档
                                 foreach( $ecnAllData['EcnReviewItem'] as $key=>&$value ){
-                                    $changeFileStateRow = $model->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['assoc'], 'state'=>'Arching']);
+                                    $changeFileStateRow = $model->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['assoc'], 'state'=>'Archiving']);
                                     if( $changeFileStateRow === false ) throw new \Exception('评审失败');
                                 }
                             }else{
