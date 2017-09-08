@@ -176,14 +176,16 @@
                     <th class="th_gate">步骤</th>
                     <th class="th_mile_stone">里程碑</th>
                     <th class="th_items">节点</th>
-                    <th class="th_plan_start_time">计划开始时间</th>
-                    <th class="th_plan_complate_time">计划结束时间</th>
+                    <!--<th class="th_plan_start_time">计划开始时间</th>-->
                     <th class="th_start_time">实际开始时间</th>
+                    <th class="th_plan_complate_time">计划结束时间</th>
                     <th class="th_complate_time">实际结束时间</th>
                     <th class="th_comments">备注</th>
-                    <th class="th_state">状态</th>
+                    <th class="th_state">进度</th>
+                    <th class="th_status">状态</th>
                     <eq name="Think.session.user.id" value="$auth">
                         <th class="th_editor">操作</th>
+                        <th class="th_mark">标记</th>
                     </eq>
                 </tr>
             </thead>
@@ -197,18 +199,39 @@
                             <td rowspan="{$value['rowspan']}" class="{$value.plan.class}">{$value.mile_stone}</td>
                         </if>
                         <td class="{$value.plan.class}">{$value.items}</td>
-                        <td class="plan_start_time change_input td_center {$value.plan.class}" originally="{$value.plan_start_time}">{$value.plan_start_time}</td>
-                        <td class="plan_complete_time change_input td_center {$value.plan.class}" originally="{$value.plan_stop_time}">{$value.plan_stop_time}</td>
+                        <!--<td class="plan_start_time change_input td_center {$value.plan.class}" originally="{$value.plan_start_time}">{$value.plan_start_time}</td>-->
                         <td class="start_time change_input td_center {$value.plan.class}" originally="{$value.plan.start_time}">{$value.plan.start_time}</td>
-                        <td class="complete_time change_input td_center {$value.plan.class}" originally="{$value.plan.complete_time}">{$value.plan.complete_time}</td>
+                        <td class="complete_time change_input td_center {$value.plan.class}" originally="{$value.plan_stop_time}">{$value.plan_stop_time}</td>
+                        <td class="plan_complete_time change_input td_center {$value.plan.class}" originally="{$value.plan.complete_time}">{$value.plan.complete_time}</td>
                         <td class="comments change_input {$value.plan.class}" originally="{$value.plan.comments_entity}">{$value.plan.comments}</td>
-                        <td class="td_center"><span class="label {$value.plan.state_class}">{$value.plan.state_text}</span></td>
+
+                        <eq name="value.plan.state_text" value="success">
+                            <td class="td_center"><span class="label {$value.plan.state_class}">已完成</span></td>
+                        </eq>
+                        <eq name="value.plan.state_text" value="start">
+                            <td class="td_center"><span class="label {$value.plan.state_class}">进行中</span></td>
+                        </eq>
+                        <eq name="value.plan.state_text" value="noStart">
+                            <td class="td_center"><span class="label {$value.plan.state_class}">未开始</span></td>
+                        </eq>
+
+                        <eq name="value.plan.status" value="ok">
+                            <td class="td_center"><span class="tag tag-success">正常</span></td>
+                        </eq>
+                        <eq name="value.plan.status" value="no">
+                            <td class="td_center"><span class="tag tag-danger">延期</span></td>
+                        </eq>
+                        <eq name="value.plan.status" value="default">
+                            <td class="td_center"><span class=""></span></td>
+                        </eq>
+
                         <eq name="Think.session.user.id" value="$auth">
                             <td class="operation_td {$value.plan.class}">
                                 <if condition="isset($value['show']) AND $value['show'] eq 'true'">
                                     <button class="editor-btn btn btn-default btn-sm" plan_project="{$getID}" step="{$value.gate}" plan_node="{$value.id}"><i class="icon-edit"></i></button>
                                 </if>
                             </td>
+                            <td class="td_mark"><button type="button" plan_project="{$getID}" plan_node="{$value.id}" class="layui-btn-primary btn-mark" title="标记为完成状态">完成</button></td>
                         </eq>
                     </tr>
                 </volist>
@@ -385,6 +408,16 @@
         </div>
     </eq>
 
+
+
+
+
+
+
+
+
+
+
     <eq name="tab" value="discuss">
         <present name="Think.get.floor"><input type="hidden" id="floorNum" value="{$Think.get.floor}"></present>
         <div class="message-container">
@@ -396,7 +429,7 @@
                     <div class="clearfix"></div>
                 </div>-->
                 <notempty name="discuss">
-                    <volist name="discuss" id="value">
+                    <volist name="discuss" id="value" key="key">
                         <div class="media" name="floor{$i}">
                             <div class="media-left">
                                 <img class="media-object" src="{$value.face}" width="50" alt="...">
@@ -404,12 +437,39 @@
                             </div>
                             <div class="media-body">
                                 <div class="well well-sm other-info-box">
+
+                                    <span class=" pull-right reply">回复</span>
+
                                     <p class="other-info">
-                                        <span class=" pull-right floor">{$value.reply_time|date='Y-m-d H:i:s',###}　|　{$i} #</span>
+                                        <span class=" pull-right floor">{$value.reply_time|date='Y-m-d H:i:s',###}　|　{$key} #</span>
                                     </p>
                                     <p class="other-info">收件人：{$namelist}　<present name="value.cc_person_list_info">｜　抄送人：{$value.cc_person_list_info}</present></p>
                                 </div>
                                 <div class="context">{$value.discuss_context}</div>
+                                <notempty name="value.reply">
+                                    <div class="reply-info">
+                                        <volist name="value.reply" id="val">
+                                            <div class="reply-content"> <div class="face"><img src="{$val.face}" alt=""></div>　<div class="context-rpl">{$val.nickname} ：{$val.discuss_context} </div><p>{$val.reply_time|date="Y-m-d H:i:s",###}</p></div>
+                                        </volist>
+                                    </div>
+                                </notempty>
+                                <div class="reply-context">
+                                    <form class="layui-form reply-form">
+
+                                        <div class="layui-form-item layui-form-text">
+                                            <textarea name="reply_context" placeholder="请输入内容" class="layui-textarea reply-textarea"></textarea>
+                                        </div>
+
+                                        <input type="hidden" name="type" value="reply">
+                                        <input type="hidden" name="id" value="{$Think.get.id}">
+                                        <input type="hidden" name="email" value="{$value.email}">
+                                        <input type="hidden" name="discussId" value="{$value.id}">
+
+                                        <button class="layui-btn reply-submit" type="button">提交</button>
+                                        <button class="layui-btn layui-btn-primary close-reply" type="button" >取消</button>
+
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </volist>

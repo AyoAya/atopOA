@@ -1,0 +1,115 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/file/index.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/file/index.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>ECN</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">ECN</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="pull-left">
+        <a href="__ROOT__/ECN/add" class="layui-btn layui-btn-primary">
+            创建ECN
+        </a>
+        <a href="__ROOT__/ECN/rules" class="layui-btn layui-btn-primary">
+            ECN规则
+        </a>
+    </div>
+
+    <div class="clearfix" style="margin-bottom: 25px;"></div>
+
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>ECN号</th>
+                <th>状态</th>
+                <th>创建人</th>
+                <th>创建时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="__ROOT__/ECN/detail/id/1">ECN0000001</a></td>
+                <td>
+                    <span class="tag tag-primary">评审中</span>
+                </td>
+                <td>李平</td>
+                <td>2017-09-01 14:56</td>
+            </tr>
+            <tr>
+                <td><a href="__ROOT__/ECN/detail/id/1">ECN0000001</a></td>
+                <td>
+                    <span class="tag tag-primary">评审中</span>
+                </td>
+                <td>李平</td>
+                <td>2017-09-01 14:56</td>
+            </tr>
+            <tr>
+                <td><a href="__ROOT__/ECN/detail/id/1">ECN0000001</a></td>
+                <td>
+                    <span class="tag tag-primary">评审中</span>
+                </td>
+                <td>李平</td>
+                <td>2017-09-01 14:56</td>
+            </tr>
+            <tr>
+                <td><a href="__ROOT__/ECN/detail/id/1">ECN0000001</a></td>
+                <td>
+                    <span class="tag tag-primary">评审中</span>
+                </td>
+                <td>李平</td>
+                <td>2017-09-01 14:56</td>
+            </tr>
+            <tr>
+                <td><a href="__ROOT__/ECN/detail/id/1">ECN0000001</a></td>
+                <td>
+                    <span class="tag tag-primary">评审中</span>
+                </td>
+                <td>李平</td>
+                <td>2017-09-01 14:56</td>
+            </tr>
+            <tr>
+                <td><a href="__ROOT__/ECN/detail/id/1">ECN0000001</a></td>
+                <td>
+                    <span class="tag tag-primary">评审中</span>
+                </td>
+                <td>李平</td>
+                <td>2017-09-01 14:56</td>
+            </tr>
+            <tr>
+                <td><a href="__ROOT__/ECN/detail/id/1">ECN0000001</a></td>
+                <td>
+                    <span class="tag tag-primary">评审中</span>
+                </td>
+                <td>李平</td>
+                <td>2017-09-01 14:56</td>
+            </tr>
+            <tr>
+                <td><a href="__ROOT__/ECN/detail/id/1">ECN0000001</a></td>
+                <td>
+                    <span class="tag tag-primary">评审中</span>
+                </td>
+                <td>李平</td>
+                <td>2017-09-01 14:56</td>
+            </tr>
+        </tbody>
+    </table>
+
+</block>
+
+
+

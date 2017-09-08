@@ -1,0 +1,56 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/file/addRule.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/file/editRule.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>编辑文件规则</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/File">文件管理</a></li>
+        <li><a href="__ROOT__/File/fileRules">文件规则</a></li>
+        <li>编辑文件规则</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <form class="layui-form" action="" style="margin-top: 10px;">
+        <input type="hidden" name="id" value="{$result.id}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">规则名</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" required  lay-verify="required|name" autocomplete="off" class="layui-input" value="{$result.name}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">长度</label>
+            <div class="layui-input-block">
+                <input type="text" name="length" required  lay-verify="required|length" autocomplete="off" class="layui-input" value="{$result.length}">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">规则描述</label>
+            <div class="layui-input-block">
+                <textarea name="desc" class="layui-textarea" lay-verify="desc">{$result.desc}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="editRuleSubmit">提交数据</button>
+            </div>
+        </div>
+    </form>
+
+</block>
+
+
+

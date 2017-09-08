@@ -2,123 +2,89 @@
 <extend name="layout/default"/>
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
-    <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
-    <link rel="stylesheet" href="__CSS__/File/index.css">
-    <link rel="stylesheet" href="__CSS__/File/add.css">
+    <link rel="stylesheet" href="__CSS__/file/apply.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
-    <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
-    <script src="__JS__/File/apply.js"></script>
+    <script src="__JS__/file/apply.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
-    <title>编号申请</title>
+    <title>申请编号</title>
 </block>
 <!-- 【路径导航】 -->
 <block name="breadcrumb">
     <ol class="breadcrumb breadcrumb-edit">
-        <li class="active"><a href="__ROOT__/File">文件管理</a></li>
-        <li class="active">编号申请</li>
+        <li><a href="__ROOT__/File">文件管理</a></li>
+        <li class="active">申请编号</li>
     </ol>
 </block>
+<!-- 【正文区域】 -->
 <block name="content">
 
-    <div class="title-bar" style="margin: 0 0 30px 0;">
-        <h4>基本信息</h4>
-    </div>
-
-    <div class="basic-container">
-        <form class="layui-form ">
-
-            <div class="layui-form-item layui-inline">
-                <div class="layui-form-label" style="padding:10px 0 10px 10px;">文件类型</div>
-                <div class="layui-input-block"  style="width: 250px;">
-                    <select name="type" lay-filter="type">
-                        <volist name="ruleData" id="val">
-                            <option value='{$val.type}'>{$val.type}</option>
-                        </volist>
-                    </select>
-                </div>
+    <form class="layui-form" action="" style="margin-top: 10px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 70px;">文件类型</label>
+            <div class="layui-input-inline">
+                <select name="id" lay-verify="required">
+                    <volist name="rules" id="value">
+                        <option value="{$value.id}">{$value.name}</option>
+                    </volist>
+                </select>
             </div>
-
-            <div class="layui-form-item layui-inline" style="margin: 0 20px 15px 20px;">
-                <button class="layui-btn" lay-submit lay-filter="submit">申请</button>
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="applySubmit">立即申请</button>
             </div>
-        </form>
-    </div>
-
-    <div class="title-bar" style="margin: 0 0 30px 0;">
-        <h4>申请记录</h4>
-    </div>
-
-    <notempty name='realData'>
-        <div class="layui-form-item layui-form-text layui-inline">
-            <div class="layui-form-label" style="width: 90px;">您的编号</div>　
-            <div class="real-num layui-inline" style="height: 38px;line-height: 38px;"><a href="##">{$realData.file_no}</a></div>
         </div>
-    </notempty>
-
-    <table class="layui-table">
-        <thead>
-        <tr>
-            <th style="width: 150px;">文件编号</th>
-            <th style="width: 150px;">申请人</th>
-            <th style="width: 150px;">申请时间</th>
-            <th style="width: 120px;">状态</th>
-        </tr>
-        </thead>
-        <tbody>
-        <volist name="numData" id="val">
-            <tr>
-                <td><a href="__ROOT__/File/fileDetail/no/{$val.file_no}/version/{$val.version}">{$val.file_no}</a></td>
-                <td>{$val.nickname}</td>
-                <td>{$val.time|date="Y-m-d H:i:s",###}</td>
-                <eq name="val.status" value="1">
-                    <td>
-                        <span class="tag tag-brown">未评审</span>
-                    </td>
-                </eq>
-                <eq name="val.status" value="2">
-                    <td>
-                        <span class="tag tag-brown" >已编辑</span>
-                    </td>
-                </eq>
-                <eq name="val.status" value="0">
-                    <td>
-                        <span class="tag tag-danger">不可用</span>
-                    </td>
-                </eq>
-                <eq name="val.status" value="3">
-                    <td>
-                        <span style="width: 50px;height: 26px;background: #428bca;display: inline-block; color: #fff;border-radius:2px;line-height: 26px;text-align: center;">评审中</span>
-                    </td>
-                </eq>
-                <eq name="val.status" value="4">
-                    <td>
-                        <span class="tag tag-danger">不可用</span>
-                    </td>
-                </eq>
-                <eq name="val.status" value="5">
-                    <td>
-                        <span class="tag tag-success">可用</span>
-                    </td>
-                </eq>
-                <eq name="val.status" value="6">
-                    <td>
-                        <span class="tag tag-danger">不可用</span>
-                    </td>
-                </eq>
-
-            </tr>
-        </volist>
-
-        </tbody>
-    </table>
+    </form>
+    <p class="tswb">注：同一种文件类型一小时内只能申请10次</p>
 
     <div class="clearfix"></div>
+
+    <div class="section-grey-table">
+        <div class="section-title">我的申请记录<small>正在进行中评审的文件号无法进行回收</small></div>
+        <div class="section-body">
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <th>文件编号</th>
+                        <th>当前状态</th>
+                        <th>申请时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <notempty name="result">
+                        <volist name="result" id="value">
+                            <tr>
+                                <td><a href="__ROOT__/File/detail/id/{$value.id}">{$value.filenumber}</a></td>
+                                <td>
+                                    <span class="{$value.className}">{$value.stateName}</span>
+                                </td>
+                                <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
+                                <td>
+                                    <div class="button-group">
+                                        <a href="__ROOT__/File/delete/id/{$value.id}" type="button" class="layui-btn layui-btn-primary layui-btn-small">删除</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </volist>
+                    <else/>
+                        <tr>
+                            <td colspan="4" style="text-align: center;padding: 40px 0;">没有数据</td>
+                        </tr>
+                    </notempty>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
     <!-- 分页 -->
-    <ul class="pagination pagination-edit">{$page}</ul>
+    <ul class="pagination pagination-edit">{$pageShow}</ul>
 
 
 </block>
+
+
+

@@ -1,0 +1,36 @@
+
+/* 隐藏layedit编辑器的工具栏 */
+.layui-layedit .layui-layedit-tool {
+    display: none;
+}
+
+
+
+.preview-condition .layui-table tbody tr td:first-child,
+.edit-condition .layui-table tbody tr td:first-child {
+    width: 150px;
+    padding: 15px;
+    vertical-align: top;
+    font-weight: bold;
+}
+.edit-condition .layui-input {
+    width: 200px;
+}
+
+#FilePick {
+    margin-top: 10px;
+}
+.tswb {
+    color: #999;
+    font-size: 12px;
+    padding: 5px 0;
+}
+.ipt-yc {
+    height: 38px;
+    line-height: 38px;
+    margin-left: 20px;
+    padding: 0;
+}
+.wb-red {
+    color: #d9534f;
+}

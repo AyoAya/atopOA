@@ -1,0 +1,75 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/ECN/ruleDetail.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/ecn/ruleDetail.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>规则详情</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/ECN">ECN</a></li>
+        <li><a href="__ROOT__/ECN/rules">ECN规则</a></li>
+        <li class="active">规则详情</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="section-grey-table" style="margin-top: 10px;">
+        <div class="section-title">基本信息</div>
+        <div class="section-body">
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <th>规则名称</th>
+                        <th>规则描述</th>
+                        <th>创建人</th>
+                        <th>创建时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{$result.name}</td>
+                        <td>{$result.description}</td>
+                        <td>{$result.nickname}</td>
+                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="section-grey">
+        <div class="section-title">抄送列表</div>
+        <div class="section-body">
+            <volist name="result.ccs" id="value">
+                <span class="zw-item">{$value.name}</span>
+            </volist>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <volist name="result.recipients" id="value">
+        <div class="section-grey">
+            <div class="section-title">{$key+1} 级评审</div>
+            <div class="section-body">
+                <volist name="value" id="val">
+                    <span class="zw-item">{$val.name}</span>
+                </volist>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </volist>
+
+</block>
+
+
+

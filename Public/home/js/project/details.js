@@ -4,6 +4,13 @@
 
 $(function(){
 
+
+
+    // 初始化layui组件
+    layui.use(['layer','form'], function(){
+        var layer = layui.layer,
+            form = layui.form();
+
     // 归档文件：删除文档
     $('.document-unlink-btn').click(function(){
         var _path = $(this).prev().val();
@@ -175,6 +182,18 @@ $(function(){
         var start_time = _parent_tr.find('input[name=start_time]').val();
         var complete_time = _parent_tr.find('input[name=complete_time]').val();
         var comments = _parent_tr.find('textarea[name=comments]').val();
+
+        // 判断用户是否
+        if( start_time == '' ){
+            layer.msg('填写开始时间！',{time:2000});
+            return false;
+        }
+
+        if(complete_time != '' && Date.parse(complete_time) < Date.parse(start_time)){
+            layer.msg('计划结束时间不得小于实际开始时间！',{time:2000});
+            return false;
+        }
+
         $.ajax({
             url : ThinkPHP['AJAX'] + '/Project/plan',
             type : 'POST',
@@ -182,7 +201,7 @@ $(function(){
                 plan_project : plan_project,
                 plan_node : plan_node,
                 start_time : start_time,
-                complete_time : complete_time,
+                plan_stop_time : complete_time,
                 comments : comments
             },
             dataType : 'json',
@@ -203,6 +222,67 @@ $(function(){
                     $('#MessageModal').modal('show');
                     setTimeout(function(){
                         $('#MessageModal').modal('hide');
+                    },1000);
+                }
+            }
+        });
+    });
+
+    // 项目计划：点击完成提交当前完成时间
+    $('.plan-table').on('click','.btn-mark',function(){
+
+        var plan_project = $(this).attr('plan_project');
+        var plan_node = $(this).attr('plan_node');
+        var _parentTr = $(this).parents('tr');
+
+        var startTime = _parentTr.find('.start_time').text();
+        var completeTime = _parentTr.find('.complete_time').text();
+        var plan_complete_time = _parentTr.find('.plan_complete_time').text();
+
+        //console.log(_parentTr);
+        //console.log(startTime);
+        //console.log(completeTime);
+        // 判断用户是否
+        if( startTime == '' ){
+            layer.msg('请先设置的时间！',{time:2000});
+            return false;
+        }
+        if( completeTime == '' ){
+            layer.msg('请先设置的时间！',{time:2000});
+            return false;
+        }
+        if( plan_complete_time != '' ){
+            layer.msg('此项目已经处于完成状态！',{time:2000});
+            return false;
+        }
+
+        //loading层
+        var load = layer.load(1, {
+            shade: [0.5,'#fff'] //0.1透明度的白色背景
+        });
+
+        $.ajax({
+            url : ThinkPHP['AJAX'] + '/Project/mark',
+            type : 'POST',
+            data : {
+                plan_project : plan_project,
+                plan_node : plan_node,
+                start_time : startTime,
+                plan_stop_time : completeTime,
+            },
+            dataType : 'json',
+
+            success : function(response){
+                if( response.flag > 0 ){
+                    layer.msg('操作成功!',{icon:1,time:2000})
+                    setTimeout(function(){
+                        location.reload();
+                    },1000);
+                }else{
+                    setTimeout(function(){
+                        layer.msg('操作失败!',{icon:2,time:2000})
+                        $('#MessageModal').modal('hide');
+                        layer.close(load)
                     },1000);
                 }
             }
@@ -277,10 +357,6 @@ $(function(){
 
     });*/
 
-    // 初始化layui组件
-    layui.use(['layer','form'], function(){
-        var layer = layui.layer,
-            form = layui.form();
         //监听部门改变
         form.on('select(change)', function( data ){
             $.ajax({
@@ -303,7 +379,62 @@ $(function(){
                 }
             });
         });
-    });
+
+        // 回复区 点击回复出现输入框
+        $('.message-board').on('click','.reply',function(){
+            $('.reply-context').each(function( index ){
+                if($(this).css('display') != 'none'){
+                    $(this).css('display','none');
+                }
+            })
+
+            var _reply = $(this).parents('.media-body').find('.reply-context');
+            _reply.show();
+        })
+        // 回复区 点击取消隐藏输入框
+        $('.message-board').on('click','.close-reply',function(){
+            $(this).parents('.reply-context').hide();
+        })
+
+        // 回复提交
+        $('.message-board').on('click','.reply-submit',function(){
+            var data = new Object();
+
+            data.context = ($(this).parents('.reply-form').find('.reply-textarea').val());
+            data.tyep = ($(this).parents('.reply-form').find('input[name = type]').val());
+            data.id = ($(this).parents('.reply-form').find('input[name = id]').val());
+            data.email = ($(this).parents('.reply-form').find('input[name = email]').val());
+            data.discuss = ($(this).parents('.reply-form').find('input[name = discussId]').val());
+
+            var index = layer.load(1, {
+                shade: [0.5,'#fff'] //0.1透明度的白色背景
+            });
+
+            $.ajax({
+                url : ThinkPHP['AJAX'] + '/Project/reply',
+                type : 'POST',
+                data : data,
+                dataType : 'json',
+
+                success : function(response){
+                    if(response.flag > 0){
+                        layer.msg(response.msg,{icon:1,time:2000})
+                        setTimeout(function(){
+                            location.reload();
+                        },2000)
+                    }else{
+                        layer.msg(response.msg,{icon:2,time:2000})
+                        setTimeout(function(){
+                            layer.close(index);
+                            location.reload();
+                        },2000)
+                    }
+                }
+            });
+
+            return false;
+
+        })
 
     // 评论区：跳转楼层
     $('#jump').click(function(){
@@ -332,12 +463,11 @@ $(function(){
     // 讨论区：打开添加抄送人模态框
     $('#add-cc-people').click(function(){
         $('#CCpeopleModal').modal('show');
-        $('#content-box').mCustomScrollbar('disable');
     });
 
-    $('#CCpeopleModal').on('hidden.bs.modal', function (e) {
+    /*$('#CCpeopleModal').on('hidden.bs.modal', function (e) {
         $('#content-box').mCustomScrollbar('update');
-    })
+    })*/
 
     // 讨论区：点击抄送人添加到抄送人员列表
     $('#cc-person-list').on('click','li',function(){
@@ -429,6 +559,7 @@ $(function(){
     });
 
 
+    });
 
 });
 

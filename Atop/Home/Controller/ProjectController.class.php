@@ -1,6 +1,7 @@
 <?php
 namespace Home\Controller;
 use Think\Page;
+use Think\Model;
 
 class ProjectController extends AuthController
 {
@@ -383,6 +384,17 @@ p {
 <p class="main">更新项：Gate$gate [ $mile_stone ] / $items</p>
 <p>详情请查看：<a href="http://$httpHost/Project/details/tab/plan/id/$iid">http://$httpHost/Project/details/tab/plan/id/$iid</a></p>
 HTML;
+        }elseif( $category == 'REPLY' ){
+
+            $subject = '项目讨论回复，'.$emailData['pj_num'].' / '.$emailData['pj_name'];
+
+            extract($emailData['gate']);
+
+            $body ='<p>Dear '.$emailData['pj_create_person'].'</p>
+<p>'.session('user')['nickname'].'回复了讨论区'.$emailData['pj_num'].'/'.$emailData['pj_name'].' 下您发表的 “'.$emailData['discuss_context'].'评论”</p>
+<p>内容:'.$emailData['content'].'</p>
+<p>详情请查看：<a href="http://$httpHost/Project/details/tab/discuss/id/'.$emailData['id'].'">http://$httpHost/Project/details/tab/discuss/id/'.$emailData['id'].'</a></p>';
+
         }elseif( $category == 'document' ){
             extract($emailData);
             $pj_create_time = date('Y年m月d日 H:i:s');
@@ -451,6 +463,30 @@ p {
 HTML;
         }
         send_Email($emailList,'',$subject,$body,$this->ccList);
+    }
+
+    # 回复邮件推送
+    public function pushEmails($category, $pushIdList, $emailData, $iid=''){
+
+        $map['id'] = array('in',$pushIdList);//查询所有参与该项目人员的信息
+
+        $httpHost = $_SERVER['HTTP_HOST'];
+
+        if( $category == 'REPLY'){
+
+            $subject = '项目讨论回复，'.$emailData['pj_num'].' / '.$emailData['pj_name'];
+
+
+            $body ='<p>Dear '.$emailData['pj_create_person'].'</p>
+<p>'.session('user')['nickname'].' 回复了讨论区 '.$emailData['pj_num'].'/'.$emailData['pj_name'].' 下您发表的评论 </p>
+<p>评论内容如下：'.$emailData['discuss_context'].'</p>
+<p>回复内容如下：</p>
+<p>'.$emailData['content'].'</p>
+<p>详情请查看：<a href="http://'.$httpHost.'/Project/details/tab/discuss/id/'.$emailData['id'].'">http://'.$httpHost.'/Project/details/tab/discuss/id/'.$emailData['id'].'</a></p>';
+
+            send_Email($pushIdList,'',$subject,$body,session('user')['email']);
+        }
+
     }
 
     # 详情页
@@ -529,7 +565,10 @@ HTML;
                 $this->assign('progress',$progress);
                 $this->assign('projects',$projects);
                 break;
+
+
             case 'plan':    // 项目计划
+
                 $plan = M('ProjectPlan');
                 $planResult = $plan->field('id,gate,mile_stone,items,plan_start_time,plan_stop_time')->where('plan_project='.$getID)->order('gate,id ASC')->select();    //获取项目计划信息
                 //print_r($plan->getLastSql());
@@ -570,9 +609,11 @@ HTML;
                 $uniqueResult = array_diff($uniqueStep,$uniquePlan);
                 array_push($uniqueResult,max($uniqueResult)+1);     //get next step.
                 $uniqueResult = array_values($uniqueResult);
+
                 # 根据show键控制显示隐藏编辑按钮
                 foreach($planResult as $key=>&$value){
                     # 当用户完成某一项节点时，添加class为succ，未完成则标识为acti
+
                     if( !empty($value['plan']) ){
                         if( $value['plan']['start_time'] != '' ){
                             $value['plan']['class'] = 'succ';
@@ -583,14 +624,23 @@ HTML;
                         $value['plan']['comments_entity'] = htmlspecialchars($value['plan']['comments']);   # 为保留用户撤销后维持原有的格式
                         if( $value['plan']['start_time'] != '' && $value['plan']['complete_time'] != '' ){
                             $value['plan']['state_class'] = 'label-success';
-                            $value['plan']['state_text'] = '已完成';
+                            $value['plan']['state_text'] = 'success';
                         }elseif( $value['plan']['start_time'] == '' && $value['plan']['complete_time'] == '' ){
                             $value['plan']['state_class'] = 'label-default';
-                            $value['plan']['state_text'] = '未开始';
+                            $value['plan']['state_text'] = 'noStart';
                         }elseif( $value['plan']['start_time'] != '' && $value['plan']['complete_time'] == '' ){
                             $value['plan']['state_class'] = 'label-primary';
-                            $value['plan']['state_text'] = '进行中';
+                            $value['plan']['state_text'] = 'start';
                         }
+
+                        if( strtotime($value['plan']['complete_time']) && strtotime($value['plan_stop_time']) >= strtotime($value['plan']['complete_time']) ){
+                            $value['plan']['status'] = 'ok';
+                        }elseif( strtotime($value['plan']['complete_time']) && strtotime($value['plan_stop_time']) < strtotime($value['plan']['complete_time']) ){
+                            $value['plan']['status'] = 'no';
+                        }else{
+                            $value['plan']['status'] = 'default';
+                        }
+
                     }else{
                         $value['plan']['class'] = 'acti';
                     }
@@ -602,6 +652,10 @@ HTML;
                 # print_r($planResult);
                 $this->assign('gateResult',$planResult);
                 break;
+
+
+
+
             case 'subprojects':    // 子项目开发
                 $project = M('Project');
                 $plan = M('ProjectPlan');
@@ -699,7 +753,11 @@ HTML;
                 # print_r($gates);
                 $this->assign('gates',$gates);
                 break;
+
             case 'discuss':    // 讨论区
+
+                $model = new model();
+
                 //$users = M()->table('atop_department a,atop_user b')->field('a.id dpmt_id,a.name dpmt_name,b.id user_id,b.nickname,b.email')->where('a.id=b.department')->select();
                 //$this->assign('users',$users);
                 $departments = M('Department')->field('id,name')->select();
@@ -718,8 +776,8 @@ HTML;
                 }
                 $this->assign('namelist',substr($nameList,0,-2));
                 $discussResult = M()->table('atop_project_discuss a,atop_user b')
-                                    ->field('a.discuss_id,a.discuss_context,a.reply_time,a.cc_list,b.nickname,b.face')
-                                    ->where('a.discuss_id='.$getID.' AND a.discuss_user=b.id')
+                                    ->field('a.discuss_id,a.discuss_context,a.reply_time,a.cc_list,b.nickname,b.face,b.email,a.id')
+                                    ->where('a.discuss_id='.$getID.' AND a.discuss_user = b.id AND Reply_id is null')
                                     ->select();
                 // 获取所有参与该项目的人员
                 //$recipients = $project->field('pj_responsible,pj_management,pj_fw_development,pj_design,pj_structure_design,pj_dvt_test,pj_light_design,pj_ate_design,pj_market')->find($getID);
@@ -734,16 +792,64 @@ HTML;
                         }
                         $value['cc_person_list_info'] = substr($nicknameList,0,-2);
                     }
+
+                    $value['reply'] = $model->table(C('DB_PREFIX').'project_discuss a,'.C('DB_PREFIX').'user b')
+                                            ->field('a.discuss_context,a.reply_time,b.nickname,b.face')
+                                            ->where('a.discuss_id = '.$getID.' AND a.Reply_id = '.$value['id'].' AND a.reply_id is not null AND b.id = a.discuss_user')
+                                            ->select();
                 }
                 # print_r($discussResult);
                 $this->assign('defaultCClist',$this->defaultCClist);    // 将默认抄送人注入模板
                 $this->assign('discuss',$discussResult);
                 break;
+
             default:
                 $this->error('错误');
         }
         $this->assign('tab',$get);
         $this->display();
+    }
+
+    # 回复评论
+    public function reply(){
+
+        if(IS_POST){
+
+            $model = new model();
+
+            $post = I('post.');
+
+            # print_r($post);
+            $discuss['discuss_id'] = $post['id'];
+            $discuss['discuss_context'] = $post['context'];
+            $discuss['discuss_user'] = session('user')['id'];
+            $discuss['reply_time'] = time();
+
+            $rel = $model->table(C('DB_PREFIX').'project a,'.C('DB_PREFIX').'project_discuss b')
+                         ->field('a.pj_num,b.discuss_context,a.pj_name,a.pj_create_person,a.id')
+                         ->where('a.id = b.discuss_id AND a.id ='.$post['id'].' AND b.id ='.$post['discuss'])
+                         ->find();
+
+            $rel['content'] = $post['context'];
+            $rel['discuss_context'] = html_entity_decode($rel['discuss_context']);
+
+            $discuss_id = M('ProjectDiscuss')->add($discuss);
+            if( $discuss_id ){
+                $dis['Reply_id'] = $post['discuss'];
+                $discussId = M('projectDiscuss')->where('id = '.$discuss_id)->save($dis);
+                if( $discussId ){
+                    $this->pushEmails('REPLY',$post['email'],$rel,$rel['id']);
+                    $this->ajaxReturn(['flag'=>1,'msg'=>'操作成功！']);
+                }else{
+                    $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                }
+            }else{
+                $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+            }
+        }else{
+            $this->error('非法提交！');
+        }
+
     }
 
     # 切换部门
@@ -815,40 +921,89 @@ HTML;
         if(IS_POST)
         {
             $data = I('post.');
-            if( !empty($data) )
-            {
+
+             # print_r( strtotime(date('Y-m-d H:i:s',strtotime(''.$data['complete_time'].'+1 day'))).'---');
+             /*print_r( $data);
+             die();*/
+
+            if( !empty($data) ) {
                 $data['id'] = I('post.plan_node');
                 $data['comments'] = replaceEnterWithBr(strip_tags($data['comments']));
                 $data['save_time'] = time();
                 $plan = M('ProjectPlan');
                 $id = $plan->save($data);  // 修改
-                if( $id )
-                {
+                if ($id) {
                     # 更新项目最近更新时间
                     $pj_id = $data['plan_project'];
                     $pj_save_data['id'] = $pj_id;
                     $pj_save_data['pj_update_time'] = time();
                     $pj_save_id = M('Project')->save($pj_save_data);
-                    if( $pj_save_id )
-                    {
+                    if ($pj_save_id) {
                         $projectResult = M('Project')->find($data['plan_project']);
-                        $planNode = $plan->find( I('post.plan_node') );
+                        $planNode = $plan->find(I('post.plan_node'));
                         $planNode['pj_num'] = $projectResult['pj_num'];
                         $planNode['pj_name'] = $projectResult['pj_name'];
                         $planNode['pj_create_person'] = $projectResult['pj_management'];
                         //print_r($planNode);
-                        $this->pushEmail('update',$projectResult['pj_participate'].','.$projectResult['pj_create_person_id'],$planNode,$projectResult['id']);
-                        $this->ajaxReturn( array('flag' => 1, 'msg' => '保存成功') );
+                        $this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
+                        $this->ajaxReturn(array('flag' => 1, 'msg' => '保存成功'));
                         exit;
-                    }else{
-                        $this->ajaxReturn( array('flag' => 0, 'msg' => '保存失败') );
+                    } else {
+                        $this->ajaxReturn(array('flag' => 0, 'msg' => '保存失败'));
                         exit;
                     }
-                }else{
-                    $this->ajaxReturn( array('flag' => 0, 'msg' => '错误') );
+                } else {
+                    $this->ajaxReturn(array('flag' => 0, 'msg' => '错误'));
                     exit;
                 }
             }
+        }
+    }
+
+    # Ajax修改项目状态
+    public function mark(){
+        if(IS_POST){
+
+            $post = I('post.');
+            $asd['plan_stop_time'] = '';
+            $rel = M('Project')->select();
+            foreach ($rel as $key=>&$val){
+                $val['plan'] = M('ProjectPlan')->where('plan_project ='.$val['id'])->select();
+                foreach ($val['plan'] as $k=>&$v){
+                    if($v['start_time'] == ''){
+                        M('ProjectPlan')->where('id ='.$v['id'])->save($asd);
+                    }
+                }
+
+
+            }
+
+
+
+
+            print_r($post);
+            # print_r($rel);
+
+            die();
+
+            $plan['complete_time'] = date('Y-m-d', time());
+            $plan['id'] = $post['plan_node'];
+
+            $plan_id = M('ProjectPlan')->save($plan);
+
+            if($plan_id){
+                $this->ajaxReturn(['flag'=>1,'msg'=>'操作成功！']);
+                exit();
+            }else{
+                $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+                exit();
+            }
+
+        }else{
+
+            $this->ajaxReturn(['flag'=>0,'msg'=>'操作失败！']);
+            exit();
+
         }
     }
 

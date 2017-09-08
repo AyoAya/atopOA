@@ -134,6 +134,10 @@ h2 a {
 	display: none;
 }
 
+.layui-table thead th {
+	padding: 15px;
+}
+
 
 .section {
 	width: 100%;
@@ -175,6 +179,66 @@ h2 a {
 .section-primary .section-body {
 	padding: 15px;
 }
+
+.section-grey {
+	width: 100%;
+	border: 1px solid #e2e2e2;
+	margin-bottom: 30px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	overflow: visible;
+}
+.section-grey .layui-table {
+	margin: 0;
+}
+.section-grey .section-title {
+	width: auto;
+	padding: 10px 15px;
+	border-bottom: 1px solid #e2e2e2;
+	font-size: 18px;
+	font-size: 15px;
+	background: #f3f3f3;
+}
+.section-grey .section-title small {
+	font-size: 50%;
+	margin-left: 20px;
+	color: #888;
+}
+.section-grey .section-body {
+	padding: 15px;
+}
+
+.section-grey-table {
+	width: 100%;
+	margin-bottom: 30px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	overflow: visible;
+}
+.section-grey-table .layui-table {
+	margin: 0;
+}
+.section-grey-table .section-title {
+	width: auto;
+	padding: 10px 15px;
+	border: 1px solid #e2e2e2;
+	border-bottom: none;
+	font-size: 18px;
+	font-size: 15px;
+	background: #f3f3f3;
+}
+.section-grey-table .section-title small {
+	font-size: 50%;
+	margin-left: 20px;
+	color: #888;
+}
+.section-grey-table .section-body {
+
+}
+
+
 .commingSoon {
 	color: #888;
 	position: fixed;
@@ -358,6 +422,19 @@ i.file-icon-ext-rar,i.file-icon-ext-zip {
 	background: url("../img/fileIcon/icon_rar.gif") center center  no-repeat;
 }
 
+/*** 定义fieldset样式 ***/
+.fl-fieldset {
+	margin: 15px 0;
+}
+.fl-fieldset legend {
+	font-size: 17px;
+	padding-bottom: 7px;
+}
+.fl-fieldset legend small {
+	margin-left: 20px;
+	color: #999;
+	font-size: 50%;
+}
 
 /*** 没有权限访问页面 ***/
 .permission-denied {

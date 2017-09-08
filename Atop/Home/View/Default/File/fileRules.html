@@ -1,0 +1,71 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/file/fileRules.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/file/fileRules.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>文件规则</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/File">文件管理</a></li>
+        <li>文件规则</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="pull-left">
+        <a href="__ROOT__/File/addRule" class="layui-btn layui-btn-primary">
+            添加文件规则
+        </a>
+    </div>
+
+    <div class="clearfix" style="margin-bottom: 25px;"></div>
+
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>规则名</th>
+                <th>长度</th>
+                <th>当前点</th>
+                <th>规则描述</th>
+                <th>创建人</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <volist name="result" id="value">
+                <tr>
+                    <td>{$value.name}</td>
+                    <td>{$value.length}</td>
+                    <td>{$value.current}</td>
+                    <td>{$value.desc}</td>
+                    <td>{$value.nickname}</td>
+                    <td>{$value.createtime|date="Y-m-d H:i",###}</td>
+                    <td>
+                        <div class="layui-btn-group">
+                            <a href="__ROOT__/File/editRule/id/{$value.id}" class="layui-btn layui-btn-primary layui-btn-small">编辑</a>
+                            <a href="__ROOT__/File/delRule/id/{$value.id}" class="layui-btn layui-btn-primary layui-btn-small">删除</a>
+                        </div>
+                    </td>
+                </tr>
+            </volist>
+        </tbody>
+    </table>
+
+    <!-- 分页 -->
+    <ul class="pagination pagination-edit">{$pageShow}</ul>
+
+</block>
+
+
+

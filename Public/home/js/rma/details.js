@@ -335,16 +335,16 @@ $(function(){
                         if( window.loguploader.getFiles().length > 0 ){
                             window.loguploader.upload();
                         }else{
-                            layer.msg(response.msg,{icon : 1,time : 2000});
+                            layer.msg(response.msg,{icon : 1,time : 1000});
                             setTimeout(function(){
                                 location.reload();
-                            },2000);
+                            },1000);
                         }
                     }else{
-                        layer.msg(response.msg,{icon : 2,time : 2000});
+                        layer.msg(response.msg,{icon : 2,time : 1000});
                         setTimeout(function(){
                             layer.closeAll();
-                        },2000);
+                        },1000);
                     }
                 }
             });

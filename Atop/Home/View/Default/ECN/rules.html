@@ -2,31 +2,29 @@
 <extend name="layout/default"/>
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
-    <link rel="stylesheet" href="__CSS__/file/index.css">
+    <link rel="stylesheet" href="__CSS__/ECN/rules.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
-    <script src="__JS__/file/index.js"></script>
+    <script src="__JS__/ecn/rules.js"></script>
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
-    <title>文件管理</title>
+    <title>ECN规则</title>
 </block>
 <!-- 【路径导航】 -->
 <block name="breadcrumb">
     <ol class="breadcrumb breadcrumb-edit">
-        <li class="active">文件管理</li>
+        <li><a href="__ROOT__/ECN">ECN</a></li>
+        <li class="active">ECN规则</li>
     </ol>
 </block>
 <!-- 【正文区域】 -->
 <block name="content">
 
     <div class="pull-left">
-        <a href="__ROOT__/File/apply" class="layui-btn layui-btn-primary">
-            编号申请 / 我的编号
-        </a>
-        <a href="__ROOT__/File/fileRules" class="layui-btn layui-btn-primary">
-            文件规则
+        <a href="__ROOT__/ECN/addRule" class="layui-btn layui-btn-primary">
+            添加ECN规则
         </a>
     </div>
 
@@ -34,35 +32,36 @@
 
     <table class="layui-table">
         <thead>
-            <tr>
-                <th>文件号</th>
-                <th>版本</th>
-                <th>状态</th>
-                <th>发起人</th>
-                <th>发起时间</th>
-                <th>操作</th>
-            </tr>
+        <tr>
+            <th>规则名称</th>
+            <th>规则描述</th>
+            <th>创建人</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
         </thead>
         <tbody>
             <notempty name="result">
                 <volist name="result" id="value">
                     <tr>
-                        <td><a href="__ROOT__/File/detail/id/{$value.id}">{$value.filenumber}</a></td>
-                        <td>{$value.version}</td>
                         <td>
-                            <span class="{$value.className}">{$value.stateName}</span>
+                            <a href="__ROOT__/ECN/ruleDetail/id/{$value.id}">{$value.name}</a>
+                        </td>
+                        <td>
+                            <p>{$value.description}</p>
                         </td>
                         <td>{$value.nickname}</td>
                         <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
                         <td>
                             <div class="layui-btn-group">
-                                <a href="__ROOT__/File/delete/id/{$value.id}" class="layui-btn layui-btn-primary layui-btn-small">删除</a>
+                                <a href="__ROOT__/ECN/editRule/id/{$value.id}" class="layui-btn layui-btn-primary layui-btn-small">编辑</a>
+                                <a href="__ROOT__/ECN/deleteRule/id/{$value.id}" type="button" class="layui-btn layui-btn-primary layui-btn-small">删除</a>
                             </div>
                         </td>
                     </tr>
                 </volist>
             <else/>
-                <tr><td colspan="5" style="text-align: center;padding: 40px 0;">没有数据</td></tr>
+                <tr><td style="text-align: center;padding: 40px 0;"></td>没有数据</tr>
             </notempty>
         </tbody>
     </table>

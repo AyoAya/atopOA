@@ -1,0 +1,21 @@
+.layui-table tbody td {
+    padding: 15px;
+}
+.zw-item {
+    float: left;
+    width: 10%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    cursor: default;
+    border-radius: 50px;
+    -webkit-transition: all .6s;
+    -moz-transition: all .6s;
+    -ms-transition: all .6s;
+    -o-transition: all .6s;
+    transition: all .6s;
+}
+.zw-item:hover {
+    background: #f2f2f2;
+    border-radius: 0;
+}

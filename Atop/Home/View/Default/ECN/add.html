@@ -1,0 +1,337 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/ecn/detail.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>创建ECN</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/ECN">ECN</a></li>
+        <li class="active">创建ECN</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="edit-condition">
+        <form class="layui-form" action="" style="margin-top: 10px;">
+            <!--<div class="layui-form-item">
+                <label class="layui-form-label">ECN号</label>
+                <div class="layui-input-block">
+                    <div class="ecn-itm">ECN000001254</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">创建人</label>
+                <div class="layui-input-block">
+                    <div class="ecn-itm">李平</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">创建时间</label>
+                <div class="layui-input-block">
+                    <div class="ecn-itm">2017-09-01 21:16</div>
+                </div>
+            </div>-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">变更描述</label>
+                <div class="layui-input-block">
+                    <textarea id="layedit-description" style="display: none;"></textarea>
+                    <div class="layui-form-mid layui-word-aux">例：TEKTRONIX and TEK are registered trademarks of
+                        Tektronix, Inc.
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">变更原因</label>
+                <div class="layui-input-block">
+                    <textarea id="layedit-reason" style="display: none;"></textarea>
+                    <div class="layui-form-mid layui-word-aux">例：TEKTRONIX and TEK are registered trademarks of
+                        Tektronix, Inc.
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item" id="affect">
+                <label class="layui-form-label">受影响的文件列表</label>
+                <div class="layui-input-block">
+                    <div class="review-selected"></div>     <!--添加到评审的项-->
+                    <div class="choose-btn"><i class="layui-icon">&#xe61f;</i> 添加文件</div>
+                    <div class="layui-form-mid layui-word-aux">注：将已经编辑好的文件添加到此处 [支持多选]</div>
+                </div>
+            </div>
+            <div class="layui-form-item" id="review-rule">
+                <label class="layui-form-label">评审规则</label>
+                <div class="layui-input-block">
+                    <select name="quote_rule" id="rule" lay-filter="rule" lay-verify="required">
+                        <option class="default-option" value="0">请选择评审规则</option>
+                        <volist name="ecnRules" id="value">
+                            <option value="{$value.id}">{$value.name}</option>
+                        </volist>
+                    </select>
+                    <div class="layui-form-mid layui-word-aux">注：您可在此处可预览当前选中评审规则的详细信息，当您确认规则后便只能从该规则中所配置的岗位选择人员。</div>
+                    <div class="rule-preview"></div>    <!--规则预览-->
+                </div>
+            </div>
+            <div class="review-group"></div>    <!--评审组-->
+            <div class="layui-form-item" id="dcc">
+                <label class="layui-form-label">DCC评审</label>
+                <div class="layui-input-block">
+                    <div class="ps-wrapper">
+                        <div class="gw-mc">dcc专员</div>
+                        <volist name="dccUsers" id="value">
+                            <input type="checkbox" name="dcc[{$value.id}]" lay-verify="required" title="{$value.nickname}" lay-skin="primary">
+                        </volist>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="createECN">保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary cancel-edit-btn">取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        layui.use(['form', 'layer', 'layedit'], function() {
+            // init layui components.
+            var form = layui.form(),
+                layer = layui.layer,
+                layedit = layui.layedit;
+
+            var reviewSelected = {
+                file: []
+            };    // 被添加到显示的评审项(初始化结构)
+
+            // 定义layedit编辑器配置
+            var layeditOptions = {
+                height: 150
+            }
+
+            // 实例化layedit编辑器
+            var layeditDescription = layedit.build('layedit-description', layeditOptions);
+            var layeditReason = layedit.build('layedit-reason', layeditOptions);
+
+
+            var reviews = {$reviews};   // 评审项数据
+
+            //console.log(reviews);
+
+            // 添加文件
+            $('.choose-btn').click(function(){
+                layer.open({
+                    type: 1,
+                    id: 'LAYER_CONTAINER',
+                    title: '选择文件',
+                    area: ['1000px', '500px'],
+                    shade: [0.5, '#000'],
+                    shadeClose: true,
+                    content: renderReviewItem(reviews, true)
+                })
+            });
+
+            // 监听规则变动
+            form.on('select(rule)', function(data){
+                if( data.value > 0 ){
+                    $.post(ThinkPHP['AJAX'] + '/ECN/listenEcnRuleChange', {
+                        ruleid: data.value
+                    }, function(response){
+                        renderReviewRule(response);
+                        renderReviewGroup(response);
+                    });
+                }
+            });
+
+            // 监听提交
+            form.on('submit(createECN)', function(data){
+                //console.log(data.field);
+                // 验证表单提交时数据的合法性
+                if( !layedit.getText(layeditDescription).length ){
+                    $('#content').scrollTop(0);
+                    layer.msg('请输入变更描述', {icon: 2, time: 1500});
+                    return false;
+                }
+                if( !layedit.getText(layeditReason).length ){
+                    $('#content').scrollTop(0);
+                    layer.msg('请输入变更原因', {icon: 2, time: 1500});
+                    return false;
+                }
+                if( !reviewSelected.file.length ){
+                    let top = $('#affect')[0].offsetTop;
+                    $('#content').scrollTop(top-20);
+                    layer.msg('请添加文件', {icon: 2, time: 1500});
+                    return false;
+                }
+                if( $('.review-group').children().length ){
+                    for( let i=0; i < $('.review-group').children().length; i++ ){
+                        if($('.review-group .layui-form-item').eq(i).find('.ps-wrapper .layui-form-checked').length < 1){
+                            let top = $('.review-group .layui-form-item').eq(i)[0].offsetTop;
+                            $('#content').scrollTop(top-20);
+                            layer.msg('请检查'+ ( i + 1 ) +'级评审是否未选择人员', {icon: 2, time: 1500});
+                            return false;
+                        }
+                    }
+                }else{
+                    let top = $('#review-rule')[0].offsetTop;
+                    $('#content').scrollTop(top-20);
+                    layer.msg('请配置评审规则', {icon: 2, time: 1500});
+                    return false;
+                }
+                if( $('#dcc .ps-wrapper .layui-form-checked').length < 1 ){
+                    let top = $('#dcc')[0].offsetTop;
+                    $('#content').scrollTop(top-20);
+                    layer.msg('请选择dcc评审专员', {icon: 2, time: 1500});
+                    return false;
+                }
+
+                $.post(ThinkPHP['AJAX'] + '/ECN/add', {
+                    change_description: layedit.getContent(layeditDescription),
+                    change_reason: layedit.getContent(layeditReason),
+                    quote_rule: data.field.quote_rule,
+                    reviewSelected: reviewSelected,
+                    field: JSON.stringify(data.field)
+                }, function(response){
+
+                });
+
+                return false;
+            });
+
+            // 渲染评审规则
+            function renderReviewRule(data){
+                var reviewHTML = '';
+                var rulePreview = $('.rule-preview');
+
+                for( let item in data.recipients ){     // 评审级
+                    reviewHTML += '<div class="lv-row">';
+                    reviewHTML += '<div class="lv-mc">'+ (Number(item) + 1) +' 级评审：</div>';
+                    reviewHTML += '<div class="lv-itm">';
+                    for( let post in data.recipients[item] ){
+                        reviewHTML += '<span class="js-zw">'+ data.recipients[item][post].name +'</span>';
+                    }
+                    reviewHTML += '<div class="clearfix"></div>';
+                    reviewHTML += '</div>';
+                    reviewHTML += '</div>';
+                }
+                reviewHTML += '<div class="lv-row">';
+                reviewHTML += '<div class="lv-mc">抄送列表：<small>抄送列表将通知到包含该职位的所有人员</small></div>';
+                reviewHTML += '<div class="lv-itm">';
+                for( let item in data.ccs ){     // 抄送列表
+                    reviewHTML += '<span class="js-zw">'+ data.ccs[item].name +'</span>';
+                }
+                reviewHTML += '<div class="clearfix"></div>';
+                reviewHTML += '</div>';
+                reviewHTML += '</div>';
+                rulePreview.html(reviewHTML);
+                if($('#rule .default-option').length > 0) $('#rule .default-option').remove();  // 当选择一次规则后移除掉默认显示的选择option
+                form.render();
+                rulePreview.show();
+            }
+
+            // 渲染评审组
+            function renderReviewGroup(data){
+                var reviewGroupHTML = '';
+                var reviewGroup = $('.review-group');
+
+                for( let group in data.recipients ){
+                    reviewGroupHTML += '<div class="layui-form-item">';
+                    reviewGroupHTML += '<label class="layui-form-label">'+ (Number(group) + 1) +' 级评审</label>';
+                    reviewGroupHTML += '<div class="layui-input-block">';
+                    reviewGroupHTML += '<div class="ps-wrapper">';
+                    for( let item in data.recipients[group] ){
+                        if( data.recipients[group][item].recipient_2D ){
+                            reviewGroupHTML += '<div class="gw-mc">'+ data.recipients[group][item].name +'</div>';
+                        }
+                        if( data.recipients[group][item].recipient_2D ){
+                            for( let key in data.recipients[group][item].recipient_2D ){
+                                reviewGroupHTML += '<input type="checkbox" lay-verify="required" name="reviewGroup'+ key +'['+ data.recipients[group][item].recipient_2D[key].id +']" title="'+ data.recipients[group][item].recipient_2D[key].nickname +'" lay-skin="primary" title="'+ data.recipients[group][item].recipient_2D[key].nickname +'">';
+                            }
+                        }
+                    }
+                    reviewGroupHTML += '</div>';
+                    reviewGroupHTML += '</div>';
+                    reviewGroupHTML += '</div>';
+                    reviewGroup.html(reviewGroupHTML);
+                    form.render();
+                }
+            }
+
+            // 渲染评审项
+            function renderReviewItem(reviews, inLayer = false){
+                var renderHtml = '';
+
+                for( let type in reviews ){
+                    if( type == 'file' ){
+                        if( reviews[type].length ){
+                            if( inLayer ){
+                                renderHtml += '<thead><tr><th>文件号</th><th>版本号</th><th>附件</th><th>文件描述</th><th>操作</th></tr></thead>';
+                            }
+                            for( let item in reviews[type] ){
+                                renderHtml += '<tr>';
+                                renderHtml += '<td>'+ reviews[type][item].filenumber +'</td>';
+                                renderHtml += '<td>'+ reviews[type][item].version +'</td>';
+                                renderHtml += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/'+ reviews[type][item].attachment.path +'" target="_blank" title="'+ reviews[type][item].attachment.name +'"><i class="file-icon file-icon-ext-'+ reviews[type][item].attachment.ext +'"></i> '+ reviews[type][item].attachment.name +'</a></td>';
+                                renderHtml += '<td title="'+ reviews[type][item].description +'"><p>'+ reviews[type][item].description +'</p></td>';
+                                if( inLayer ){
+                                    if( reviewSelected.file[item] ){    // 如果已经被添加到选中，下次激活时则被禁用
+                                        renderHtml += '<td width="66"><button type="button" class="layui-btn layui-btn-normal layui-btn-disabled addReviewItem" index="'+ item +'">添加</button></td>';
+                                    }else{
+                                        renderHtml += '<td width="66"><button type="button" class="layui-btn layui-btn-normal addReviewItem" index="'+ item +'">添加</button></td>';
+                                    }
+                                }else{
+                                    renderHtml += '<td width="66"><button type="button" class="layui-btn layui-btn-danger removeReviewItem" index="'+ item +'">移除</button></td>';
+                                }
+                                renderHtml += '</tr>';
+                            }
+                        }else{
+                            renderHtml = null;
+                        }
+                    }
+                }
+                if( renderHtml == '' || renderHtml == null ){
+                    return '';
+                }else{
+                    return '<table class="layui-table"><tbody>'+ renderHtml +'</tbody></table>';
+                }
+            }
+
+            // 添加评审项button
+            $(document).on('click', '#LAYER_CONTAINER .addReviewItem', function(){
+                if( !$(this).hasClass('layui-btn-disabled') ){
+                    let index = $(this).attr('index');
+                    reviewSelected.file.push(reviews.file[index]);
+                    $('.review-selected').html(renderReviewItem(reviewSelected, false));
+                    $(this).addClass('layui-btn-disabled');
+                }
+            });
+
+            // 移除评审项button
+            $(document).on('click', '.review-selected .removeReviewItem', function(){
+                let index = $(this).attr('index');
+                reviewSelected.file.splice(index, 1);
+                let resultHtml = renderReviewItem(reviewSelected, false);
+                if( resultHtml ) {
+                    $('.review-selected').html(renderReviewItem(reviewSelected, false));
+                }else{
+                    $('.review-selected').html('');
+                }
+                //$('.review-selected').append(renderReviewItem(reviewSelected, false));
+            });
+
+        });
+    </script>
+
+</block>
+
+
+
