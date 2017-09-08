@@ -14,6 +14,7 @@ class ECNController extends AuthController {
 
     # 初始化ECN首页
     public function index(){
+
         $model = new Model();
         $count = $model->table(C('DB_PREFIX').'ecn')->where('disable = "N" AND state <> "NotPass"')->count();
         //数据分页
@@ -246,7 +247,7 @@ class ECNController extends AuthController {
         if( IS_POST ){
             $model = D('Ecn');
             if( I('post.currentType') == 'file' ){
-                $result = $model->table(C('DB_PREFIX').'file_number')->where('createuser='.session('user')['id'].' AND state <> "InReview"')->order('createtime DESC')->select();
+                $result = $model->table(C('DB_PREFIX').'file_number')->where('createuser='.session('user')['id'].' AND state <> "InReview" AND state <> "WaitingEdit"')->order('createtime DESC')->select();
                 $result = $model->jsonToArray($result);
                 $this->ajaxReturn($result);
             }else{
@@ -306,6 +307,7 @@ class ECNController extends AuthController {
 
     # ECN详情
     public function detail(){
+
         if( IS_POST ){
             $model = M('', '', 'MYSQL_CRSAPI');
             $EcnModel = D('Ecn');

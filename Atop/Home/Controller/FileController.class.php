@@ -72,6 +72,7 @@ class FileController extends AuthController {
                                         ->where('a.createuser = b.id AND filenumber = "'.$result['filenumber'].'" AND version <> "'.$result['version'].'"')
                                         ->order('version DESC')
                                         ->select();
+
                 // 获取当前文件关联的ecn
                 $ecnAssocData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'ecn b,'.C('DB_PREFIX').'ecn_review_item c')
                                   ->field('b.id,b.ecn_number,b.state')
@@ -240,6 +241,7 @@ class FileController extends AuthController {
         $this->assign('pageShow',$pageShow);
         $this->assign('result', $result);
         $this->display();
+
     }
 
     # 添加文件规则

@@ -152,7 +152,9 @@
                             RenderHTML += '<tr>';
                             RenderHTML += '<td>'+ data[key].filenumber +'</td>';
                             RenderHTML += '<td>'+ data[key].version +'</td>';
-                            RenderHTML += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/'+ data[key].attachment.path +'" target="_blank" title="'+ data[key].attachment.name +'"><i class="file-icon file-icon-ext-'+ data[key].attachment.ext +'"></i> '+ data[key].attachment.name +'</a></td>';
+                            if( data[key].attachment ){
+                                RenderHTML += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/'+ data[key].attachment.path +'" target="_blank" title="'+ data[key].attachment.name +'"><i class="file-icon file-icon-ext-'+ data[key].attachment.ext +'"></i> '+ data[key].attachment.name +'</a></td>';
+                            }
                             RenderHTML += '<td title="'+ data[key].description +'"><p>'+ data[key].description +'</p></td>';
                             if( InLayer ){  // 如果渲染在弹出层中则按钮显示为添加，反之则为移除
                                 if( Object.keys(reviewSelected).length ){   // 检查已选择的数据是否为空
