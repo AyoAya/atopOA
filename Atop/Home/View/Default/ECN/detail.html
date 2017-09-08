@@ -142,7 +142,9 @@
                         <th>创建人</th>
                         <th>创建时间</th>
                         <th>最后编辑时间</th>
-                        <th width="217">操作</th>
+                        <neq name="result.state" value="NotPass">
+                            <th width="221">操作</th>
+                        </neq>
                     </tr>
                     </thead>
                     <tbody>
@@ -158,19 +160,23 @@
                                 {$result.lastedit_time|date="Y-m-d H:i", ###}
                             </notempty>
                         </td>
-                        <td>
-                            <eq name="result.state" value="InReview">
-                                <eq name="result.createuser" value="$Think.session.user.id">
+                        <neq name="result.state" value="NotPass">
+                            <td>
+                                <eq name="result.state" value="InReview">
                                     <button type="button" class="layui-btn layui-btn-small layui-btn-disabled">编辑</button>
                                     <button type="button" class="layui-btn layui-btn-normal layui-btn-small layui-btn-disabled">发起评审</button>
-                                    <button type="button" class="layui-btn layui-btn-danger layui-btn-small">撤回</button>
+                                    <eq name="result.createuser" value="$Think.session.user.id">
+                                        <button type="button" class="layui-btn layui-btn-danger layui-btn-small rollback-btn">撤回</button>
+                                    <else/>
+                                        <button type="button" class="layui-btn layui-btn-danger layui-btn-small layui-btn-disabled">撤回</button>
+                                    </eq>
+                                <else/>
+                                    <button type="button" class="layui-btn layui-btn-small edit-ecn-btn">编辑</button>
+                                    <button type="button" class="layui-btn layui-btn-normal layui-btn-small start-review-btn">发起评审</button>
+                                    <button type="button" class="layui-btn layui-btn-danger layui-btn-small layui-btn-disabled">撤回</button>
                                 </eq>
-                            <else/>
-                                <button type="button" class="layui-btn layui-btn-small edit-ecn-btn">编辑</button>
-                                <button type="button" class="layui-btn layui-btn-normal layui-btn-small start-review-btn">发起评审</button>
-                                <button type="button" class="layui-btn layui-btn-danger layui-btn-small layui-btn-disabled">撤回</button>
-                            </eq>
-                        </td>
+                            </td>
+                        </neq>
                     </tr>
                     </tbody>
                 </table>
@@ -190,33 +196,37 @@
         </div>
 
         <div class="section-grey-table syx-wjlb">
-            <div class="section-title">受影响的文件列表</div>
-            <div class="section-body">
-                <table class="layui-table">
-                    <thead>
-                        <tr>
-                            <th>文件号</th>
-                            <th>版本号</th>
-                            <th>附件</th>
-                            <th>文件描述</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <volist name="result.EcnReviewItem" id="value">
+            <switch name="result.ecn_type">
+                <case value="file"> {// 如果ecn类型是file}
+                    <div class="section-title">受影响的文件列表</div>
+                    <div class="section-body">
+                        <table class="layui-table">
+                            <thead>
                             <tr>
-                                <td>{$value.item.filenumber}</td>
-                                <td>{$value.item.version}</td>
-                                <td>
-                                    <a href="http://{$Think.SERVER.http_host}/{$value.item.attachment.path}" target="_blank" title="{$value.item.attachment.name}"><i class="file-icon file-icon-ext-{$value.item.attachment.ext}"></i> {$value.item.attachment.name}</a>
-                                </td>
-                                <td title="{:strip_tags($value['item']['description'])}">
-                                    <p class="wrap">{:strip_tags($value['item']['description'])}</p>    {//过滤掉html标签}
-                                </td>
+                                <th>文件号</th>
+                                <th>版本号</th>
+                                <th>附件</th>
+                                <th>文件描述</th>
                             </tr>
-                        </volist>
-                    </tbody>
-                </table>
-            </div>
+                            </thead>
+                            <tbody>
+                            <volist name="result.EcnReviewItem" id="value">
+                                <tr>
+                                    <td><a href="__ROOT__/File/detail/id/{$value.assoc}">{$value.item.filenumber}</a></td>
+                                    <td>{$value.item.version}</td>
+                                    <td>
+                                        <a href="http://{$Think.SERVER.http_host}/{$value.item.attachment.path}" target="_blank" title="{$value.item.attachment.name}"><i class="file-icon file-icon-ext-{$value.item.attachment.ext}"></i> {$value.item.attachment.name}</a>
+                                    </td>
+                                    <td title="{:strip_tags($value['item']['description'])}">
+                                        <p class="wrap">{:strip_tags($value['item']['description'])}</p>    {//过滤掉html标签}
+                                    </td>
+                                </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+                    </div>
+                </case>
+            </switch>
         </div>
 
         <div class="section-grey-table psjd-bg">
@@ -260,6 +270,44 @@
                 </table>
             </div>
         </div>
+
+        {//如果不存在历史记录则不加载}
+        <present name="HistoryReview">
+            <div class="section-grey-table history-review">
+                <div class="section-title">评审记录</div>
+                <div class="section-body">
+                    <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <th>评审次数</th>
+                            <th>状态</th>
+                            <th>创建人</th>
+                            <th>创建时间</th>
+                            <th>最后编辑时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="HistoryReview" id="value">
+                                <tr>
+                                    <td><a href="__ROOT__/ECN/detail/{$value.ecn_number}/{$value.id}">第{$value.seq}次评审</a></td>
+                                    <td>
+                                        <span class="{$value.className}">{$value.stateName}</span>
+                                    </td>
+                                    <td>{$value.User.nickname}</td>
+                                    <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
+                                    <td>
+                                        <notempty name="value.lastedit_time">
+                                            {$value.lastedit_time|date="Y-m-d H:i", ###}
+                                        </notempty>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </present>
+
     </div>
 
     <script>
@@ -672,6 +720,28 @@
                 }else{
                     $('#REVIEW_CONTAINER .tj-psr').removeClass('sr-only');
                 }
+            });
+
+            $('.rollback-btn').click(function(){
+                var RBloading = layer.load( 1, {   // 创建loading层
+                    shade: [0.5, '#fff']     //0.5透明度的白色背景
+                });
+                $.post(ThinkPHP['AJAX'] + '/ECN/rollback', {
+                    id: _id,
+                    ecn_type: _ecnType
+                }, function(response){
+                    if( response.flag ){
+                        layer.msg(response.msg, {icon: 1, time: 1000});
+                        setTimeout(function(){
+                            location.replace(location.href);
+                        }, 1000);
+                    }else{
+                        layer.msg(response.msg, {icon: 2, time: 3000});
+                        setTimeout(function(){
+                            layer.close(RBloading);
+                        }, 3000);
+                    }
+                })
             });
 
             /**

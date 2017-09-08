@@ -34,12 +34,8 @@
                         <td>{$result.filenumber}</td>
                     </tr>
                     <tr>
-                        <td>创建人</td>
-                        <td>{$result.nickname}</td>
-                    </tr>
-                    <tr>
-                        <td>创建时间</td>
-                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
+                        <td>版本</td>
+                        <td>{$result.version}</td>
                     </tr>
                     <tr>
                         <td>状态</td>
@@ -48,8 +44,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>版本</td>
-                        <td>{$result.version}</td>
+                        <td>描述</td>
+                        <td>{$result.description}</td>
                     </tr>
                     <tr>
                         <td>附件</td>
@@ -58,8 +54,24 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>描述</td>
-                        <td>{$result.description}</td>
+                        <td>ECN</td>
+                        <td>
+                            <present name="ecnAssoc">
+                                <volist name="ecnAssoc.new" id="value">
+                                    <a href="__ROOT__/ECN/detail/{$value.ecn_number}">{$value.ecn_number}</a>
+                                </volist>
+                                <else/>
+                                无
+                            </present>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>创建人</td>
+                        <td>{$result.nickname}</td>
+                    </tr>
+                    <tr>
+                        <td>创建时间</td>
+                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
                     </tr>
                     <tr>
                         <td>操作</td>
@@ -88,12 +100,11 @@
                         <td>{$result.filenumber}</td>
                     </tr>
                     <tr>
-                        <td>创建人</td>
-                        <td>{$result.nickname}</td>
-                    </tr>
-                    <tr>
-                        <td>创建时间</td>
-                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
+                        <td>版本</td>
+                        <td>
+                            <input type="text" class="layui-input pull-left" name="version" id="version" value="{$result.version}">
+                            <span class="tswb ipt-yc pull-left">请确保版本的正确格式（忽略大小写），例：V1.25</span>
+                        </td>
                     </tr>
                     <tr>
                         <td>状态</td>
@@ -102,10 +113,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>版本</td>
+                        <td>描述</td>
                         <td>
-                            <input type="text" class="layui-input pull-left" name="version" id="version" value="{$result.version}">
-                            <span class="tswb ipt-yc pull-left">请确保版本的正确格式（忽略大小写），例：V1.25</span>
+                            <textarea id="layedit-description" style="display: none;">
+                                {$result.description}
+                            </textarea>
                         </td>
                     </tr>
                     <tr>
@@ -120,12 +132,24 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>描述</td>
+                        <td>ECN</td>
                         <td>
-                            <textarea id="layedit-description" style="display: none;">
-                                {$result.description}
-                            </textarea>
+                            <present name="ecnAssoc">
+                                <volist name="ecnAssoc.new" id="value">
+                                    <a href="__ROOT__/ECN/detail/{$value.ecn_number}">{$value.ecn_number}</a>
+                                </volist>
+                                <else/>
+                                无
+                            </present>
                         </td>
+                    </tr>
+                    <tr>
+                        <td>创建人</td>
+                        <td>{$result.nickname}</td>
+                    </tr>
+                    <tr>
+                        <td>创建时间</td>
+                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
                     </tr>
                     <tr>
                         <td>操作</td>

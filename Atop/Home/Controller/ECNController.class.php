@@ -15,7 +15,7 @@ class ECNController extends AuthController {
     # 初始化ECN首页
     public function index(){
         $model = new Model();
-        $count = $model->table(C('DB_PREFIX').'ecn')->where('disable = "N"')->count();
+        $count = $model->table(C('DB_PREFIX').'ecn')->where('disable = "N" AND state <> "NotPass"')->count();
         //数据分页
         $page = new Page($count,C('LIMIT_SIZE'));
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
@@ -27,7 +27,7 @@ class ECNController extends AuthController {
         }
         $result = $model->table(C('DB_PREFIX').'ecn a,'.C('DB_PREFIX').'user b')
                         ->field('a.id,a.ecn_number,a.state,a.disable,a.createtime,a.lastedit_time,b.nickname')
-                        ->where('a.createuser = b.id AND a.disable = "N"')
+                        ->where('a.createuser = b.id AND a.disable = "N" AND a.state <> "NotPass"')
                         ->order('a.createtime DESC')
                         ->limit($page->firstRow.','.$page->listRows)
                         ->select();
@@ -143,6 +143,9 @@ class ECNController extends AuthController {
             case 'NotReview':      // 待评审
                 $className = 'tag tag-warning';
                 break;
+            case 'NotPass':      // 未通过
+                $className = 'tag tag-danger';
+                break;
             case 'WAIT':      // 待评审
                 $className = 'tag tag-warning';
                 break;
@@ -179,6 +182,9 @@ class ECNController extends AuthController {
                 break;
             case 'NotReview':      // 待评审
                 $stateName = '待评审';
+                break;
+            case 'NotPass':      // 未通过
+                $stateName = '未通过';
                 break;
             case 'WAIT':      // 待评审
                 $stateName = '待评审';
@@ -296,60 +302,119 @@ class ECNController extends AuthController {
     public function detail(){
         if( IS_POST ){
             $model = M('', '', 'MYSQL_CRSAPI');
+            $EcnModel = D('Ecn');
             $model->startTrans();
             try{
                 $postData = I('post.','',false);
-                // 拼装ecn表数据
-                $ecnData['id'] = $postData['id'];
+                $EcnAllData = $EcnModel->relation(true)->find($postData['id']);
+                // 收集ecn表数据
                 $ecnData['change_description'] = $postData['change_description'];
                 $ecnData['change_reason'] = $postData['change_reason'];
                 $ecnData['quote_rule'] = $postData['quote_rule'];
                 $ecnData['ecn_type'] = $postData['ecn_type'];
-                $ecnData['lastedit_time'] = time();
+                // 如果保存当前ecn的状态不是拒绝则更新最后修改时间，如果是拒绝则创建新的时间
+                if( $EcnAllData['state'] != 'BeRejected' ){
+                    $ecnData['lastedit_time'] = time();
+                }else{
+                    $ecnData['createtime'] = time();
+                }
                 $ecnData['createuser'] = session('user')['id'];
-                $ecn_row = $model->table(C('DB_PREFIX').'ecn')->save($ecnData);
-                if( $ecn_row === false ) throw new \Exception('保存失败');
-                $ecnReviewDel_row = $model->table(C('DB_PREFIX').'ecn_review')->where('ecn_id='.$postData['id'])->delete();
-                if( !$ecnReviewDel_row ) throw new \Exception('保存失败');
-                // 拼装ecn_review表的评审组数据
-                foreach( $postData['review_group'] as $key=>&$value ){
-                    foreach( $value as $k=>$v ){
-                        $ecnReviewData['review_user'] = $v;
-                        $ecnReviewData['ecn_id'] = $postData['id'];
-                        $ecnReviewData['along'] = ($key + 1);
-                        $ecnReviewId = $model->table(C('DB_PREFIX').'ecn_review')->add($ecnReviewData);
-                        if( !$ecnReviewId ) throw new \Exception('保存失败');
+                if( $EcnAllData['state'] != 'BeRejected' ){
+                    // 拼装ecn表数据
+                    $ecnData['id'] = $postData['id'];
+                    $ecn_row = $model->table(C('DB_PREFIX').'ecn')->save($ecnData);
+                    if( $ecn_row === false ) throw new \Exception('保存失败');
+                    $ecnReviewDel_row = $model->table(C('DB_PREFIX').'ecn_review')->where('ecn_id='.$postData['id'])->delete();
+                    if( !$ecnReviewDel_row ) throw new \Exception('保存失败');
+                    // 拼装ecn_review表的评审组数据
+                    foreach( $postData['review_group'] as $key=>&$value ){
+                        foreach( $value as $k=>$v ){
+                            $ecnReviewData['review_user'] = $v;
+                            $ecnReviewData['ecn_id'] = $postData['id'];
+                            $ecnReviewData['along'] = ($key + 1);
+                            $ecnReviewId = $model->table(C('DB_PREFIX').'ecn_review')->add($ecnReviewData);
+                            if( !$ecnReviewId ) throw new \Exception('保存失败');
+                        }
                     }
-                }
-                // 拼装ecn_review表的dcc数据
-                foreach( $postData['dcc_review'] as $key=>&$value ){
-                    $dccReviewData['review_user'] = $value;
-                    $dccReviewData['ecn_id'] = $postData['id'];
-                    $dccReviewData['along'] = 0;
-                    $dccReviewData['is_dcc'] = 'Y';
-                    $dccReviewId = $model->table(C('DB_PREFIX').'ecn_review')->add($dccReviewData);
-                    if( !$dccReviewId ) throw new \Exception('保存失败');
-                }
-                $ecnReviewItemDel_row = $model->table(C('DB_PREFIX').'ecn_review_item')->where('ecn_id='.$postData['id'])->delete();
-                if( !$ecnReviewItemDel_row ) throw new \Exception('保存失败');
-                // 拼装ecn_review_item表数据
-                foreach( $postData['reviewSelected'] as $key=>&$value ){
-                    $ecnReviewItemData['assoc'] = $value['id'];
-                    $ecnReviewItemData['ecn_id'] = $postData['id'];
-                    // 写入评审项数据
-                    $ecnReviewItemId = $model->table(C('DB_PREFIX').'ecn_review_item')->add($ecnReviewItemData);
-                    if( !$ecnReviewItemId ) throw new \Exception('保存失败');
+                    // 拼装ecn_review表的dcc数据
+                    foreach( $postData['dcc_review'] as $key=>&$value ){
+                        $dccReviewData['review_user'] = $value;
+                        $dccReviewData['ecn_id'] = $postData['id'];
+                        $dccReviewData['along'] = 0;
+                        $dccReviewData['is_dcc'] = 'Y';
+                        $dccReviewId = $model->table(C('DB_PREFIX').'ecn_review')->add($dccReviewData);
+                        if( !$dccReviewId ) throw new \Exception('保存失败');
+                    }
+                    $ecnReviewItemDel_row = $model->table(C('DB_PREFIX').'ecn_review_item')->where('ecn_id='.$postData['id'])->delete();
+                    if( !$ecnReviewItemDel_row ) throw new \Exception('保存失败');
+                    // 拼装ecn_review_item表数据
+                    foreach( $postData['reviewSelected'] as $key=>&$value ){
+                        $ecnReviewItemData['assoc'] = $value['id'];
+                        $ecnReviewItemData['ecn_id'] = $postData['id'];
+                        // 写入评审项数据
+                        $ecnReviewItemId = $model->table(C('DB_PREFIX').'ecn_review_item')->add($ecnReviewItemData);
+                        if( !$ecnReviewItemId ) throw new \Exception('保存失败');
+                    }
+                }else{  // 当该ecn被拒绝后seq+1记录当前是第seq+1次评审，以往记录可通过加参数seq=X查询以前记录
+                    $ecnData['ecn_number'] = $EcnAllData['ecn_number'];
+                    $ecnData['seq'] = ($EcnAllData['seq'] + 1);
+                    $copyEcnHistoryCoverId = $ecn_row = $model->table(C('DB_PREFIX').'ecn')->add($ecnData); // 拒绝之后增加一条新的记录，ecn_number和前一次保持一致，但seq(评审次数)+1
+                    if( !$copyEcnHistoryCoverId ) throw new \Exception('保存失败');
+                    $changeEcnStateRow = $model->table(C('DB_PREFIX').'ecn')->save(['id'=>$postData['id'], 'state'=>'NotPass']);    // 将前一次的ecn状态改为未通过
+                    if( !$changeEcnStateRow ) throw new \Exception('保存失败');
+                    // 拼装ecn_review表的评审组数据
+                    foreach( $postData['review_group'] as $key=>&$value ){
+                        foreach( $value as $k=>$v ){
+                            $ecnReviewData['review_user'] = $v;
+                            $ecnReviewData['ecn_id'] = $copyEcnHistoryCoverId;
+                            $ecnReviewData['along'] = ($key + 1);
+                            $ecnReviewId = $model->table(C('DB_PREFIX').'ecn_review')->add($ecnReviewData);
+                            if( !$ecnReviewId ) throw new \Exception('保存失败');
+                        }
+                    }
+                    // 拼装ecn_review表的dcc数据
+                    foreach( $postData['dcc_review'] as $key=>&$value ){
+                        $dccReviewData['review_user'] = $value;
+                        $dccReviewData['ecn_id'] = $copyEcnHistoryCoverId;
+                        $dccReviewData['along'] = 0;
+                        $dccReviewData['is_dcc'] = 'Y';
+                        $dccReviewId = $model->table(C('DB_PREFIX').'ecn_review')->add($dccReviewData);
+                        if( !$dccReviewId ) throw new \Exception('保存失败');
+                    }
+                    // 拼装ecn_review_item表数据
+                    foreach( $postData['reviewSelected'] as $key=>&$value ){
+                        $ecnReviewItemData['assoc'] = $value['id'];
+                        $ecnReviewItemData['ecn_id'] = $copyEcnHistoryCoverId;
+                        // 写入评审项数据
+                        $ecnReviewItemId = $model->table(C('DB_PREFIX').'ecn_review_item')->add($ecnReviewItemData);
+                        if( !$ecnReviewItemId ) throw new \Exception('保存失败');
+                    }
                 }
             }catch (\Exception $exception){
                 $model->rollback();
                 $this->ajaxReturn(['flag'=>0, 'msg'=>$exception->getMessage()]);
             }
             $model->commit();
-            $this->ajaxReturn(['flag'=>1, 'msg'=>'保存成功']);
+            $this->ajaxReturn(['flag'=>1, 'msg'=>'保存成功', 'ecn_id'=>$copyEcnHistoryCoverId]);
         }else{
-            if( I('get.id') && is_numeric(I('get.id')) ){
+            if( I('get.num') ){
                 $EcnModel = D('Ecn');
-                $result = $EcnModel->relation(true)->find(I('get.id'));
+                $history = I('get.history') && is_numeric(I('get.history')) ? true : false;
+                if( $history ){ // 如果存在history参数，则说明访问的是历史记录
+                    $result = $EcnModel->relation(true)->find(I('get.history'));
+                }else{
+                    // 永远获取当前ecn号最新的记录
+                    $result = $EcnModel->relation(true)->where('ecn_number = "'.I('get.num').'"')->order('seq DESC')->limit(1)->find();
+                }
+                // 如果存在历史的评审记录则注入模板
+                $ecnHistoryReview = $EcnModel->relation('User')->where('ecn_number = "'.I('get.num').'" AND id <> '.$result['id'])->order()->select();
+                if( $ecnHistoryReview ){
+                    foreach( $ecnHistoryReview as $key=>&$value ){
+                        $value['className'] = $this->fetchClassStyle($value['state']);
+                        $value['stateName'] = $this->fetchStateName($value['state']);
+                    }
+                    $this->assign('HistoryReview', $ecnHistoryReview);
+                }
                 // 将评审人数据提取出来重新排序
                 $sortEcnReview = $result['EcnReview'];
                 $sort = [];
@@ -426,11 +491,11 @@ class ECNController extends AuthController {
                 $this->assign('result', $result);
                 $this->assign('rules', $this->getAllEcnRules());
                 $this->assign('AllUsers', $allUsers);
-                $this->assign('reviewItems', $this->getEcnReviewItems(I('get.id')));
+                $this->assign('reviewItems', $this->getEcnReviewItems($result['id']));
                 // 查看当前登陆用户是否有评审该ecn的权限
                 $ecnRV = $EcnModel->table(C('DB_PREFIX').'ecn_review')->where(['ecn_id'=>$result['id'], 'along'=>$result['current_along'], 'review_user'=>session('user')['id']])->find();
                 // 当前登陆用户在评审列表中并且没有评审记录才可以评审
-                if( in_array(session('user')['id'], $result['Checkeds'][$result['current_along']-1]) && $ecnRV['already_review'] == 'N' && $result['state'] != 'BeRejected' ) $this->assign('reviewAuth', true);
+                if( in_array(session('user')['id'], $result['Checkeds'][$result['current_along']-1]) && $ecnRV['already_review'] == 'N' && $result['state'] != 'BeRejected' && $result['state'] != 'NotReview' ) $this->assign('reviewAuth', true);
                 $this->display();
             }
         }
@@ -445,10 +510,10 @@ class ECNController extends AuthController {
                     $ecnAllData = $this->getEcnData(I('post.id'));
                     if( !$ecnAllData ) throw new \Exception('发起失败');
                     $changeEcnStateRow = $model->save(['id'=>I('post.id'), 'state'=>'InReview']);   // 修改ecn状态
-                    if( !$changeEcnStateRow ) throw new \Exception('发起失败');
+                    if( $changeEcnStateRow === false ) throw new \Exception('发起失败');
                     foreach( $ecnAllData['EcnReviewItem'] as $key=>&$value ){   // 修改文件状态
                         $ecnItemRow = $model->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['assoc'], 'state'=>'InReview']);
-                        if( !$ecnItemRow ) throw new \Exception('发起失败');
+                        if( $ecnItemRow === false ) throw new \Exception('发起失败');
                     }
                     $pushUsersData = $this->getAlongOfPushUsers(1, $ecnAllData['EcnReview']);   // 获取收件人数据
                     $ccUsersData = $this->getAllCcUsers($ecnAllData['quote_rule']);     // 获取抄送人数据
@@ -464,6 +529,26 @@ class ECNController extends AuthController {
         }
     }
 
+    # 撤回评审
+    public function rollback(){
+        if( IS_POST ){
+            $postData = I('post.');
+            try {
+                $EcnModel = D('Ecn');
+                $changeEcnStateRow = $EcnModel->save(['id'=>$postData['id'], 'state'=>'NotReview']);
+                if( !$changeEcnStateRow ) throw new \Exception('撤回失败');
+                $ecnAllData = $this->getEcnData($postData['id']);
+                $pushUsersData = $this->getAlongOfPushUsers($ecnAllData['current_along'], $ecnAllData['EcnReview']);   // 获取收件人数据
+                $ccUsersData = $this->getAllCcUsers($ecnAllData['quote_rule']);     // 获取抄送人数据
+                $sendResult_Rollback = $this->pushEmail('Rollback', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccUsersData);
+                $sendResult_Rollback ? $this->ajaxReturn(['flag'=>1, 'msg'=>'撤回成功']) : $this->ajaxReturn(['flag'=>1, 'msg'=>'撤回成功，部分邮件未发送']);
+            } catch(\Exception $exception) {
+                $this->ajaxReturn(['flag'=>0, 'msg'=>'撤回失败']);
+            }
+            $this->ajaxReturn(['flag'=>1, 'msg'=>'撤回成功']);
+        }
+    }
+
     # 提交评审数据
     public function postReview(){
         if( IS_POST ){
@@ -472,7 +557,11 @@ class ECNController extends AuthController {
             try {
                 $ecnAllData = $this->getEcnData($postData['ecn_id']);
                 if( !$ecnAllData ) throw new \Exception('评审失败');
-                if( $ecnAllData['state'] === 'BeRejected' ) throw new \Exception('评审已被拒绝');
+                if( $ecnAllData['state'] === 'BeRejected' ){
+                    throw new \Exception('评审已被拒绝');
+                }elseif( $ecnAllData['state'] === 'NotReview' ){
+                    throw new \Exception('评审已被撤回');
+                }
                 $ccUsersData = $this->getAllCcUsers($ecnAllData['quote_rule']);     // 获取抄送人数据
                 $model->startTrans();   // 开启事务
                 $map['review_user'] = session('user')['id'];
@@ -525,6 +614,13 @@ class ECNController extends AuthController {
                         // 如果当前级已经进行完毕，则通知下一级评审人和该ecn创建人
                         // 如果当前级已经处于dcc评审并且审核已全部通过则告知该ecn创建人该ecn评审已经完成
                         if( !$postData['along'] ){   // 如果当前along已经是dcc评审
+                            if( $postData['ecn_type'] == 'file' ){  // 如果当前ecn类型是file并且评审流程已走完，则修改文件状态为已归档
+                                foreach( $ecnAllData['EcnReviewItem'] as $key=>&$value ){
+                                    $changeFileStateRow = $model->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['item']['id'], 'state'=>'Arching']);
+                                }
+                            }else{
+                                // 非文件ecn类型的处理方式...
+                            }
                             $pushUsersData = [ ['email'=>$ecnAllData['User']['email'], 'name'=>$ecnAllData['User']['nickname']] ];  // 如果当前是dcc评审并且步骤也已经走完，则通知该ecn创建人
                             $sendResult_Complete = $this->pushEmail('Complete', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccUsersData);
                         }else{
@@ -556,6 +652,7 @@ class ECNController extends AuthController {
      * @param  [array] $address     收件人
      * @param  [array] $data    邮件内容数据
      * @param  [array]  $cc      抄送人
+     * @param  [array]  $reviewData      评审信息
      * @return bool
      */
     private function pushEmail($type, $ecnType, $address, $data, $cc = [], $reviewData){
@@ -567,7 +664,7 @@ class ECNController extends AuthController {
                 $subject = '['.session('user')['nickname'].'] 发起了编号为【'.$data['ecn_number'].'】的文件评审，请关注';
                 $body = '<p class="sm-dear">Dear '.$dear.',</p>';
                 $body .= '<p>['.session('user')['nickname'].'] 发起了编号为【'.$data['ecn_number'].'】的文件评审，请关注。</p>';
-                $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
+                $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/'.$data['ecn_number'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
             }else{
                 // 非文件ecn类型的处理方式...
             }
@@ -576,7 +673,7 @@ class ECNController extends AuthController {
                 $subject = '['.session('user')['nickname'].'] 推送了 ['.$data['User']['nickname'].'] 发起的编号为【'.$data['ecn_number'].'】的文件评审，请关注';
                 $body = '<p class="sm-dear">Dear '.$dear.',</p>';
                 $body .= '<p>['.session('user')['nickname'].'] 推送了 ['.$data['User']['nickname'].'] 发起的编号为【'.$data['ecn_number'].'】的文件评审，请关注。</p>';
-                $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
+                $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/'.$data['ecn_number'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
             }else{
                 // 非文件ecn类型的处理方式...
             }
@@ -586,15 +683,24 @@ class ECNController extends AuthController {
                 $body = '<p class="sm-dear">Dear '.$dear.',</p>';
                 $body .= '<p>['.session('user')['nickname'].'] 已'.$stateText.'了您发起的编号为【'.$data['ecn_number'].'】的文件评审。</p>';
                 $body .= trim($reviewData['remark']) != '' ? '<p class="remark">备注：'.replaceEnterWithBr($reviewData['remark']).'</p>' : '';
-                $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
+                $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/'.$data['ecn_number'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
             }else{
                 // 非文件ecn类型的处理方式...
             }
-        }elseif( $type == 'Complete' ){
+        }elseif( $type == 'Complete' ){     // 评审结束
             $subject = '您发起的编号为【'.$data['ecn_number'].'】的文件评审已结束，请知悉';
             $body = '<p class="sm-dear">Dear '.$dear.',</p>';
             $body .= '<p>您发起的编号为【'.$data['ecn_number'].'】的文件评审已结束，请知悉。</p>';
-            $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/id/'.$data['id'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
+            $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/'.$data['ecn_number'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
+        }elseif( $type == 'Rollback' ){     // 撤回
+            if( $ecnType == 'file' ){
+                $subject = '['.session('user')['nickname'].'] 已撤回了编号为【'.$data['ecn_number'].'】的文件评审。';
+                $body = '<p class="sm-dear">Dear '.$dear.',</p>';
+                $body .= '<p>['.session('user')['nickname'].'] 已撤回了编号为【'.$data['ecn_number'].'】的文件评审。</p>';
+                $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/'.$data['ecn_number'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
+            }else{
+                // 非文件ecn类型的处理方式...
+            }
         }
         $sendResult = send_email([['email'=>'vinty_email@163.com','name'=>'蒋明']], '', $subject, $body, [['email'=>'2737583968@qq.com','name'=>'蒋明']]);
         return is_integer($sendResult) ? true : false;

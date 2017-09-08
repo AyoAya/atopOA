@@ -26,6 +26,10 @@
     padding-bottom: 200px;
 }
 
+.history-review .layui-table tbody td {
+    padding: 15px;
+}
+
 
 .syx-wjlb .layui-table tbody td, .psjd-bg .layui-table tbody td {
     padding: 15px;

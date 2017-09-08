@@ -72,6 +72,23 @@ class FileController extends AuthController {
                                         ->where('a.createuser = b.id AND filenumber = "'.$result['filenumber'].'" AND version <> "'.$result['version'].'"')
                                         ->order('version DESC')
                                         ->select();
+                // 获取当前文件关联的ecn
+                $ecnAssocData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'ecn b,'.C('DB_PREFIX').'ecn_review_item c')
+                                  ->field('b.id,b.ecn_number,b.state')
+                                  ->where('a.id=c.assoc AND b.id=c.ecn_id AND a.id='.I('get.id'))
+                                  ->order('c.ecn_id DESC')
+                                  ->select();
+                // 如果不存在关联的ecn则说明该文件并没有被添加到ecn评审
+                if( $ecnAssocData ){
+                    foreach($ecnAssocData as $key=>&$value){
+                        if( $value['state'] == 'InReview' ){
+                            $ecnAssoc['new'][] = $value;
+                        }else{
+                            $ecnAssoc['history'][] = $value;
+                        }
+                    }
+                    $this->assign('ecnAssoc', $ecnAssoc);
+                }
                 $this->assign('beforeVersions', $beforeVersions);
                 $this->display();
             }
@@ -160,6 +177,9 @@ class FileController extends AuthController {
             case 'InReview':        // 评审中
                 $className = 'tag tag-info';
                 break;
+            case 'Archiving':        // 已归档
+                $className = 'tag tag-success';
+                break;
             case 'BeRejected':      // 驳回
                 $className = 'tag tag-danger';
                 break;
@@ -180,6 +200,9 @@ class FileController extends AuthController {
                 break;
             case 'InReview':        // 评审中
                 $stateName = '评审中';
+                break;
+            case 'Archiving':        // 已归档
+                $stateName = '已归档';
                 break;
             case 'BeRejected':      // 驳回
                 $stateName = '驳回';
