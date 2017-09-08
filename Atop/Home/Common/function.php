@@ -598,6 +598,12 @@ function send_Email($address, $nickname='', $subject, $body,$cc = []){
     // 样式
     $style = <<<STYLE
 <style>
+    a {
+        color: #428bca;
+    }
+    a:hover {
+        color: #2a6496;
+    }
     p {
         line-height: 100%;
     }

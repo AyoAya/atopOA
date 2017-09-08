@@ -142,9 +142,9 @@
                         <th>创建人</th>
                         <th>创建时间</th>
                         <th>最后编辑时间</th>
-                        <neq name="result.state" value="NotPass">
+                        <notin name="result.state" value="NotPass,Complete">
                             <th width="221">操作</th>
-                        </neq>
+                        </notin>
                     </tr>
                     </thead>
                     <tbody>
@@ -160,7 +160,7 @@
                                 {$result.lastedit_time|date="Y-m-d H:i", ###}
                             </notempty>
                         </td>
-                        <neq name="result.state" value="NotPass">
+                        <notin name="result.state" value="NotPass,Complete">
                             <td>
                                 <eq name="result.state" value="InReview">
                                     <button type="button" class="layui-btn layui-btn-small layui-btn-disabled">编辑</button>
@@ -176,7 +176,7 @@
                                     <button type="button" class="layui-btn layui-btn-danger layui-btn-small layui-btn-disabled">撤回</button>
                                 </eq>
                             </td>
-                        </neq>
+                        </notin>
                     </tr>
                     </tbody>
                 </table>

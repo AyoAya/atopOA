@@ -146,6 +146,9 @@ class ECNController extends AuthController {
             case 'NotPass':      // 未通过
                 $className = 'tag tag-danger';
                 break;
+            case 'Complete':      // 已完成
+                $className = 'tag tag-success';
+                break;
             case 'WAIT':      // 待评审
                 $className = 'tag tag-warning';
                 break;
@@ -185,6 +188,9 @@ class ECNController extends AuthController {
                 break;
             case 'NotPass':      // 未通过
                 $stateName = '未通过';
+                break;
+            case 'Complete':      // 已完成
+                $stateName = '已完成';
                 break;
             case 'WAIT':      // 待评审
                 $stateName = '待评审';
@@ -495,7 +501,11 @@ class ECNController extends AuthController {
                 // 查看当前登陆用户是否有评审该ecn的权限
                 $ecnRV = $EcnModel->table(C('DB_PREFIX').'ecn_review')->where(['ecn_id'=>$result['id'], 'along'=>$result['current_along'], 'review_user'=>session('user')['id']])->find();
                 // 当前登陆用户在评审列表中并且没有评审记录才可以评审
-                if( in_array(session('user')['id'], $result['Checkeds'][$result['current_along']-1]) && $ecnRV['already_review'] == 'N' && $result['state'] != 'BeRejected' && $result['state'] != 'NotReview' ) $this->assign('reviewAuth', true);
+                if( $result['current_along'] ){
+                    if( in_array(session('user')['id'], $result['Checkeds'][$result['current_along']-1]) && $ecnRV['already_review'] == 'N' && $result['state'] != 'BeRejected' && $result['state'] != 'NotReview' ) $this->assign('reviewAuth', true);
+                }else{
+                    if( in_array(session('user')['id'], $result['Checkeds']['dcc']) && $ecnRV['already_review'] == 'N' && $result['state'] != 'BeRejected' && $result['state'] != 'NotReview' ) $this->assign('reviewAuth', true);
+                }
                 $this->display();
             }
         }
@@ -556,6 +566,7 @@ class ECNController extends AuthController {
             $model = D('Ecn');
             try {
                 $ecnAllData = $this->getEcnData($postData['ecn_id']);
+                $ccUsersData = $this->getAllCcUsers($ecnAllData['quote_rule']);     // 获取抄送人数据
                 if( !$ecnAllData ) throw new \Exception('评审失败');
                 if( $ecnAllData['state'] === 'BeRejected' ){
                     throw new \Exception('评审已被拒绝');
@@ -603,20 +614,15 @@ class ECNController extends AuthController {
                     $currentAlongCount = $model->table(C('DB_PREFIX').'ecn_review')->where($currentAlongMap)->count();
                     $alongCompleteNum = $model->table(C('DB_PREFIX').'ecn_review')->where($compMap)->count();
                     if( $alongCompleteNum == $currentAlongCount ){   // 检查当前级已通过的评审是否等于当前级的总长度，
-                        // 判断顺位along是否存在评审人数据，如果存在则给下一级评审人员推送邮件，不存在则给DCC人员发送邮件
-                        $nextAlongCount = $model->table(C('DB_PREFIX').'ecn_review')->where([
-                            'ecn_id' => $postData['ecn_id'],
-                            'along' => ($postData['along'] + 1),
-                        ])->count();
-                        $alongNumber = $nextAlongCount ? ($postData['along'] + 1) : 0;
-                        $ecnRow = $model->table(C('DB_PREFIX').'ecn')->save(['id'=>$postData['ecn_id'], 'current_along'=>$alongNumber]);    // 更新当前ecn顺位
-                        if( !$ecnRow ) throw new \Exception('评审失败');
                         // 如果当前级已经进行完毕，则通知下一级评审人和该ecn创建人
                         // 如果当前级已经处于dcc评审并且审核已全部通过则告知该ecn创建人该ecn评审已经完成
                         if( !$postData['along'] ){   // 如果当前along已经是dcc评审
-                            if( $postData['ecn_type'] == 'file' ){  // 如果当前ecn类型是file并且评审流程已走完，则修改文件状态为已归档
+                            $changeECNStateRow = $model->table(C('DB_PREFIX').'ecn')->save(['id'=>$ecnAllData['id'], 'state'=>'Complete']);
+                            if( $changeECNStateRow === false ) throw new \Exception('评审失败');
+                            if( $ecnAllData['ecn_type'] == 'file' ){  // 如果当前ecn类型是file并且评审流程已走完，则修改文件状态为已归档
                                 foreach( $ecnAllData['EcnReviewItem'] as $key=>&$value ){
-                                    $changeFileStateRow = $model->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['item']['id'], 'state'=>'Arching']);
+                                    $changeFileStateRow = $model->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['assoc'], 'state'=>'Arching']);
+                                    if( $changeFileStateRow === false ) throw new \Exception('评审失败');
                                 }
                             }else{
                                 // 非文件ecn类型的处理方式...
@@ -624,6 +630,14 @@ class ECNController extends AuthController {
                             $pushUsersData = [ ['email'=>$ecnAllData['User']['email'], 'name'=>$ecnAllData['User']['nickname']] ];  // 如果当前是dcc评审并且步骤也已经走完，则通知该ecn创建人
                             $sendResult_Complete = $this->pushEmail('Complete', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccUsersData);
                         }else{
+                            // 判断顺位along是否存在评审人数据，如果存在则给下一级评审人员推送邮件，不存在则给DCC人员发送邮件
+                            $nextAlongCount = $model->table(C('DB_PREFIX').'ecn_review')->where([
+                                'ecn_id' => $postData['ecn_id'],
+                                'along' => ($postData['along'] + 1),
+                            ])->count();
+                            $alongNumber = $nextAlongCount ? ($postData['along'] + 1) : 0;
+                            $ecnRow = $model->table(C('DB_PREFIX').'ecn')->save(['id'=>$postData['ecn_id'], 'current_along'=>$alongNumber]);    // 更新当前ecn顺位
+                            if( !$ecnRow ) throw new \Exception('评审失败');
                             $pushUsersData = $this->getAlongOfPushUsers($alongNumber, $ecnAllData['EcnReview']);   // 获取收件人数据
                             $sendResult_Complete = $this->pushEmail('PushDown', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccUsersData);
                         }
