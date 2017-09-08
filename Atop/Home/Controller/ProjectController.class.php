@@ -501,7 +501,9 @@ HTML;
             $this->assign('getID',$getID);
             $project = M('Project');
             $auth = $project->field('pj_create_person_id,pj_participate')->find($getID);
-            $this->assign('auth',$auth['pj_create_person_id']);
+
+            $this->assign('auth',$auth['pj_participate']);
+            $this->assign('auths',$auth['pj_create_person_id']);
             $this->assign('participate',$auth['pj_create_person_id'].','.$auth['pj_participate']);
         }else{
             $this->error('错误');
@@ -979,12 +981,6 @@ HTML;
             }
 
 
-
-
-            print_r($post);
-            # print_r($rel);
-
-            die();
 
             $plan['complete_time'] = date('Y-m-d', time());
             $plan['id'] = $post['plan_node'];

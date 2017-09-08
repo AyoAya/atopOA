@@ -34,12 +34,8 @@
                         <td>{$result.filenumber}</td>
                     </tr>
                     <tr>
-                        <td>创建人</td>
-                        <td>{$result.nickname}</td>
-                    </tr>
-                    <tr>
-                        <td>创建时间</td>
-                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
+                        <td>版本</td>
+                        <td>{$result.version}</td>
                     </tr>
                     <tr>
                         <td>状态</td>
@@ -48,8 +44,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>版本</td>
-                        <td>{$result.version}</td>
+                        <td>描述</td>
+                        <td>{$result.description}</td>
                     </tr>
                     <tr>
                         <td>附件</td>
@@ -58,13 +54,33 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>描述</td>
-                        <td>{$result.description}</td>
+                        <td>ECN</td>
+                        <td>
+                            <present name="ecnAssoc">
+                                <volist name="ecnAssoc.new" id="value">
+                                    <a href="__ROOT__/ECN/detail/{$value.ecn_number}">{$value.ecn_number}</a>
+                                </volist>
+                                <else/>
+                                无
+                            </present>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>创建人</td>
+                        <td>{$result.nickname}</td>
+                    </tr>
+                    <tr>
+                        <td>创建时间</td>
+                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
                     </tr>
                     <tr>
                         <td>操作</td>
                         <td>
-                            <button type="button" class="layui-btn layui-btn-primary xq-edit-btn">编辑</button>
+                            <eq name="result.state" value="InReview">
+                                <button type="button" class="layui-btn layui-btn-primary layui-btn-disabled">编辑</button>
+                            <else/>
+                                <button type="button" class="layui-btn layui-btn-primary xq-edit-btn">编辑</button>
+                            </eq>
                         </td>
                     </tr>
                 </tbody>
@@ -72,7 +88,8 @@
         </div>
     </div>
 
-    <div class="section-grey-table edit-condition sr-only">
+    <neq name="result.state" value="BeRejected">
+        <div class="section-grey-table edit-condition sr-only">
         <input type="hidden" name="id" value="{$result.id}" id="fileID">
         <div class="section-title">编辑文件</div>
         <div class="section-body">
@@ -83,20 +100,6 @@
                         <td>{$result.filenumber}</td>
                     </tr>
                     <tr>
-                        <td>创建人</td>
-                        <td>{$result.nickname}</td>
-                    </tr>
-                    <tr>
-                        <td>创建时间</td>
-                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
-                    </tr>
-                    <tr>
-                        <td>状态</td>
-                        <td>
-                            <span class="{$result.className}">{$result.stateName}</span>
-                        </td>
-                    </tr>
-                    <tr>
                         <td>版本</td>
                         <td>
                             <input type="text" class="layui-input pull-left" name="version" id="version" value="{$result.version}">
@@ -104,12 +107,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>附件</td>
+                        <td>状态</td>
                         <td>
-                            <a href="__ROOT__/{$result.file.path}" target="_blank"><i class="file-icon file-icon-ext-{$result.file.ext}"></i> {$result.file.name}</a>
-                            <div id="FilePick"><i class="icon-arrow-up"></i> 上传文件</div>
-                            <div class="uploader-attachment-queue"></div>
-                            <div class="tswb">注：一个文件号只能对应一个文件（文件上传只能单选），在有文件的情况下重新上传附件将会被替换。</div>
+                            <span class="{$result.className}">{$result.stateName}</span>
                         </td>
                     </tr>
                     <tr>
@@ -119,6 +119,37 @@
                                 {$result.description}
                             </textarea>
                         </td>
+                    </tr>
+                    <tr>
+                        <td>附件</td>
+                        <td>
+                            <notempty name="result.file">
+                                <a href="__ROOT__/{$result.file.path}" target="_blank"><i class="file-icon file-icon-ext-{$result.file.ext}"></i> {$result.file.name}</a>
+                            </notempty>
+                            <div id="FilePick"><i class="icon-arrow-up"></i> 上传文件</div>
+                            <div class="uploader-attachment-queue"></div>
+                            <div class="tswb">注：一个文件号只能对应一个文件（文件上传只能单选），在有文件的情况下重新上传附件将会被替换。</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ECN</td>
+                        <td>
+                            <present name="ecnAssoc">
+                                <volist name="ecnAssoc.new" id="value">
+                                    <a href="__ROOT__/ECN/detail/{$value.ecn_number}">{$value.ecn_number}</a>
+                                </volist>
+                                <else/>
+                                无
+                            </present>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>创建人</td>
+                        <td>{$result.nickname}</td>
+                    </tr>
+                    <tr>
+                        <td>创建时间</td>
+                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
                     </tr>
                     <tr>
                         <td>操作</td>
@@ -131,6 +162,7 @@
             </table>
         </div>
     </div>
+    </neq>
 
     <div class="section-grey-table">
         <div class="section-title">以往版本</div>

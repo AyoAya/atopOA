@@ -333,6 +333,7 @@ span.tag {
 	color: #fff;
 	background: #428bca;
 	border-radius: 2px;
+	cursor: default;
 }
 span.tag-primary {
 	background: #428bca;

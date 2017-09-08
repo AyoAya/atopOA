@@ -2,11 +2,11 @@
 <extend name="layout/default"/>
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
-    <link rel="stylesheet" href="__CSS__/file/ecn.css">
+    <link rel="stylesheet" href="__CSS__/ecn/detail.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
-    <script src="__JS__/file/ecn.js"></script>
+    <!-- <script src="__JS__/ecn/ecn.js"></script> -->
 </block>
 <!-- 【页面标题】 -->
 <block name="webtitle">
@@ -21,274 +21,114 @@
 </block>
 <!-- 【正文区域】 -->
 <block name="content">
-
-    <div class="edit-condition sr-only">
-        <form class="layui-form" action="" style="margin-top: 10px;">
-            <!--<div class="layui-form-item">
-                <label class="layui-form-label">ECN号</label>
-                <div class="layui-input-block">
-                    <div class="ecn-itm">ECN000001254</div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">创建人</label>
-                <div class="layui-input-block">
-                    <div class="ecn-itm">李平</div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">创建时间</label>
-                <div class="layui-input-block">
-                    <div class="ecn-itm">2017-09-01 21:16</div>
-                </div>
-            </div>-->
-            <div class="layui-form-item">
-                <label class="layui-form-label">变更描述</label>
-                <div class="layui-input-block">
-                    <textarea id="layedit-description" style="display: none;"></textarea>
-                    <div class="layui-form-mid layui-word-aux">例：TEKTRONIX and TEK are registered trademarks of
-                        Tektronix, Inc.
+    <neq name="result.state" value="InReview">
+        <div class="edit-condition sr-only">
+            <form class="layui-form" action="" style="margin-top: 10px;">
+                <!--<div class="layui-form-item">
+                    <label class="layui-form-label">ECN号</label>
+                    <div class="layui-input-block">
+                        <div class="ecn-itm">ECN000001254</div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">变更原因</label>
-                <div class="layui-input-block">
-                    <textarea id="layedit-reason" style="display: none;"></textarea>
-                    <div class="layui-form-mid layui-word-aux">例：TEKTRONIX and TEK are registered trademarks of
-                        Tektronix, Inc.
+                <div class="layui-form-item">
+                    <label class="layui-form-label">创建人</label>
+                    <div class="layui-input-block">
+                        <div class="ecn-itm">李平</div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">受影响的文件列表</label>
-                <div class="layui-input-block">
-                    <div class="selected-files">
-                        <table class="layui-table">
-                            <tbody>
-                            <tr>
-                                <td>EVT00000157</td>
-                                <td>V1.63</td>
-                                <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                                        class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a>
-                                </td>
-                                <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                                    <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                                        即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                                        Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                                </td>
-                                <td>
-                                    <button type="button" class="layui-btn layui-btn-primary">添加</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>EVT00000157</td>
-                                <td>V1.63</td>
-                                <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                                        class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a>
-                                </td>
-                                <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                                    <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                                        即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                                        Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                                </td>
-                                <td>
-                                    <button type="button" class="layui-btn layui-btn-primary">添加</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>EVT00000157</td>
-                                <td>V1.63</td>
-                                <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                                        class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a>
-                                </td>
-                                <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                                    <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                                        即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                                        Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                                </td>
-                                <td>
-                                    <button type="button" class="layui-btn layui-btn-primary">添加</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>EVT00000157</td>
-                                <td>V1.63</td>
-                                <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                                        class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a>
-                                </td>
-                                <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                                    <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                                        即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                                        Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                                </td>
-                                <td>
-                                    <button type="button" class="layui-btn layui-btn-primary">添加</button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">创建时间</label>
+                    <div class="layui-input-block">
+                        <div class="ecn-itm">2017-09-01 21:16</div>
                     </div>
-                    <div class="choose-btn"><i class="layui-icon">&#xe61f;</i> 添加文件</div>
-                    <div class="layui-form-mid layui-word-aux">注：将已经编辑好的文件添加到此处 [支持多选]</div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">评审规则</label>
-                <div class="layui-input-block">
-                    <select name="city" lay-verify="required">
-                        <option value="0">规则一</option>
-                        <option value="1">规则二</option>
-                        <option value="2">规则三</option>
-                    </select>
-                    <div class="layui-form-mid layui-word-aux">注：您可在此处可预览当前选中评审规则的详细信息，当您确认规则后便只能从该规则中所配置的岗位选择人员。</div>
-                    <div class="rule-preview">
-                        <div class="lv-row">
-                            <div class="lv-mc">1 级评审：</div>
-                            <div class="lv-itm">
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                            </div>
-                        </div>
-                        <div class="lv-row">
-                            <div class="lv-mc">2 级评审：</div>
-                            <div class="lv-itm">
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                            </div>
-                        </div>
-                        <div class="lv-row">
-                            <div class="lv-mc">3 级评审：</div>
-                            <div class="lv-itm">
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                            </div>
-                        </div>
-                        <div class="lv-row">
-                            <div class="lv-mc">抄送列表：<small>抄送列表将通知到包含该职位的所有人员（不能手动选取）</small></div>
-                            <div class="lv-itm">
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                                <span class="js-zw">PE工程师</span>
-                            </div>
+                </div>-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">变更描述</label>
+                    <div class="layui-input-block">
+                        <textarea id="layedit-description" style="display: none;">{$result.change_description}</textarea>
+                        <div class="layui-form-mid layui-word-aux">例：TEKTRONIX and TEK are registered trademarks of
+                            Tektronix, Inc.
                         </div>
                     </div>
-                    <!--<div class="rule-preview">
-                        <div class="rule-preview-loading"><i class="icon-spinner icon-spin icon-2x"></i></div>
-                    </div>-->
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">1 级评审</label>
-                <div class="layui-input-block">
-                    <div class="ps-wrapper">
-                        <div class="gw-mc">PE工程师</div>
-                        <input type="checkbox" name="persons[1]" title="蒋明" lay-skin="primary" checked>
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
-                        <div class="gw-mc">结构工程师</div>
-                        <input type="checkbox" name="persons[1]" title="蒋明" lay-skin="primary" checked>
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">变更原因</label>
+                    <div class="layui-input-block">
+                        <textarea id="layedit-reason" style="display: none;">{$result.change_reason}</textarea>
+                        <div class="layui-form-mid layui-word-aux">例：TEKTRONIX and TEK are registered trademarks of
+                            Tektronix, Inc.
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">2 级评审</label>
-                <div class="layui-input-block">
-                    <div class="ps-wrapper">
-                        <div class="gw-mc">PE工程师</div>
-                        <input type="checkbox" name="persons[1]" title="蒋明" lay-skin="primary" checked>
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <div class="gw-mc">结构工程师</div>
-                        <input type="checkbox" name="persons[1]" title="蒋明" lay-skin="primary" checked>
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
-                        <div class="gw-mc">ATE工程师</div>
-                        <input type="checkbox" name="persons[1]" title="蒋明" lay-skin="primary" checked>
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
+                <div class="layui-form-item" id="affect">
+                    <label class="layui-form-label">受影响的文件列表</label>
+                    <div class="layui-input-block">
+                        <div class="selected-files">
+                            {/*<table class="layui-table">
+                                <tbody>
+                                    <volist name="result.EcnReviewItem" id="value">
+                                        <tr>
+                                            <td>{$value.item.filenumber}</td>
+                                            <td>{$value.item.version}</td>
+                                            <td>
+                                                <a href="http://{$Think.SERVER.http_host}/{$value.item.attachment.path}" target="_blank" title="{$value.item.attachment.name}"><i class="file-icon file-icon-ext-{$value.item.attachment.ext}"></i> {$value.item.attachment.name}</a>
+                                            </td>
+                                            <td title="{:strip_tags($value['item']['description'])}">
+                                                <p class="wrap">{:strip_tags($value['item']['description'])}</p>
+                                            </td>
+                                            <td width="64">
+                                                <button type="button" class="layui-btn layui-btn-danger">移除</button>
+                                            </td>
+                                        </tr>
+                                    </volist>
+                                </tbody>
+                            </table>*/}
+                        </div>
+                        <div class="choose-btn"><i class="layui-icon">&#xe61f;</i> 添加文件</div>
+                        <div class="layui-form-mid layui-word-aux">注：将已经编辑好的文件添加到此处 [支持多选]</div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">DCC评审</label>
-                <div class="layui-input-block">
-                    <div class="ps-wrapper">
-                        <div class="gw-mc">DCC专员</div>
-                        <input type="checkbox" name="persons[1]" title="蒋明" lay-skin="primary" checked>
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
-                        <input type="checkbox" name="persons[2]" title="龚驰翔" lay-skin="primary">
-                        <input type="checkbox" name="persons[3]" title="李平" lay-skin="primary">
-                        <input type="checkbox" name="persons[4]" title="马晓东" lay-skin="primary">
+                <div class="layui-form-item" id="review-rule">
+                    <label class="layui-form-label">评审规则</label>
+                    <div class="layui-input-block">
+                        <select name="quote_rule" id="rule" lay-filter="rule" lay-verify="required">
+                            <volist name="rules" id="value">
+                                <eq name="result.quote_rule" value="$value.id">
+                                    <option value="{$value.id}" checked>{$value.name}</option>
+                                <else/>
+                                    <option value="{$value.id}">{$value.name}</option>
+                                </eq>
+                            </volist>
+                        </select>
+                        <div class="layui-form-mid layui-word-aux">注：您可在此处可预览当前选中评审规则的详细信息，当您确认规则后便只能从该规则中所配置的岗位选择人员。</div>
+                        <div class="rule-preview"></div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
-                    <button type="reset" class="layui-btn layui-btn-primary cancel-edit-btn">取消</button>
+                <div class="review-group"></div>    <!--评审组-->
+                <div class="layui-form-item" id="dcc">
+                    <label class="layui-form-label">DCC评审</label>
+                    <div class="layui-input-block">
+                        <div class="ps-wrapper">
+                            <div class="gw-mc">dcc专员</div>
+                            <volist name="dccUsers" id="value">
+                                <in name="value.id" value="$result.Checkeds.dcc">
+                                    <input type="checkbox" name="dcc[{$value.id}]" lay-verify="required" title="{$value.nickname}" value="{$value.id}" lay-skin="primary" checked>
+                                <else/>
+                                    <input type="checkbox" name="dcc[{$value.id}]" lay-verify="required" title="{$value.nickname}" value="{$value.id}" lay-skin="primary">
+                                </in>
+                            </volist>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </form>
-    </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit lay-filter="saveECN">保存</button>
+                        <button type="reset" class="layui-btn layui-btn-primary cancel-edit-btn">取消</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </neq>
 
     <div class="preview-condition">
         <div class="section-grey-table">
@@ -301,22 +141,42 @@
                         <th>状态</th>
                         <th>创建人</th>
                         <th>创建时间</th>
-                        <th>操作</th>
+                        <th>最后编辑时间</th>
+                        <neq name="result.state" value="NotPass">
+                            <th width="221">操作</th>
+                        </neq>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <td>ECN000012</td>
+                        <td>{$result.ecn_number}</td>
                         <td>
-                            <span class="tag tag-primary">评审中</span>
+                            <span class="{$result.className}">{$result.stateName}</span>
                         </td>
-                        <td>李平</td>
-                        <td>2017-08-20 16:23</td>
+                        <td>{$result.User.nickname}</td>
+                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
                         <td>
-                            <button type="button" class="layui-btn layui-btn-small edit-ecn-btn">编辑</button>
-                            <button type="button" class="layui-btn layui-btn-normal layui-btn-small">发起评审</button>
-                            <button type="button" class="layui-btn layui-btn-danger layui-btn-small layui-btn-disabled">撤回</button>
+                            <notempty name="result.lastedit_time">
+                                {$result.lastedit_time|date="Y-m-d H:i", ###}
+                            </notempty>
                         </td>
+                        <neq name="result.state" value="NotPass">
+                            <td>
+                                <eq name="result.state" value="InReview">
+                                    <button type="button" class="layui-btn layui-btn-small layui-btn-disabled">编辑</button>
+                                    <button type="button" class="layui-btn layui-btn-normal layui-btn-small layui-btn-disabled">发起评审</button>
+                                    <eq name="result.createuser" value="$Think.session.user.id">
+                                        <button type="button" class="layui-btn layui-btn-danger layui-btn-small rollback-btn">撤回</button>
+                                    <else/>
+                                        <button type="button" class="layui-btn layui-btn-danger layui-btn-small layui-btn-disabled">撤回</button>
+                                    </eq>
+                                <else/>
+                                    <button type="button" class="layui-btn layui-btn-small edit-ecn-btn">编辑</button>
+                                    <button type="button" class="layui-btn layui-btn-normal layui-btn-small start-review-btn">发起评审</button>
+                                    <button type="button" class="layui-btn layui-btn-danger layui-btn-small layui-btn-disabled">撤回</button>
+                                </eq>
+                            </td>
+                        </neq>
                     </tr>
                     </tbody>
                 </table>
@@ -325,93 +185,48 @@
         <div class="section-grey">
             <div class="section-title">变更描述</div>
             <div class="section-body">
-                <p>Layui 哪里有未压缩源代码？</p><br>
-                <p>有部分猿吐槽说：你们丫的不是张口闭口开源开源吗？怎么我下载的包里的代码是压缩过的，源代码呢？
-                    针对这类问题，很有必要解释一下。Layui项目的开源是毋庸置疑的，我们的全部代码托管在GitHub（你可以通过首页的Star进入）。
-                    之所以在下载包里没有提供未压缩的源代码，是为了避免一些猿的使用混淆，因为之前有遇到过部分可爱到极致的猿，
-                    居然同时引入了压缩过和未压缩过的layui.js，虽然文档在“开始使用”中有相关的明确说明，但这种问题仍然不是个例，
-                    使得我欲哭无泪啊啊啊，但毕竟我们要做“中国最容易使用的UI框架”，所以俺忍了。因此才决定只对下载包提供我们构建后的代码，
-                    并且，由于是经过了压缩、合并等处理，所以更适合用于生产环境。</p><br>
-                <p>还是遇到困难咋办？</p>
-                <p>可以继续看看这个：layui 常见问题的处理和实用干货集锦
-                    但我还是不会用怎么办？我还是遇到困难怎么办？
-                    首先，多看文档啊亲！那可是作者一个字节一个字节撸出来的，求珍惜。你抽出一定时间仔细阅读文档，后面只会节省更多时间！
-                    其次，实在无解，就请在社区反馈吧。你也可以自己组织QQ群，在社区神马的地方拉一些Layui的小伙伴，相互交流噢！</p>
+                {$result.change_description}
             </div>
         </div>
         <div class="section-grey">
             <div class="section-title">变更原因</div>
             <div class="section-body">
-                <p>Layui 哪里有未压缩源代码？</p><br>
-                <p>有部分猿吐槽说：你们丫的不是张口闭口开源开源吗？怎么我下载的包里的代码是压缩过的，源代码呢？
-                    针对这类问题，很有必要解释一下。Layui项目的开源是毋庸置疑的，我们的全部代码托管在GitHub（你可以通过首页的Star进入）。
-                    之所以在下载包里没有提供未压缩的源代码，是为了避免一些猿的使用混淆，因为之前有遇到过部分可爱到极致的猿，
-                    居然同时引入了压缩过和未压缩过的layui.js，虽然文档在“开始使用”中有相关的明确说明，但这种问题仍然不是个例，
-                    使得我欲哭无泪啊啊啊，但毕竟我们要做“中国最容易使用的UI框架”，所以俺忍了。因此才决定只对下载包提供我们构建后的代码，
-                    并且，由于是经过了压缩、合并等处理，所以更适合用于生产环境。</p>
+                {$result.change_reason}
             </div>
         </div>
 
         <div class="section-grey-table syx-wjlb">
-            <div class="section-title">受影响的文件列表</div>
-            <div class="section-body">
-                <table class="layui-table">
-                    <thead>
-                    <tr>
-                        <th>文件号</th>
-                        <th>版本号</th>
-                        <th>附件</th>
-                        <th>文件描述</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>EVT00000157</td>
-                        <td>V1.63</td>
-                        <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                                class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a></td>
-                        <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                            <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                                即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                                Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>EVT00000157</td>
-                        <td>V1.63</td>
-                        <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                                class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a></td>
-                        <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                            <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                                即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                                Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>EVT00000157</td>
-                        <td>V1.63</td>
-                        <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                                class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a></td>
-                        <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                            <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                                即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                                Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>EVT00000157</td>
-                        <td>V1.63</td>
-                        <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                                class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a></td>
-                        <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                            <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                                即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                                Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            <switch name="result.ecn_type">
+                <case value="file"> {// 如果ecn类型是file}
+                    <div class="section-title">受影响的文件列表</div>
+                    <div class="section-body">
+                        <table class="layui-table">
+                            <thead>
+                            <tr>
+                                <th>文件号</th>
+                                <th>版本号</th>
+                                <th>附件</th>
+                                <th>文件描述</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <volist name="result.EcnReviewItem" id="value">
+                                <tr>
+                                    <td><a href="__ROOT__/File/detail/id/{$value.assoc}">{$value.item.filenumber}</a></td>
+                                    <td>{$value.item.version}</td>
+                                    <td>
+                                        <a href="http://{$Think.SERVER.http_host}/{$value.item.attachment.path}" target="_blank" title="{$value.item.attachment.name}"><i class="file-icon file-icon-ext-{$value.item.attachment.ext}"></i> {$value.item.attachment.name}</a>
+                                    </td>
+                                    <td title="{:strip_tags($value['item']['description'])}">
+                                        <p class="wrap">{:strip_tags($value['item']['description'])}</p>    {//过滤掉html标签}
+                                    </td>
+                                </tr>
+                            </volist>
+                            </tbody>
+                        </table>
+                    </div>
+                </case>
+            </switch>
         </div>
 
         <div class="section-grey-table psjd-bg">
@@ -419,108 +234,584 @@
             <div class="section-body">
                 <table class="layui-table">
                     <thead>
-                    <tr>
-                        <th>评审步骤</th>
-                        <th>评审人</th>
-                        <th>评审状态</th>
-                        <th>评审时间</th>
-                        <th>备注信息</th>
-                    </tr>
+                        <tr>
+                            <th>评审步骤</th>
+                            <th>评审人</th>
+                            <th>评审状态</th>
+                            <th>评审时间</th>
+                            <th>备注信息</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>1 级评审</td>
-                        <td>陈朋</td>
-                        <td>
-                            <span class="tag tag-primary">未评审</span>
-                        </td>
-                        <td>2017-08-24 15:27</td>
-                        <td title="当你使用表单时，Layui会对select、checkbox、radio等原始元素隐藏，从而进行美化修饰处理。但这需要依赖于form组件，所以你必须加载 form，并且执行一个实例。值得注意的是：导航的Hover效果、Tab选项卡等同理（它们需依赖 element 模块）">
-                            <p>当你使用表单时，Layui会对select、checkbox、radio等原始元素隐藏，从而进行美化修饰处理。但这需要依赖于form组件，所以你必须加载 form，并且执行一个实例。值得注意的是：导航的Hover效果、Tab选项卡等同理（它们需依赖 element 模块）</p>
-                        </td>
-                    </tr>
+                        <volist name="result.EcnReview" id="value">
+                            <tr>
+                                <present name="value.colspan">
+                                    <td rowspan="{$value.colspan}">
+                                        <eq name="value.is_dcc" value="Y">
+                                            DCC评审
+                                        <else/>
+                                            {$value.along} 级评审
+                                        </eq>
+                                    </td>
+                                </present>
+                                <td>{$value.user.nickname}</td>
+                                <td>
+                                    <span class="{$value.className}">{$value.stateName}</span>
+                                </td>
+                                <td>
+                                    <notempty name="value.review_time">{$value.review_time|date="Y-m-d H:i", ###}</notempty>
+                                </td>
+                                <td title="{$value.remark}">
+                                    <p class="wrap">{$value.remark}</p>
+                                </td>
+                            </tr>
+                        </volist>
                     </tbody>
                 </table>
             </div>
         </div>
+
+        {//如果不存在历史记录则不加载}
+        <present name="HistoryReview">
+            <div class="section-grey-table history-review">
+                <div class="section-title">评审记录</div>
+                <div class="section-body">
+                    <table class="layui-table">
+                        <thead>
+                        <tr>
+                            <th>评审次数</th>
+                            <th>状态</th>
+                            <th>创建人</th>
+                            <th>创建时间</th>
+                            <th>最后编辑时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <volist name="HistoryReview" id="value">
+                                <tr>
+                                    <td><a href="__ROOT__/ECN/detail/{$value.ecn_number}/{$value.id}">第{$value.seq}次评审</a></td>
+                                    <td>
+                                        <span class="{$value.className}">{$value.stateName}</span>
+                                    </td>
+                                    <td>{$value.User.nickname}</td>
+                                    <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
+                                    <td>
+                                        <notempty name="value.lastedit_time">
+                                            {$value.lastedit_time|date="Y-m-d H:i", ###}
+                                        </notempty>
+                                    </td>
+                                </tr>
+                            </volist>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </present>
+
     </div>
 
+    <script>
+        layui.use(['form', 'layer', 'layedit'], function() {
+            // init layui components.
+            var form = layui.form(),
+                    layer = layui.layer,
+                    layedit = layui.layedit;
 
-    <div class="filelist-wrapper sr-only">
-        <div class="filelist-box">
-            <table class="layui-table">
-                <thead>
-                <tr>
-                    <th>文件号</th>
-                    <th>版本号</th>
-                    <th>附件</th>
-                    <th>文件描述</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>EVT00000157</td>
-                    <td>V1.63</td>
-                    <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                            class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a></td>
-                    <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                        <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                            即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                            Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                    </td>
-                    <td>
-                        <button type="button" class="layui-btn layui-btn-primary">添加</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>EVT00000157</td>
-                    <td>V1.63</td>
-                    <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                            class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a></td>
-                    <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                        <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                            即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                            Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                    </td>
-                    <td>
-                        <button type="button" class="layui-btn layui-btn-primary">添加</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>EVT00000157</td>
-                    <td>V1.63</td>
-                    <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                            class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a></td>
-                    <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                        <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                            即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                            Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                    </td>
-                    <td>
-                        <button type="button" class="layui-btn layui-btn-primary">添加</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>EVT00000157</td>
-                    <td>V1.63</td>
-                    <td><a href="#" title="Microsoft Office ExcMicrosoft.docx"><i
-                            class="file-icon file-icon-ext-docx"></i> Microsoft Office ExcMicrosoft.docx</a></td>
-                    <td title="由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的Response Headers加上属性：Access-Control-Allow-Origin: *">
-                        <p>由于浏览器存在同源策略，所以如果layui（里面含图标字体文件）所在的地址与你当前的页面地址不在同一个域下，
-                            即会出现图标跨域问题。所以要么你就把Layui与网站放在同一服务器，要么就对Layui所在的资源服务器的
-                            Response Headers加上属性：Access-Control-Allow-Origin: *</p>
-                    </td>
-                    <td>
-                        <button type="button" class="layui-btn layui-btn-primary">添加</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+            // 定义layedit编辑器配置
+            var layeditOptions = {
+                height: 150
+            }
+
+            // 实例化layedit编辑器
+            var layeditDescription = layedit.build('layedit-description', layeditOptions);
+            var layeditReason = layedit.build('layedit-reason', layeditOptions);
+
+            // 编辑
+            $('.edit-ecn-btn').click(function(){
+                $('.preview-condition').addClass('sr-only');
+                $('.edit-condition').removeClass('sr-only');
+            });
+
+            // 取消编辑
+            $('.cancel-edit-btn').click(function(){
+                $('.edit-condition').addClass('sr-only');
+                $('.preview-condition').removeClass('sr-only');
+                $('#content').scrollTop(0);
+            });
+
+            var reviews = null;   // 评审项数据
+
+            var Checkeds = <php>echo json_encode($result['Checkeds']);</php>;
+            var reviewItems = <php>echo json_encode($reviewItems);</php>;
+            var _id = <php>echo  $result['id'];</php>;
+            var _ecnType = '<php>echo  $result['ecn_type'];</php>';
+
+            //console.log(_id, _ecnType);
+
+            var reviewSelected = [];    // 被添加到显示的评审项(初始化结构)
+
+            for( let key in reviewItems.InReviews ){
+                reviewSelected.push(reviewItems.InReviews[key]);
+            }
+
+            //console.log(reviewSelected);
+
+            $('.selected-files').html( renderReviewItemList('{$result.ecn_type}', reviewSelected, false) );
+
+            $.post(ThinkPHP['AJAX'] + '/ECN/listenEcnRuleChange', {
+                ruleid: {$result.quote_rule}
+            }, function(response){
+                renderReviewRule(response);
+                renderReviewGroup(response, Checkeds);
+            });
+
+            // 监听规则变动
+            form.on('select(rule)', function(data){
+                if( data.value > 0 ){
+                    $.post(ThinkPHP['AJAX'] + '/ECN/listenEcnRuleChange', {
+                        ruleid: data.value
+                    }, function(response){
+                        renderReviewRule(response);
+                        renderReviewGroup(response);
+                    });
+                }
+            });
+
+            // 监听提交
+            form.on('submit(saveECN)', function(data){
+                // 验证表单提交时数据的合法性
+                if( $.trim(layedit.getText(layeditDescription)) == '' ){
+                    $('#content').scrollTop(0);
+                    layer.msg('请输入变更描述', {icon: 2, time: 1500});
+                    return false;
+                }
+                if( $.trim(layedit.getText(layeditReason)) == '' ){
+                    $('#content').scrollTop(0);
+                    layer.msg('请输入变更原因', {icon: 2, time: 1500});
+                    return false;
+                }
+                if( Object.keys(reviewSelected).length < 1 ){
+                    let top = $('#affect')[0].offsetTop;
+                    $('#content').scrollTop(top-20);
+                    layer.msg('请添加文件', {icon: 2, time: 1500});
+                    return false;
+                }
+                if( $('.review-group').children().length ){
+                    for( let i=0; i < $('.review-group').children().length; i++ ){
+                        if($('.review-group .layui-form-item').eq(i).find('.ps-wrapper .layui-form-checked').length < 1){
+                            let top = $('.review-group .layui-form-item').eq(i)[0].offsetTop;
+                            $('#content').scrollTop(top-20);
+                            layer.msg('请检查'+ ( i + 1 ) +'级评审是否未选择人员', {icon: 2, time: 1500});
+                            return false;
+                        }
+                    }
+                }else{
+                    let top = $('#review-rule')[0].offsetTop;
+                    $('#content').scrollTop(top-20);
+                    layer.msg('请配置评审规则', {icon: 2, time: 1500});
+                    return false;
+                }
+                if( $('#dcc .ps-wrapper .layui-form-checked').length < 1 ){
+                    let top = $('#dcc')[0].offsetTop;
+                    $('#content').scrollTop(top-20);
+                    layer.msg('请选择dcc评审专员', {icon: 2, time: 1500});
+                    return false;
+                }
+                var review_group = [];
+                var dcc_review = [];
+                // 拼装评审组数据
+                $('.review-group .layui-form-item').each(function(index){
+                    var groupData = [];
+                    $('.review-group .layui-form-item').eq(index).find('.ps-wrapper .layui-form-checkbox').each(function(i){
+                        if( $(this).hasClass('layui-form-checked') ){
+                            let val = $(this).prev().attr('value');
+                            groupData.push(val);
+                        }
+                    });
+                    review_group.push(groupData);
+                });
+                // 拼装dcc评审
+                $('#dcc .ps-wrapper .layui-form-checkbox').each(function(i){
+                    if( $(this).hasClass('layui-form-checked') ){
+                        let val = $(this).prev().attr('value');
+                        dcc_review.push(val);
+                    }
+                });
+                var postData = {
+                    id: _id,
+                    ecn_type: _ecnType,
+                    change_description: layedit.getContent(layeditDescription),
+                    change_reason: layedit.getContent(layeditReason),
+                    quote_rule: data.field.quote_rule,
+                    reviewSelected: reviewSelected,
+                    review_group: review_group,
+                    dcc_review: dcc_review
+                }
+                // 组装数据并提交
+                $.post(ThinkPHP['AJAX'] + '/ECN/detail', postData, function(response){
+                    if( response.flag ){
+                        layer.msg(response.msg, {icon: 1, time: 1500});
+                        setTimeout(function(){
+                            location.replace(location.href);
+                        }, 1500);
+                    }else{
+                        layer.msg(response.msg, {icon: 2, time: 3000});
+                    }
+                });
+                return false;
+            });
+
+            // 渲染评审规则
+            function renderReviewRule(data){
+                var reviewHTML = '';
+                var rulePreview = $('.rule-preview');
+
+                for( let item in data.recipients ){     // 评审级
+                    reviewHTML += '<div class="lv-row">';
+                    reviewHTML += '<div class="lv-mc">'+ (Number(item) + 1) +' 级评审：</div>';
+                    reviewHTML += '<div class="lv-itm">';
+                    for( let post in data.recipients[item] ){
+                        reviewHTML += '<span class="js-zw">'+ data.recipients[item][post].name +'</span>';
+                    }
+                    reviewHTML += '<div class="clearfix"></div>';
+                    reviewHTML += '</div>';
+                    reviewHTML += '</div>';
+                }
+                reviewHTML += '<div class="lv-row">';
+                reviewHTML += '<div class="lv-mc">抄送列表：<small>抄送列表将通知到包含该职位的所有人员</small></div>';
+                reviewHTML += '<div class="lv-itm">';
+                for( let item in data.ccs ){     // 抄送列表
+                    reviewHTML += '<span class="js-zw">'+ data.ccs[item].name +'</span>';
+                }
+                reviewHTML += '<div class="clearfix"></div>';
+                reviewHTML += '</div>';
+                reviewHTML += '</div>';
+                rulePreview.html(reviewHTML);
+                if($('#rule .default-option').length > 0) $('#rule .default-option').remove();  // 当选择一次规则后移除掉默认显示的选择option
+                form.render();
+                rulePreview.show();
+            }
+
+            // 渲染评审组
+            function renderReviewGroup(data, checkeds = []){
+                var reviewGroupHTML = '';
+                var reviewGroup = $('.review-group');
+
+                for( var group in data.recipients ){
+                    reviewGroupHTML += '<div class="layui-form-item">';
+                    reviewGroupHTML += '<label class="layui-form-label">'+ (Number(group) + 1) +' 级评审</label>';
+                    reviewGroupHTML += '<div class="layui-input-block">';
+                    reviewGroupHTML += '<div class="ps-wrapper">';
+                    for( let item in data.recipients[group] ){
+                        if( data.recipients[group][item].recipient_2D ){
+                            reviewGroupHTML += '<div class="gw-mc">'+ data.recipients[group][item].name +'</div>';
+                        }
+                        if( data.recipients[group][item].recipient_2D ){
+                            for( let key in data.recipients[group][item].recipient_2D ){
+                                if( Object.keys(checkeds).length > 0 ) {
+                                    if ( contains(checkeds[group], data.recipients[group][item].recipient_2D[key].id) ) {
+                                        reviewGroupHTML += '<input type="checkbox" lay-verify="required" name="reviewGroup' + key + '[' + data.recipients[group][item].recipient_2D[key].id + ']" title="' + data.recipients[group][item].recipient_2D[key].nickname + '" lay-skin="primary" value="' + data.recipients[group][item].recipient_2D[key].id + '" title="' + data.recipients[group][item].recipient_2D[key].nickname + '" checked>';
+                                    } else {
+                                        reviewGroupHTML += '<input type="checkbox" lay-verify="required" name="reviewGroup' + key + '[' + data.recipients[group][item].recipient_2D[key].id + ']" title="' + data.recipients[group][item].recipient_2D[key].nickname + '" lay-skin="primary" value="' + data.recipients[group][item].recipient_2D[key].id + '" title="' + data.recipients[group][item].recipient_2D[key].nickname + '">';
+                                    }
+                                }else{
+                                    reviewGroupHTML += '<input type="checkbox" lay-verify="required" name="reviewGroup'+ key +'['+ data.recipients[group][item].recipient_2D[key].id +']" title="'+ data.recipients[group][item].recipient_2D[key].nickname +'" lay-skin="primary" value="'+ data.recipients[group][item].recipient_2D[key].id +'" title="'+ data.recipients[group][item].recipient_2D[key].nickname +'">';
+                                }
+                            }
+                        }
+                    }
+                    reviewGroupHTML += '</div>';
+                    reviewGroupHTML += '</div>';
+                    reviewGroupHTML += '</div>';
+                    reviewGroup.html(reviewGroupHTML);
+                    form.render();
+                }
+            }
+
+            // 添加文件
+            $('.choose-btn').click(function(){
+                $.post(ThinkPHP['AJAX'] + '/ECN/getDataOfCurrentEcnType', {
+                    currentType: '{$result.ecn_type}'
+                }, function(response){
+                    var HTML = renderReviewItemList('{$result.ecn_type}', response);
+                    reviews = response;
+                    layer.open({
+                        type: 1,
+                        id: 'LAYER_CONTAINER',
+                        title: '选择文件',
+                        area: ['1000px', '500px'],
+                        shade: [0.5, '#000'],
+                        shadeClose: true,
+                        content: HTML
+                    })
+                });
+            });
+
+            // 渲染受影响的数据列
+            function renderReviewItemList(type, data, InLayer = true){
+                var RenderHTML = '';
+                var head = '<thead><tr><th>文件号</th><th>版本号</th><th>附件</th><th>文件描述</th><th>操作</th></tr></thead>';
+                if( type === 'file' ){
+                    if( Object.keys(data).length ){
+                        RenderHTML += '<table class="layui-table">';
+                        if( InLayer ) RenderHTML += head;
+                        RenderHTML += '<tbody>';
+                        for( let key in data ){
+                            RenderHTML += '<tr>';
+                            RenderHTML += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/File/detail/id/'+ data[key].id +'">'+ data[key].filenumber +'</a></td>';
+                            RenderHTML += '<td>'+ data[key].version +'</td>';
+                            RenderHTML += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/'+ data[key].attachment.path +'" target="_blank" title="'+ data[key].attachment.name +'"><i class="file-icon file-icon-ext-'+ data[key].attachment.ext +'"></i> '+ data[key].attachment.name +'</a></td>';
+                            RenderHTML += '<td title="'+ data[key].description +'"><p>'+ data[key].description +'</p></td>';
+                            //console.log(data[key].description);
+                            if( InLayer ){  // 如果渲染在弹出层中则按钮显示为添加，反之则为移除
+                                if( Object.keys(reviewSelected).length ){   // 检查已选择的数据是否为空
+                                    if( contains(reviewItems.InReviewIds, data[key].id) ){     // 检查已选择的数据里面是否已经存在对应的item
+                                        RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-normal layui-btn-disabled addReviewItem" index="'+ key +'" ecnType="'+ type +'" actv="'+ data[key].id +'">添加</button></td>';
+                                    }else{
+                                        RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-normal addReviewItem" index="'+ key +'" ecnType="'+ type +'" actv="'+ data[key].id +'">添加</button></td>';
+                                    }
+                                }else{
+                                    RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-normal addReviewItem" index="'+ key +'" ecnType="'+ type +'" actv="'+ data[key].id +'">添加</button></td>';
+                                }
+                            }else{
+                                RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-danger removeReviewItem" index="'+ key +'" ecnType="'+ type +'" actv="'+ data[key].id +'">移除</button></td>';
+                            }
+                            RenderHTML += '</tr>';
+                        }
+                        RenderHTML += '</tbody>';
+                        RenderHTML += '</table>';
+                    }else{
+                        RenderHTML = '<div style="padding: 219px 0;text-align: center;">没有数据</div>';
+                    }
+                }else{
+                    // 当评审类型为非文件时的处理方案...
+                }
+                return RenderHTML;
+            }
+
+            // 发起评审
+            $('.start-review-btn').click(function(){
+                var loading = layer.load(1, {   // 提交时创建loading层
+                    shade: [0.5,'#fff']     //0.5透明度的白色背景
+                });
+                $.post(ThinkPHP['AJAX'] + '/ECN/InitiateReview',{
+                    id: {$result.id},
+                    ecn_type: '{$result.ecn_type}'
+                }, function(response){
+                    if( response.flag ){
+                        layer.msg(response.msg, {icon: 1, time: 1000});
+                        setTimeout(function(){
+                            location.replace(location.href);
+                        }, 1000);
+                    }else{
+                        layer.msg(response.msg, {icon: 2, time: 3000});
+                        setTimeout(function(){
+                            layer.close(loading);
+                        }, 3000);
+                    }
+                });
+            });
+
+            // 添加评审项button
+            $(document).on('click', '#LAYER_CONTAINER .addReviewItem', function(){
+                if( !$(this).hasClass('layui-btn-disabled') ){
+                    let index = $(this).attr('index');
+                    let ecnType = $(this).attr('ecnType');
+                    let actv = $(this).attr('actv');
+                    reviewItems.InReviewIds.push(actv);
+                    reviewSelected.push(reviews[index]);
+                    $('.selected-files').html(renderReviewItemList(ecnType, reviewSelected, false));
+                    $(this).addClass('layui-btn-disabled');
+                }
+            });
+
+            // 移除评审项button
+            $(document).on('click', '.selected-files .removeReviewItem', function(){
+                let index = $(this).attr('index');
+                let ecnType = $(this).attr('ecnType');
+                let actv = $(this).attr('actv');
+                $.post(ThinkPHP['AJAX'] + '/ECN/removeOriginEcnItem', {
+                    ecnType: ecnType,
+                    ecn_id: {$result.id},
+                    assoc: actv
+                }, function(response){
+                    if( !response.flag ){
+                        layer.msg(response.msg, {icon: 2, time: 3000});
+                    }
+                });
+                let idx = reviewItems.InReviewIds.indexOf(actv);
+                if( idx > -1 ) reviewItems.InReviewIds.splice(idx, 1);
+                reviewSelected.splice(index, 1);
+                let resultHtml = renderReviewItemList(ecnType, reviewSelected, false);
+                $('.selected-files').html(resultHtml);
+            });
+
+            // 监听滚动
+            $('#content').scroll(function(){
+                if( $('#ReviewBtn') ){
+                    if( $('#scrollBackTop').hasClass('sr-only') ){
+                        $('#ReviewBtn').css({bottom : '60px'});
+                    }else{
+                        $('#ReviewBtn').css({bottom : '122px'});
+                    }
+                }
+            });
+
+            var extra = false;  // 添加评审人开关
+
+            // 点击打开评审模态框
+            $('#ReviewBtn').click(function(){
+                var reviewBoxHtml = $('.review-box-wrapper').html();
+                layer.open({
+                    type: 1,
+                    id: 'REVIEW_CONTAINER',
+                    title: '评审',
+                    area: ['700px','480px'],
+                    shade: [0.5, '#000'],
+                    shadeClose: true,
+                    content: reviewBoxHtml,
+                    end: function(){
+                        extra = false;  // 重置开关
+                    }
+                });
+                form.render();  // 解决layui组件被添加到layer中的失效问题
+            });
+
+            // 监听是否开启了选择额外的评审人
+            form.on('checkbox(Extra)', function(data){
+                let _next = $(data.elem).parent().next();
+                if( !extra ){
+                    _next.removeClass('sr-only');
+                    extra = true;
+                }else{
+                    _next.addClass('sr-only');
+                    extra = false;
+                }
+            });
+
+            // 监听评审结果提交
+            form.on('submit(submitReview)', function(data){
+                var SRloading = layer.load( 1, {   // 创建loading层
+                    shade: [0.5, '#fff']     //0.5透明度的白色背景
+                });
+                data.field.ecn_id = _id;
+                data.field.along = {$result.current_along};
+                data.field.ecn_type = _ecnType;
+                $.post(ThinkPHP['AJAX'] + '/ECN/postReview', data.field, function(response){
+                    if( response.flag ){
+                        layer.msg(response.msg, {icon: 1, time: 1000});
+                        setTimeout(function(){
+                            location.replace(location.href);
+                        }, 1000);
+                    }else{
+                        layer.msg(response.msg, {icon: 2, time: 3000});
+                        setTimeout(function(){
+                            layer.close(SRloading);
+                        }, 3000);
+                    }
+                });
+                return false;
+            });
+
+            // 监听评审状态，控制添加评审人是否显示
+            form.on('radio(reviewState)', function(data){
+                if( data.value == 'REFUSE' ){
+                    $('#REVIEW_CONTAINER .tj-psr').addClass('sr-only');
+                }else{
+                    $('#REVIEW_CONTAINER .tj-psr').removeClass('sr-only');
+                }
+            });
+
+            $('.rollback-btn').click(function(){
+                var RBloading = layer.load( 1, {   // 创建loading层
+                    shade: [0.5, '#fff']     //0.5透明度的白色背景
+                });
+                $.post(ThinkPHP['AJAX'] + '/ECN/rollback', {
+                    id: _id,
+                    ecn_type: _ecnType
+                }, function(response){
+                    if( response.flag ){
+                        layer.msg(response.msg, {icon: 1, time: 1000});
+                        setTimeout(function(){
+                            location.replace(location.href);
+                        }, 1000);
+                    }else{
+                        layer.msg(response.msg, {icon: 2, time: 3000});
+                        setTimeout(function(){
+                            layer.close(RBloading);
+                        }, 3000);
+                    }
+                })
+            });
+
+            /**
+             * 判断值是否在数组中，$.inArray存在一些问题
+             * @param arr 目标数组
+             * @param obj 查找值
+             * @returns {boolean}
+             */
+            function contains(arr, obj) {
+                let i = arr.length;
+                while (i--) {
+                    if (arr[i] === obj) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+
+        });
+    </script>
+
 
 </block>
 
 
+<block name="modals">
 
+    <present name="reviewAuth">
+        <div id="ReviewBtn">评审</div>
+        <div class="review-box-wrapper">
+            <div class="review-box">
+                <form class="layui-form">
+                    <div class="layui-form-item" style="margin-bottom: 15px;">
+                        <label class="layui-form-label" style="width: auto;">状态</label>
+                        <div class="layui-input-block" style="margin-left: 100px;">
+                            <input type="radio" name="review_state" value="PASS" title="通过" lay-filter="reviewState" checked>
+                            <input type="radio" name="review_state" value="REFUSE" title="拒绝" lay-filter="reviewState">
+                        </div>
+                    </div>
+                    <div class="layui-form-item tj-psr">
+                        <label class="layui-form-label" style="width: auto;">添加评审人</label>
+                        <div class="layui-input-inline" style="width: 30px;">
+                            <input type="checkbox" name="extra" title="" lay-skin="primary" lay-filter="Extra">
+                        </div>
+                        <div class="layui-input-inline sr-only" style="width:500px;">
+                            <select name="review_user" lay-verify="required" lay-search style="width: 100px;">
+                                <volist name="AllUsers" id="value">
+                                    <option value="{$value.id}">{$value.nickname}</option>
+                                </volist>
+                            </select>
+                            <div class="layui-form-mid layui-word-aux" style="padding-bottom: 0;">选择需要添加的额外的评审人并与您当前处于同一级评审</div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label" style="width: auto;">备注</label>
+                        <div class="layui-input-block" style="margin-left: 100px;">
+                            <textarea name="remark" placeholder="" class="layui-textarea" style="min-height: 150px;max-height: 180px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-bottom: 10px;">
+                        <div class="layui-input-block" style="margin-left: 100px;">
+                            <button class="layui-btn" lay-submit lay-filter="submitReview">提交数据</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </present>
+
+
+
+</block>

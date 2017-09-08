@@ -183,7 +183,11 @@
                     <th class="th_comments">备注</th>
                     <th class="th_state">进度</th>
                     <th class="th_status">状态</th>
-                    <eq name="Think.session.user.id" value="$auth">
+                    <in name="Think.session.user.id" value="$auth">
+                        <th class="th_editor">操作</th>
+                        <th class="th_mark">标记</th>
+                    </in>
+                    <eq name="Think.session.user.id" value="$auths">
                         <th class="th_editor">操作</th>
                         <th class="th_mark">标记</th>
                     </eq>
@@ -225,7 +229,7 @@
                             <td class="td_center"><span class=""></span></td>
                         </eq>
 
-                        <eq name="Think.session.user.id" value="$auth">
+                        <eq name="Think.session.user.id" value="$auths">
                             <td class="operation_td {$value.plan.class}">
                                 <if condition="isset($value['show']) AND $value['show'] eq 'true'">
                                     <button class="editor-btn btn btn-default btn-sm" plan_project="{$getID}" step="{$value.gate}" plan_node="{$value.id}"><i class="icon-edit"></i></button>
@@ -233,6 +237,15 @@
                             </td>
                             <td class="td_mark"><button type="button" plan_project="{$getID}" plan_node="{$value.id}" class="layui-btn-primary btn-mark" title="标记为完成状态">完成</button></td>
                         </eq>
+
+                        <in name="Think.session.user.id" value="$auth">
+                            <td class="operation_td {$value.plan.class}">
+                                <if condition="isset($value['show']) AND $value['show'] eq 'true'">
+                                    <button class="editor-btn btn btn-default btn-sm" plan_project="{$getID}" step="{$value.gate}" plan_node="{$value.id}"><i class="icon-edit"></i></button>
+                                </if>
+                            </td>
+                            <td class="td_mark"><button type="button" plan_project="{$getID}" plan_node="{$value.id}" class="layui-btn-primary btn-mark" title="标记为完成状态">完成</button></td>
+                        </in>
                     </tr>
                 </volist>
             </tbody>
