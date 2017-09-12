@@ -149,7 +149,10 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
                     location.replace(location.href);
                 }, 1000);
             }else{
-                layer.msg(response.msg, {icon : 2,time : 1000});
+                layer.msg(response.msg, {icon : 2,time : 3000});
+                setTimeout(function(){
+                    location.replace(location.href);
+                }, 3000);
             }
         })
     }

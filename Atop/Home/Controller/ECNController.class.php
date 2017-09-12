@@ -247,7 +247,7 @@ class ECNController extends AuthController {
         if( IS_POST ){
             $model = D('Ecn');
             if( I('post.currentType') == 'file' ){
-                $result = $model->table(C('DB_PREFIX').'file_number')->where('createuser='.session('user')['id'].' AND state <> "InReview" AND state <> "WaitingEdit"')->order('createtime DESC')->select();
+                $result = $model->table(C('DB_PREFIX').'file_number')->where('createuser='.session('user')['id'].' AND state not in ( "InReview","WaitingEdit","Archiving" )')->order('createtime DESC')->select();
                 $result = $model->jsonToArray($result);
                 $this->ajaxReturn($result);
             }else{

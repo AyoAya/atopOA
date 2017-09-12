@@ -14,7 +14,7 @@ class FileController extends AuthController {
     # 初始化文件管理首页
     public function index(){
         $model = new Model();
-        $count = $model->table(C('DB_PREFIX').'file_number')->count();
+        $count = $model->table(C('DB_PREFIX').'file_number')->where('upgrade="N"')->count();
         //数据分页
         $page = new Page($count,C('LIMIT_SIZE'));
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
@@ -25,9 +25,9 @@ class FileController extends AuthController {
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
         $result = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'user b')
-                          ->field('a.id,a.filenumber,a.version,a.state,a.createtime,b.nickname')
-                          ->where('a.createuser = b.id')
-                          ->order('lastedit_time DESC,createtime DESC')
+                          ->field('a.id,a.filenumber,a.version,a.state,a.createtime,a.createuser,b.nickname')
+                          ->where('a.createuser = b.id AND a.upgrade="N"')
+                          ->order('createtime DESC')
                           ->limit($page->firstRow.','.$page->listRows)
                           ->select();
         foreach( $result as $key=>&$value ){
@@ -46,23 +46,58 @@ class FileController extends AuthController {
             $model = new Model();
             $postData = I('post.','',false);
             $fileData = $model->table(C('DB_PREFIX').'file_number')->find($postData['id']);
-            if( $fileData['attachment'] != '' ){    // 如果附件不为空，则删除以前的附件
-                $fileInfo = json_decode($fileData['attachment'], true);
-                $this->removeFile($fileInfo['path']);
+            if( $fileData['state'] == 'Archiving' ){    // 如果当前状态为归档，则说明该操作为升版
+                $model->startTrans();
+                try{
+                    $changeOldUpgrade['id'] = $postData['id'];
+                    $changeOldUpgrade['upgrade'] = 'Y';
+                    $changeRow = $model->table(C('DB_PREFIX').'file_number')->save($changeOldUpgrade);  // 将以往版本的升版状态改为Y表示该文件已经升版过了
+                    if( $changeRow === false ) throw new \Exception('升版失败');
+                    $OldVersion = (float)substr($fileData['version'], 1);  // 获取之前版本准备对比
+                    $NewVersion = (float)substr($postData['version'], 1);   // 最新版本
+                    if( $NewVersion < $OldVersion ) throw new \Exception('升版的版本号应当比之前高');
+                    $upgradeData['type'] = $fileData['type'];
+                    $upgradeData['filenumber'] = $fileData['filenumber'];
+                    $upgradeData['attachment'] = $postData['attachment'];
+                    $upgradeData['description'] = $postData['description'];
+                    $upgradeData['state'] = 'WaitingReview';
+                    $upgradeData['version'] = strtoupper($postData['version']);    // 为保证版本的一致性，一律将版本转换为大写
+                    $upgradeData['createuser'] = session('user')['id'];
+                    $upgradeData['createtime'] = time();
+                    $addId = $model->table(C('DB_PREFIX').'file_number')->add($upgradeData);
+                    if( !$addId ) throw new \Exception('升版失败');
+                } catch (\Exception $exception) {
+                    $model->rollback();
+                    $this->ajaxReturn(['flag'=>0, 'msg'=>$exception->getMessage()]);
+                }
+                $this->ajaxReturn(['flag'=>1, 'msg'=>'升版成功']);
+            }else{
+                if( $fileData['attachment'] != '' && $fileData['state'] != 'Archiving' ){    // 如果附件不为空并且状态不为已归档，则删除以前的附件
+                    $fileInfo = json_decode($fileData['attachment'], true);
+                    $this->removeFile($fileInfo['path']);
+                }
+                $postData['version'] = strtoupper($postData['version']);    // 为保证版本的一致性，一律将版本转换为大写
+                $postData['state'] = 'WaitingReview';
+                $postData['frequency'] = ((int)$fileData['frequency'] + 1); // 每保存一次修改次数+1
+                $postData['lastedit_time'] = time();
+                $row = $model->table(C('DB_PREFIX').'file_number')->save($postData);
+                $row !== false ? $this->ajaxReturn(['flag'=>1, 'msg'=>'保存成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'保存失败']);
             }
-            $postData['version'] = strtoupper($postData['version']);    // 为保证版本的一致性，一律将版本转换为大写
-            $postData['state'] = 'WaitingReview';
-            $postData['frequency'] = ((int)$fileData['frequency'] + 1); // 每保存一次修改次数+1
-            $postData['lastedit_time'] = time();
-            $row = $model->table(C('DB_PREFIX').'file_number')->save($postData);
-            $row !== false ? $this->ajaxReturn(['flag'=>1, 'msg'=>'保存成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'保存失败']);
         }else{
-            if( I('get.id') && is_numeric(I('get.id')) ){
+            if( I('get.filenumber') ){
                 $model = new Model();
-                $result = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'user b')
-                                ->field('a.id,a.filenumber,a.state,a.version,a.attachment,a.description,a.createtime,b.nickname')
-                                ->where('a.createuser = b.id AND a.id = '.I('get.id'))
-                                ->select()[0];
+                if( I('get.id') ){
+                    $result = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'user b')
+                        ->field('a.id,a.filenumber,a.state,a.version,a.attachment,a.description,a.upgrade,a.createtime,b.nickname,b.id user_id')
+                        ->where('a.createuser = b.id AND a.id = '.I('get.id'))
+                        ->select()[0];
+                }else{
+                    $result = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'user b')
+                        ->field('a.id,a.filenumber,a.state,a.version,a.attachment,a.description,a.upgrade,a.createtime,b.nickname,b.id user_id')
+                        ->where('a.createuser = b.id AND a.filenumber = "'.I('get.filenumber').'"')
+                        ->order('a.version DESC,id DESC')
+                        ->find();
+                }
                 if( $result['attachment'] != '' ) $result['file'] = json_decode($result['attachment'], true); // 如果存在附件则将json转数组
                 $result['className'] = $this->fetchClassStyle($result['state']);
                 $result['stateName'] = $this->fetchStateName($result['state']);
@@ -72,23 +107,20 @@ class FileController extends AuthController {
                                         ->where('a.createuser = b.id AND filenumber = "'.$result['filenumber'].'" AND version <> "'.$result['version'].'"')
                                         ->order('version DESC')
                                         ->select();
-
                 // 获取当前文件关联的ecn
                 $ecnAssocData = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'ecn b,'.C('DB_PREFIX').'ecn_review_item c')
                                   ->field('b.id,b.ecn_number,b.state')
-                                  ->where('a.id=c.assoc AND b.id=c.ecn_id AND a.id='.I('get.id'))
+                                  ->where('a.id=c.assoc AND b.id=c.ecn_id AND a.id='.$result['id'])
                                   ->order('c.ecn_id DESC')
-                                  ->select();
+                                  ->find();
                 // 如果不存在关联的ecn则说明该文件并没有被添加到ecn评审
                 if( $ecnAssocData ){
-                    foreach($ecnAssocData as $key=>&$value){
-                        if( $value['state'] == 'InReview' ){
-                            $ecnAssoc['new'][] = $value;
-                        }else{
-                            $ecnAssoc['history'][] = $value;
-                        }
+                    $this->assign('ecnAssoc', $ecnAssocData);
+                }
+                foreach( $beforeVersions as $key=>&$value ){
+                    if( !empty($value['attachment']) ){
+                        $value['attachment'] = json_decode($value['attachment'], true);
                     }
-                    $this->assign('ecnAssoc', $ecnAssoc);
                 }
                 $this->assign('beforeVersions', $beforeVersions);
                 $this->display();
@@ -135,7 +167,7 @@ class FileController extends AuthController {
             $rules = $this->getAllFileRules();
             $this->assign('rules', $rules);
             $model = new Model();
-            $count = $model->table(C('DB_PREFIX').'file_number')->count();
+            $count = $model->table(C('DB_PREFIX').'file_number')->where('upgrade="N"')->count();
             //数据分页
             $page = new Page($count,C('LIMIT_SIZE'));
             $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
@@ -145,7 +177,7 @@ class FileController extends AuthController {
             if(C('PAGE_STATUS_INFO')){
                 $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
             }
-            $result = $model->table(C('DB_PREFIX').'file_number')->where( ['createuser'=>session('user')['id']] )->order('createtime DESC')->limit($page->firstRow.','.$page->listRows)->select();    // 获取所有属于当前登录用户的文件号
+            $result = $model->table(C('DB_PREFIX').'file_number')->where( ['createuser'=>session('user')['id'], 'upgrade'=>'N'] )->order('createtime DESC')->limit($page->firstRow.','.$page->listRows)->select();    // 获取所有属于当前登录用户的文件号
             foreach( $result as $key=>&$value ){
                 $value['className'] = $this->fetchClassStyle($value['state']);
                 $value['stateName'] = $this->fetchStateName($value['state']);

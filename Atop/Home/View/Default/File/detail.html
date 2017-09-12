@@ -57,11 +57,7 @@
                         <td>ECN</td>
                         <td>
                             <present name="ecnAssoc">
-                                <volist name="ecnAssoc.new" id="value">
-                                    <a href="__ROOT__/ECN/detail/{$value.ecn_number}">{$value.ecn_number}</a>
-                                </volist>
-                                <else/>
-                                无
+                                <a href="__ROOT__/ECN/detail/{$ecnAssoc.ecn_number}">{$ecnAssoc.ecn_number}</a>
                             </present>
                         </td>
                     </tr>
@@ -76,11 +72,25 @@
                     <tr>
                         <td>操作</td>
                         <td>
-                            <eq name="result.state" value="InReview">
-                                <button type="button" class="layui-btn layui-btn-primary layui-btn-disabled">编辑</button>
+                            <neq name="result.state" value="InReview">
+                                <neq name="Think.session.user.id" value="$result.user_id">
+                                    <button type="button" class="layui-btn layui-btn-primary layui-btn-disabled">
+                                        <eq name="result.state" value="Archiving">升版<else/>编辑</eq>
+                                    </button>
+                                <else/>
+                                    <eq name="result.upgrade" value="Y">
+                                        <button type="button" class="layui-btn layui-btn-primary layui-btn-disabled">
+                                            <eq name="result.state" value="Archiving">升版<else/>编辑</eq>
+                                        </button>
+                                    <else/>
+                                        <button type="button" class="layui-btn layui-btn-primary xq-edit-btn">
+                                            <eq name="result.state" value="Archiving">升版<else/>编辑</eq>
+                                        </button>
+                                    </eq>
+                                </neq>
                             <else/>
-                                <button type="button" class="layui-btn layui-btn-primary xq-edit-btn">编辑</button>
-                            </eq>
+                                <button type="button" class="layui-btn layui-btn-primary layui-btn-disabled">编辑</button>
+                            </neq>
                         </td>
                     </tr>
                 </tbody>
@@ -88,84 +98,102 @@
         </div>
     </div>
 
-    <neq name="result.state" value="BeRejected">
-        <div class="section-grey-table edit-condition sr-only">
-        <input type="hidden" name="id" value="{$result.id}" id="fileID">
-        <div class="section-title">编辑文件</div>
-        <div class="section-body">
-            <table class="layui-table">
-                <tbody>
-                    <tr>
-                        <td>文件号</td>
-                        <td>{$result.filenumber}</td>
-                    </tr>
-                    <tr>
-                        <td>版本</td>
-                        <td>
-                            <input type="text" class="layui-input pull-left" name="version" id="version" value="{$result.version}">
-                            <span class="tswb ipt-yc pull-left">请确保版本的正确格式（忽略大小写），例：V1.25</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>状态</td>
-                        <td>
-                            <span class="{$result.className}">{$result.stateName}</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>描述</td>
-                        <td>
-                            <textarea id="layedit-description" style="display: none;">
-                                {$result.description}
-                            </textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>附件</td>
-                        <td>
-                            <notempty name="result.file">
-                                <a href="__ROOT__/{$result.file.path}" target="_blank"><i class="file-icon file-icon-ext-{$result.file.ext}"></i> {$result.file.name}</a>
-                            </notempty>
-                            <div id="FilePick"><i class="icon-arrow-up"></i> 上传文件</div>
-                            <div class="uploader-attachment-queue"></div>
-                            <div class="tswb">注：一个文件号只能对应一个文件（文件上传只能单选），在有文件的情况下重新上传附件将会被替换。</div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>ECN</td>
-                        <td>
-                            <present name="ecnAssoc">
-                                <volist name="ecnAssoc.new" id="value">
-                                    <a href="__ROOT__/ECN/detail/{$value.ecn_number}">{$value.ecn_number}</a>
-                                </volist>
-                                <else/>
-                                无
-                            </present>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>创建人</td>
-                        <td>{$result.nickname}</td>
-                    </tr>
-                    <tr>
-                        <td>创建时间</td>
-                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
-                    </tr>
-                    <tr>
-                        <td>操作</td>
-                        <td>
-                            <button type="button" id="saveFileData" class="layui-btn">保存</button>
-                            <button type="button" class="layui-btn layui-btn-primary xq-cancel-btn">取消</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    </neq>
+    <eq name="Think.session.user.id" value="$result.user_id">
+        <neq name="result.state" value="BeRejected">
+            <div class="section-grey-table edit-condition sr-only">
+            <input type="hidden" name="id" value="{$result.id}" id="fileID">
+            <div class="section-title">编辑文件</div>
+            <div class="section-body">
+                <table class="layui-table">
+                    <tbody>
+                        <tr>
+                            <td>文件号</td>
+                            <td>{$result.filenumber}</td>
+                        </tr>
+                        <tr>
+                            <td>版本</td>
+                            <td>
+                                <input type="text" class="layui-input pull-left" name="version" id="version" value="{$result.version}">
+                                <span class="tswb ipt-yc pull-left">请确保版本的正确格式（忽略大小写），例：V1.25</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>状态</td>
+                            <td>
+                                <neq name="result.state" value="Archiving">
+                                    <span class="{$result.className}">{$result.stateName}</span>
+                                </neq>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>描述</td>
+                            <td>
+                                <textarea id="layedit-description" style="display: none;">
+                                    <neq name="result.state" value="Archiving">
+                                        {$result.description}
+                                    </neq>
+                                </textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>附件</td>
+                            <td>
+                                <neq name="result.state" value="Archiving">
+                                    <notempty name="result.file">
+                                        <a href="__ROOT__/{$result.file.path}" target="_blank"><i class="file-icon file-icon-ext-{$result.file.ext}"></i> {$result.file.name}</a>
+                                    </notempty>
+                                </neq>
+                                <div id="FilePick"><i class="icon-arrow-up"></i> 上传文件</div>
+                                <div class="uploader-attachment-queue"></div>
+                                <neq name="result.state" value="Archiving">
+                                    <div class="tswb">注：一个文件号只能对应一个文件（文件上传只能单选），在有文件的情况下重新上传附件将会被替换。</div>
+                                </neq>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ECN</td>
+                            <td>
+                                <neq name="result.state" value="Archiving">
+                                    <present name="ecnAssoc">
+                                        <a href="__ROOT__/ECN/detail/{$ecnAssoc.ecn_number}">{$ecnAssoc.ecn_number}</a>
+                                    </present>
+                                </neq>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>创建人</td>
+                            <td>
+                                <neq name="result.state" value="Archiving">
+                                    {$result.nickname}
+                                </neq>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>创建时间</td>
+                            <td>
+                                <neq name="result.state" value="Archiving">
+                                    {$result.createtime|date="Y-m-d H:i", ###}
+                                </neq>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>操作</td>
+                            <td>
+                                <button type="button" id="saveFileData" class="layui-btn">
+                                    <neq name="result.state" value="Archiving">保存<else/>升版</neq>
+                                </button>
+                                <button type="button" class="layui-btn layui-btn-primary xq-cancel-btn">取消</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </neq>
+    </eq>
 
     <div class="section-grey-table">
-        <div class="section-title">以往版本</div>
+        <div class="section-title">版本记录</div>
         <div class="section-body">
             <table class="layui-table">
                 <thead>
@@ -180,9 +208,11 @@
                     <notempty name="beforeVersions">
                         <volist name="beforeVersions" id="value">
                             <tr>
-                                <td><a href="#">{$value.version}</a></td>
+                                <td><a href="__ROOT__/File/detail/{$value.filenumber}/{$value.id}">{$value.version}</a></td>
                                 <td>
-                                    <a href="__ROOT__/{$result.file.path}" target="_blank"><i class="file-icon file-icon-ext-{$result.file.ext}"></i> {$result.file.name}</a>
+                                    <notempty name="value.attachment">
+                                        <a href="__ROOT__/{$value.attachment.path}" target="_blank"><i class="file-icon file-icon-ext-{$value.attachment.ext}"></i> {$value.attachment.name}</a>
+                                    </notempty>
                                 </td>
                                 <td>{$value.nickname}</td>
                                 <td>{$value.createtime|date="Y-m-d H:i", ###}</td>

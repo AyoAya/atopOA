@@ -40,27 +40,31 @@
                 <th>状态</th>
                 <th>发起人</th>
                 <th>发起时间</th>
-                <th>操作</th>
+                <!--<th>操作</th>-->
             </tr>
         </thead>
         <tbody>
             <notempty name="result">
                 <volist name="result" id="value">
                     <tr>
-                        <td><a href="__ROOT__/File/detail/id/{$value.id}">{$value.filenumber}</a></td>
+                        <td><a href="__ROOT__/File/detail/{$value.filenumber}">{$value.filenumber}</a></td>
                         <td>{$value.version}</td>
                         <td>
                             <span class="{$value.className}">{$value.stateName}</span>
                         </td>
                         <td>{$value.nickname}</td>
                         <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
-                        <td>
-                            <in name="value.state" value="WaitingEdit,WaitingReview">
-                                <a href="__ROOT__/File/delete/id/{$value.id}" class="layui-btn layui-btn-primary layui-btn-small">删除</a>
+                        <!--<td>
+                            <eq name="Think.session.user.id" value="$value.createuser">
+                                <in name="value.state" value="WaitingEdit,WaitingReview">
+                                    <a href="__ROOT__/File/delete/id/{$value.id}" class="layui-btn layui-btn-primary layui-btn-small">删除</a>
+                                <else/>
+                                    <button type="button" class="layui-btn layui-btn-primary layui-btn-small layui-btn-disabled">删除</button>
+                                </in>
                             <else/>
                                 <button type="button" class="layui-btn layui-btn-primary layui-btn-small layui-btn-disabled">删除</button>
-                            </in>
-                        </td>
+                            </eq>
+                        </td>-->
                     </tr>
                 </volist>
             <else/>
