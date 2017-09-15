@@ -31,7 +31,7 @@ class ECNController extends AuthController {
         $result = $model->table(C('DB_PREFIX').'ecn a,'.C('DB_PREFIX').'user b')
                         ->field('a.id,a.ecn_number,a.state,a.disable,a.createtime,a.lastedit_time,b.nickname')
                         ->where('a.createuser = b.id AND a.disable = "N" AND a.state <> "NotPass"')
-                        ->order('a.createtime DESC')
+                        ->order('a.id DESC')
                         ->limit($page->firstRow.','.$page->listRows)
                         ->select();
         foreach( $result as $key=>&$value ){
