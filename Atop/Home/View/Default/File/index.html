@@ -28,6 +28,19 @@
         <a href="__ROOT__/File/fileRules" class="layui-btn layui-btn-primary">
             文件规则
         </a>
+        <a href="__ROOT__/ECN/add" class="layui-btn layui-btn-primary">
+            创建ECN
+        </a>
+        <a href="__ROOT__/ECN/rules" class="layui-btn layui-btn-primary">
+            ECN规则
+        </a>
+    </div>
+
+    <div class="pull-right">
+        <form action="__ROOT__/File" method="get" style="position: relative;width: 300px;height: 38px;">
+            <input type="text" class="layui-input" name="search" style="width: 300px;" value="{$Think.get.search}">
+            <button type="submit" style="position: absolute;right: 0;top: 0;height: 38px;width: 38px;background: none;border: none;line-height: 42px;"><i class="layui-icon">&#xe615;</i></button>
+        </form>
     </div>
 
     <div class="clearfix" style="margin-bottom: 25px;"></div>

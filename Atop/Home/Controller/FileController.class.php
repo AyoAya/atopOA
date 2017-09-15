@@ -14,7 +14,16 @@ class FileController extends AuthController {
     # 初始化文件管理首页
     public function index(){
         $model = new Model();
-        $count = $model->table(C('DB_PREFIX').'file_number')->where('upgrade="N"')->count();
+
+        if( I('get.search') && trim(I('get.search')) != '' ){
+            $condition = 'a.createuser = b.id AND a.upgrade="N" AND a.filenumber LIKE "%'.I('get.search').'%"';
+            $map['upgrade'] = 'N';
+            $map['filenumber'] = ['like', '%'.I('get.search').'%'];
+        }else{
+            $map['upgrade'] = 'N';
+            $condition = 'a.createuser = b.id AND a.upgrade="N"';
+        }
+        $count = $model->table(C('DB_PREFIX').'file_number')->where($map)->count();
         //数据分页
         $page = new Page($count,C('LIMIT_SIZE'));
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
@@ -26,7 +35,7 @@ class FileController extends AuthController {
         }
         $result = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'user b')
                           ->field('a.id,a.filenumber,a.version,a.state,a.createtime,a.createuser,b.nickname')
-                          ->where('a.createuser = b.id AND a.upgrade="N"')
+                          ->where($condition)
                           ->order('createtime DESC')
                           ->limit($page->firstRow.','.$page->listRows)
                           ->select();
@@ -167,7 +176,9 @@ class FileController extends AuthController {
             $rules = $this->getAllFileRules();
             $this->assign('rules', $rules);
             $model = new Model();
-            $count = $model->table(C('DB_PREFIX').'file_number')->where('upgrade="N"')->count();
+            $map['createuser'] = session('user')['id'];
+            $map['upgrade'] = 'N';
+            $count = $model->table(C('DB_PREFIX').'file_number')->where($map)->count();
             //数据分页
             $page = new Page($count,C('LIMIT_SIZE'));
             $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
@@ -177,7 +188,7 @@ class FileController extends AuthController {
             if(C('PAGE_STATUS_INFO')){
                 $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
             }
-            $result = $model->table(C('DB_PREFIX').'file_number')->where( ['createuser'=>session('user')['id'], 'upgrade'=>'N'] )->order('createtime DESC')->limit($page->firstRow.','.$page->listRows)->select();    // 获取所有属于当前登录用户的文件号
+            $result = $model->table(C('DB_PREFIX').'file_number')->where($map)->order('createtime DESC')->limit($page->firstRow.','.$page->listRows)->select();    // 获取所有属于当前登录用户的文件号
             foreach( $result as $key=>&$value ){
                 $value['className'] = $this->fetchClassStyle($value['state']);
                 $value['stateName'] = $this->fetchStateName($value['state']);

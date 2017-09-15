@@ -29,23 +29,23 @@
                 <div class="layui-input-block">
                     <select name="ecn_type" id="ecn-type" lay-filter="ecnType">
                         <option value="file">文件</option>
-                        <option value="bom">BOM</option>
+                        <option value="bom" disabled>BOM</option>
                     </select>
-                    <div class="layui-form-mid layui-word-aux">选择该评审的类型</div>
+                    <div class="layui-form-mid layui-word-aux">选择该评审的类型：文件或BOM</div>
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">变更描述</label>
                 <div class="layui-input-block">
                     <textarea id="layedit-description" style="display: none;"></textarea>
-                    <div class="layui-form-mid layui-word-aux">例：TEKTRONIX and TEK are registered trademarks of Tektronix, Inc.</div>
+                    <div class="layui-form-mid layui-word-aux">填写该ECN相关的描述信息</div>
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">变更原因</label>
                 <div class="layui-input-block">
                     <textarea id="layedit-reason" style="display: none;"></textarea>
-                    <div class="layui-form-mid layui-word-aux">例：TEKTRONIX and TEK are registered trademarks of Tektronix, Inc.</div>
+                    <div class="layui-form-mid layui-word-aux">填写该ECN变更的原因，例如：新文件评审、文件升版等</div>
                 </div>
             </div>
             <div class="layui-form-item" id="affect">
@@ -53,7 +53,7 @@
                 <div class="layui-input-block">
                     <div class="review-selected"></div>     <!--添加到评审的项-->
                     <div class="choose-btn"><i class="layui-icon">&#xe61f;</i> 添加文件</div>
-                    <div class="layui-form-mid layui-word-aux">注：将已经编辑好的文件添加到此处 [支持多选]</div>
+                    <div class="layui-form-mid layui-word-aux">将已经编辑好的文件添加到此处 [支持多选]</div>
                 </div>
             </div>
             <div class="layui-form-item" id="review-rule">
@@ -65,8 +65,6 @@
                             <option value="{$value.id}">{$value.name}</option>
                         </volist>
                     </select>
-                    <div class="layui-form-mid layui-word-aux">注：您可在此处可预览当前选中评审规则的详细信息，当您确认规则后便只能从该规则中所配置的岗位选择人员。</div>
-                    <div class="rule-preview"></div>    <!--规则预览-->
                 </div>
             </div>
             <div class="review-group"></div>    <!--评审组-->
@@ -79,6 +77,13 @@
                             <input type="checkbox" name="dcc[{$value.id}]" lay-verify="required" title="{$value.nickname}" value="{$value.id}" lay-skin="primary">
                         </volist>
                     </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">抄送列表</label>
+                <div class="layui-input-block">
+                    <div class="rule-preview"></div>    <!--规则预览-->
+                    <div class="layui-form-mid layui-word-aux">评审结束后，将会邮件通知到上面职位的所有人</div>
                 </div>
             </div>
             <div class="layui-form-item">
@@ -97,9 +102,29 @@
                 layer = layui.layer,
                 layedit = layui.layedit;
 
-            var defaultEcnType = 'file';
+            var defaultEcnType = '<php>echo isset($_REQUEST["type"]) ? $_REQUEST["type"] : "file";</php>';
 
+            // 快速添加到受影响的项
+            var quickSelect = <php>if(isset($quickSelect)){ echo json_encode($quickSelect["file"][0]); }else{ echo 0; }</php>;
             var reviewSelected = [];  // 被添加到显示的评审项(初始化结构)
+            if( typeof quickSelect == 'object' && Object.keys(quickSelect).length > 0 ){
+                reviewSelected.push({
+                    attachment: quickSelect.attachment,
+                    createtime: quickSelect.createtime,
+                    createuser: quickSelect.createuser,
+                    description: quickSelect.description,
+                    filenumber: quickSelect.filenumber,
+                    frequency: quickSelect.frequency,
+                    id: quickSelect.id,
+                    lastedit_time: quickSelect.lastedit_time,
+                    state: quickSelect.state,
+                    type: quickSelect.type,
+                    upgrade: quickSelect.upgrade,
+                    version: quickSelect.version
+                });
+            }
+
+            $('.review-selected').html(renderReviewItemList(defaultEcnType, reviewSelected, false));
 
             // 定义layedit编辑器配置
             var layeditOptions = {
@@ -131,7 +156,7 @@
                         type: 1,
                         id: 'LAYER_CONTAINER',
                         title: '选择文件',
-                        area: ['1000px', '500px'],
+                        area: ['1200px', '500px'],
                         shade: [0.5, '#000'],
                         shadeClose: true,
                         content: HTML
@@ -142,23 +167,31 @@
             // 渲染受影响的数据列
             function renderReviewItemList(type, data, InLayer = true){
                 var RenderHTML = '';
-                var head = '<thead><tr><th>文件号</th><th>版本号</th><th>附件</th><th>文件描述</th><th>操作</th></tr></thead>';
+                var head = '<thead><tr><th>文件号</th><th>版本号</th><th width="300">附件</th><th width="550">文件描述</th><th width="66">操作</th></tr></thead>';
                 if( type === 'file' ){
                     if( Object.keys(data).length ){
+                        console.log('data true');
                         RenderHTML += '<table class="layui-table">';
                         if( InLayer ) RenderHTML += head;
                         RenderHTML += '<tbody>';
                         for( let key in data ){
+                            var isHave = false;     // 作用于选择的数据是否已存在
                             RenderHTML += '<tr>';
-                            RenderHTML += '<td>'+ data[key].filenumber +'</td>';
+                            RenderHTML += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/File/detail/'+ data[key].filenumber +'" target="_blank">'+ data[key].filenumber +'</a></td>';
                             RenderHTML += '<td>'+ data[key].version +'</td>';
                             if( data[key].attachment ){
                                 RenderHTML += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/'+ data[key].attachment.path +'" target="_blank" title="'+ data[key].attachment.name +'"><i class="file-icon file-icon-ext-'+ data[key].attachment.ext +'"></i> '+ data[key].attachment.name +'</a></td>';
                             }
-                            RenderHTML += '<td title="'+ data[key].description +'"><p>'+ data[key].description +'</p></td>';
+                            RenderHTML += '<td><p>'+ data[key].description +'</p></td>';
                             if( InLayer ){  // 如果渲染在弹出层中则按钮显示为添加，反之则为移除
                                 if( Object.keys(reviewSelected).length ){   // 检查已选择的数据是否为空
-                                    if( reviewSelected[key] ){     // 检查已选择的数据里面是否已经存在对应的item
+                                    for( let i in reviewSelected ){     // 检查已选择的数据里面是否已经存在对应的item
+                                        if( data[key].id === reviewSelected[i].id ){
+                                            isHave = true;
+                                            break;
+                                        }
+                                    }
+                                    if( isHave ){
                                         RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-normal layui-btn-disabled addReviewItem" index="'+ key +'" ecnType="'+ type +'">添加</button></td>';
                                     }else{
                                         RenderHTML += '<td width="66"><button type="button" class="layui-btn layui-btn-normal addReviewItem" index="'+ key +'" ecnType="'+ type +'">添加</button></td>';
@@ -174,6 +207,7 @@
                         RenderHTML += '</tbody>';
                         RenderHTML += '</table>';
                     }else{
+                        console.log('data false');
                         RenderHTML = '';
                     }
                 }else{
@@ -271,7 +305,7 @@
                     if( response.flag ){
                         layer.msg(response.msg, {icon: 1, time: 1500});
                         setTimeout(function(){
-                            location.href = 'http://'+ ThinkPHP['HTTP_HOST'] +'/ECN';
+                            location.href = 'http://'+ ThinkPHP['HTTP_HOST'] +'/ECN/detail/'+ response.ecn;
                         }, 1500);
                     }else{
                         layer.msg(response.msg, {icon: 2, time: 3000});
@@ -284,20 +318,7 @@
             function renderReviewRule(data){
                 var reviewHTML = '';
                 var rulePreview = $('.rule-preview');
-
-                for( let item in data.recipients ){     // 评审级
-                    reviewHTML += '<div class="lv-row">';
-                    reviewHTML += '<div class="lv-mc">'+ (Number(item) + 1) +' 级评审：</div>';
-                    reviewHTML += '<div class="lv-itm">';
-                    for( let post in data.recipients[item] ){
-                        reviewHTML += '<span class="js-zw">'+ data.recipients[item][post].name +'</span>';
-                    }
-                    reviewHTML += '<div class="clearfix"></div>';
-                    reviewHTML += '</div>';
-                    reviewHTML += '</div>';
-                }
                 reviewHTML += '<div class="lv-row">';
-                reviewHTML += '<div class="lv-mc">抄送列表：<small>抄送列表将通知到包含该职位的所有人员</small></div>';
                 reviewHTML += '<div class="lv-itm">';
                 for( let item in data.ccs ){     // 抄送列表
                     reviewHTML += '<span class="js-zw">'+ data.ccs[item].name +'</span>';

@@ -605,34 +605,71 @@ function send_Email($address, $nickname='', $subject, $body,$cc = []){
         color: #2a6496;
     }
     p {
-        line-height: 100%;
+        line-height: 150%;
     }
     p.sm-dear {
         margin-bottom: 24px;
     }
-    p.ck-lj, p.remark {
+    p.ck-lj, p.remark, table {
         margin-top: 24px;
+    }
+    table {
+        font-size: 14px;
+        color: #555;
+        border: solid 1px #e2e2e2;
+    }
+    table thead tr th {
+        font-size: 14px;
+        text-align: left;
+        color: #555;
+        border-right: solid 1px #e2e2e2;
+        border-bottom: solid 1px #e2e2e2;
+    }
+    table thead tr th:last-child {
+        border-right: none;
+    }
+    table tbody tr td {
+        font-size: 14px;
+        color: #555;
+        text-align: left;
+        border-right: solid 1px #e2e2e2;
+        border-bottom: solid 1px #e2e2e2;
+        line-height: 150%;
+    }
+    table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    table tbody tr td:last-child {
+        border-right: none;
     }
 </style>
 STYLE;
 
-    // 头部
-    $head = <<<HEAD
-<div style="color: #555;border: solid 1px #e2e2e2;font-size: 14px;margin: 40px;">
-    <div style="padding: 20px 20px 10px 20px;background: #393d49;">
+    /*<div style="padding: 20px 20px 10px 20px;background: #393d49;">
         <a href="http://61.139.89.33:8088" target="_blank" title="华拓光通信股份有限公司"><img height="30" src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/></a>
     </div>
-    <div style="padding: 30px 20px 10px 20px;">
+    <div style="padding: 15px 0;border-top: dashed 1px #e2e2e2;font-size: 14px;margin-top: 50px;">$email_from_name</div>
+    */
+
+    // 头部
+    $head = <<<HEAD
+<div style="color: #555;font-size: 14px;margin: 10px 0;">
+    <div style="padding-bottom: 30px;">
 HEAD;
 
     //设置签名信息
     $sign = <<<SIGN
-    <div style="padding: 15px 0;border-top: dashed 1px #e2e2e2;font-size: 14px;margin-top: 50px;">$email_from_name</div>
     </div>
     <div>
-        <div style="padding: 10px 20px;background: #f2f2f2;font-size: 12px;color: #888;">
-            <p style="line-height: 100%;">此为系统邮件请勿回复</p>
-            <p style="line-height: 100%;">Copyright &copy; 华拓光通信 $currentYear All Right Reserved.</p>
+        <div style="padding: 10px 20px;background: #2a3542;font-size: 12px;color: #fff;">
+            <div style="float: left; margin-right: 30px;margin-top: 18px;">
+                <a href="http://61.139.89.33:8088" target="_blank" title="华拓光通信股份有限公司"><img style="border:none;" height="30" src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/></a>
+            </div>
+            <div style="float: left;">
+                <p style="line-height: 100%;">该邮件由系统自动发送，请勿回复。</p>
+                <p style="line-height: 100%;">&copy; 2014-$currentYear ATOP版权所有</p>
+            </div>
+            <div style="clear: both;"></div>
         </div>
     </div>
 </div>
@@ -666,20 +703,18 @@ SIGN;
     }else{
         $mail->addAddress($address,$nickname);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
     }
-    if( !$cc ){
-        if(is_array($cc)){
-            if (count($cc) == count($cc, 1)) {  // 一维数组
-                foreach($cc as $ccperson){
-                    $mail->addCC($ccperson);
-                }
-            } else {    // 二维数组
-                foreach($cc as $value){
-                    $mail->addAddress($value['email'], $value['name']);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
-                }
+    if(is_array($cc) && !empty($cc)){
+        if (count($cc) == count($cc, 1)) {  // 一维数组
+            foreach($cc as $ccperson){
+                $mail->addCC($ccperson);
             }
-        }else{
-            $mail->addCC($cc);
+        } else {    // 二维数组
+            foreach($cc as $value){
+                $mail->addCC($value['email'], $value['name']);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+            }
         }
+    }else{
+        $mail->addCC($cc);
     }
     //$mail->addReplyTo("oa@atoptechnology.com","华拓光通信股份有限公司");// 设置回复人信息，指的是收件人收到邮件后，如果要回复，回复邮件将发送到的邮箱地址
     //$mail->addCC("");// 设置邮件抄送人，可以只写地址，上述的设置也可以只写地址
