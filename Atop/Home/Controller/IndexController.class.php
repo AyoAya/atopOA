@@ -10,8 +10,11 @@ class IndexController extends AuthController {
     //初始化页面
     public function index(){
 
-        
+        $rel = M('Software')->where('name = "OA System"')->find();
 
+        $result = M('SoftwareLog')->where('soft_asc = '.$rel['id'])->order('save_time DESC ')->find();
+
+        $this->assign('result',$result);
         $this->display();
     }
 

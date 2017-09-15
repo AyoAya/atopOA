@@ -67,6 +67,8 @@ class RegularMail{
             }
 
         }
+
+
         # 判断所有数据中 是否有plan  如果有就保留 如果没有则删除数据
         foreach ($project_data as $ke=>&$value){
             if(!$value['plan']){
@@ -107,6 +109,9 @@ class RegularMail{
 
         # 数组重新排序
         sort($project_data);
+
+         /*print_r($project_data);
+         die();*/
 
         self::output( $project_data );
 
@@ -183,13 +188,39 @@ p{
 .table tbody tr td:last-child {
     border-right: none;
 }
+.table tbody tr td .status_start{
+    background: #428bca;
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
+.table tbody tr td .status_noStart{
+    background: #777; 
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
 </style>
 STYLE;
 
         foreach ($data as $key=>&$value){
 
-            $html = '<div class="title">[ 项目管理/项目计划 ] 项目延期通知</div> <p>Dear All,</p>';
-            $html .= '<p> '.$value['pj_num'].$value['pj_name'].' 有任务延期，详情如下：</p>';
+            $html = '<p>Dear All,</p>';
+            $html .= '<p> '.$value['pj_num'].' '.$value['pj_name'].' 有任务延期，请关注。</p><p>详情请点击链接：<a href="http://' . self::$http_host . '/Project/details/tab/plan/id/' . $value["id"] . '">http://' . self::$http_host . '/Project/details/tab/plan/id/' . $value["id"] . '</a></p>';
             $html .= "\r\n<table class='table' cellpadding='0' cellspacing='0'>
     <thead>
         <tr>
@@ -199,8 +230,9 @@ STYLE;
             <th>里程碑</th>
             <th>节点</th>
             <th width='90'>开始时间</th>
-            <th width='90'>计划结束时间</th>
+            <th width='90'>结束时间</th>
             <th>备注</th>
+            <th>进度</th>
         </tr>
     </thead>
 <tbody>\r\n
@@ -214,31 +246,36 @@ STYLE;
                 if (count($value['plan']) > 1) {
                     if (($k + 1) < count($value['plan'])) {
                         if( $k == 0 ){
-                            $html .= "<td rowspan='" . count($value['plan']) . "'><a href='http://" . self::$http_host . "/Project/details/tab/plan/id/" . $value['id'] . "'>" . $value['pj_num'] . "</a></td>
+                            $html .= "<td rowspan='" . count($value['plan']) . "'><a href='http://" . self::$http_host . "/Project/details/tab/overview/id/" . $value['id'] . "'>" . $value['pj_num'] . "</a></td>
                                       <td rowspan='" . count($value['plan']) . "'>" . $value['pj_name'] . "</td>";
                         }
                     }
                 } else {
-                    $html .= "<td><a href='http://" . self::$http_host . "/Project/details/tab/plan/id/" . $value['id'] . "'>" . $value['pj_num'] . "</a></td>
+                    $html .= "<td><a href='http://" . self::$http_host . "/Project/details/tab/overview/id/" . $value['id'] . "'>" . $value['pj_num'] . "</a></td>
                               <td>" . $value['pj_name'] . "</td>";
                 }
 
                 $html .= "\t\t\t<td>Gate" . $v['gate'] . "</td>\r\n
                           \t\t\t<td>" . $v['mile_stone'] . "</td>\r\n
                           \t\t\t<td>" . $v['items'] . "</td>\r\n
-                          \t\t\t<td>" . $v['start_time'] . "</td>\r\n
+                          \t\t\t<td>" . $v['plan_start_time'] . "</td>\r\n
                           \t\t\t<td>" . $v['plan_stop_time'] . "</td>\r\n
                           \t\t\t<td>" . $v['comments'] . "</td>\r\n
                          ";
+                if($v['status'] == 0){
+                    $html .= "\t\t\t<td><span class='status_noStart'>未开始</span></td>\r\n";
+                }else{
+                    $html .= "\t\t\t<td><span class='status_start'>进行中</span></td>\r\n";
+                }
             }
 
             $html .= "\t\t</tr>\r\n";
 
-            $subject = '[ 项目管理/项目计划 ] 项目延期通知';
+            $subject = '[项目管理] 项目延期通知';
 
             $html .= "\t</tbody>\r\n</table>";
 
-            //echo $style.$html;
+            echo $style.$html;
 
             self::push_eml($style.$html,$subject,$value['address']);
 

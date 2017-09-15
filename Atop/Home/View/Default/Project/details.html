@@ -177,19 +177,14 @@
                     <th class="th_mile_stone">里程碑</th>
                     <th class="th_items">节点</th>
                     <!--<th class="th_plan_start_time">计划开始时间</th>-->
-                    <th class="th_start_time">实际开始时间</th>
-                    <th class="th_plan_complate_time">计划结束时间</th>
-                    <th class="th_complate_time">实际结束时间</th>
+                    <th class="th_start_time">开始时间</th>
+                    <th class="th_plan_complate_time">结束时间</th>
+                    <!--<th class="th_complate_time">实际结束时间</th>-->
                     <th class="th_comments">备注</th>
                     <th class="th_state">进度</th>
                     <th class="th_status">状态</th>
-                    <in name="Think.session.user.id" value="$auth">
+                    <eq name="Think.session.user.id" value="$auth">
                         <th class="th_editor">操作</th>
-                        <th class="th_mark">标记</th>
-                    </in>
-                    <eq name="Think.session.user.id" value="$auths">
-                        <th class="th_editor">操作</th>
-                        <th class="th_mark">标记</th>
                     </eq>
                 </tr>
             </thead>
@@ -204,48 +199,51 @@
                         </if>
                         <td class="{$value.plan.class}">{$value.items}</td>
                         <!--<td class="plan_start_time change_input td_center {$value.plan.class}" originally="{$value.plan_start_time}">{$value.plan_start_time}</td>-->
-                        <td class="start_time change_input td_center {$value.plan.class}" originally="{$value.plan.start_time}">{$value.plan.start_time}</td>
+                        <td class="start_time change_input td_center {$value.plan.class}" originally="{$value.plan_start_time}">{$value.plan_start_time}</td>
                         <td class="complete_time change_input td_center {$value.plan.class}" originally="{$value.plan_stop_time}">{$value.plan_stop_time}</td>
-                        <td class="plan_complete_time change_input td_center {$value.plan.class}" originally="{$value.plan.complete_time}">{$value.plan.complete_time}</td>
+                        <!--<td class="plan_complete_time change_input td_center {$value.plan.class}" originally="{$value.plan.complete_time}">{$value.plan.complete_time}</td>-->
                         <td class="comments change_input {$value.plan.class}" originally="{$value.plan.comments_entity}">{$value.plan.comments}</td>
 
-                        <eq name="value.plan.state_text" value="success">
-                            <td class="td_center"><span class="label {$value.plan.state_class}">已完成</span></td>
+                        <eq name="value.status" value="2">
+                            <td class="td_center steps"><span class="label label-success">已完成</span></td>
                         </eq>
-                        <eq name="value.plan.state_text" value="start">
-                            <td class="td_center"><span class="label {$value.plan.state_class}">进行中</span></td>
+                        <eq name="value.status" value="1">
+                            <td class="td_center steps"><span class="label label-primary">进行中</span></td>
                         </eq>
-                        <eq name="value.plan.state_text" value="noStart">
-                            <td class="td_center"><span class="label {$value.plan.state_class}">未开始</span></td>
+                        <eq name="value.status" value="0">
+                            <td class="td_center steps"><span class="label label-default">未开始</span></td>
                         </eq>
+
+                        <td class="step_dis" style="display: none">
+                            <eq name="value.plan.state_text" value="success">
+                                <span class="label {$value.plan.state_class}">已完成</span>
+                            </eq>
+                            <eq name="value.plan.state_text" value="start">
+                                <span class="label {$value.plan.state_class}">进行中</span>
+                            </eq>
+                            <eq name="value.plan.state_text" value="noStart">
+                               <span class="label {$value.plan.state_class}">未开始</span>
+                            </eq>
+                        </td>
 
                         <eq name="value.plan.status" value="ok">
-                            <td class="td_center"><span class="tag tag-success">正常</span></td>
+                            <td class="td_status"><span class="tag tag-success">正常</span></td>
                         </eq>
                         <eq name="value.plan.status" value="no">
-                            <td class="td_center"><span class="tag tag-danger">延期</span></td>
+                            <td class="td_status"><span class="tag tag-danger">延期</span></td>
                         </eq>
                         <eq name="value.plan.status" value="default">
-                            <td class="td_center"><span class=""></span></td>
+                            <td class="td_status"><span class=""></span></td>
                         </eq>
 
-                        <eq name="Think.session.user.id" value="$auths">
+                        <eq name="Think.session.user.id" value="$auth">
                             <td class="operation_td {$value.plan.class}">
                                 <if condition="isset($value['show']) AND $value['show'] eq 'true'">
                                     <button class="editor-btn btn btn-default btn-sm" plan_project="{$getID}" step="{$value.gate}" plan_node="{$value.id}"><i class="icon-edit"></i></button>
-                                </if>
-                            </td>
-                            <td class="td_mark"><button type="button" plan_project="{$getID}" plan_node="{$value.id}" class="layui-btn-primary btn-mark" title="标记为完成状态">完成</button></td>
-                        </eq>
 
-                        <in name="Think.session.user.id" value="$auth">
-                            <td class="operation_td {$value.plan.class}">
-                                <if condition="isset($value['show']) AND $value['show'] eq 'true'">
-                                    <button class="editor-btn btn btn-default btn-sm" plan_project="{$getID}" step="{$value.gate}" plan_node="{$value.id}"><i class="icon-edit"></i></button>
                                 </if>
                             </td>
-                            <td class="td_mark"><button type="button" plan_project="{$getID}" plan_node="{$value.id}" class="layui-btn-primary btn-mark" title="标记为完成状态">完成</button></td>
-                        </in>
+                        </eq>
                     </tr>
                 </volist>
             </tbody>
@@ -462,7 +460,11 @@
                                 <notempty name="value.reply">
                                     <div class="reply-info">
                                         <volist name="value.reply" id="val">
-                                            <div class="reply-content"> <div class="face"><img src="{$val.face}" alt=""></div>　<div class="context-rpl">{$val.nickname} ：{$val.discuss_context} </div><p>{$val.reply_time|date="Y-m-d H:i:s",###}</p></div>
+                                            <notempty name="val.class" value="true">
+                                                <div class="reply-content"> <div class="face"><img src="{$val.face}" alt=""></div>　<div class="context-rpl">{$val.nickname} ：{$val.discuss_context} </div><p>{$val.reply_time|date="Y-m-d H:i:s",###}</p></div>
+                                            <else/>
+                                                <div class="reply-content  has-bottom"> <div class="face"><img src="{$val.face}" alt=""></div>　<div class="context-rpl">{$val.nickname} ：{$val.discuss_context} </div><p>{$val.reply_time|date="Y-m-d H:i:s",###}</p></div>
+                                            </notempty>
                                         </volist>
                                     </div>
                                 </notempty>

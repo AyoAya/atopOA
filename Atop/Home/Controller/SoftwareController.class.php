@@ -57,18 +57,18 @@ class SoftwareController extends AuthController {
                     }
 
                     $softData = $model->table(C('DB_PREFIX') . 'software')
-                        ->where("type='firmware'")
-                        ->limit($page->firstRow.','.$page->listRows)
-                        ->order('number ASC')
-                        ->select();
+                                      ->where("type='firmware'")
+                                      ->limit($page->firstRow.','.$page->listRows)
+                                      ->order('number ASC')
+                                      ->select();
 
                     foreach ($softData as $key => &$value) {
 
                         $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
-                            ->where('soft_asc =' . $value['id'])
-                            ->order('id ASC')
-                            ->field('version,save_time,soft_asc')
-                            ->select();
+                                                  ->where('soft_asc =' . $value['id'])
+                                                  ->order('id ASC')
+                                                  ->field('version,save_time,soft_asc')
+                                                  ->select();
                     }
 
                     break;
@@ -76,8 +76,8 @@ class SoftwareController extends AuthController {
                 case  'ate' :
 
                     $count = $model->table(C('DB_PREFIX') . 'software')
-                        ->where("type='ATE'")
-                        ->count();
+                                   ->where("type='ATE'")
+                                   ->count();
 
                     # 数据分页
                     $page = new Page($count,15);
@@ -177,10 +177,10 @@ class SoftwareController extends AuthController {
         $softRel = $model->table(C('DB_PREFIX').'software')->find(I('get.id'));
 
         $softRel['child'] = $model->table(C('DB_PREFIX').'software_log a,'.C('DB_PREFIX').'software b,'.C('DB_PREFIX').'user c')
-            ->field('a.log,a.save_time,a.version,a.attachment,c.face,a.push_email,a.cc_email')
-            ->where('b.id ='.I('get.id').' AND b.id=a.soft_asc AND a.save_person=c.id')
-            ->order('a.id DESC')
-            ->select();
+                                  ->field('a.log,a.save_time,a.version,a.attachment,c.face,a.push_email,a.cc_email')
+                                  ->where('b.id ='.I('get.id').' AND b.id=a.soft_asc AND a.save_person=c.id')
+                                  ->order('a.id DESC')
+                                  ->select();
 
 
         # print_r($softRel);

@@ -3,6 +3,12 @@
  */
 $(function(){
 
+
+    layui.use('layer',function(){
+        var layer = layui.layer;
+
+
+
     //检测浏览器中是否存在项目计划保存的localStorage数据，如果存在则替换为该数据，不存在则为新增
     if( window.localStorage ){  //检测浏览器是否支持localStorage
         // 检测localStorage的各项数据是否都存在并且不为空
@@ -784,4 +790,5 @@ $(function(){
 
     initDatetimepicker();
 
+    })
 });

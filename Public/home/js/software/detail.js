@@ -158,6 +158,11 @@ $(function(){
         //文件上传结束时
         form.on('submit(software)',function( data ){
 
+            if( !$('#detail_form').find('.version-ipt').val() ){
+                layer.msg('请输入版本号！',{icon:2,time:2000});
+                return false;
+            }
+
             var tmpArr = new Array();
 
             if( $('#picker').next().children().length > 0 ){

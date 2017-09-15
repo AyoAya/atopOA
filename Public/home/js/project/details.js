@@ -123,7 +123,7 @@ $(function(){
             picker_position = 'bottom-left';
         }
         _td.html('<div class="btn-group">' +
-            '<button type="button" class="btn btn-default btn-sm td-cancel-btn">' +
+            '<button type="button" class="btn btn-default btn-sm td-cancel-btn" plan_project="' + plan_project + '" step="'+ _step +'" plan_node="' + plan_node + '">' +
                 '<i class="icon-remove"></i></button>' +
                 '<button type="button" class="btn btn-default btn-sm td-save-btn" plan_project="' + plan_project + '" plan_node="' + plan_node + '">' +
                 '<i class="icon-ok"></i></button></div>');
@@ -139,6 +139,7 @@ $(function(){
         _tr.find('.start_time').html('<input type="text" name="start_time" readonly class="form-control input-sm start_time_picker" value="' + start_time_text + '">');
         _tr.find('.complete_time').html('<input type="text" name="complete_time" readonly class="form-control input-sm complete_time_picker" value="' + complete_time_text + '">');
         _tr.find('.comments').html('<textarea style="height: '+ prev_td +';" type="text" name="comments" class="form-control input-sm comments_textarea">' + comments_text + '</textarea>');
+        _tr.find('.steps').html('<select class="steps" name="steps" lay-verify="required"><option value="0">未开始</option><option value="1">进行中</option><option value="2">已完成</option></select>');
         // 初始化时间组件
         $('.start_time_picker,.complete_time_picker').datetimepicker({
             language:  'zh-CN',
@@ -159,16 +160,23 @@ $(function(){
         // 获取到当前点击元素的父节点tr/td
         var _td = $(this).parent().parent();
         var _tr = $(this).parent().parent().parent();
-        _td.html('<button class="editor-btn btn btn-default btn-sm"><i class="icon-edit"></i></button>');
+        var _getId =  $(this).attr('plan_project');
+        var _gate =  $(this).attr('step');
+        var _pid =  $(this).attr('plan_node');
+
+        _td.html('<button class="editor-btn btn btn-default btn-sm" plan_project="'+ _getId +'" step="'+ _gate +'" plan_node="'+ _pid +'"><i class="icon-edit"></i></button>');
+
         // 获取到原始数据
         var start_time_text = _tr.find('.start_time').attr('originally');
         var complete_time_text = _tr.find('.complete_time').attr('originally');
         var comments_text = _tr.find('.comments').attr('originally');
+        var steps_text = _tr.find('.step_dis').html()
         //console.log(comments_text);
         // 恢复到原始数据
         _tr.find('.start_time').html(start_time_text);
         _tr.find('.complete_time').html(complete_time_text);
         _tr.find('.comments').html(comments_text);
+        _tr.find('.steps').html(steps_text);
     });
 
 
@@ -177,11 +185,12 @@ $(function(){
         var plan_project = $(this).attr('plan_project');
         var plan_node = $(this).attr('plan_node');
         var _parent_tr = $(this).parents('tr');
-        //var plan_start_time = _parent_tr.find('input[name=plan_start_time]').val();
-        //var plan_complete_time = _parent_tr.find('input[name=plan_complete_time]').val();
+        var plan_start_time = _parent_tr.find('input[name=plan_start_time]').val();
+        var plan_complete_time = _parent_tr.find('input[name=plan_complete_time]').val();
         var start_time = _parent_tr.find('input[name=start_time]').val();
         var complete_time = _parent_tr.find('input[name=complete_time]').val();
         var comments = _parent_tr.find('textarea[name=comments]').val();
+        var steps = _parent_tr.find('select[name=steps]').val();
 
         // 判断用户是否
         if( start_time == '' ){
@@ -202,7 +211,8 @@ $(function(){
                 plan_node : plan_node,
                 start_time : start_time,
                 plan_stop_time : complete_time,
-                comments : comments
+                comments : comments,
+                steps : steps
             },
             dataType : 'json',
             beforeSend : function(){
@@ -210,18 +220,14 @@ $(function(){
             },
             success : function(response){
                 if( response.flag > 0 ){
-                    $('#loading').addClass('sr-only');
-                    $('#MessageText').html('<p><i class="icon-ok-sign text-success"></i>&nbsp;' + response.msg + '</p>' );
-                    $('#MessageModal').modal('show');
                     setTimeout(function(){
+                        layer.msg(response.msg,{icon:1,time:2000});
                         location.reload();
                     },1000);
                 }else{
-                    $('#loading').addClass('sr-only');
-                    $('#MessageText').html('<p><i class="icon-remove-sign text-danger"></i>&nbsp;错误</p>' );
-                    $('#MessageModal').modal('show');
                     setTimeout(function(){
-                        $('#MessageModal').modal('hide');
+                        layer.msg(response.msg,{icon:2,time:2000});
+                        location.reload();
                     },1000);
                 }
             }
@@ -231,62 +237,67 @@ $(function(){
     // 项目计划：点击完成提交当前完成时间
     $('.plan-table').on('click','.btn-mark',function(){
 
-        var plan_project = $(this).attr('plan_project');
-        var plan_node = $(this).attr('plan_node');
-        var _parentTr = $(this).parents('tr');
+        if($(this).hasClass('success_btn')){
 
-        var startTime = _parentTr.find('.start_time').text();
-        var completeTime = _parentTr.find('.complete_time').text();
-        var plan_complete_time = _parentTr.find('.plan_complete_time').text();
+            layer.msg('此项目已经处于完成状态！',{icon:5,time:2000});
 
-        //console.log(_parentTr);
-        //console.log(startTime);
-        //console.log(completeTime);
-        // 判断用户是否
-        if( startTime == '' ){
-            layer.msg('请先设置的时间！',{time:2000});
-            return false;
-        }
-        if( completeTime == '' ){
-            layer.msg('请先设置的时间！',{time:2000});
-            return false;
-        }
-        if( plan_complete_time != '' ){
-            layer.msg('此项目已经处于完成状态！',{time:2000});
-            return false;
-        }
+        }else{
 
-        //loading层
-        var load = layer.load(1, {
-            shade: [0.5,'#fff'] //0.1透明度的白色背景
-        });
+            var plan_project = $(this).attr('plan_project');
+            var plan_node = $(this).attr('plan_node');
+            var _parentTr = $(this).parents('tr');
 
-        $.ajax({
-            url : ThinkPHP['AJAX'] + '/Project/mark',
-            type : 'POST',
-            data : {
-                plan_project : plan_project,
-                plan_node : plan_node,
-                start_time : startTime,
-                plan_stop_time : completeTime,
-            },
-            dataType : 'json',
+            var startTime = _parentTr.find('.start_time').text();
+            var completeTime = _parentTr.find('.complete_time').text();
+            var plan_complete_time = _parentTr.find('.plan_complete_time').text();
 
-            success : function(response){
-                if( response.flag > 0 ){
-                    layer.msg('操作成功!',{icon:1,time:2000})
-                    setTimeout(function(){
-                        location.reload();
-                    },1000);
-                }else{
-                    setTimeout(function(){
-                        layer.msg('操作失败!',{icon:2,time:2000})
-                        $('#MessageModal').modal('hide');
-                        layer.close(load)
-                    },1000);
-                }
+            // 判断用户是否
+            if( startTime == '' ){
+                layer.msg('请先设置的时间！',{time:2000});
+                return false;
             }
-        });
+            if( completeTime == '' ){
+                layer.msg('请先设置的时间！',{time:2000});
+                return false;
+            }
+            if( plan_complete_time != '' ){
+                layer.msg('此项目已经处于完成状态！',{time:2000});
+                return false;
+            }
+
+            //loading层
+            var load = layer.load(1, {
+                shade: [0.5,'#fff'] //0.1透明度的白色背景
+            });
+
+            $.ajax({
+                url : ThinkPHP['AJAX'] + '/Project/mark',
+                type : 'POST',
+                data : {
+                    plan_project : plan_project,
+                    plan_node : plan_node,
+                    start_time : startTime,
+                    plan_stop_time : completeTime,
+                },
+                dataType : 'json',
+
+                success : function(response){
+                    if( response.flag > 0 ){
+                        layer.msg('操作成功!',{icon:1,time:2000})
+                        setTimeout(function(){
+                            location.reload();
+                        },1000);
+                    }else{
+                        setTimeout(function(){
+                            layer.msg('操作失败!',{icon:2,time:2000})
+                            $('#MessageModal').modal('hide');
+                            layer.close(load)
+                        },1000);
+                    }
+                }
+            });
+        }
+
     });
 
     var upOption = {    // Huploadify默认配置
