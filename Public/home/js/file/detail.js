@@ -29,6 +29,11 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
         $('#content').scrollTop(0);
     });
 
+    // 回收
+    $('.recycle-btn').click(function(){
+        layer.msg('暂未开放回收功能');
+    });
+
     // uploader参数配置
     var FileUploaderOptions = {
         auto: false,
@@ -113,7 +118,11 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
     $('#saveFileData').click(function(){
         var data = {};
         if( !checkEditData() ) return false;
-        FileUploader.upload();
+        if( FileUploader.getFiles().length ) {  // 如果不存在附件
+            FileUploader.upload();
+        }else{
+            submitEditData(null);
+        }
     });
 
     // 验证编辑
@@ -127,9 +136,11 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
             layer.msg('版本格式错误', {icon : 2,time : 1000});
             return false;
         }
-        if( FileUploader.getFiles().length <= 0 ){
-            layer.msg('请上传附件', {icon : 2,time : 1000});
-            return false;
+        if( $('#file-attachment-a').length < 1 ){
+            if( FileUploader.getFiles().length <= 0 ){
+                layer.msg('请上传附件', {icon : 2,time : 1000});
+                return false;
+            }
         }
         return true;
     }
@@ -137,19 +148,22 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
     // 提交编辑数据
     function submitEditData(filedata){
         let _version = $('#version').val();
-        $.post(ThinkPHP['AJAX'] + '/File/detail', {
-            id: _fileID,
-            version: _version,
-            attachment: JSON.stringify(filedata),
-            description: layedit.getContent(layeditDescription)
-        }, function(response){
+        let postData = {};
+        postData.id = _fileID;
+        postData.version = _version;
+        if( filedata ) postData.attachment = JSON.stringify(filedata);
+        postData.description = layedit.getContent(layeditDescription);
+        $.post(ThinkPHP['AJAX'] + '/File/detail', postData, function(response){
             if( response.flag ){
                 layer.msg(response.msg, {icon : 1,time : 1000});
                 setTimeout(function(){
                     location.replace(location.href);
                 }, 1000);
             }else{
-                layer.msg(response.msg, {icon : 2,time : 1000});
+                layer.msg(response.msg, {icon : 2,time : 3000});
+                setTimeout(function(){
+                    location.replace(location.href);
+                }, 3000);
             }
         })
     }

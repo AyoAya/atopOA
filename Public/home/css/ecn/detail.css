@@ -26,7 +26,50 @@
     padding-bottom: 200px;
 }
 
-.history-review .layui-table tbody td {
+@media (max-width: 1440px) {
+    .edit-condition .selected-files .layui-table td.stint-a {
+        width: 200px;
+    }
+    .edit-condition .selected-files .layui-table td.stint-a a {
+        display: block;
+        width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .edit-condition .selected-files .layui-table td.stint-td {
+        width: 300px;
+    }
+    .edit-condition .selected-files .layui-table td p.stint-p {
+        width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+@media (min-width: 1440px) {
+    .edit-condition .selected-files .layui-table td.stint-a {
+        width: 400px;
+    }
+    .edit-condition .selected-files .layui-table td.stint-a a {
+        display: block;
+        width: 400px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .edit-condition .selected-files .layui-table td.stint-td {
+        width: 600px;
+    }
+    .edit-condition .selected-files .layui-table td p.stint-p {
+        width: 600px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.history-review .layui-table tbody td, .preview-condition .layui-table tbody td {
     padding: 15px;
 }
 
@@ -128,10 +171,9 @@
     color: #fff;
 }
 .rule-preview {
-    display: none;
-    clear: both;
+    display: block;
+    min-height: 60px;
     border-radius: 2px;
-    padding-top: 5px;
     border: solid 1px #e6e6e6;
 }
 .rule-preview .lv-row {

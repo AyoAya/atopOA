@@ -17,3 +17,7 @@
 .section-grey-table {
     margin-top: 20px;
 }
+
+.layui-table tbody td {
+    padding: 15px;
+}

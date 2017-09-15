@@ -47,26 +47,30 @@
             <table class="layui-table">
                 <thead>
                     <tr>
+                        <th>文件类型</th>
                         <th>文件编号</th>
+                        <th>版本</th>
                         <th>当前状态</th>
                         <th>申请时间</th>
-                        <th>操作</th>
+                        <!--<th>操作</th>-->
                     </tr>
                 </thead>
                 <tbody>
                     <notempty name="result">
                         <volist name="result" id="value">
                             <tr>
+                                <td>{$value.type}</td>
                                 <td><a href="__ROOT__/File/detail/id/{$value.id}">{$value.filenumber}</a></td>
+                                <td>{$value.version}</td>
                                 <td>
                                     <span class="{$value.className}">{$value.stateName}</span>
                                 </td>
                                 <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
-                                <td>
+                                <!--<td>
                                     <div class="button-group">
                                         <a href="__ROOT__/File/delete/id/{$value.id}" type="button" class="layui-btn layui-btn-primary layui-btn-small">删除</a>
                                     </div>
-                                </td>
+                                </td>-->
                             </tr>
                         </volist>
                     <else/>
