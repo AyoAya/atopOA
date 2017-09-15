@@ -713,8 +713,6 @@ SIGN;
                 $mail->addCC($value['email'], $value['name']);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
             }
         }
-    }else{
-        $mail->addCC($cc);
     }
     //$mail->addReplyTo("oa@atoptechnology.com","华拓光通信股份有限公司");// 设置回复人信息，指的是收件人收到邮件后，如果要回复，回复邮件将发送到的邮箱地址
     //$mail->addCC("");// 设置邮件抄送人，可以只写地址，上述的设置也可以只写地址

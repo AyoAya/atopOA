@@ -207,6 +207,7 @@ class ManageController extends AuthController {
 
     //重置密码
     public function resetPassword(){
+
         if(!IS_POST) return;
         $id = I('post.id');
         $resetPassword = I('post.password');
@@ -214,11 +215,13 @@ class ManageController extends AuthController {
         $userInfo = $user->find($id);
         $address = $userInfo['email'];
         $nickname = $userInfo['nickname'];
-        $subject = '您的密码已重置';
+        $subject = '[用户管理] OA系统密码重置通知';
+        $server = $_SERVER['HTTP_HOST'];
         $body = <<<HTML
 <p>Dear $nickname,</p>
-<p>您的密码已重置</p>
+<p>您OA系统账号的密码已重置</p>
 <p>新密码：$resetPassword</p>
+<p>收到邮件后请及时登录 <a style="color:#428bca;" href="http://$server">http://$server</a> 修改密码。</p>
 HTML;
         $result = $user->save(array('id'=>$id,'password'=>sha1($resetPassword)));
         if($result!==false){
@@ -298,7 +301,7 @@ HTML;
             if(M('AuthGroupAccess')->add($access)){
                 $address = I('post.email');
                 $nickname = I('post.nickname');
-                $subject = '您的OA系统账号已开通!';
+                $subject = '[用户管理] OA系统账号开通';
                 $body = '<p>Dear '.I('post.nickname').',</p><p>您的OA系统账号已开通!<br><br>账号：'.I('post.account').'<br>密码：'.I('post.password').'<br><br>收到邮件后请及时登录 <a style="color:#428bca;" href="http://'.$_SERVER['HTTP_HOST'].'">http://'.$_SERVER['HTTP_HOST'].'</a> 修改密码。</p>';
                 send_Email($address, $nickname, $subject, $body);
                 $this->ajaxReturn(array('flag'=>'1','msg'=>'添加成功'));
