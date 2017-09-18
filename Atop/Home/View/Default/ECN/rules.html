@@ -2,7 +2,7 @@
 <extend name="layout/default"/>
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
-    <!--<link rel="stylesheet" href="__CSS__/ECN/rules.css">-->
+    <link rel="stylesheet" href="__CSS__/ECN/rules.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
@@ -47,8 +47,8 @@
                         <td>
                             <a href="__ROOT__/ECN/ruleDetail/id/{$value.id}">{$value.name}</a>
                         </td>
-                        <td>
-                            <p>{$value.description}</p>
+                        <td class="td-wrap">
+                            <p class="p-wrap">{$value.description}</p>
                         </td>
                         <td>{$value.nickname}</td>
                         <td>{$value.createtime|date="Y-m-d H:i:s", ###}</td>
