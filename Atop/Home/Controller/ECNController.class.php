@@ -48,8 +48,8 @@ class ECNController extends AuthController {
 
     # 创建ECN
     public function add(){
+        $model = M('', '', 'MYSQL_CRSAPI');
         if( IS_POST ){
-            $model = M('', '', 'MYSQL_CRSAPI');
             $model->startTrans();
             try{
                 $postData = I('post.','',false);
@@ -103,7 +103,12 @@ class ECNController extends AuthController {
             $model->commit();
             $this->ajaxReturn(['flag'=>1, 'msg'=>'创建成功','ecn'=>$ecnNumber]);
         }else{
-            if( I('get.id') && is_numeric(I('get.id')) ){
+            if( I('get.id') && is_numeric(I('get.id')) ){   // 如果当前文件已经存在ECN则直接跳转的对应的ECN详情页面
+                $tmpRes = $model->table(C('DB_PREFIX').'ecn a,'.C('DB_PREFIX').'ecn_review_item b')->field('a.id,a.ecn_number')->where('a.id = b.ecn_id AND b.assoc = '.I('get.id'))->group('b.ecn_id')->find();
+                if( !empty($tmpRes) ){
+                    redirect('/ECN/detail/'.$tmpRes['ecn_number']);
+                    exit;
+                }
                 $quickSelect = $this->getWaitingReviewItem(I('get.id'));
                 $this->assign('quickSelect', $quickSelect);
             }
@@ -247,7 +252,15 @@ class ECNController extends AuthController {
         if( IS_POST ){
             $model = D('Ecn');
             if( I('post.currentType') == 'file' ){
-                $result = $model->table(C('DB_PREFIX').'file_number')->where('createuser='.session('user')['id'].' AND state not in ( "InReview","WaitingEdit","Archiving" )')->order('createtime DESC')->select();
+                $result = $model->table(C('DB_PREFIX').'file_number')
+                                ->where('createuser='.session('user')['id'].' AND state not in ( "InReview","WaitingEdit","Archiving" )')
+                                ->order('createtime DESC')
+                                ->select();
+                foreach( $result as $key=>&$value ){    // 如果文件已经生成了ecn则排除掉
+                    $tmpRes = $model->table(C('DB_PREFIX').'ecn_review_item a,'.C('DB_PREFIX').'ecn b')->where('a.assoc = '.$value['id'].' AND a.ecn_id = b.id')->select();
+                    if( $tmpRes ) unset($result[$key]);
+                }
+                sort($result);  // unset之后重新排序
                 $result = $model->jsonToArray($result);
                 $this->ajaxReturn($result);
             }else{
@@ -937,7 +950,7 @@ class ECNController extends AuthController {
             if( $result['cc'] ){
                 $result['ccs'] = $this->getCcsAndRecipients('String', $result['cc']);
             }else{
-                $result['ccs'] = '';
+                $result['ccs'] = null;
             }
             $result['recipients'] = $this->getCcsAndRecipients('Array', $result['recipient']);
             $this->assign('result', $result);
@@ -966,7 +979,7 @@ class ECNController extends AuthController {
             if( I('get.id') && is_numeric(I('get.id')) ){
                 $model = new Model();
                 $result = $model->table(C('DB_PREFIX').'ecn_rule')->find(I('get.id'));
-                $result['ccs'] = $this->getCcsAndRecipients('String', $result['cc']);
+                $result['ccs'] = $result['cc'] ? $this->getCcsAndRecipients('String', $result['cc']) : null;
                 $result['recipients'] = $this->getCcsAndRecipients('Array', $result['recipient']);
                 $positions = $this->getAllPositions();
                 //$this->markSelectedPost($this->getAllPositions(), $result['ccs']);

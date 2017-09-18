@@ -50,9 +50,13 @@
     <div class="section-grey">
         <div class="section-title">抄送列表</div>
         <div class="section-body">
-            <volist name="result.ccs" id="value">
-                <span class="zw-item">{$value.name}</span>
-            </volist>
+            <notempty name="result.ccs">
+                <volist name="result.ccs" id="value">
+                    <span class="zw-item">{$value.name}</span>
+                </volist>
+            <else/>
+                <p style="height: 40px;line-height: 40px;text-align: center;width: 10%;">无</p>
+            </notempty>
             <div class="clearfix"></div>
         </div>
     </div>
