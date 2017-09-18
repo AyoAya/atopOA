@@ -279,7 +279,10 @@ class FileController extends AuthController {
         }
         $result = $model->table(C('DB_PREFIX').'file_rule a,'.C('DB_PREFIX').'user b')
                         ->field('a.id,a.name,a.length,a.current,a.desc,a.createtime,b.nickname')
-                        ->where('a.createuser=b.id')->order('createtime DESC')->limit($page->firstRow.','.$page->listRows)->select();
+                        ->where('a.createuser=b.id')->order('createtime DESC')
+                        ->limit($page->firstRow.','.$page->listRows)
+                        ->order('a.name ASC')
+                        ->select();
         $pageShow = $page->show();
         $this->assign('pageShow',$pageShow);
         $this->assign('result', $result);

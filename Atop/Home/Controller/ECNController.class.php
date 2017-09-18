@@ -272,11 +272,10 @@ class ECNController extends AuthController {
             $ruleid = I('post.ruleid');
             $model = new Model();
             $result = $model->table(C('DB_PREFIX').'ecn_rule')->find($ruleid);
-            $result['ccs'] = $this->getCcsAndRecipients('String', $result['cc']);
+            $result['ccs'] = $result['cc'] ? $this->getCcsAndRecipients('String', $result['cc']) : null;
             $result['recipients'] = $this->getCcsAndRecipients('Array', $result['recipient']);
             $result['ccs'] = $this->getEcnRuleConfigurationUsers('cc', $result['ccs']);
             $result['recipients'] = $this->getEcnRuleConfigurationUsers('recipients', $result['recipients']);
-            //print_r($result);
             $this->ajaxReturn($result);
         }
     }
@@ -908,7 +907,7 @@ class ECNController extends AuthController {
         $result = $model->table(C('DB_PREFIX').'ecn_rule a,'.C('DB_PREFIX').'user b')
             ->field('a.id,a.name,a.description,a.createtime,b.nickname')
             ->where('a.createuser = b.id')
-            ->order('createtime DESC')
+            ->order('a.name ASC')
             ->limit($page->firstRow.','.$page->listRows)
             ->select();
         $pageShow = $page->show();
@@ -925,7 +924,11 @@ class ECNController extends AuthController {
                             ->field('a.id,a.name,a.description,a.cc,a.recipient,a.createtime,b.nickname')
                             ->where('a.createuser = b.id AND a.id = '.I('get.id'))
                             ->select()[0];
-            $result['ccs'] = $this->getCcsAndRecipients('String', $result['cc']);
+            if( $result['cc'] ){
+                $result['ccs'] = $this->getCcsAndRecipients('String', $result['cc']);
+            }else{
+                $result['ccs'] = '';
+            }
             $result['recipients'] = $this->getCcsAndRecipients('Array', $result['recipient']);
             $this->assign('result', $result);
             $this->display();

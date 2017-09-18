@@ -70,7 +70,7 @@
                             <p class="p-wrap">{$value.description}</p>
                         </td>
                         <td>{$value.nickname}</td>
-                        <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
+                        <td>{$value.createtime|date="Y-m-d H:i:s", ###}</td>
                         <!--<td>
                             <eq name="Think.session.user.id" value="$value.createuser">
                                 <in name="value.state" value="WaitingEdit,WaitingReview">

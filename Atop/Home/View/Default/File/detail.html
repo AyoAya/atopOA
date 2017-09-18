@@ -67,7 +67,7 @@
                     </tr>
                     <tr>
                         <td>创建时间</td>
-                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
+                        <td>{$result.createtime|date="Y-m-d H:i:s", ###}</td>
                     </tr>
                     <tr>
                         <td>操作</td>
@@ -198,7 +198,7 @@
                     <td>创建时间</td>
                     <td>
                         <neq name="result.state" value="Archiving">
-                            {$result.createtime|date="Y-m-d H:i", ###}
+                            {$result.createtime|date="Y-m-d H:i:s", ###}
                         </neq>
                     </td>
                 </tr>
@@ -237,7 +237,7 @@
                                     </notempty>
                                 </td>
                                 <td>{$value.nickname}</td>
-                                <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
+                                <td>{$value.createtime|date="Y-m-d H:i:s", ###}</td>
                             </tr>
                         </volist>
                     <else/>

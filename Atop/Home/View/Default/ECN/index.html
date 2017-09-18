@@ -41,10 +41,10 @@
                         <span class="{$value.className}">{$value.stateName}</span>
                     </td>
                     <td>{$value.nickname}</td>
-                    <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
+                    <td>{$value.createtime|date="Y-m-d H:i:s", ###}</td>
                     <td>
                         <notempty name="value.lastedit_time">
-                            {$value.lastedit_time|date="Y-m-d H:i", ###}
+                            {$value.lastedit_time|date="Y-m-d H:i:s", ###}
                         </notempty>
                     </td>
                 </tr>
