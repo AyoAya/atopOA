@@ -1,48 +1,59 @@
-@CHARSET "UTF-8";
-
-.message-container {
-	width: 1000px;
-	margin: 0 auto;
+#banner{
+	width: 10%;
+	height: 400px;
+	float: left;
+	border-radius: 1px;
+	position: fixed;
 }
-.panel-title a {
-	display: block;
-	outline: none;
-	text-decoration: none;
-}
-.panel-title a:hover {
-	text-decoration: none;
-}
-.panel-body {
-	min-height: 250px;
-}
-.noticeList li {
-	padding: 7px 5px;
-	border-bottom: solid 1px #ccc;
-}
-.noticeList li a:hover {
-	text-decoration: none;
-}
-.noticeList li small {
-	position: relative;
-	top: 4px;
-}
-.empty-box {
-	width: 130px;
-	height: 225px;
-	color: #bbb;
-	margin: 0 auto;
+#banner li{
+	height: 50px;
+	color: #666;
+	font-weight: 600;
+	font-size: 16px;
+	margin:0 0 5px 0;
+	line-height: 50px;
 	text-align: center;
+	cursor: pointer;
+	border:1px solid #ccc;
+	border-radius: 2px;
 }
-.empty-box i {
-	font-size: 150px;
+.has-active{
+	background: #428bca;
+	color: #fff !important;
+	border:0 !important;
 }
-.empty-box p.first {
-	font-size: 28px;
+#banner li:hover{
+	background: #428bca;
+	color: #fff !important;
+	border:0;
 }
-.noticeListTextColor a {
-	color: #555;
+#info{
+	width: 85%;
+	height: 1100px;
+	border:1px solid #e6e6e6;
+	float: right;
 }
-.noticeListTextColor a:hover {
-	color: #333;
+#info .box{
+
 }
 
+#info dd{
+	font-size: 14px;
+	color: #555;
+	margin-left:30px;
+	line-height: 30px;
+	height: 30px;
+}
+#info dd span{
+	width: 6px;
+	height: 6px;
+	background: indianred;
+	display: inline-block;
+	border-radius: 6px;
+	margin-right: 5px;
+	margin-bottom: 2px;
+}
+#content{
+	padding: 50px;
+	position: fixed;
+}

@@ -66,7 +66,7 @@ class SoftwareController extends AuthController {
 
                         $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
                                                   ->where('soft_asc =' . $value['id'])
-                                                  ->order('id ASC')
+                                                  ->order('id DESC')
                                                   ->field('version,save_time,soft_asc')
                                                   ->select();
                     }
@@ -91,18 +91,18 @@ class SoftwareController extends AuthController {
                     }
 
                     $softData = $model->table(C('DB_PREFIX') . 'software')
-                        ->where("type='ATE'")
-                        ->limit($page->firstRow.','.$page->listRows)
-                        ->order('number ASC')
-                        ->select();
+                                      ->where("type='ATE'")
+                                      ->limit($page->firstRow.','.$page->listRows)
+                                      ->order('number ASC')
+                                      ->select();
 
                     foreach ($softData as $key => &$value) {
 
                         $value['content'] = $model->table(C('DB_PREFIX') . 'software_log')
-                            ->where('soft_asc ='.$value['id'])
-                            ->order('id ASC')
-                            ->field('version,save_time,soft_asc')
-                            ->select();
+                                                  ->where('soft_asc ='.$value['id'])
+                                                  ->order('id DESC')
+                                                  ->field('version,save_time,soft_asc')
+                                                  ->select();
                     }
 
 
@@ -115,6 +115,8 @@ class SoftwareController extends AuthController {
         }
 
         $pageShow = $page->show();
+
+        # print_r($softData);
 
         $this->assign('softData', $softData);
         $this->assign('page', $pageShow);
@@ -177,7 +179,7 @@ class SoftwareController extends AuthController {
         $softRel = $model->table(C('DB_PREFIX').'software')->find(I('get.id'));
 
         $softRel['child'] = $model->table(C('DB_PREFIX').'software_log a,'.C('DB_PREFIX').'software b,'.C('DB_PREFIX').'user c')
-                                  ->field('a.log,a.save_time,a.version,a.attachment,c.face,a.push_email,a.cc_email')
+                                  ->field('a.log,a.save_time,a.version,a.attachment,c.face,a.push_email,a.cc_email,c.nickname')
                                   ->where('b.id ='.I('get.id').' AND b.id=a.soft_asc AND a.save_person=c.id')
                                   ->order('a.id DESC')
                                   ->select();
@@ -203,6 +205,8 @@ class SoftwareController extends AuthController {
 
         //调用父类注入部门和人员信息
         $this->getAllUsersAndDepartments();
+
+        # print_r($softRel);
 
         $this->assign('softData',$softRel['child']);
         $this->assign('ccList',$ccList);
