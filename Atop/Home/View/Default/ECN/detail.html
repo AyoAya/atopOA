@@ -134,10 +134,10 @@
                             <span class="{$result.className}">{$result.stateName}</span>
                         </td>
                         <td>{$result.User.nickname}</td>
-                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
+                        <td>{$result.createtime|date="Y-m-d H:i:s", ###}</td>
                         <td>
                             <notempty name="result.lastedit_time">
-                                {$result.lastedit_time|date="Y-m-d H:i", ###}
+                                {$result.lastedit_time|date="Y-m-d H:i:s", ###}
                             </notempty>
                         </td>
                         <td>
@@ -226,8 +226,8 @@
                                     <td>
                                         <a href="http://{$Think.SERVER.http_host}/{$value.item.attachment.path}" target="_blank" title="{$value.item.attachment.name}"><i class="file-icon file-icon-ext-{$value.item.attachment.ext}"></i> {$value.item.attachment.name}</a>
                                     </td>
-                                    <td title="{:strip_tags($value['item']['description'])}">
-                                        <p class="wrap">{:strip_tags($value['item']['description'])}</p>    {//过滤掉html标签}
+                                    <td>
+                                        {:strip_tags($value['item']['description'])}    {//过滤掉html标签}
                                     </td>
                                 </tr>
                             </volist>
@@ -268,11 +268,9 @@
                                     <span class="{$value.className}">{$value.stateName}</span>
                                 </td>
                                 <td>
-                                    <notempty name="value.review_time">{$value.review_time|date="Y-m-d H:i", ###}</notempty>
+                                    <notempty name="value.review_time">{$value.review_time|date="Y-m-d H:i:s", ###}</notempty>
                                 </td>
-                                <td title="{$value.remark}">
-                                    <p class="wrap">{$value.remark}</p>
-                                </td>
+                                <td>{$value.remark}</td>
                             </tr>
                         </volist>
                     </tbody>
@@ -303,10 +301,10 @@
                                         <span class="{$value.className}">{$value.stateName}</span>
                                     </td>
                                     <td>{$value.User.nickname}</td>
-                                    <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
+                                    <td>{$value.createtime|date="Y-m-d H:i:s", ###}</td>
                                     <td>
                                         <notempty name="value.lastedit_time">
-                                            {$value.lastedit_time|date="Y-m-d H:i", ###}
+                                            {$value.lastedit_time|date="Y-m-d H:i:s", ###}
                                         </notempty>
                                     </td>
                                 </tr>

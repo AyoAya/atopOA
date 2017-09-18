@@ -67,7 +67,7 @@
                     </tr>
                     <tr>
                         <td>创建时间</td>
-                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
+                        <td>{$result.createtime|date="Y-m-d H:i:s", ###}</td>
                     </tr>
                     <tr>
                         <td>操作</td>
@@ -198,16 +198,14 @@
                     <td>创建时间</td>
                     <td>
                         <neq name="result.state" value="Archiving">
-                            {$result.createtime|date="Y-m-d H:i", ###}
+                            {$result.createtime|date="Y-m-d H:i:s", ###}
                         </neq>
                     </td>
                 </tr>
                 <tr>
                     <td>操作</td>
                     <td>
-                        <button type="button" id="saveFileData" class="layui-btn">
-                            <neq name="result.state" value="Archiving">保存<else/>升版</neq>
-                        </button>
+                        <button type="button" id="saveFileData" class="layui-btn">保存</button>
                         <button type="button" class="layui-btn layui-btn-primary xq-cancel-btn">取消</button>
                     </td>
                 </tr>
@@ -239,7 +237,7 @@
                                     </notempty>
                                 </td>
                                 <td>{$value.nickname}</td>
-                                <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
+                                <td>{$value.createtime|date="Y-m-d H:i:s", ###}</td>
                             </tr>
                         </volist>
                     <else/>

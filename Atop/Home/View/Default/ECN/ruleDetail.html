@@ -40,20 +40,10 @@
                         <td>{$result.name}</td>
                         <td>{$result.description}</td>
                         <td>{$result.nickname}</td>
-                        <td>{$result.createtime|date="Y-m-d H:i", ###}</td>
+                        <td>{$result.createtime|date="Y-m-d H:i:s", ###}</td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-    </div>
-
-    <div class="section-grey">
-        <div class="section-title">抄送列表</div>
-        <div class="section-body">
-            <volist name="result.ccs" id="value">
-                <span class="zw-item">{$value.name}</span>
-            </volist>
-            <div class="clearfix"></div>
         </div>
     </div>
 
@@ -68,6 +58,20 @@
             </div>
         </div>
     </volist>
+
+    <div class="section-grey">
+        <div class="section-title">抄送列表</div>
+        <div class="section-body">
+            <notempty name="result.ccs">
+                <volist name="result.ccs" id="value">
+                    <span class="zw-item">{$value.name}</span>
+                </volist>
+                <else/>
+                <p style="height: 40px;line-height: 40px;text-align: center;width: 10%;">无</p>
+            </notempty>
+            <div class="clearfix"></div>
+        </div>
+    </div>
 
 </block>
 

@@ -31,7 +31,7 @@ class ECNController extends AuthController {
         $result = $model->table(C('DB_PREFIX').'ecn a,'.C('DB_PREFIX').'user b')
                         ->field('a.id,a.ecn_number,a.state,a.disable,a.createtime,a.lastedit_time,b.nickname')
                         ->where('a.createuser = b.id AND a.disable = "N" AND a.state <> "NotPass"')
-                        ->order('a.createtime DESC')
+                        ->order('a.id DESC')
                         ->limit($page->firstRow.','.$page->listRows)
                         ->select();
         foreach( $result as $key=>&$value ){
@@ -48,8 +48,8 @@ class ECNController extends AuthController {
 
     # 创建ECN
     public function add(){
+        $model = M('', '', 'MYSQL_CRSAPI');
         if( IS_POST ){
-            $model = M('', '', 'MYSQL_CRSAPI');
             $model->startTrans();
             try{
                 $postData = I('post.','',false);
@@ -90,16 +90,6 @@ class ECNController extends AuthController {
                 }
                 // 拼装ecn_review_item表数据
                 foreach( $postData['reviewSelected'] as $key=>&$value ){
-                    if( $postData['ecn_type'] === 'file' ){  // 如果类型是file
-                        // 拼装评审文件的状态数据
-                        $changeFileStateData['id'] = $value['id'];
-                        $changeFileStateData['state'] = 'InReview';
-                        // 修改评审文件的状态为评审中
-                        $changeFileStateId = $model->table(C('DB_PREFIX').'file_number')->save($changeFileStateData);
-                        if( $changeFileStateId === false ) throw new \Exception('创建失败');
-                    }else{
-                        // 非文件ecn类型的处理方式...
-                    }
                     $ecnReviewItemData['assoc'] = $value['id'];
                     $ecnReviewItemData['ecn_id'] = $ecn_id;
                     // 写入评审项数据
@@ -113,7 +103,12 @@ class ECNController extends AuthController {
             $model->commit();
             $this->ajaxReturn(['flag'=>1, 'msg'=>'创建成功','ecn'=>$ecnNumber]);
         }else{
-            if( I('get.id') && is_numeric(I('get.id')) ){
+            if( I('get.id') && is_numeric(I('get.id')) ){   // 如果当前文件已经存在ECN则直接跳转的对应的ECN详情页面
+                $tmpRes = $model->table(C('DB_PREFIX').'ecn a,'.C('DB_PREFIX').'ecn_review_item b')->field('a.id,a.ecn_number')->where('a.id = b.ecn_id AND b.assoc = '.I('get.id'))->group('b.ecn_id')->find();
+                if( !empty($tmpRes) ){
+                    redirect('/ECN/detail/'.$tmpRes['ecn_number']);
+                    exit;
+                }
                 $quickSelect = $this->getWaitingReviewItem(I('get.id'));
                 $this->assign('quickSelect', $quickSelect);
             }
@@ -257,7 +252,15 @@ class ECNController extends AuthController {
         if( IS_POST ){
             $model = D('Ecn');
             if( I('post.currentType') == 'file' ){
-                $result = $model->table(C('DB_PREFIX').'file_number')->where('createuser='.session('user')['id'].' AND state not in ( "InReview","WaitingEdit","Archiving" )')->order('createtime DESC')->select();
+                $result = $model->table(C('DB_PREFIX').'file_number')
+                                ->where('createuser='.session('user')['id'].' AND state not in ( "InReview","WaitingEdit","Archiving" )')
+                                ->order('createtime DESC')
+                                ->select();
+                foreach( $result as $key=>&$value ){    // 如果文件已经生成了ecn则排除掉
+                    $tmpRes = $model->table(C('DB_PREFIX').'ecn_review_item a,'.C('DB_PREFIX').'ecn b')->where('a.assoc = '.$value['id'].' AND a.ecn_id = b.id')->select();
+                    if( $tmpRes ) unset($result[$key]);
+                }
+                sort($result);  // unset之后重新排序
                 $result = $model->jsonToArray($result);
                 $this->ajaxReturn($result);
             }else{
@@ -272,11 +275,10 @@ class ECNController extends AuthController {
             $ruleid = I('post.ruleid');
             $model = new Model();
             $result = $model->table(C('DB_PREFIX').'ecn_rule')->find($ruleid);
-            $result['ccs'] = $this->getCcsAndRecipients('String', $result['cc']);
+            $result['ccs'] = $result['cc'] ? $this->getCcsAndRecipients('String', $result['cc']) : null;
             $result['recipients'] = $this->getCcsAndRecipients('Array', $result['recipient']);
             $result['ccs'] = $this->getEcnRuleConfigurationUsers('cc', $result['ccs']);
             $result['recipients'] = $this->getEcnRuleConfigurationUsers('recipients', $result['recipients']);
-            //print_r($result);
             $this->ajaxReturn($result);
         }
     }
@@ -559,6 +561,15 @@ class ECNController extends AuthController {
             try {
                 $EcnModel = D('Ecn');
                 $ecnAllData = $this->getEcnData($postData['id']);
+                if( $ecnAllData['ecn_type']  == 'file' ){   // 如果是文件类型的ecn，撤回之后将文件状态更改为待评审WaitingReview
+                    foreach( $ecnAllData['EcnReviewItem'] as $key=>&$value ){
+                        $changeFileStateRow = $EcnModel->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['assoc'], 'state'=>'WaitingReview']);
+                        if( $changeFileStateRow === false ) throw new \Exception('撤回失败');
+                    }
+                }else{
+                    // 非文件ecn类型的处理方式...
+                }
+                // 将ecn表状态更改为NotReview，并且将当前current_along强制为1
                 $changeEcnStateRow = $EcnModel->save(['id'=>$postData['id'], 'state'=>'NotReview', 'current_along'=>1]);
                 if( $changeEcnStateRow === false ) throw new \Exception('撤回失败');
                 // 清除评审记录
@@ -599,6 +610,17 @@ class ECNController extends AuthController {
                 }elseif( $ecnAllData['state'] === 'NotReview' ){
                     throw new \Exception('评审已被撤回');
                 }
+                // 发起评审后将文件/BOM类型更改为评审中
+                /*if( $ecnAllData['ecn_type'] === 'file' ){  // 如果类型是file
+                    // 拼装评审文件的状态数据
+                    $changeFileStateData['id'] = $ecnAllData['id'];
+                    $changeFileStateData['state'] = 'InReview';
+                    // 修改评审文件的状态为评审中
+                    $changeFileStateId = $model->table(C('DB_PREFIX').'file_number')->save($changeFileStateData);
+                    if( $changeFileStateId === false ) throw new \Exception('创建失败');
+                }else{
+                    // 非文件ecn类型的处理方式...
+                }*/
                 $ccUsersData = $this->getAllCcUsers($ecnAllData['quote_rule']);     // 获取抄送人数据
                 $model->startTrans();   // 开启事务
                 $map['review_user'] = session('user')['id'];
@@ -894,6 +916,7 @@ class ECNController extends AuthController {
 
     # ECN规则列表
     public function rules(){
+        if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
         $model = new Model();
         $count = $model->table(C('DB_PREFIX').'ecn_rule')->count();
         //数据分页
@@ -908,7 +931,7 @@ class ECNController extends AuthController {
         $result = $model->table(C('DB_PREFIX').'ecn_rule a,'.C('DB_PREFIX').'user b')
             ->field('a.id,a.name,a.description,a.createtime,b.nickname')
             ->where('a.createuser = b.id')
-            ->order('createtime DESC')
+            ->order('a.name ASC')
             ->limit($page->firstRow.','.$page->listRows)
             ->select();
         $pageShow = $page->show();
@@ -919,13 +942,18 @@ class ECNController extends AuthController {
 
     # 规则详情
     public function ruleDetail(){
+        if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
         if( I('get.id') && is_numeric(I('get.id')) ){
             $model = new Model();
             $result = $model->table(C('DB_PREFIX').'ecn_rule a,'.C('DB_PREFIX').'user b')
                             ->field('a.id,a.name,a.description,a.cc,a.recipient,a.createtime,b.nickname')
                             ->where('a.createuser = b.id AND a.id = '.I('get.id'))
                             ->select()[0];
-            $result['ccs'] = $this->getCcsAndRecipients('String', $result['cc']);
+            if( $result['cc'] ){
+                $result['ccs'] = $this->getCcsAndRecipients('String', $result['cc']);
+            }else{
+                $result['ccs'] = null;
+            }
             $result['recipients'] = $this->getCcsAndRecipients('Array', $result['recipient']);
             $this->assign('result', $result);
             $this->display();
@@ -950,10 +978,11 @@ class ECNController extends AuthController {
             $id = $model->table(C('DB_PREFIX').'ecn_rule')->save($ecnRuleData);
             $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'保存成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'保存失败']);
         }else{
+            if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
             if( I('get.id') && is_numeric(I('get.id')) ){
                 $model = new Model();
                 $result = $model->table(C('DB_PREFIX').'ecn_rule')->find(I('get.id'));
-                $result['ccs'] = $this->getCcsAndRecipients('String', $result['cc']);
+                $result['ccs'] = $result['cc'] ? $this->getCcsAndRecipients('String', $result['cc']) : null;
                 $result['recipients'] = $this->getCcsAndRecipients('Array', $result['recipient']);
                 $positions = $this->getAllPositions();
                 //$this->markSelectedPost($this->getAllPositions(), $result['ccs']);

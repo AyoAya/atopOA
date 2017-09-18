@@ -48,9 +48,11 @@
                     <td>{$value.name}</td>
                     <td>{$value.length}</td>
                     <td>{$value.current}</td>
-                    <td>{$value.desc}</td>
+                    <td class="td-wrap" title="{$value.desc}">
+                        <p class="p-wrap">{$value.desc}</p>
+                    </td>
                     <td>{$value.nickname}</td>
-                    <td>{$value.createtime|date="Y-m-d H:i",###}</td>
+                    <td>{$value.createtime|date="Y-m-d H:i:s",###}</td>
                     <td>
                         <div class="layui-btn-group">
                             <a href="__ROOT__/File/editRule/id/{$value.id}" class="layui-btn layui-btn-primary layui-btn-small">编辑</a>

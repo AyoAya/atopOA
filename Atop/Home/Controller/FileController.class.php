@@ -34,7 +34,7 @@ class FileController extends AuthController {
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
         $result = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'user b')
-                          ->field('a.id,a.filenumber,a.version,a.state,a.createtime,a.createuser,b.nickname')
+                          ->field('a.id,a.filenumber,a.version,a.state,a.createtime,a.createuser,a.description,b.nickname')
                           ->where($condition)
                           ->order('createtime DESC')
                           ->limit($page->firstRow.','.$page->listRows)
@@ -266,6 +266,7 @@ class FileController extends AuthController {
 
     # 文件规则
     public function fileRules(){
+        if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
         $model = new Model();
         $count = $model->table(C('DB_PREFIX').'file_rule')->count();
         //数据分页
@@ -279,7 +280,10 @@ class FileController extends AuthController {
         }
         $result = $model->table(C('DB_PREFIX').'file_rule a,'.C('DB_PREFIX').'user b')
                         ->field('a.id,a.name,a.length,a.current,a.desc,a.createtime,b.nickname')
-                        ->where('a.createuser=b.id')->order('createtime DESC')->limit($page->firstRow.','.$page->listRows)->select();
+                        ->where('a.createuser=b.id')->order('createtime DESC')
+                        ->limit($page->firstRow.','.$page->listRows)
+                        ->order('a.name ASC')
+                        ->select();
         $pageShow = $page->show();
         $this->assign('pageShow',$pageShow);
         $this->assign('result', $result);
@@ -297,6 +301,7 @@ class FileController extends AuthController {
             $id = $model->table(C('DB_PREFIX').'file_rule')->add($postData);
             $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'创建成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'创建失败']);
         }else{
+            if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
             $this->display();
         }
     }
@@ -309,6 +314,7 @@ class FileController extends AuthController {
             $row = $model->table(C('DB_PREFIX').'file_rule')->save($postData);
             $row !== false ? $this->ajaxReturn(['flag'=>1, 'msg'=>'修改成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'修改失败']);
         }else{
+            if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
             if( I('get.id') && is_numeric(I('get.id')) ){
                 $model = new Model();
                 $result = $model->table(C('DB_PREFIX').'file_rule')->find(I('get.id'));

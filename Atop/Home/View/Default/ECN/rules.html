@@ -2,7 +2,7 @@
 <extend name="layout/default"/>
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
-    <!--<link rel="stylesheet" href="__CSS__/ECN/rules.css">-->
+    <link rel="stylesheet" href="__CSS__/ECN/rules.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
@@ -47,11 +47,11 @@
                         <td>
                             <a href="__ROOT__/ECN/ruleDetail/id/{$value.id}">{$value.name}</a>
                         </td>
-                        <td>
-                            <p>{$value.description}</p>
+                        <td class="td-wrap" title="{$value.description}">
+                            <p class="p-wrap">{$value.description}</p>
                         </td>
                         <td>{$value.nickname}</td>
-                        <td>{$value.createtime|date="Y-m-d H:i", ###}</td>
+                        <td>{$value.createtime|date="Y-m-d H:i:s", ###}</td>
                         <td>
                             <div class="layui-btn-group">
                                 <a href="__ROOT__/ECN/editRule/id/{$value.id}" class="layui-btn layui-btn-primary layui-btn-small">编辑</a>
@@ -61,7 +61,7 @@
                     </tr>
                 </volist>
             <else/>
-                <tr><td style="text-align: center;padding: 40px 0;"></td>没有数据</tr>
+                <tr><td colspan="5" style="text-align: center;padding: 40px 0;">没有数据</td></tr>
             </notempty>
         </tbody>
     </table>
