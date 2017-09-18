@@ -34,7 +34,7 @@ class FileController extends AuthController {
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
         $result = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'user b')
-                          ->field('a.id,a.filenumber,a.version,a.state,a.createtime,a.createuser,b.nickname')
+                          ->field('a.id,a.filenumber,a.version,a.state,a.createtime,a.createuser,a.description,b.nickname')
                           ->where($condition)
                           ->order('createtime DESC')
                           ->limit($page->firstRow.','.$page->listRows)

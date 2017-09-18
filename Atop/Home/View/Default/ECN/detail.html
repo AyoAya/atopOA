@@ -226,8 +226,8 @@
                                     <td>
                                         <a href="http://{$Think.SERVER.http_host}/{$value.item.attachment.path}" target="_blank" title="{$value.item.attachment.name}"><i class="file-icon file-icon-ext-{$value.item.attachment.ext}"></i> {$value.item.attachment.name}</a>
                                     </td>
-                                    <td title="{:strip_tags($value['item']['description'])}">
-                                        <p class="wrap">{:strip_tags($value['item']['description'])}</p>    {//过滤掉html标签}
+                                    <td>
+                                        {:strip_tags($value['item']['description'])}    {//过滤掉html标签}
                                     </td>
                                 </tr>
                             </volist>
@@ -270,9 +270,7 @@
                                 <td>
                                     <notempty name="value.review_time">{$value.review_time|date="Y-m-d H:i", ###}</notempty>
                                 </td>
-                                <td title="{$value.remark}">
-                                    <p class="wrap">{$value.remark}</p>
-                                </td>
+                                <td>{$value.remark}</td>
                             </tr>
                         </volist>
                     </tbody>
