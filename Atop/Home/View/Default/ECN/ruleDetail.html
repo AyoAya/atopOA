@@ -47,20 +47,6 @@
         </div>
     </div>
 
-    <div class="section-grey">
-        <div class="section-title">抄送列表</div>
-        <div class="section-body">
-            <notempty name="result.ccs">
-                <volist name="result.ccs" id="value">
-                    <span class="zw-item">{$value.name}</span>
-                </volist>
-            <else/>
-                <p style="height: 40px;line-height: 40px;text-align: center;width: 10%;">无</p>
-            </notempty>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-
     <volist name="result.recipients" id="value">
         <div class="section-grey">
             <div class="section-title">{$key+1} 级评审</div>
@@ -72,6 +58,20 @@
             </div>
         </div>
     </volist>
+
+    <div class="section-grey">
+        <div class="section-title">抄送列表</div>
+        <div class="section-body">
+            <notempty name="result.ccs">
+                <volist name="result.ccs" id="value">
+                    <span class="zw-item">{$value.name}</span>
+                </volist>
+                <else/>
+                <p style="height: 40px;line-height: 40px;text-align: center;width: 10%;">无</p>
+            </notempty>
+            <div class="clearfix"></div>
+        </div>
+    </div>
 
 </block>
 

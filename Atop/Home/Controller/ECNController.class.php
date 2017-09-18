@@ -916,6 +916,7 @@ class ECNController extends AuthController {
 
     # ECN规则列表
     public function rules(){
+        if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
         $model = new Model();
         $count = $model->table(C('DB_PREFIX').'ecn_rule')->count();
         //数据分页
@@ -941,6 +942,7 @@ class ECNController extends AuthController {
 
     # 规则详情
     public function ruleDetail(){
+        if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
         if( I('get.id') && is_numeric(I('get.id')) ){
             $model = new Model();
             $result = $model->table(C('DB_PREFIX').'ecn_rule a,'.C('DB_PREFIX').'user b')
@@ -976,6 +978,7 @@ class ECNController extends AuthController {
             $id = $model->table(C('DB_PREFIX').'ecn_rule')->save($ecnRuleData);
             $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'保存成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'保存失败']);
         }else{
+            if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
             if( I('get.id') && is_numeric(I('get.id')) ){
                 $model = new Model();
                 $result = $model->table(C('DB_PREFIX').'ecn_rule')->find(I('get.id'));
