@@ -90,16 +90,6 @@ class ECNController extends AuthController {
                 }
                 // 拼装ecn_review_item表数据
                 foreach( $postData['reviewSelected'] as $key=>&$value ){
-                    if( $postData['ecn_type'] === 'file' ){  // 如果类型是file
-                        // 拼装评审文件的状态数据
-                        $changeFileStateData['id'] = $value['id'];
-                        $changeFileStateData['state'] = 'InReview';
-                        // 修改评审文件的状态为评审中
-                        $changeFileStateId = $model->table(C('DB_PREFIX').'file_number')->save($changeFileStateData);
-                        if( $changeFileStateId === false ) throw new \Exception('创建失败');
-                    }else{
-                        // 非文件ecn类型的处理方式...
-                    }
                     $ecnReviewItemData['assoc'] = $value['id'];
                     $ecnReviewItemData['ecn_id'] = $ecn_id;
                     // 写入评审项数据
@@ -558,6 +548,15 @@ class ECNController extends AuthController {
             try {
                 $EcnModel = D('Ecn');
                 $ecnAllData = $this->getEcnData($postData['id']);
+                if( $ecnAllData['ecn_type']  == 'file' ){   // 如果是文件类型的ecn，撤回之后将文件状态更改为待评审WaitingReview
+                    foreach( $ecnAllData['EcnReviewItem'] as $key=>&$value ){
+                        $changeFileStateRow = $EcnModel->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['assoc'], 'state'=>'WaitingReview']);
+                        if( $changeFileStateRow === false ) throw new \Exception('撤回失败');
+                    }
+                }else{
+                    // 非文件ecn类型的处理方式...
+                }
+                // 将ecn表状态更改为NotReview，并且将当前current_along强制为1
                 $changeEcnStateRow = $EcnModel->save(['id'=>$postData['id'], 'state'=>'NotReview', 'current_along'=>1]);
                 if( $changeEcnStateRow === false ) throw new \Exception('撤回失败');
                 // 清除评审记录
@@ -598,6 +597,17 @@ class ECNController extends AuthController {
                 }elseif( $ecnAllData['state'] === 'NotReview' ){
                     throw new \Exception('评审已被撤回');
                 }
+                // 发起评审后将文件/BOM类型更改为评审中
+                /*if( $ecnAllData['ecn_type'] === 'file' ){  // 如果类型是file
+                    // 拼装评审文件的状态数据
+                    $changeFileStateData['id'] = $ecnAllData['id'];
+                    $changeFileStateData['state'] = 'InReview';
+                    // 修改评审文件的状态为评审中
+                    $changeFileStateId = $model->table(C('DB_PREFIX').'file_number')->save($changeFileStateData);
+                    if( $changeFileStateId === false ) throw new \Exception('创建失败');
+                }else{
+                    // 非文件ecn类型的处理方式...
+                }*/
                 $ccUsersData = $this->getAllCcUsers($ecnAllData['quote_rule']);     // 获取抄送人数据
                 $model->startTrans();   // 开启事务
                 $map['review_user'] = session('user')['id'];
