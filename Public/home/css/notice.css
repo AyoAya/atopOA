@@ -1,9 +1,10 @@
 #banner{
-	width: 10%;
+	width: 140px;
 	height: 400px;
 	float: left;
 	border-radius: 1px;
-	position: fixed;
+	margin: 0px 30px 0 0;
+
 }
 #banner li{
 	height: 50px;
@@ -28,21 +29,23 @@
 	border:0;
 }
 #info{
-	width: 85%;
+	width: 820px;
 	height: 1100px;
 	border:1px solid #e6e6e6;
-	float: right;
+	float: left;
+	padding:10px;
 }
-#info .box{
-
+#info h3{
+	text-align: center;
+	border-bottom: 1px solid #ccc;
+	padding: 10px 150px 20px 0;
 }
-
 #info dd{
 	font-size: 14px;
 	color: #555;
-	margin-left:30px;
-	line-height: 30px;
-	height: 30px;
+	border-bottom: 1px solid #d2d2d2;
+	margin:5px 30px;
+	padding: 8px 0;
 }
 #info dd span{
 	width: 6px;
@@ -55,5 +58,4 @@
 }
 #content{
 	padding: 50px;
-	position: fixed;
 }
