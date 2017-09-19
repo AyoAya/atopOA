@@ -31,6 +31,7 @@ class DCCController extends AuthController {
                 $department = 'quality';
                 $folders_public = read_all_dir('./Uploads/dcc/quality/public');
                 $folders_private = read_all_dir('./Uploads/dcc/quality/private');
+                $folders_iso = read_all_dir('./Uploads/dcc/quality/ISO9001');
                 break;
             case 4:
                 $department = 'sales';
