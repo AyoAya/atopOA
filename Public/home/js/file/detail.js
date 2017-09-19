@@ -145,6 +145,35 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
         return true;
     }
 
+    $('#review-btn').click(function(){
+        let rid = $(this).attr('rid');
+        //询问框
+        /*layer.confirm("该文件已存在对应的ECN，点击确定将会跳转到ECN详情页面。\r\n1.如果ECN状态为待评审，可以直接发起评审。\r\n2.如果ECN状态为已拒绝，则需重新编辑后再发起评审。", {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            location.href = 'http://'+ ThinkPHP['HTTP_HOST'] +'/ECN/add/type/file/id/'+ rid;
+        }, function(){
+            layer.closeAll();
+        });*/
+
+        layer.open({
+            type: 1,
+            title: '提示',
+            skin: 'layui-layer-demo', //样式类名
+            closeBtn: 1, //不显示关闭按钮
+            area: ['440px'],
+            btn: ['确定','取消'],
+            shadeClose: true, //开启遮罩关闭
+            content: '<p style="padding: 20px;"><i class=""></i>该文件已存在对应的ECN，点击确定将会跳转到ECN详情页面。<br><br>1.如果ECN状态为待评审，可以直接发起评审。<br>2.如果ECN状态为已拒绝，则需重新编辑后再发起评审。</p>',
+            yes: function(index, layero){
+                location.href = 'http://'+ ThinkPHP['HTTP_HOST'] +'/ECN/add/type/file/id/'+ rid;
+            },
+            btn2: function(index, layero){
+                layer.closeAll();
+            }
+        });
+    });
+
     // 提交编辑数据
     function submitEditData(filedata){
         let _version = $('#version').val();

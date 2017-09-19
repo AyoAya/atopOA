@@ -95,7 +95,12 @@
                                     </eq>
                                     <button type="button" class="layui-btn layui-btn-primary layui-btn-disabled">升版</button>
                                     <eq name="Think.session.user.id" value="$result.user_id">
-                                        <a href="__ROOT__/ECN/add/type/file/id/{$result.id}" class="layui-btn layui-btn-primary">评审</a>
+                                        <!--<a href="__ROOT__/ECN/add/type/file/id/{$result.id}" class="layui-btn layui-btn-primary">评审</a>-->
+                                        <present name="ecnAssoc">
+                                            <button type="button" id="review-btn" class="layui-btn layui-btn-primary" rid="{$result.id}">评审</button>
+                                        <else/>
+                                            <a href="__ROOT__/ECN/add/type/file/id/{$result.id}" class="layui-btn layui-btn-primary">评审</a>
+                                        </present>
                                     <else/>
                                         <button type="button" class="layui-btn layui-btn-primary layui-btn-disabled">评审</button>
                                     </eq>
