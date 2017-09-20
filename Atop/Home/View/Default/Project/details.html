@@ -238,10 +238,9 @@
 
                         <eq name="Think.session.user.id" value="$auth">
                             <td class="operation_td {$value.plan.class}">
-                                <if condition="isset($value['show']) AND $value['show'] eq 'true'">
+
                                     <button class="editor-btn btn btn-default btn-sm" plan_project="{$getID}" step="{$value.gate}" plan_node="{$value.id}"><i class="icon-edit"></i></button>
 
-                                </if>
                             </td>
                         </eq>
                     </tr>
@@ -250,6 +249,8 @@
         </table>
     </eq>
 
+    <!--<if condition="isset($value['show']) AND $value['show'] eq 'true'">-->
+    <!--</if>-->
     <eq name="tab" value="subprojects">
         <eq name="Think.session.user.id" value="$auth">
             <div class="add-subprojects">
