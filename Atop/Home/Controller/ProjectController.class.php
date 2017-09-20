@@ -985,8 +985,8 @@ HTML;
                         $planNode['pj_num'] = $projectResult['pj_num'];
                         $planNode['pj_name'] = $projectResult['pj_name'];
                         $planNode['pj_create_person'] = $projectResult['pj_management'];
-                        //print_r($planNode);
-                        $this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
+
+                        //$this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
                         $this->ajaxReturn(array('flag' => 1, 'msg' => '保存成功'));
                         exit;
                     }else{
@@ -1020,8 +1020,8 @@ HTML;
                         $planNode['pj_num'] = $projectResult['pj_num'];
                         $planNode['pj_name'] = $projectResult['pj_name'];
                         $planNode['pj_create_person'] = $projectResult['pj_management'];
-                        //print_r($planNode);
-                        $this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
+
+                        //$this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
                         $this->ajaxReturn(array('flag' => 1, 'msg' => '保存成功'));
                         exit;
                     }else{
@@ -1055,8 +1055,8 @@ HTML;
                         $planNode['pj_num'] = $projectResult['pj_num'];
                         $planNode['pj_name'] = $projectResult['pj_name'];
                         $planNode['pj_create_person'] = $projectResult['pj_management'];
-                        //print_r($planNode);
-                        $this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
+                        
+                        //$this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
                         $this->ajaxReturn(array('flag' => 1, 'msg' => '保存成功'));
                         exit;
                     }else{
@@ -1068,41 +1068,6 @@ HTML;
                     exit;
                 }
             }
-
-             # print_r( strtotime(date('Y-m-d H:i:s',strtotime(''.$data['complete_time'].'+1 day'))).'---');
-             /*print_r( $data);
-             die();*/
-
-            /*if( !empty($data) ) {
-                $data['id'] = I('post.plan_node');
-                $data['comments'] = replaceEnterWithBr(strip_tags($data['comments']));
-                $data['save_time'] = time();
-                $id = $plan->save($data);  // 修改
-                if ($id) {
-                    # 更新项目最近更新时间
-                    $pj_id = $data['plan_project'];
-                    $pj_save_data['id'] = $pj_id;
-                    $pj_save_data['pj_update_time'] = time();
-                    $pj_save_id = M('Project')->save($pj_save_data);
-                    if ($pj_save_id) {
-                        $projectResult = M('Project')->find($data['plan_project']);
-                        $planNode = $plan->find(I('post.plan_node'));
-                        $planNode['pj_num'] = $projectResult['pj_num'];
-                        $planNode['pj_name'] = $projectResult['pj_name'];
-                        $planNode['pj_create_person'] = $projectResult['pj_management'];
-                        //print_r($planNode);
-                        $this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
-                        $this->ajaxReturn(array('flag' => 1, 'msg' => '保存成功'));
-                        exit;
-                    } else {
-                        $this->ajaxReturn(array('flag' => 0, 'msg' => '保存失败'));
-                        exit;
-                    }
-                } else {
-                    $this->ajaxReturn(array('flag' => 0, 'msg' => '错误'));
-                    exit;
-                }
-            }*/
         }
     }
 
