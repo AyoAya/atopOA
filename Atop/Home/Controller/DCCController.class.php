@@ -56,6 +56,7 @@ class DCCController extends AuthController {
         }
 
         $folders['public'] = $folders_public;
+        $folders['ISO9001'] = $folders_iso;
 
         if( I('get.department') && !empty(I('get.department')) ){
             if( $nowuser_department != I('get.department') && $nowuser_department != 0 ){
@@ -66,6 +67,8 @@ class DCCController extends AuthController {
         }else{
             $folders['private'] = $folders_private;
         }
+
+        print_r($folders);
 
         $this->assign('userDepartment',$userDepartment);
         $this->assign('folders',$folders);

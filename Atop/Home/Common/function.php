@@ -837,9 +837,11 @@ function read_all_dir ( $dir ){
             if ( $file != '.' && $file != '..'){
                 $cur_path = $dir . DIRECTORY_SEPARATOR . $file;
                 if ( is_dir ( $cur_path ) ){
-                    $result['dir'][iconv("gb2312","utf-8",$cur_path)] = read_all_dir ( $cur_path );
+                    $result['dir'][iconv("gb2312","utf-8//IGNORE",$cur_path)] = read_all_dir ( $cur_path );
                 }else{
-                    $result['file'][] = iconv("gb2312","utf-8",$cur_path);
+                    $curFile = iconv("gb2312","utf-8//IGNORE",$cur_path);
+                    $curFile = str_replace(chr(194) . chr(160), "<{@||@}>", $curFile);
+                    $result['file'][] = $curFile;
                 }
             }
         }
@@ -858,19 +860,29 @@ function getFolderName($path){
     return end(explode('\\',$path));
 }
 
+function get_basename($filename){
+    return preg_replace('/^.+[\\\\\\/]/', '', $filename);
+}
 
 function traverse_document(&$arr){
     if( is_array($arr) && !empty($arr) ){
-        foreach($arr as $key=>&$value){
-            if( is_array($value) ){
-                if($key!='dir' && $key!='file'){
-                    echo '<div class="folder-icon text-primary"><i class="icon-folder-open-alt"></i>&nbsp;'.getFolderName($key).'</div>';
+        foreach($arr as $key=>&$value) {
+            if (is_array($value)) {
+                if ($key != 'dir' && $key != 'file') {
+                    echo '<div class="clearfix"></div><div class="folder-icon text-primary"><i class="icon-folder-open-alt"></i>&nbsp;' . getFolderName($key) . '</div><div class="clearfix"></div>';
                 }
                 traverse_document($value);
-            }else{
-                switch(getExtension($value)){
+            } else {
+
+                echo '<div class="col-lg-6" file-path="' . $value . '" style="padding: 7px 10px 7px 15px;"><a href="' . $value . '" target="_blank" title="' . getBasename($value) . '"><i class="file-icon file-icon-ext-' . getExtension($value) . '"></i>&nbsp;' . getBasename($value) . '</a></div>';
+                if (($key) % 2) {
+                    echo '<div class="clearfix"></div>';
+                }
+                if ($key == (count($arr) - 1)) {
+                    echo '<div class="clearfix"></div>';
+                }
+                /*switch(getExtension($value)){
                     case 'pdf':
-                        echo '<li class="file-icon" file-path="'.$value.'"><a href="'.$value.'" target="_blank" title="'.getBasename($value).'"><i class="z-icon-logo z-icon-pdf"></i>&nbsp;'.getBasename($value).'</a></li>';
                         break;
                     case 'PDF':
                         echo '<li class="file-icon" file-path="'.$value.'"><a href="'.$value.'" target="_blank" title="'.getBasename($value).'"><i class="z-icon-logo z-icon-pdf"></i>&nbsp;'.getBasename($value).'</a></li>';
@@ -907,7 +919,7 @@ function traverse_document(&$arr){
                         break;
                     default:
                         echo '<li class="file-icon" file-path="'.$value.'"><a href="'.$value.'" target="_blank" title="'.getBasename($value).'"><i class="z-icon-logo z-icon-file"></i>&nbsp;'.getBasename($value).'</a></li>';
-                }
+                }*/
             }
         }
     }else{

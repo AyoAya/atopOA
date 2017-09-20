@@ -81,16 +81,69 @@
 				</span>
 			</div>
 		</div>-->
+
+		<!--<if condition="is_array($folders['ISO9001'])">
+			<div class="section-primary">
+				<div class="section-title">
+					<h2 class="panel-title">ISO9001</h2>
+				</div>
+				<div class="section-body">
+					<div class="file-box">
+						<ul class="folders-list">
+							<present name="folders.ISO9001.file">
+								<volist name="folders.ISO9001.file" id="value">
+									<li class="file-icon" file-path="{$value}"><a href="{$value}" target="_blank"><i class="file-icon file-icon-ext-{:getExtension($value)}"></i>&nbsp;{:getBasename($value)}</a></li>
+								</volist>
+							</present>
+							<notempty name="folders.ISO9001">
+								<present name="folders.ISO9001.dir">
+									{:traverse_document($folders['ISO9001']['dir'])}
+								</present>
+								<else/>
+								<i class="icon-exclamation-sign"></i> 没有数据
+							</notempty>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</if>-->
+		<if condition="is_array($folders['ISO9001'])">
+			<div class="section-primary">
+				<div class="section-title">
+					<h2 class="panel-title">ISO9001</h2>
+				</div>
+				<div class="section-body">
+					<div class="file-box">
+						<div class="folders-list">
+							<present name="folders.ISO9001.file">
+								<volist name="folders.ISO9001.file" id="value">
+									<div class="clearfix"></div>
+									<div class="file-icon" file-path="{$value}"><a href="{$value}" target="_blank"><i class="file-icon file-icon-ext-{:getExtension($value)}"></i>&nbsp;{:getBasename($value)}</a></div>
+								</volist>
+							</present>
+							<notempty name="folders.ISO9001">
+								<present name="folders.ISO9001.dir">
+									{:traverse_document($folders['ISO9001']['dir'])}
+								</present>
+								<else/>
+								<i class="icon-exclamation-sign"></i> 没有数据
+							</notempty>
+						</div>
+					</div>
+				</div>
+			</div>
+		</if>
+
 		<div class="section-primary">
 			<div class="section-title">
 				<h5>公开文档</h5>
 			</div>
 			<div class="section-body">
 				<div class="file-box">
-					<ul class="folders-list">
+					<div class="folders-list">
 						<present name="folders.public.file">
 							<volist name="folders.public.file" id="value">
-								<li class="file-icon" file-path="{$value}" title="{:getBasename($value)}"><a href="{$value}" target="_blank"><i class="icon-file-alt"></i>&nbsp;{:getBasename($value)}</a></li>
+								<li class="file-icon" file-path="{$value}" title="{:getBasename($value)}"><a href="{$value}" target="_blank"><i class="file-icon file-icon-ext-{:getExtension($value)}"></i>&nbsp;{:getBasename($value)}</a></li>
 							</volist>
 						</present>
 						<notempty name="folders.public">
@@ -100,7 +153,7 @@
 						<else/>
 							<i class="icon-exclamation-sign"></i> 没有数据
 						</notempty>
-					</ul>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -112,10 +165,10 @@
 				</div>
 				<div class="section-body">
 					<div class="file-box">
-						<ul class="folders-list">
+						<div class="folders-list">
 							<present name="folders.private.file">
 								<volist name="folders.private.file" id="value">
-									<li class="file-icon" file-path="{$value}"><a href="{$value}" target="_blank"><i class="icon-file-alt"></i>&nbsp;{:getBasename($value)}</a></li>
+									<li class="file-icon" file-path="{$value}"><a href="{$value}" target="_blank"><i class="file-icon file-icon-ext-{:getExtension($value)}"></i>&nbsp;{:getBasename($value)}</a></li>
 								</volist>
 							</present>
 							<notempty name="folders.private">
@@ -125,7 +178,7 @@
 							<else/>
 								<i class="icon-exclamation-sign"></i> 没有数据
 							</notempty>
-						</ul>
+						</div>
 					</div>
 				</div>
 			</div>
