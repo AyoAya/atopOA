@@ -488,9 +488,10 @@
             }
 
             // 渲染评审组
-            function renderReviewGroup(data, checkeds = []){
+            function renderReviewGroup(data, checkeds){
                 var reviewGroupHTML = '';
                 var reviewGroup = $('.review-group');
+                var checkeds = checkeds || [];
 
                 for( var group in data.recipients ){
                     reviewGroupHTML += '<div class="layui-form-item">';
@@ -543,7 +544,8 @@
             });
 
             // 渲染受影响的数据列
-            function renderReviewItemList(type, data, InLayer = true){
+            function renderReviewItemList(type, data, InLayer){
+                var InLayer = InLayer || true;
                 var RenderHTML = '';
                 var head = '<thead><tr><th>文件号</th><th>版本号</th><th>附件</th><th>文件描述</th><th>操作</th></tr></thead>';
                 if( type === 'file' ){

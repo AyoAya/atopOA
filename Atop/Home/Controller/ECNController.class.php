@@ -610,17 +610,6 @@ class ECNController extends AuthController {
                 }elseif( $ecnAllData['state'] === 'NotReview' ){
                     throw new \Exception('评审已被撤回');
                 }
-                // 发起评审后将文件/BOM类型更改为评审中
-                /*if( $ecnAllData['ecn_type'] === 'file' ){  // 如果类型是file
-                    // 拼装评审文件的状态数据
-                    $changeFileStateData['id'] = $ecnAllData['id'];
-                    $changeFileStateData['state'] = 'InReview';
-                    // 修改评审文件的状态为评审中
-                    $changeFileStateId = $model->table(C('DB_PREFIX').'file_number')->save($changeFileStateData);
-                    if( $changeFileStateId === false ) throw new \Exception('创建失败');
-                }else{
-                    // 非文件ecn类型的处理方式...
-                }*/
                 $ccUsersData = $this->getAllCcUsers($ecnAllData['quote_rule']);     // 获取抄送人数据
                 $model->startTrans();   // 开启事务
                 $map['review_user'] = session('user')['id'];
@@ -652,6 +641,14 @@ class ECNController extends AuthController {
                         'state' => 'BeRejected'
                     ]);
                     if( !$ecnRow ) throw new \Exception('评审失败');
+                    if( $ecnAllData['ecn_type'] == 'file' ){
+                        foreach( $ecnAllData['EcnReviewItem'] as $key=>&$value ){   // 如果评审被拒绝则修改文件状态
+                            $changeFileNumberStateRow = $model->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['assoc'], 'state'=>'WaitingReview']);
+                            if( $changeFileNumberStateRow === false ) throw new \Exception('评审失败');
+                        }
+                    }else{
+                        // 非文件ecn类型的处理方式...
+                    }
                     $pushUsersData = [ ['email'=>$ecnAllData['User']['email'], 'name'=>$ecnAllData['User']['nickname']] ];  // 通知该ecn创建人
                     $ccsPersons = $this->getAlongOfPushUsers($ecnAllData['current_along'], $ecnAllData['EcnReview']);
                     $sendResult = $this->pushEmail('ReviewAction', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccsPersons, ['reviewState'=>$postData['review_state'], 'remark'=>$postData['remark']]);
@@ -698,10 +695,6 @@ class ECNController extends AuthController {
                             array_push($this->ccs, ['email'=>$ecnAllData['User']['email'], 'name'=>$ecnAllData['User']['nickname']]);  // 将创建人添加到抄送人
                             $sendResult_Complete = $this->pushEmail('PushDown', $postData['ecn_type'], $pushUsersData, $ecnAllData, $this->ccs, ['reviewState' => $postData['review_state'], 'remark' => $postData['remark']]);
                         }
-                        /*$pushUsersData = [ ['email'=>$ecnAllData['User']['email'], 'name'=>$ecnAllData['User']['nickname']] ];  // 通知该ecn创建人
-                        $ccList = $this->getAlongOfPushUsers($postData['along'], $ecnAllData['EcnReview']);
-                        array_push($ccList, ['email'=>session('user')['email'], 'name'=>$ecnAllData['User']['nickname']]);  // 将自己添加到抄送人
-                        $sendResult = $this->pushEmail('ReviewAction', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccList, ['reviewState'=>$postData['review_state'], 'remark'=>$postData['remark']]);*/
                         $sendResult_Complete ? $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功']) : $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功，部分邮件未发送']);
                     }else{
                         $pushUsersData = [ ['email'=>$ecnAllData['User']['email'], 'name'=>$ecnAllData['User']['nickname']] ];  // 通知该ecn创建人
