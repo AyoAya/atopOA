@@ -12,7 +12,7 @@ layui.use(['form', 'jquery', 'layer'], function(){
     $.post(ThinkPHP['AJAX'] + '/File/getFileTypeDescription', {
         fileTypeId: fileTypeId
     }, function(response){
-        $('p.tswb').text(response.msg);
+        $('p.tswb span').text(response.msg);
     });
 
     // 监听文件类型改变
@@ -20,7 +20,7 @@ layui.use(['form', 'jquery', 'layer'], function(){
         $.post(ThinkPHP['AJAX'] + '/File/getFileTypeDescription', {
             fileTypeId: data.value
         }, function(response){
-            $('p.tswb').text(response.msg);
+            $('p.tswb span').text(response.msg);
         });
     });
 
