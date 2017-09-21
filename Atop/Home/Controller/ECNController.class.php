@@ -29,7 +29,7 @@ class ECNController extends AuthController {
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
         $result = $model->table(C('DB_PREFIX').'ecn a,'.C('DB_PREFIX').'user b')
-                        ->field('a.id,a.ecn_number,a.state,a.disable,a.createtime,a.lastedit_time,b.nickname')
+                        ->field('a.id,a.ecn_number,a.state,a.disable,a.change_description,a.createtime,a.lastedit_time,b.nickname')
                         ->where('a.createuser = b.id AND a.disable = "N" AND a.state <> "NotPass"')
                         ->order('a.id DESC')
                         ->limit($page->firstRow.','.$page->listRows)
@@ -43,8 +43,6 @@ class ECNController extends AuthController {
         $this->assign('result',$result);
         $this->display();
     }
-
-
 
     # 创建ECN
     public function add(){

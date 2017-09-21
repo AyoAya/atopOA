@@ -1,3 +1,25 @@
 .layui-table tbody td {
     padding: 15px;
 }
+@media ( min-width: 1440px ) {
+    .layui-table tbody td.td-wrap {
+        width: 600px;
+    }
+    .layui-table tbody td p.p-wrap {
+        width: 600px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+@media ( max-width: 1440px ) {
+    .layui-table tbody td.td-wrap {
+        width: 400px;
+    }
+    .layui-table tbody td p.p-wrap {
+        width: 400px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}

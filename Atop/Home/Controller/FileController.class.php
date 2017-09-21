@@ -16,12 +16,14 @@ class FileController extends AuthController {
         $model = new Model();
 
         if( I('get.search') && trim(I('get.search')) != '' ){
-            $condition = 'a.createuser = b.id AND a.upgrade="N" AND a.filenumber LIKE "%'.I('get.search').'%"';
+            $condition = 'a.createuser = b.id AND a.upgrade="N" AND a.state <> "Recyle" AND a.filenumber LIKE "%'.I('get.search').'%"';
             $map['upgrade'] = 'N';
             $map['filenumber'] = ['like', '%'.I('get.search').'%'];
+            $map['state'] = ['neq', 'Recyle'];
         }else{
             $map['upgrade'] = 'N';
-            $condition = 'a.createuser = b.id AND a.upgrade="N"';
+            $map['state'] = ['neq', 'Recyle'];
+            $condition = 'a.createuser = b.id AND a.upgrade="N" AND a.state <> "Recyle"';
         }
         $count = $model->table(C('DB_PREFIX').'file_number')->where($map)->count();
         //数据分页
@@ -107,6 +109,7 @@ class FileController extends AuthController {
                         ->order('a.version DESC,id DESC')
                         ->find();
                 }
+                if( $result['state'] == 'Recyle' ) $this->error('文件号已回收');  // 已回收的文件号页面不允许访问
                 if( $result['attachment'] != '' ) $result['file'] = json_decode($result['attachment'], true); // 如果存在附件则将json转数组
                 $result['className'] = $this->fetchClassStyle($result['state']);
                 $result['stateName'] = $this->fetchStateName($result['state']);
@@ -152,6 +155,15 @@ class FileController extends AuthController {
         }
     }
 
+    # 获取指定文件类型的描述信息
+    public function getFileTypeDescription(){
+        if( IS_POST ){
+            $typeId = I('post.fileTypeId');
+            $result = M('FileRule')->field('desc')->find($typeId);
+            $result ? $this->ajaxReturn(['flag'=>1, 'msg'=>$result['desc']]) : $this->ajaxReturn(['flag'=>0, 'msg'=>'描述信息获取失败']);
+        }
+    }
+
     # 编号申请页
     public function apply(){
         if( IS_POST ){
@@ -159,25 +171,38 @@ class FileController extends AuthController {
             $result = $model->table(C('DB_PREFIX').'file_rule')->find(I('post.id'));
             $quantity = $model->table(C('DB_PREFIX').'file_number')->where('createtime > '.( time() - 3600 ).' AND type = "'.$result['name'].'"')->count();
             if( (int)$quantity >= 10 ) $this->ajaxReturn(['flag'=>0, 'msg'=>'同一个文件类型1小时内只能申请10次']);
-            $model->startTrans();
-            $current = $result['current'] + 1;
-            $row = $model->table(C('DB_PREFIX').'file_rule')->save(['id'=>$result['id'], 'current'=>$current]); // 当前规则current + 1
-            $increment = ( ( $result['length'] - strlen($result['name']) ) - strlen($current) );    // 计算出需要填充的长度
-            if( $increment <= 0 ) $this->ajaxReturn(['flag'=>0, 'msg'=>'无法申请文件号，请检查文件类型的长度是否合法']);
-            $filenumber = '';
-            $filenumber = $result['name'].str_pad($filenumber, $increment, '0', STR_PAD_RIGHT).$current;    // 生成文件编号
-            $filenumberData['type'] = $result['name'];
-            $filenumberData['filenumber'] = $filenumber;
-            $filenumberData['createtime'] = time();
-            $filenumberData['createuser'] = session('user')['id'];
-            $id = $model->table(C('DB_PREFIX').'file_number')->add($filenumberData);    // 将申请的文件编号保存
-            $row && $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'申请成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'申请失败']);
+            // 检查是否存在已回收的记录
+            $recyleData = $model->table(C('DB_PREFIX').'file_number')->where('type = "'.$result['name'].'" AND state = "Recyle"')->order('id ASC')->limit(1)->select();
+            if( $recyleData ){  // 如果存在已回收的记录则优先使用
+                $reuseRow = $model->table(C('DB_PREFIX').'file_number')->save([
+                    'id'=>$recyleData[0]['id'],
+                    'state'=>'WaitingEdit',
+                    'createtime'=>time(),
+                    'createuser'=>session('user')['id']
+                ]);
+                $reuseRow !== false ? $this->ajaxReturn(['flag'=>1, 'msg'=>'申请成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'申请失败']);
+            }else{
+                $model->startTrans();
+                $current = $result['current'] + 1;
+                $row = $model->table(C('DB_PREFIX').'file_rule')->save(['id'=>$result['id'], 'current'=>$current]); // 当前规则current + 1
+                $increment = ( ( $result['length'] - strlen($result['name']) ) - strlen($current) );    // 计算出需要填充的长度
+                if( $increment <= 0 ) $this->ajaxReturn(['flag'=>0, 'msg'=>'无法申请文件号，请检查文件类型的长度是否合法']);
+                $filenumber = '';
+                $filenumber = $result['name'].str_pad($filenumber, $increment, '0', STR_PAD_RIGHT).$current;    // 生成文件编号
+                $filenumberData['type'] = $result['name'];
+                $filenumberData['filenumber'] = $filenumber;
+                $filenumberData['createtime'] = time();
+                $filenumberData['createuser'] = session('user')['id'];
+                $id = $model->table(C('DB_PREFIX').'file_number')->add($filenumberData);    // 将申请的文件编号保存
+                $row && $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'申请成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'申请失败']);
+            }
         }else{
             $rules = $this->getAllFileRules();
             $this->assign('rules', $rules);
             $model = new Model();
             $map['createuser'] = session('user')['id'];
             $map['upgrade'] = 'N';
+            $map['state'] = ['neq', 'Recyle'];
             $count = $model->table(C('DB_PREFIX').'file_number')->where($map)->count();
             //数据分页
             $page = new Page($count,C('LIMIT_SIZE'));
@@ -227,6 +252,9 @@ class FileController extends AuthController {
             case 'BeRejected':      // 驳回
                 $className = 'tag tag-danger';
                 break;
+            case 'Recyle':      // 已回收
+                $className = 'tag tag-pay';
+                break;
             default:                // 如果都不是则直接返回错误的class样式
                 $className = 'tag tag-danger';
         }
@@ -250,6 +278,9 @@ class FileController extends AuthController {
                 break;
             case 'BeRejected':      // 驳回
                 $stateName = '驳回';
+                break;
+            case 'Recyle':      // 已回收
+                $stateName = '已回收';
                 break;
             default:                // 如果都不是则直接返回错误的class样式
                 $stateName = 'UNKNOW';
@@ -321,6 +352,24 @@ class FileController extends AuthController {
                 $this->assign('result', $result);
                 $this->display();
             }
+        }
+    }
+
+    # 回收文件号
+    public function recyleFileNumber(){
+        if( IS_POST ){
+            $id = I('post.fileid');
+            $row = M('FileNumber')->save([
+                'id'=>$id,
+                'state'=>'Recyle',
+                'version'=>null,
+                'attachment'=>null,
+                'description'=>null,
+                'frequency'=>0,
+                'upgrade'=>'N',
+                'lastedit_time'=>null,
+            ]);
+            $row !== false ? $this->ajaxReturn(['flag'=>1, 'msg'=>'回收成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'回收失败']);
         }
     }
 
