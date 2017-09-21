@@ -68,7 +68,8 @@ class DCCController extends AuthController {
             $folders['private'] = $folders_private;
         }
 
-        print_r($folders);
+         # echo strtotime('2017-04-15');
+         # print_r($folders);
 
         $this->assign('userDepartment',$userDepartment);
         $this->assign('folders',$folders);

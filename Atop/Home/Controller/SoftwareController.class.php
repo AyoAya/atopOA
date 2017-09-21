@@ -181,7 +181,7 @@ class SoftwareController extends AuthController {
         $softRel['child'] = $model->table(C('DB_PREFIX').'software_log a,'.C('DB_PREFIX').'software b,'.C('DB_PREFIX').'user c')
                                   ->field('a.log,a.save_time,a.version,a.attachment,c.face,a.push_email,a.cc_email,c.nickname')
                                   ->where('b.id ='.I('get.id').' AND b.id=a.soft_asc AND a.save_person=c.id')
-                                  ->order('a.id DESC')
+                                  ->order('a.save_time DESC')
                                   ->select();
 
 

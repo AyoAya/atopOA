@@ -144,18 +144,26 @@ hr {
 .department-btn a:last-child {
     margin-right: 0;
 }
+.folders-list {
+    column-width: auto;
+    column-count: 2;
+    column-gap: 20px;
+}
+.folders-list .file-item {
+    padding: 5px 15px;
+}
 
-
+/*
 .content-body .file-box .folders-list li.file-icon {
     width: 50%;
     height: 20px;
     display: inline-block;
-    /*text-overflow: ellipsis;
+    !*text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;*/
+    white-space: nowrap;*!
     padding-right: 20px;
     font-size: 14px;
-}
+}*/
 .content-body .file-box .folders-list li.notPower {
     width: 100%;
     text-align: center;
@@ -168,7 +176,7 @@ hr {
     color: #ccc;
     display: block;
 }
-.content-body .file-box .folders-list .folder-icon {
+.content-body .file-box .folder-icon {
     margin: 10px 0;
     text-indent: 4px;
     clear: both;

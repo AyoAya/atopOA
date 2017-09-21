@@ -866,21 +866,22 @@ function get_basename($filename){
 
 function traverse_document(&$arr){
     if( is_array($arr) && !empty($arr) ){
+        $html = '';
         foreach($arr as $key=>&$value) {
             if (is_array($value)) {
                 if ($key != 'dir' && $key != 'file') {
-                    echo '<div class="clearfix"></div><div class="folder-icon text-primary"><i class="icon-folder-open-alt"></i>&nbsp;' . getFolderName($key) . '</div><div class="clearfix"></div>';
+                    echo '<div class="folder-icon text-primary"><i class="icon-folder-open-alt"></i>&nbsp;' . getFolderName($key) . '</div>';
                 }
                 traverse_document($value);
             } else {
 
-                echo '<div class="col-lg-6" file-path="' . $value . '" style="padding: 7px 10px 7px 15px;"><a href="' . $value . '" target="_blank" title="' . getBasename($value) . '"><i class="file-icon file-icon-ext-' . getExtension($value) . '"></i>&nbsp;' . getBasename($value) . '</a></div>';
-                if (($key) % 2) {
-                    echo '<div class="clearfix"></div>';
+                $html .=  '<div class="file-item" file-path="' . $value . '"><a href="' . $value . '" target="_blank" title="' . getBasename($value) . '"><i class="file-icon file-icon-ext-' . getExtension($value) . '"></i>&nbsp;' . getBasename($value) . '</a></div>';
+                /*if (($key) % 2) {
+
                 }
                 if ($key == (count($arr) - 1)) {
-                    echo '<div class="clearfix"></div>';
-                }
+                    $html .= '<div class="clearfix"></div>';
+                }*/
                 /*switch(getExtension($value)){
                     case 'pdf':
                         break;
@@ -921,6 +922,9 @@ function traverse_document(&$arr){
                         echo '<li class="file-icon" file-path="'.$value.'"><a href="'.$value.'" target="_blank" title="'.getBasename($value).'"><i class="z-icon-logo z-icon-file"></i>&nbsp;'.getBasename($value).'</a></li>';
                 }*/
             }
+        }
+        if( $html ){
+            echo '<div class="folders-list">'.$html.'</div>';
         }
     }else{
         echo '&nbsp;&nbsp;&nbsp;没有数据';
