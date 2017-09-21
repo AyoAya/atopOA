@@ -114,7 +114,6 @@
 				</div>
 				<div class="section-body">
 					<div class="file-box">
-						<div class="folders-list">
 							<present name="folders.ISO9001.file">
 								<volist name="folders.ISO9001.file" id="value">
 									<div class="clearfix"></div>
@@ -128,7 +127,6 @@
 								<else/>
 								<i class="icon-exclamation-sign"></i> 没有数据
 							</notempty>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -140,10 +138,9 @@
 			</div>
 			<div class="section-body">
 				<div class="file-box">
-					<div class="folders-list">
 						<present name="folders.public.file">
 							<volist name="folders.public.file" id="value">
-								<li class="file-icon" file-path="{$value}" title="{:getBasename($value)}"><a href="{$value}" target="_blank"><i class="file-icon file-icon-ext-{:getExtension($value)}"></i>&nbsp;{:getBasename($value)}</a></li>
+								<div class="file-icon" file-path="{$value}" title="{:getBasename($value)}"><a href="{$value}" target="_blank"><i class="file-icon file-icon-ext-{:getExtension($value)}"></i>&nbsp;{:getBasename($value)}</a></div>
 							</volist>
 						</present>
 						<notempty name="folders.public">
@@ -153,7 +150,6 @@
 						<else/>
 							<i class="icon-exclamation-sign"></i> 没有数据
 						</notempty>
-					</div>
 				</div>
 			</div>
 		</div>
