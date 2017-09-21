@@ -28,9 +28,9 @@
             <tr>
                 <th>ECN号</th>
                 <th>状态</th>
+                <th>描述</th>
                 <th>创建人</th>
                 <th>创建时间</th>
-                <th>最后编辑时间</th>
             </tr>
         </thead>
         <tbody>
@@ -40,13 +40,11 @@
                     <td>
                         <span class="{$value.className}">{$value.stateName}</span>
                     </td>
+                    <td class="td-wrap" title="{$value.change_description}">
+                        <p class="p-wrap">{$value.change_description}</p>
+                    </td>
                     <td>{$value.nickname}</td>
                     <td>{$value.createtime|date="Y-m-d H:i:s", ###}</td>
-                    <td>
-                        <notempty name="value.lastedit_time">
-                            {$value.lastedit_time|date="Y-m-d H:i:s", ###}
-                        </notempty>
-                    </td>
                 </tr>
             </volist>
         </tbody>

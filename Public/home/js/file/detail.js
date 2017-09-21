@@ -114,6 +114,31 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
         $(this).parent().parent().remove();
     });
 
+    // 回收文件号
+    $('.recycle-btn').click(function(){
+        layer.confirm('点击确定后该编号将会被系统回收，继续吗？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.post(ThinkPHP['AJAX'] + '/File/recyleFileNumber', {
+                fileid: fileid
+            }, function(response){
+                if( response.flag ){
+                    layer.msg(response.msg, {icon: 1, time: 1500});
+                    setTimeout(function(){
+                        location.href = 'http://'+ ThinkPHP['HTTP_HOST'] +'/File';
+                    }, 1500);
+                }else{
+                    layer.msg(response.msg, {icon: 1, time: 2000});
+                    setTimeout(function(){
+                        layer.closeAll();
+                    }, 2000);
+                }
+            });
+        }, function(){
+            layer.closeAll();
+        });
+    });
+
     // 编辑提交
     $('#saveFileData').click(function(){
         var data = {};
@@ -148,14 +173,6 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
     $('#review-btn').click(function(){
         let rid = $(this).attr('rid');
         //询问框
-        /*layer.confirm("该文件已存在对应的ECN，点击确定将会跳转到ECN详情页面。\r\n1.如果ECN状态为待评审，可以直接发起评审。\r\n2.如果ECN状态为已拒绝，则需重新编辑后再发起评审。", {
-            btn: ['确定','取消'] //按钮
-        }, function(){
-            location.href = 'http://'+ ThinkPHP['HTTP_HOST'] +'/ECN/add/type/file/id/'+ rid;
-        }, function(){
-            layer.closeAll();
-        });*/
-
         layer.open({
             type: 1,
             title: '提示',

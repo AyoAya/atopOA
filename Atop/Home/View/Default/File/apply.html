@@ -26,7 +26,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label" style="width: 70px;">文件类型</label>
             <div class="layui-input-inline">
-                <select name="id" lay-verify="required">
+                <select name="id" lay-verify="required" lay-filter="fileType">
                     <volist name="rules" id="value">
                         <option value="{$value.id}">{$value.name}</option>
                     </volist>
@@ -37,7 +37,7 @@
             </div>
         </div>
     </form>
-    <p class="tswb">注：同一种文件类型一小时内只能申请10次</p>
+    <p class="tswb"></p>
 
     <div class="clearfix"></div>
 

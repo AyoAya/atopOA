@@ -7,6 +7,23 @@ layui.use(['form', 'jquery', 'layer'], function(){
         $ = layui.jquery,
         layer = layui.layer;
 
+    // 获取页面初始化时选中文件类型的描述信息
+    var fileTypeId = $('.layui-form-select dl dd.layui-this').attr('lay-value');
+    $.post(ThinkPHP['AJAX'] + '/File/getFileTypeDescription', {
+        fileTypeId: fileTypeId
+    }, function(response){
+        $('p.tswb').text(response.msg);
+    });
+
+    // 监听文件类型改变
+    form.on('select(fileType)', function(data){
+        $.post(ThinkPHP['AJAX'] + '/File/getFileTypeDescription', {
+            fileTypeId: data.value
+        }, function(response){
+            $('p.tswb').text(response.msg);
+        });
+    });
+
     // 监听提交
     form.on('submit(applySubmit)', function(data){
         console.log(data.field);

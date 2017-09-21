@@ -65,6 +65,9 @@
     top: 3px;
     margin-right: 5px;
 }
+.notice-wrapper .ntc-r .msg-box .msg-text span.tag {
+    margin-right: 5px;
+}
 .notice-wrapper .ntc-r .msg-box .msg-text .eml-weidu {
     background: url("../../img/icons/weidu.svg") center center no-repeat;
     background-size: 100%;
