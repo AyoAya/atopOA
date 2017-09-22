@@ -12,7 +12,12 @@ class ManageController extends AuthController {
     //用户管理
     public function index(){
         $person = D('User');
-        $count = $person->where('id<>1 AND state=1')->count();
+        if( I('get.search') ){
+            $count = $person->where('nickname LIKE "%'.I('get.search').'%" OR account LIKE "%'.I('get.search').'%" AND id<>1')->count();
+        }else{
+            $count = $person->where('id<>1 AND state=1')->count();
+        }
+
         //数据分页
         $page = new Page($count,C('LIMIT_SIZE'));
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
@@ -22,7 +27,11 @@ class ManageController extends AuthController {
         if(C('PAGE_STATUS_INFO')){
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
-        $result = $person->where('id<>1 AND state=1')->relation(true)->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
+        if(I('get.search')){
+            $result = $person->where('nickname LIKE "%'.I('get.search').'%" OR account LIKE "%'.I('get.search').'%" AND id<>1')->relation(true)->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
+        }else{
+            $result = $person->where('id<>1 AND state=1')->relation(true)->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
+        }
         //echo $count.' | '.count($result);
         $pageShow = $page->show();
         $auth = new Auth();

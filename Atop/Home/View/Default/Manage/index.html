@@ -38,6 +38,18 @@
 	<a href="__ROOT__/Manage/addManage" class="layui-btn layui-btn-primary">
 		<span class="glyphicon glyphicon-plus"></span> 添加用户
 	</a>
+	<notempty name="Think.get.search">
+	<a href="__ROOT__/Manage" class="layui-btn layui-btn-primary close-search">
+		<span class="icon-remove"></span> 清除筛选
+	</a>
+	</notempty>
+
+	<div class="search">
+		<form action="__ROOT__/Manage" class="layui-form" method="get">
+			<input type="text" name="search" required  lay-verify="required" placeholder="请输入账号或姓名" autocomplete="off" value="{$Think.get.search}" class="layui-input">
+			<button class="layui-btn layui-btn-primary search-btn" id="submitSearch" type="submit"><i class="layui-icon">&#xe615;</i></button>
+		</form>
+	</div>
 	<div class="clearfix" style="margin-bottom: 15px;"></div>
 
 	<table class="layui-table" lay-skin="line">
