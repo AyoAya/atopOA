@@ -66,8 +66,8 @@
                         <td>
                             <span class="{$value.className}">{$value.stateName}</span>
                         </td>
-                        <td class="td-wrap" title="{$value.description}">
-                            <p class="p-wrap">{$value.description}</p>
+                        <td class="td-wrap" title="{:strip_tags($value['description'])}">
+                            <p class="p-wrap">{:strip_tags($value['description'])}</p>
                         </td>
                         <td>{$value.nickname}</td>
                         <td>{$value.createtime|date="Y-m-d H:i:s", ###}</td>
