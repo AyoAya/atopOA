@@ -867,9 +867,6 @@ HTML;
             $rel['discuss_context'] = html_entity_decode($rel['discuss_context']);
             $rel['nickname'] = $user['nickname'];
 
-            /*print_r($rel);
-            die();*/
-
             $discuss_id = M('ProjectDiscuss')->add($discuss);
             if( $discuss_id ){
                 $dis['Reply_id'] = $post['discuss'];
@@ -986,7 +983,7 @@ HTML;
                         $planNode['pj_name'] = $projectResult['pj_name'];
                         $planNode['pj_create_person'] = $projectResult['pj_management'];
 
-                        //$this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
+                        $this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
                         $this->ajaxReturn(array('flag' => 1, 'msg' => '保存成功'));
                         exit;
                     }else{
@@ -1021,7 +1018,7 @@ HTML;
                         $planNode['pj_name'] = $projectResult['pj_name'];
                         $planNode['pj_create_person'] = $projectResult['pj_management'];
 
-                        //$this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
+                        $this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
                         $this->ajaxReturn(array('flag' => 1, 'msg' => '保存成功'));
                         exit;
                     }else{
@@ -1056,7 +1053,7 @@ HTML;
                         $planNode['pj_name'] = $projectResult['pj_name'];
                         $planNode['pj_create_person'] = $projectResult['pj_management'];
                         
-                        //$this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
+                        $this->pushEmail('update', $projectResult['pj_participate'] . ',' . $projectResult['pj_create_person_id'], $planNode, $projectResult['id']);
                         $this->ajaxReturn(array('flag' => 1, 'msg' => '保存成功'));
                         exit;
                     }else{
