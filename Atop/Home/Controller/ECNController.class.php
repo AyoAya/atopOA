@@ -670,6 +670,15 @@ class ECNController extends AuthController {
                                 foreach( $ecnAllData['EcnReviewItem'] as $key=>&$value ){
                                     $changeFileStateRow = $model->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['assoc'], 'state'=>'Archiving']);
                                     if( $changeFileStateRow === false ) throw new \Exception('评审失败');
+                                    // 检查当前文件号是否存在已归档版本
+                                    $fileNumberResult = $model->table(C('DB_PREFIX').'file_number')->find($value['assoc']);
+                                    $otherVersions = $model->table(C('DB_PREFIX').'file_number')->where('filenumber = "'.$fileNumberResult['filenumber'].'" AND id <> '.$value['assoc'].' AND state = "Archiving"')->select();
+                                    if( $otherVersions ){   // 如果存在已归档版本则将已归档版本的状态更改为不可用Unavailable
+                                        foreach($otherVersions as $key=>&$value){
+                                            $changeOtherVersionStateRow = $model->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['id'], 'state'=>'Unavailable']);
+                                            if( $changeOtherVersionStateRow === false ) throw new \Exception('评审失败');
+                                        }
+                                    }
                                 }
                             }else{
                                 // 非文件ecn类型的处理方式...
