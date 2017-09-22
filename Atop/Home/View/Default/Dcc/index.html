@@ -161,7 +161,6 @@
 				</div>
 				<div class="section-body">
 					<div class="file-box">
-						<div class="folders-list">
 							<present name="folders.private.file">
 								<volist name="folders.private.file" id="value">
 									<li class="file-icon" file-path="{$value}"><a href="{$value}" target="_blank"><i class="file-icon file-icon-ext-{:getExtension($value)}"></i>&nbsp;{:getBasename($value)}</a></li>
@@ -174,7 +173,6 @@
 							<else/>
 								<i class="icon-exclamation-sign"></i> 没有数据
 							</notempty>
-						</div>
 					</div>
 				</div>
 			</div>
