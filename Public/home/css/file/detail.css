@@ -4,7 +4,17 @@
     display: none;
 }
 
+@media (max-width: 1440px) {
+    .preview-condition, .edit-condition {
+        width: 1096px;
+    }
+}
 
+@media (min-width: 1440px) {
+    .preview-condition, .edit-condition {
+        width: 1650px;
+    }
+}
 
 .preview-condition .layui-table tbody tr td:first-child,
 .edit-condition .layui-table tbody tr td:first-child {

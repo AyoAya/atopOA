@@ -62,6 +62,7 @@ class FileController extends AuthController {
                 try{
                     $changeOldUpgrade['id'] = $postData['id'];
                     $changeOldUpgrade['upgrade'] = 'Y';
+                    //$changeOldUpgrade['state'] = 'Unavailable'; // 将状态改为不可用
                     $changeRow = $model->table(C('DB_PREFIX').'file_number')->save($changeOldUpgrade);  // 将以往版本的升版状态改为Y表示该文件已经升版过了
                     if( $changeRow === false ) throw new \Exception('升版失败');
                     $OldVersion = (float)substr($fileData['version'], 1);  // 获取之前版本准备对比
@@ -70,7 +71,7 @@ class FileController extends AuthController {
                     $upgradeData['type'] = $fileData['type'];
                     $upgradeData['filenumber'] = $fileData['filenumber'];
                     $upgradeData['attachment'] = $postData['attachment'];
-                    $upgradeData['description'] = $postData['description'];
+                    $upgradeData['description'] = trim($postData['description']);
                     $upgradeData['state'] = 'WaitingReview';
                     $upgradeData['version'] = strtoupper($postData['version']);    // 为保证版本的一致性，一律将版本转换为大写
                     $upgradeData['createuser'] = session('user')['id'];
@@ -249,6 +250,9 @@ class FileController extends AuthController {
             case 'Archiving':        // 已归档
                 $className = 'tag tag-success';
                 break;
+            case 'Unavailable':        // 不可用
+                $className = 'tag tag-danger';
+                break;
             case 'BeRejected':      // 驳回
                 $className = 'tag tag-danger';
                 break;
@@ -275,6 +279,9 @@ class FileController extends AuthController {
                 break;
             case 'Archiving':        // 已归档
                 $stateName = '已归档';
+                break;
+            case 'Unavailable':        // 不可用
+                $stateName = '不可用';
                 break;
             case 'BeRejected':      // 驳回
                 $stateName = '驳回';
