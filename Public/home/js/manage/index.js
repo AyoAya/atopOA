@@ -174,7 +174,7 @@ $(function(){
 		$('#position-id').val($(this).attr('index'));
 	});
 
-	layui.use(['form'],function(){
+	layui.use(['form','layer'],function(){
 
         var layer = layui.layer,
             form = layui.form();
@@ -199,6 +199,33 @@ $(function(){
             });
 
         });
+
+        /*form.on('submit(search_submit)',function( data ){
+
+			var _search = $(this).prev().val();
+
+			$.ajax({
+                url : ThinkPHP['AJAX'] + '/Manage/index',
+                type : 'POST',
+                data : _search,
+                dataType : 'json',
+                beforeSubmit : function(){
+
+                },
+                success : function(response){
+
+                }
+			})
+
+        })*/
+
+
+
+
+
+
+
+
 
 
 	})
