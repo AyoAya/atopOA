@@ -31,7 +31,7 @@ class PushEmail {
 	
         'liuyan@atoptechnology.com',      //刘燕
         'yubo@atoptechnology.com',          //余波
-        'sunbin@atoptechnology.com',        //孙彬
+        'tangzhiqiang@atoptechnology.com',        //唐志强
         'dingzheng@atoptechnology.com',     //丁征
         'mikechen@atoptechnology.com',      //陈应时
         'xiaxiaosen@atoptechnology.com',    //夏小森
