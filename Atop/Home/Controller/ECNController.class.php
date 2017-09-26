@@ -687,7 +687,7 @@ class ECNController extends AuthController {
                             $pushUsersData = ['email'=>$ecnAllData['User']['email'], 'name'=>$ecnAllData['User']['nickname']];  // 如果当前是dcc评审并且步骤也已经走完，则通知该ecn创建人
                             array_push($reviewUsers, $pushUsersData);
                             array_push($ccUsersData, ['email'=>session('user')['email'], 'name'=>$ecnAllData['User']['nickname']]);  // 将自己添加到抄送人
-                            $sendResult_Complete = $this->pushEmail('Complete', $postData['ecn_type'], $reviewUsers, $ecnAllData, $ccUsersData);
+                            $sendResult_Complete = $this->pushEmail('Complete', $postData['ecn_type'], $reviewUsers, $ecnAllData, $ccUsersData, ['reviewState' => $postData['review_state'], 'remark' => $postData['remark']]);
                         }else{
                             // 判断顺位along是否存在评审人数据，如果存在则给下一级评审人员推送邮件，不存在则给DCC人员发送邮件
                             $nextAlongCount = $model->table(C('DB_PREFIX').'ecn_review')->where([
@@ -813,6 +813,7 @@ class ECNController extends AuthController {
         }elseif( $type == 'Complete' ){     // 评审结束
             $body = '<p class="sm-dear">Dear '.$dear.',</p>';
             $body .= '<p>['.session('user')['nickname'].'] 通过了 ['.$data['User']['nickname'].'] 发起的编号为'.$data['ecn_number'].'的文件评审，下列文件已归档。</p>';
+            $body .= trim($reviewData['remark']) != '' ? '<p class="remark">备注：'.replaceEnterWithBr($reviewData['remark']).'</p>' : '';
             $body .= $table;
             $body .= '<p class="ck-lj">详情请查看链接：<a href="http://'.$httphost.'/ECN/detail/'.$data['ecn_number'].'" target="_blank">http://'.$httphost.'/ECN/detail/id/'.$data['id'].'</a></p>';
         }elseif( $type == 'Rollback' ){     // 撤回
