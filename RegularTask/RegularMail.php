@@ -78,6 +78,20 @@ class RegularMail{
             }
         }
 
+        # 获取项目总监邮件
+        $_sql = "SELECT * FROM atop_user WHERE state = 1";
+        $cc = self::select($_sql);
+
+        foreach ($cc as $kkk=>&$vvv){
+            $vvv['post'] = explode(',',$vvv['post']);
+
+            if(in_array(5,$vvv['post'])){
+                $ccEmail[] = $vvv['email'];
+            }
+        }
+
+        # print_r($ccEmail);
+
         # 需要通知的数据
         foreach ($project_data as $kk=>&$vv){
             # 将需要通知的人转换成数组
@@ -103,6 +117,7 @@ class RegularMail{
             foreach ($vv['email'] as $k=>&$v){
                 $vv['address'][] = $v['email'];
             }
+            $vv['ccEmail'] = $ccEmail;
 
         }
 
@@ -277,7 +292,7 @@ STYLE;
 
             echo $style.$html;
 
-            self::push_eml($style.$html,$subject,$value['address']);
+            self::push_eml($style.$html,$subject,$value['address'],$value['ccEmail']);
 
 
 
@@ -309,7 +324,7 @@ STYLE;
     /**
      * 发送邮件
      */
-    private static function push_eml($body,$subject,$address){
+    private static function push_eml($body,$subject,$address,$cc){
 
         sleep(1);
 
@@ -373,6 +388,16 @@ SIGN;
             }
         }else{
             $mail->addAddress($address);//设置收件人信息，如邮件格式说明中的收件人，这里会显示为Liang(yyyy@163.com)
+        }
+
+        if( $cc!='' ){
+            if(is_array($cc)){
+                foreach($cc as $ccperson){
+                    $mail->addCC($ccperson);
+                }
+            }else{
+                $mail->addCC($cc);
+            }
         }
 
         //$mail->addReplyTo("oa@atoptechnology.com","华拓光通信股份有限公司");// 设置回复人信息，指的是收件人收到邮件后，如果要回复，回复邮件将发送到的邮箱地址

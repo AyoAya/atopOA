@@ -265,4 +265,13 @@ class AuthController extends Controller {
         }
     }
 
+    /**
+     * 生成代办事项
+     */
+    public function createMatters( $data ){
+
+        $data['status'] = 0;
+
+    }
+
 }
