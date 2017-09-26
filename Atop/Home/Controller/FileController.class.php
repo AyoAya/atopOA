@@ -14,16 +14,44 @@ class FileController extends AuthController {
     # 初始化文件管理首页
     public function index(){
         $model = new Model();
-
-        if( I('get.search') && trim(I('get.search')) != '' ){
-            $condition = 'a.createuser = b.id AND a.upgrade="N" AND a.state <> "Recyle" AND a.filenumber LIKE "%'.I('get.search').'%"';
-            $map['upgrade'] = 'N';
+        $map['upgrade'] = 'N';
+        if( !I('get.state') ){
+            $map['state'] = ['neq', 'Recyle'];
+        }
+        $condition = 'a.createuser = b.id AND a.upgrade="N" AND a.state <> "Recyle"';
+        if( I('get.search') && trim(I('get.search')) != '' ){   // 如果存在搜索数据
+            $condition .= ' AND a.filenumber LIKE "%'.I('get.search').'%"';
             $map['filenumber'] = ['like', '%'.I('get.search').'%'];
-            $map['state'] = ['neq', 'Recyle'];
-        }else{
-            $map['upgrade'] = 'N';
-            $map['state'] = ['neq', 'Recyle'];
-            $condition = 'a.createuser = b.id AND a.upgrade="N" AND a.state <> "Recyle"';
+        }
+        if( I('get.filenumber') ){
+            $condition .= ' AND a.filenumber LIKE "%'.I('get.filenumber').'%"';
+            $map['filenumber'] = ['like', '%'.I('get.filenumber').'%'];
+        }
+        if( I('get.version') ){
+            $condition .= ' AND a.version LIKE "%'.strtoupper(I('get.version')).'%"';
+            $map['version'] = ['like', '%'.strtoupper(I('get.version')).'%'];
+        }
+        if( I('get.state') && I('get.state') != 'null' ){
+            $condition .= ' AND a.state = "'.I('get.state').'"';
+            $map['version'] = I('get.state');
+        }
+        if( I('get.description') ){
+            $condition .= ' AND a.description LIKE "%'.I('get.description').'%"';
+            $map['description'] = ['like', '%'.I('get.description').'%'];
+        }
+        if( I('get.createuser') && I('get.createuser') != 'null' ){
+            $condition .= ' AND a.createuser = '.I('get.createuser');
+            $map['createuser'] = I('get.createuser');
+        }
+        if( I('get.start_time') && !I('get.end_time') ){
+            $condition .= ' AND a.createtime > '.strtotime(I('get.start_time'));
+            $map['createtime'] = ['gt', strtotime(I('get.start_time'))];
+        }elseif( !I('get.start_time') && I('get.end_time') ){
+            $condition .= ' AND a.createtime < '.strtotime(I('get.end_time'));
+            $map['createtime'] = ['lt', strtotime(I('get.end_time'))];
+        }elseif( I('get.start_time') && I('get.end_time') ){
+            $condition .= ' AND a.createtime > '.strtotime(I('get.start_time')).' AND a.createtime < '.strtotime(I('get.end_time'));
+            $map['createtime'] = [ ['gt', strtotime(I('get.start_time'))], ['lt', strtotime(I('get.end_time'))] ];
         }
         $count = $model->table(C('DB_PREFIX').'file_number')->where($map)->count();
         //数据分页
@@ -45,6 +73,9 @@ class FileController extends AuthController {
             $value['className'] = $this->fetchClassStyle($value['state']);
             $value['stateName'] = $this->fetchStateName($value['state']);
         }
+        // 获取分组创建人数据作用筛选
+        $userGroup = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'user b')->field('b.id,b.nickname name')->where('a.createuser=b.id')->group('a.createuser')->select();
+        $this->assign('userGroup', $userGroup);
         $pageShow = $page->show();
         $this->assign('pageShow',$pageShow);
         $this->assign('result', $result);
@@ -84,9 +115,11 @@ class FileController extends AuthController {
                 }
                 $this->ajaxReturn(['flag'=>1, 'msg'=>'升版成功']);
             }else{
-                if( $fileData['attachment'] != '' && $fileData['state'] != 'Archiving' ){    // 如果附件不为空并且状态不为已归档，则删除以前的附件
-                    $fileInfo = json_decode($fileData['attachment'], true);
-                    $this->removeFile($fileInfo['path']);
+                if( isset($postData['attachment']) ){   // 如果上传了新文件则删除以前的附件
+                    if( $fileData['attachment'] != '' && $fileData['state'] != 'Archiving' ){    // 如果附件不为空并且状态不为已归档，则删除以前的附件
+                        $fileInfo = json_decode($fileData['attachment'], true);
+                        $this->removeFile($fileInfo['path']);
+                    }
                 }
                 $postData['version'] = strtoupper($postData['version']);    // 为保证版本的一致性，一律将版本转换为大写
                 $postData['state'] = 'WaitingReview';
@@ -304,7 +337,6 @@ class FileController extends AuthController {
 
     # 文件规则
     public function fileRules(){
-        if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
         $model = new Model();
         $count = $model->table(C('DB_PREFIX').'file_rule')->count();
         //数据分页
@@ -339,7 +371,7 @@ class FileController extends AuthController {
             $id = $model->table(C('DB_PREFIX').'file_rule')->add($postData);
             $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'创建成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'创建失败']);
         }else{
-            if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
+            if( !strstr(session('user')['post'], '1788') ) $this->assign('PERMISSION_DENIED',true);
             $this->display();
         }
     }
@@ -352,7 +384,7 @@ class FileController extends AuthController {
             $row = $model->table(C('DB_PREFIX').'file_rule')->save($postData);
             $row !== false ? $this->ajaxReturn(['flag'=>1, 'msg'=>'修改成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'修改失败']);
         }else{
-            if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
+            if( !strstr(session('user')['post'], '1788') ) $this->assign('PERMISSION_DENIED',true);
             if( I('get.id') && is_numeric(I('get.id')) ){
                 $model = new Model();
                 $result = $model->table(C('DB_PREFIX').'file_rule')->find(I('get.id'));
@@ -382,6 +414,11 @@ class FileController extends AuthController {
 
     # 删除文件规则
     public function delRule(){
+        if( !strstr(session('user')['post'], '1788') ) {
+            $this->assign('PERMISSION_DENIED',true);
+            $this->display();
+            exit;
+        };
         if( I('get.id') && is_numeric(I('get.id')) ){
             $model = new Model();
             $row = $model->table(C('DB_PREFIX').'file_rule')->delete(I('get.id'));

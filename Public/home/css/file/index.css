@@ -23,3 +23,29 @@
         overflow: hidden;
     }
 }
+
+#file-filter .layui-form-label {
+    text-align: left;
+}
+#file-filter .layui-form {
+    border: solid 1px #ddd;
+    padding: 28px 15px 28px 15px;
+    margin-bottom: 30px;
+    position: relative;
+}
+#file-filter .layui-form:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border: solid 1px #ddd;
+    position: absolute;
+    left: 44px;
+    top: -6px;
+    transform: rotate(45deg);
+    border-bottom: none;
+    border-right: none;
+    background: #fff;
+}
+#file-filter .layui-form .layui-form-item:last-child {
+    margin-bottom: 0;
+}

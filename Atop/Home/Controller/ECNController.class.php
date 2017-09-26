@@ -648,8 +648,8 @@ class ECNController extends AuthController {
                         // 非文件ecn类型的处理方式...
                     }
                     $pushUsersData = [ ['email'=>$ecnAllData['User']['email'], 'name'=>$ecnAllData['User']['nickname']] ];  // 通知该ecn创建人
-                    $ccsPersons = $this->getAlongOfPushUsers($ecnAllData['current_along'], $ecnAllData['EcnReview']);
-                    $sendResult = $this->pushEmail('ReviewAction', $postData['ecn_type'], $pushUsersData, $ecnAllData, $ccsPersons, ['reviewState'=>$postData['review_state'], 'remark'=>$postData['remark']]);
+                    $this->getCurrentAlongAndPrevAlongData($ecnAllData['current_along'], $postData['ecn_id']);
+                    $sendResult = $this->pushEmail('ReviewAction', $postData['ecn_type'], $pushUsersData, $ecnAllData, $this->ccs, ['reviewState'=>$postData['review_state'], 'remark'=>$postData['remark']]);
                     $sendResult ? $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功']) : $this->ajaxReturn(['flag'=>1, 'msg'=>'发起成功，部分邮件未发送']);
                 }else{
                     // 检查当前评审级是否已经走完
@@ -916,7 +916,6 @@ class ECNController extends AuthController {
 
     # ECN规则列表
     public function rules(){
-        if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
         $model = new Model();
         $count = $model->table(C('DB_PREFIX').'ecn_rule')->count();
         //数据分页
@@ -942,7 +941,6 @@ class ECNController extends AuthController {
 
     # 规则详情
     public function ruleDetail(){
-        if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
         if( I('get.id') && is_numeric(I('get.id')) ){
             $model = new Model();
             $result = $model->table(C('DB_PREFIX').'ecn_rule a,'.C('DB_PREFIX').'user b')
@@ -978,7 +976,7 @@ class ECNController extends AuthController {
             $id = $model->table(C('DB_PREFIX').'ecn_rule')->save($ecnRuleData);
             $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'保存成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'保存失败']);
         }else{
-            if( !strstr(session('user')['post'], '1788') ) $this->error('您没有权限访问该页面');
+            if( !strstr(session('user')['post'], '1788') ) $this->assign('PERMISSION_DENIED',true);
             if( I('get.id') && is_numeric(I('get.id')) ){
                 $model = new Model();
                 $result = $model->table(C('DB_PREFIX').'ecn_rule')->find(I('get.id'));
@@ -1033,6 +1031,7 @@ class ECNController extends AuthController {
             $id = $model->table(C('DB_PREFIX').'ecn_rule')->add($ecnRuleData);
             $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'创建成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'创建失败']);
         }else{
+            if( !strstr(session('user')['post'], '1788') ) $this->assign('PERMISSION_DENIED',true);
             $this->assign('positions', json_encode($this->getAllPositions()));
             $this->display();
         }
@@ -1083,6 +1082,11 @@ class ECNController extends AuthController {
 
     # 删除规则
     public function deleteRule(){
+        if( !strstr(session('user')['post'], '1788') ) {
+            $this->assign('PERMISSION_DENIED',true);
+            $this->display();
+            exit;
+        }
         if( I('get.id') && is_numeric(I('get.id')) ){
             $model = new Model();
             $result = $model->table(C('DB_PREFIX').'ecn_rule')->delete(I('get.id'));

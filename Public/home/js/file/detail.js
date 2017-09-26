@@ -143,7 +143,7 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
     $('#saveFileData').click(function(){
         var data = {};
         if( !checkEditData() ) return false;
-        if( FileUploader.getFiles().length ) {  // 如果不存在附件
+        if( FileUploader.getFiles().length ) {  // 如果存在附件
             FileUploader.upload();
         }else{
             submitEditData(null);

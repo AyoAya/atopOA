@@ -2,10 +2,13 @@
 <extend name="layout/default"/>
 <!-- 【引入css样式表文件】 -->
 <block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="__CSS__/file/index.css">
 </block>
 <!-- 【引入javascript文件】 -->
 <block name="linkjs">
+    <script src="__JS__/bootstrap-datetimepicker.js"></script>
+    <script src="__JS__/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="__JS__/file/index.js"></script>
 </block>
 <!-- 【页面标题】 -->
@@ -22,8 +25,11 @@
 <block name="content">
 
     <div class="pull-left">
+        <a class="layui-btn layui-btn-primary filter-btn">
+            <span class="glyphicon glyphicon-th-list"></span> 筛选 <if condition="$_GET['filenumber'] or $_GET['version'] or $_GET['state'] or $_GET['description'] or $_GET['createuser'] or $_GET['start_time'] or $_GET['end_time']"><i class="icon-caret-up"></i><else/><i class="icon-caret-down"></i></if>
+        </a>
         <a href="__ROOT__/File/apply" class="layui-btn layui-btn-primary">
-            编号申请 / 我的编号
+            编号申请
         </a>
         <a href="__ROOT__/File/fileRules" class="layui-btn layui-btn-primary">
             文件规则
@@ -44,6 +50,74 @@
     </div>
 
     <div class="clearfix" style="margin-bottom: 25px;"></div>
+
+    <div id="file-filter" <if condition="$_GET['filenumber'] or $_GET['version'] or $_GET['state'] or $_GET['description'] or $_GET['createuser'] or $_GET['start_time'] or $_GET['end_time']">style="display: block;"<else/>style="display: none;"</if>>
+        <form action="" method="get" class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">文件号</label>
+                    <div class="layui-input-inline" style="width: 180px;">
+                        <input type="text" name="filenumber" class="layui-input" placeholder="例：CSI0000002" value="{$Think.get.filenumber}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 95px;text-align: right;padding-right: 24px;">版本</label>
+                    <div class="layui-input-inline" style="width: 126px;">
+                        <input type="text" name="version" class="layui-input" placeholder="例：V1.0" value="{$Think.get.version}">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 70px;">状态</label>
+                    <div class="layui-input-inline" style="width: 180px;">
+                        <select name="state">
+                            <option value="null">选择状态</option>
+                            <option value="WaitingEdit" <eq name="Think.get.state" value="WaitingEdit">selected</eq>>待编辑</option>
+                            <option value="WaitingReview" <eq name="Think.get.state" value="WaitingReview">selected</eq>>待评审</option>
+                            <option value="InReview" <eq name="Think.get.state" value="InReview">selected</eq>>评审中</option>
+                            <option value="Archiving" <eq name="Think.get.state" value="Archiving">selected</eq>>已归档</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">描述</label>
+                    <div class="layui-input-inline" style="width: 425px;">
+                        <input type="text" name="description" class="layui-input" placeholder="例：APSP85B33IDL03BK" value="{$Think.get.description}">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 80px;">创建人</label>
+                    <div class="layui-input-inline" style="width: 180px;">
+                        <select name="createuser">
+                            <option value="null">选择创建人</option>
+                            <volist name="userGroup" id="value">
+                                <option value="{$value.id}" <eq name="Think.get.createuser" value="$value.id">selected</eq>>{$value.name}</option>
+                            </volist>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width: 95px;">发起时间</label>
+                    <div class="layui-input-inline" style="width: 126px;">
+                        <input type="text" name="start_time" placeholder="开始时间" autocomplete="off" class="layui-input startDate" value="{$Think.get.start_time}">
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline" style="width: 126px;">
+                        <input type="text" name="end_time" placeholder="结束时间" autocomplete="off" class="layui-input endDate" value="{$Think.get.end_time}">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin-left: 80px;">
+                    <button type="submit" class="layui-btn">提交</button>
+                    <a href="__ROOT__/File" class="layui-btn layui-btn-danger">清空条件</a>
+                </div>
+            </div>
+        </form>
+    </div>
 
     <table class="layui-table">
         <thead>
@@ -94,5 +168,44 @@
     <!-- 分页 -->
     <ul class="pagination pagination-edit">{$pageShow}</ul>
 
+    <script>
+        layui.use(['form', 'jquery', 'layer'], function(){
+            var $ = layui.jquery,
+                form = layui.form(),
+                layer = layui.layer;
+            $('.startDate').datetimepicker({
+                language:  'zh-CN',
+                format:'yyyy-mm-dd',
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startDate : '2014-3-21',
+                endDate : new Date(),
+                startView: 2,
+                minView: 2,
+                forceParse: 0
+            }).on('change',function(ev){
+                var startDate = $('.startDate').val();
+                $(".endDate").datetimepicker('setStartDate',startDate);
+            });
+            $('.endDate').datetimepicker({
+                language:  'zh-CN',
+                format:'yyyy-mm-dd',
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startDate : '2014-3-21',
+                endDate : new Date(),
+                startView: 2,
+                minView: 2,
+                forceParse: 0
+            }).on('change',function(ev){
+                var endDate = $(".endDate").val();
+                $(".startDate").datetimepicker('setEndDate',endDate);
+            });;
+        });
+    </script>
 
 </block>
