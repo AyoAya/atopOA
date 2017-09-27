@@ -79,7 +79,7 @@ class ManageController extends AuthController {
         $person = D('User');
         $count = $person->where('id<>1 AND state>1')->count();
         //数据分页
-        $page = new Page($count,C('LIMIT_SIZE'),'','Manage/page');
+        $page = new Page($count,C('LIMIT_SIZE'));
         $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
         $page->setConfig('next','<span aria-hidden="true">下一页</span>');
         $page->setConfig('first','<span aria-hidden="true">首页</span>');

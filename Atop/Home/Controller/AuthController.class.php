@@ -10,16 +10,14 @@ use Think\Model;
  * 2016-10-10
  */
 class AuthController extends Controller {
-    protected function _initialize(){
 
+    protected function _initialize(){
         if(cookie('UserLoginInfo') && !session('user')){
             //当cookie存在而session不存在时，将cookie进行解密并将数据写入到session
             $userInfo = unserialize(decrypt(cookie('UserLoginInfo'),C('MD5_KEY')));
             //array('id'=>$result[0]['id'],'account'=>$result[0]['account'],'nickname'=>$result[0]['nickname'],'face'=>$result[0]['face']);
             session('user',$userInfo);
         }
-
-
         //如果session不存在就跳转到登录页
         if(!session('user')){
             //如果session不存在则将当前页面url记录在session中
@@ -40,17 +38,43 @@ class AuthController extends Controller {
             }
             $this->assign('face',$face);
         }
-
         //如果是超级管理员就给予所有权限
         if(session('user')['id']==1) return true;
-
         //检查权限
         $auth = new Auth();
         if(!$auth->check(MODULE_NAME.'/'.CONTROLLER_NAME.'/', session('user')['id'])){
             # 如果验证失败则将该信息注入模板
             $this->assign('PERMISSION_DENIED',true);
         }
+    }
 
+    # 插入待办事项
+    protected function insertNewMatter($data){
+        $model = M('Todolist');
+        $data['generate_time'] = time();
+        $result = $model->add($data);
+        return $result ? true : false;
+    }
+
+    # 将指定用户的事项标记为完成
+    protected function markMatterAsDoneSpecifyUser($url){
+        $model = M('Todolist');
+        $affectedRow = $model->where(['who'=>session('user')['id'], 'url'=>$url])->save(['state'=>'done', 'complete_time' => time()]);
+        return $affectedRow !== false ? true : false;
+    }
+
+    # 将指定url的事项标记为完成
+    protected function markMatterAsDoneSpecifyURL($url){
+        $model = M('Todolist');
+        $affectedRow = $model->where(['url'=>$url])->save(['state'=>'done', 'complete_time' => time()]);
+        return $affectedRow !== false ? true : false;
+    }
+
+    # 清除事项
+    protected function clearMatter($url){
+        $model = M('Todolist');
+        $affectedRow = $model->where(['url'=>$url])->delete();
+        return $affectedRow !== false ? true : false;
     }
 
     # 获取所有部门和人员信息
@@ -82,8 +106,6 @@ class AuthController extends Controller {
         }
         $this->assign('DccPostUsers', $result);
     }
-
-
 
     // 获取产品信息
     public function getProductData($condition = []){
@@ -146,7 +168,6 @@ class AuthController extends Controller {
             return $productResult;
         }
     }
-
 
     //产品搜索
     public function productSearch(){
@@ -222,8 +243,6 @@ class AuthController extends Controller {
         $insertId = $model->table(C('DB_PREFIX').'notice')->add($data);
         return $insertId;
     }
-
-
 
     /**
      * 检查是否已经参看消息

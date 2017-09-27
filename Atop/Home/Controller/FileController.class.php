@@ -311,7 +311,7 @@ class FileController extends AuthController {
                 $stateName = '评审中';
                 break;
             case 'Archiving':        // 已归档
-                $stateName = '已归档';
+                $stateName = '生　效';
                 break;
             case 'Unavailable':        // 不可用
                 $stateName = '不可用';

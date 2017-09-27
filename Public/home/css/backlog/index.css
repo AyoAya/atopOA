@@ -1,0 +1,97 @@
+.notice-wrapper {
+    margin-top: 10px;
+    display: flex;
+}
+.notice-wrapper .ntc-l {
+    border-right: solid 1px #e6e6e6;
+}
+.notice-wrapper .ntc-l ul li {
+    height: 55px;
+    line-height: 55px;
+    width: 150px;
+    text-align: center;
+}
+.notice-wrapper .ntc-l ul li:hover a {
+    color: #428bca;
+}
+.notice-wrapper .ntc-l ul li.active a {
+    color: #428bca;
+}
+.notice-wrapper .ntc-l ul li a {
+    color: #333;
+    display: block;
+    width: auto;
+    height: auto;
+}
+.notice-wrapper .ntc-r {
+    flex: 1;
+    padding-left: 70px;
+    padding-right: 50px;
+}
+
+.notice-wrapper .ntc-r .msg-box {
+    width: 100%;
+    padding: 15px;
+    border-bottom: dashed 1px #e6e6e6;
+    transition: all .4s;
+}
+.notice-wrapper .ntc-r .msg-box:hover {
+    background: #f5f5f5;
+}
+.notice-wrapper .ntc-r .msg-box:hover .msg-text {
+    transform: translate(10px);
+}
+.notice-wrapper .ntc-r .msg-box:last-child {
+    border-bottom: none;
+}
+@media (min-width: 1440px) {
+    .notice-wrapper .ntc-r .msg-box .msg-text {
+        width: 1200px;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        transition: all .4s;
+    }
+}
+@media (max-width: 1440px) {
+    .notice-wrapper .ntc-r .msg-box .msg-text {
+        width: 630px;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        transition: all .4s;
+    }
+}
+.notice-wrapper .ntc-r .msg-box .msg-time {
+    position: relative;
+    top: 5px;
+    font-size: 12px;
+    color: #888;
+}
+.ntc-l .eml-weidu, .ntc-l .eml-yidu,
+.notice-wrapper .ntc-r .msg-box .msg-text .eml-weidu,
+.notice-wrapper .ntc-r .msg-box .msg-text .eml-yidu {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 5px;
+    margin-right: 5px;
+}
+.notice-wrapper .ntc-r .msg-box .msg-text .eml-yidu, .ntc-l .eml-yidu {
+    width: 21px;
+    height: 21px;
+}
+.notice-wrapper .ntc-r .msg-box .msg-text span.tag {
+    margin-right: 5px;
+}
+.notice-wrapper .ntc-r .msg-box .msg-text .eml-weidu, .ntc-l .eml-weidu {
+    background: url("../../img/icons/weidu.svg") center center no-repeat;
+    background-size: 100%;
+}
+.notice-wrapper .ntc-r .msg-box .msg-text .eml-yidu, .ntc-l .eml-yidu {
+    background: url("../../img/icons/yidu.svg") center center no-repeat;
+    background-size: 100%;
+}

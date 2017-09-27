@@ -1,0 +1,59 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/backlog/index.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/backlog/index.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>通知中心</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">首页</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="notice-wrapper">
+        <div class="ntc-l">
+            <ul>
+                <li class="<eq name='Think.get.state' value='todo'>active</eq>"><a href="__ROOT__/Todolist/index/state/todo">待处理</a></li>
+                <li class="<eq name='Think.get.state' value='done'>active</eq>"><a href="__ROOT__/Todolist/index/state/done">已处理</a></li>
+            </ul>
+        </div>
+        <div class="ntc-r">
+            <notempty name="result">
+                <volist name="result" id="value">
+                    <div class="msg-box">
+                        <div class="msg-text pull-left">
+                            <i class="<eq name='value.state' value='todo'>eml-weidu<else/>eml-yidu</eq>"></i><a href="http://{$value.url}">
+                            {$value.matter_name}</a>
+                        </div>
+                        <div class="msg-time pull-right">
+                            <eq name='value.state' value='todo'>
+                                {$value.generate_time|date="Y-m-d H:i:s",###}
+                            <else/>
+                                {$value.complete_time|date="Y-m-d H:i:s",###}
+                            </eq>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </volist>
+            <else/>
+                <div style="padding-top: 20px;padding-left: 15px;color: #888;">没有数据</div>
+            </notempty>
+        </div>
+    </div>
+    <!-- 数据分页 -->
+    <div class="pageContainer">
+        <ul class="pagination pagination-edit">{$pageShow}</ul>
+    </div>
+
+</block>
