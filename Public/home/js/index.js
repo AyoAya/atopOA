@@ -6,20 +6,20 @@
 $(function(){
 
 	//$('.browser_list img').tooltip('show');
-	/*$.ajax({
-		url : ThinkPHP['AJAX'] + '/Notice/getNotice',
-		type : 'POST',
-		dataType : 'json',
-		success : function(response){
-			if(response.flag==1){
-				if(response.number>0){
-					$('.badge').text(response.number).show();
+	$.post(ThinkPHP['AJAX'] + '/Todolist/getTodolistCount', function(response){
+			if( response != 0 ){
+				if( $('#header .user-operation-item:first-child a span.badge').length ){
+					$('#header .user-operation-item a span.badge').text(response);
 				}else{
-					$('.badge').text(response.number).hide();
+					$('#header .user-operation-item:first-child a').append('<span class="badge" style="display: inline-block;">'+ response +'</span>');
+				}
+			}else{
+				if( $('#header .user-operation-item:first-child a span.badge').length ){
+					$('#header .user-operation-item a span.badge').remove();
 				}
 			}
 		}
-	});*/
+	);
 
 
 

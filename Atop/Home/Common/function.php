@@ -930,3 +930,11 @@ function traverse_document(&$arr){
         echo '&nbsp;&nbsp;&nbsp;没有数据';
     }
 }
+
+/**
+ * 获取当前URL
+ * @return string
+ */
+function getCurrentURL(){
+    return $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+}

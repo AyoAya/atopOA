@@ -560,6 +560,9 @@ class ECNController extends AuthController {
                 $EcnModel = D('Ecn');
                 $ecnAllData = $this->getEcnData($postData['id']);
                 if( $ecnAllData['ecn_type']  == 'file' ){   // 如果是文件类型的ecn，撤回之后将文件状态更改为待评审WaitingReview
+                    // 将属于当前用户的事项标记为完成
+                    $affectedRow = $this->clearMatter($_SERVER['HTTP_HOST'].'/ECN/detail/'.$ecnAllData['ecn_number']);
+                    if( !$affectedRow ) throw new \Exception('撤回失败');
                     foreach( $ecnAllData['EcnReviewItem'] as $key=>&$value ){
                         $changeFileStateRow = $EcnModel->table(C('DB_PREFIX').'file_number')->save(['id'=>$value['assoc'], 'state'=>'WaitingReview']);
                         if( $changeFileStateRow === false ) throw new \Exception('撤回失败');
@@ -779,6 +782,15 @@ class ECNController extends AuthController {
         }
         if( $type == 'InitiateReview' ){    // 发起评审
             if( $ecnType == 'file' ){
+                // 插入待办事项
+                foreach( $address as $key=>&$value ){
+                    $TodolistId = $this->insertNewMatter([
+                        'who' => $value['id'],
+                        'matter_name' => $subject,
+                        'url' => $_SERVER['HTTP_HOST'].'/ECN/detail/'.$data['ecn_number']
+                    ]);
+                    if( !$TodolistId ) return false;
+                }
                 $body = '<p class="sm-dear">Dear '.$dear.',</p>';
                 $body .= '<p>['.session('user')['nickname'].'] 发起了编号为'.$data['ecn_number'].'的文件评审，请及时处理。</p>';
                 $body .= $table;
@@ -788,6 +800,18 @@ class ECNController extends AuthController {
             }
         }elseif( $type == 'PushDown' ){     // 向下推送
             if( $ecnType == 'file' ){
+                // 将属于当前用户的事项标记为完成
+                $affectedRow = $this->markMatterAsDoneSpecifyUser($_SERVER['HTTP_HOST'].'/ECN/detail/'.$data['ecn_number']);
+                if( !$affectedRow ) return false;
+                // 插入待办事项
+                foreach( $address as $key=>&$value ){
+                    $TodolistId = $this->insertNewMatter([
+                        'who' => $value['id'],
+                        'matter_name' => $subject,
+                        'url' => $_SERVER['HTTP_HOST'].'/ECN/detail/'.$data['ecn_number']
+                    ]);
+                    if( !$TodolistId ) return false;
+                }
                 $body = '<p class="sm-dear">Dear '.$dear.',</p>';
                 $body .= '<p>['.session('user')['nickname'].'] 推送了 ['.$data['User']['nickname'].'] 发起的编号为'.$data['ecn_number'].'的文件评审，请及时处理。</p>';
                 $body .= trim($reviewData['remark']) != '' ? '<p class="remark">备注：'.replaceEnterWithBr($reviewData['remark']).'</p>' : '';
@@ -798,11 +822,26 @@ class ECNController extends AuthController {
             }
         }elseif( $type == 'ReviewAction' ){   // 评审
             if( $ecnType == 'file' ){
+                if( $reviewData['reviewState'] === 'PASS' ){
+                    // 将属于当前用户的事项标记为完成
+                    $affectedRow = $this->markMatterAsDoneSpecifyUser($_SERVER['HTTP_HOST'].'/ECN/detail/'.$data['ecn_number']);
+                    if( !$affectedRow ) return false;
+                }else{
+                    // 将属于当前用户的事项标记为完成
+                    $affectedRow = $this->markMatterAsDoneSpecifyURL($_SERVER['HTTP_HOST'].'/ECN/detail/'.$data['ecn_number']);
+                    if( !$affectedRow ) return false;
+                }
                 $body = '<p class="sm-dear">Dear '.$dear.',</p>';
                 if( empty($extra) ){
                     $body .= '<p>['.session('user')['nickname'].'] '.$stateText.'了您发起的编号为'.$data['ecn_number'].'的文件评审。</p>';
                 }else{
                     $body .= '<p>['.session('user')['nickname'].'] '.$stateText.'了您发起的编号为'.$data['ecn_number'].'的文件评审，并将['.$extra['nickname'].']添加为评审人。</p>';
+                    // 如果添加了额外评审人，则插入一条属于该评审人的待办事项
+                    $TodolistId = $this->insertNewMatter([
+                        'who' => $extra['id'],
+                        'matter_name' => $subject,
+                        'url' => $_SERVER['HTTP_HOST'].'/ECN/detail/'.$data['ecn_number']
+                    ]);
                 }
                 $body .= trim($reviewData['remark']) != '' ? '<p class="remark">备注：'.replaceEnterWithBr($reviewData['remark']).'</p>' : '';
                 $body .= $table;
@@ -811,6 +850,9 @@ class ECNController extends AuthController {
                 // 非文件ecn类型的处理方式...
             }
         }elseif( $type == 'Complete' ){     // 评审结束
+            // 将属于当前用户的事项标记为完成
+            $affectedRow = $this->markMatterAsDoneSpecifyUser($_SERVER['HTTP_HOST'].'/ECN/detail/'.$data['ecn_number']);
+            if( !$affectedRow ) return false;
             $body = '<p class="sm-dear">Dear '.$dear.',</p>';
             $body .= '<p>['.session('user')['nickname'].'] 通过了 ['.$data['User']['nickname'].'] 发起的编号为'.$data['ecn_number'].'的文件评审，下列文件已归档。</p>';
             $body .= trim($reviewData['remark']) != '' ? '<p class="remark">备注：'.replaceEnterWithBr($reviewData['remark']).'</p>' : '';
@@ -864,6 +906,7 @@ class ECNController extends AuthController {
         foreach( $data as $key=>&$value ){
             if( $value['along']  == $along ){
                 array_push($pushUsersData, [
+                    'id' => $value['user']['id'],
                     'name' => $value['user']['nickname'],
                     'email' => $value['user']['email']
                 ]);
@@ -880,7 +923,7 @@ class ECNController extends AuthController {
      */
     private function getCurrentAlongAndPrevAlongData($along, $ecnid){
         if( $along ){
-            $result = M()->table(C('DB_PREFIX').'ecn_review a,'.C('DB_PREFIX').'user b')->field('b.nickname name,b.email')->where('a.review_user=b.id AND a.along='.$along.' AND a.ecn_id='.$ecnid)->select();
+            $result = M()->table(C('DB_PREFIX').'ecn_review a,'.C('DB_PREFIX').'user b')->field('b.id,b.nickname name,b.email')->where('a.review_user=b.id AND a.along='.$along.' AND a.ecn_id='.$ecnid)->select();
             if( $result ){
                 foreach($result as $key=>&$value){
                     array_push($this->ccs, $value);
