@@ -33,7 +33,7 @@ class FileController extends AuthController {
         }
         if( I('get.state') && I('get.state') != 'null' ){
             $condition .= ' AND a.state = "'.I('get.state').'"';
-            $map['version'] = I('get.state');
+            $map['state'] = I('get.state');
         }
         if( I('get.description') ){
             $condition .= ' AND a.description LIKE "%'.I('get.description').'%"';
