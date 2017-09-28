@@ -9,6 +9,9 @@
 /*.layui-table-rewrite td:first-child {
     text-align: center;
 }*/
+.layui-table tbody td {
+    padding: 15px 8px;
+}
 .layui-table-rewrite th {
     padding: 10px 8px;
 }

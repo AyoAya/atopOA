@@ -1,3 +1,6 @@
+.layui-table tbody td {
+    padding: 15px;
+}
 input[disabled] {
     cursor: pointer !important;
     background: #fff !important;
