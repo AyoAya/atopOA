@@ -883,7 +883,8 @@ class ECNController extends AuthController {
         $ccIds = explode(',', $ruleData['cc']);
         $TmpCcUsersData = [];
         foreach( $ccIds as $value ){
-            $userData = $model->table(C('DB_PREFIX').'user')->field('nickname name,email')->where('post REGEXP "^'.$value.'," OR post REGEXP ",'.$value.'$" OR post REGEXP ",'.$value.'," OR post REGEXP "^'.$value.'$"')->select();
+            // 将抄送人添加到数组并过滤掉非正常状态的人员
+            $userData = $model->table(C('DB_PREFIX').'user')->field('nickname name,email')->where('post REGEXP "^'.$value.'," OR post REGEXP ",'.$value.'$" OR post REGEXP ",'.$value.'," OR post REGEXP "^'.$value.'$" AND state = 1')->select();
             array_push($TmpCcUsersData, $userData);
         }
         $ccUsersData = [];
@@ -923,7 +924,7 @@ class ECNController extends AuthController {
      */
     private function getCurrentAlongAndPrevAlongData($along, $ecnid){
         if( $along ){
-            $result = M()->table(C('DB_PREFIX').'ecn_review a,'.C('DB_PREFIX').'user b')->field('b.id,b.nickname name,b.email')->where('a.review_user=b.id AND a.along='.$along.' AND a.ecn_id='.$ecnid)->select();
+            $result = M()->table(C('DB_PREFIX').'ecn_review a,'.C('DB_PREFIX').'user b')->field('b.id,b.nickname name,b.email')->where('a.review_user=b.id AND b.state = 1 AND a.along='.$along.' AND a.ecn_id='.$ecnid)->select();
             if( $result ){
                 foreach($result as $key=>&$value){
                     array_push($this->ccs, $value);
