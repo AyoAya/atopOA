@@ -14,7 +14,7 @@ class TodolistController extends AuthController {
     public function index(){
         $model = M('Todolist');
         if( I('get.state') == 'todo' ){
-            $count = $model->where(['state'=>'todo'])->count();
+            $count = $model->where(['who'=>session('user')['id'], 'state'=>'todo'])->count();
             //数据分页
             $page = new Page($count,C('LIMIT_SIZE'));
             $page->setConfig('prev','<span aria-hidden="true">上一页</span>');
@@ -26,7 +26,7 @@ class TodolistController extends AuthController {
             }
             $result = $model->where(['who'=>session('user')['id'], 'state'=>'todo'])->limit($page->firstRow.','.$page->listRows)->order('generate_time DESC')->select();
         }else{
-            $count = $model->where(['state'=>'done'])->count();
+            $count = $model->where(['who'=>session('user')['id'], 'state'=>'done'])->count();
             //数据分页
             $page = new Page($count,C('LIMIT_SIZE'));
             $page->setConfig('prev','<span aria-hidden="true">上一页</span>');

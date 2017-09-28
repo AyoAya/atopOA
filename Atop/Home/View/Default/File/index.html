@@ -52,7 +52,7 @@
     <div class="clearfix" style="margin-bottom: 25px;"></div>
 
     <div id="file-filter" <if condition="$_GET['filenumber'] or $_GET['version'] or $_GET['state'] or $_GET['description'] or $_GET['createuser'] or $_GET['start_time'] or $_GET['end_time']">style="display: block;"<else/>style="display: none;"</if>>
-        <form action="" method="get" class="layui-form">
+        <form action="__ROOT__/File/index/p/1" method="get" class="layui-form">     {//当更换筛选条件后默认回到第一页而不是停留在当前页}
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label" style="width: 80px;">文件号</label>
