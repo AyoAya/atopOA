@@ -11,7 +11,7 @@ $(function(){
 				if( $('#header .user-operation-item:first-child a span.badge').length ){
 					$('#header .user-operation-item a span.badge').text(response);
 				}else{
-					$('#header .user-operation-item:first-child a').append('<span class="badge" style="display: inline-block;">'+ response +'</span>');
+					$('#header .user-operation-item:first-child a').append('<span class="badge" style="display: inline-block;background-color: #d9534f;">'+ response +'</span>');
 				}
 			}else{
 				if( $('#header .user-operation-item:first-child a span.badge').length ){

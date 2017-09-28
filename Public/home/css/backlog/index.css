@@ -38,9 +38,6 @@
 .notice-wrapper .ntc-r .msg-box:hover {
     background: #f5f5f5;
 }
-.notice-wrapper .ntc-r .msg-box:hover .msg-text {
-    transform: translate(10px);
-}
 .notice-wrapper .ntc-r .msg-box:last-child {
     border-bottom: none;
 }
@@ -51,7 +48,6 @@
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        transition: all .4s;
     }
 }
 @media (max-width: 1440px) {
