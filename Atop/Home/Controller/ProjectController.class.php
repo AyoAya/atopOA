@@ -732,20 +732,23 @@ HTML;
             case 'document':    // 归档文件
                 $plan = M('ProjectPlan');
                 $document = M('ProjectDocument');
+                $fileModel = M('FileNumber');
                 $gates = $plan->field('plan_project,gate,mile_stone')->where('plan_project='.$getID)->group('gate')->select();
-                foreach($gates as $key=>&$value){
-                    $value['document'] = $document->where('project_id='.$value['plan_project'].' AND '.'gate_num='.$value['gate'])->select();
-                }
-                $num = 0;   // 该变量作用于存放没有document的数据个数
-                foreach($gates as $key=>&$value){
-                    if( empty($value['document']) ){    // 统计document为空的数组的个数
-                        $num++;
+                $documentResult = $document->where(['project_id'=>$getID])->order('gate_num ASC')->select();
+                foreach( $documentResult as $key=>&$value ){
+                    $value['assoc_file'] = json_decode($value['assoc_file'], true);
+                    $value['FileNumbers'] = $fileModel->where(['id'=>['in', $value['assoc_file']]])->select();
+                    foreach( $value['FileNumbers'] as $k=>&$v ){
+                        $v['attachment'] = json_decode($v['attachment'], true);
                     }
+                    $value['Plan'] = $plan->where(['plan_project'=>$getID, 'gate'=>$value['gate_num']])->find();
                 }
-                if( count($gates) == $num ){
-                    $this->assign('empty',true);    //如果检测到为空的数组和源数据的长度相等则表明所有数组都不存在附件，则向模板传递empty表示不遍历数据
+                $filesData = $fileModel->where(['state'=>'Archiving'])->order('createtime DESC')->select();
+                foreach( $filesData as $key=>&$value ){
+                    $value['attachment'] = json_decode($value['attachment'], true);
                 }
-                # print_r($gates);
+                $this->assign('files', $filesData);
+                $this->assign('documents', $documentResult);
                 $this->assign('gates',$gates);
                 break;
 
@@ -815,6 +818,177 @@ HTML;
         }
         $this->assign('tab',$get);
         $this->display();
+    }
+
+    // 关联文件
+    public function assoc(){
+        if( I('get.id') && is_numeric(I('get.id')) ){
+            $getID = I('get.id');
+            $plan = M('ProjectPlan');
+            $gates = $plan->field('plan_project,gate,mile_stone')->where('plan_project='.$getID)->group('gate')->select();
+            $page = I('post.page') ? I('post.page') : 1;
+            $limit = C('LIMIT_SIZE');
+            $model = new Model();
+            $temporary = $model->table(C('DB_PREFIX').'project_document')->where(['project_id'=>$getID])->select();
+            if( $temporary ){
+                $mergeArr = [];
+                foreach($temporary as $key=>&$value){
+                    $tmpArr = json_decode($value['assoc_file']);
+                    foreach($tmpArr as $k=>&$v){
+                        array_push($mergeArr, $v);
+                    }
+                }
+                $total = $model->table(C('DB_PREFIX').'file_number')->where(['state'=>'Archiving', 'id'=>['notin', $mergeArr]])->count();
+                $filesData = $model->table(C('DB_PREFIX').'file_number')
+                    ->where(['state'=>'Archiving', 'id'=>['notin', $mergeArr]])  // 过滤掉已经添加过的filenumber
+                    ->order('createtime DESC')
+                    ->limit((($page-1)*$limit), $limit)
+                    ->select();
+            }else{
+                $total = $model->table(C('DB_PREFIX').'file_number')->where(['state'=>'Archiving'])->count();
+                $filesData = $model->table(C('DB_PREFIX').'file_number')
+                    ->where(['state'=>'Archiving'])  // 过滤掉已经添加过的filenumber
+                    ->order('createtime DESC')
+                    ->limit((($page-1)*$limit), $limit)
+                    ->select();
+            }
+            foreach( $filesData as $key=>&$value ){
+                $value['attachment'] = json_decode($value['attachment'], true);
+                $value['description'] = strip_tags($value['description']);
+            }
+            $data['limit'] = $limit;
+            $data['total'] = (int)$total;
+            $data['count'] = ceil($total / $limit);
+            $data['data'] = $filesData;
+            $this->assign('result', $data);
+            $this->assign('gates', $gates);
+            $this->display();
+        }
+    }
+
+    // 渲染关联文件
+    public function renderAssocFileData(){
+        if( IS_POST ){
+            $getID = I('post.id');
+            $page = I('post.page') ? I('post.page') : 1;
+            if( I('post.search','',false) ){
+                $map['state'] = 'Archiving';
+                $map['filenumber'] = ['like', '%'. I('post.search','',false) .'%'];
+            }else{
+                $map['state'] = 'Archiving';
+            }
+            $limit = C('LIMIT_SIZE');
+            $model = new Model();
+            $temporary = $model->table(C('DB_PREFIX').'project_document')->where(['project_id'=>$getID])->select();
+            if( $temporary ){
+                $mergeArr = [];
+                foreach($temporary as $key=>&$value){
+                    $tmpArr = json_decode($value['assoc_file']);
+                    foreach($tmpArr as $k=>&$v){
+                        array_push($mergeArr, $v);
+                    }
+                }
+                $map['id'] = ['notin', $mergeArr];
+                $total = $model->table(C('DB_PREFIX').'file_number')->where($map)->count();
+                $filesData = $model->table(C('DB_PREFIX').'file_number')
+                    ->where($map)  // 过滤掉已经添加过的filenumber
+                    ->order('createtime DESC')
+                    ->limit((($page-1)*$limit), $limit)
+                    ->select();
+            }else{
+                $total = $model->table(C('DB_PREFIX').'file_number')->where($map)->count();
+                $filesData = $model->table(C('DB_PREFIX').'file_number')
+                    ->where($map)
+                    ->order('createtime DESC')
+                    ->limit((($page-1)*$limit), $limit)
+                    ->select();
+            }
+            foreach( $filesData as $key=>&$value ){
+                $value['attachment'] = json_decode($value['attachment'], true);
+                $value['description'] = strip_tags($value['description']);
+            }
+            $data['limit'] = $limit;
+            $data['total'] = (int)$total;
+            $data['count'] = ceil($total / $limit);
+            $data['data'] = $filesData;
+            $data['search'] = I('post.search');
+            $this->ajaxReturn($data);
+        }
+    }
+
+    public function getProjectAllGates(){
+        if( IS_POST ){
+            $getID = I('post.getID');
+            $plan = M('ProjectPlan');
+            $gates = $plan->field('plan_project,gate,mile_stone')->where('plan_project='.$getID)->group('gate')->select();
+            $this->ajaxReturn($gates);
+        }
+    }
+
+    # 获取filenumber数据
+    public function getFilenumberData(){
+        if( IS_POST ){
+            $id = I('post.id');
+            $page = I('post.page') ? I('post.page') : 1;
+            $limit = 1;
+            $model = new Model();
+            $temporary = $model->table(C('DB_PREFIX').'project_document')->where(['project_id'=>$id])->select();
+            if( $temporary ){
+                $mergeArr = [];
+                foreach($temporary as $key=>&$value){
+                    $tmpArr = json_decode($value['assoc_file']);
+                    foreach($tmpArr as $k=>&$v){
+                        array_push($mergeArr, $v);
+                    }
+                }
+                $total = $model->table(C('DB_PREFIX').'file_number')->where(['state'=>'Archiving', 'id'=>['notin', $mergeArr]])->count();
+                $filesData = $model->table(C('DB_PREFIX').'file_number')
+                    ->where(['state'=>'Archiving', 'id'=>['notin', $mergeArr]])  // 过滤掉已经添加过的filenumber
+                    ->order('createtime DESC')
+                    ->limit((($page-1)*$limit), $limit)
+                    ->select();
+            }else{
+                $total = $model->table(C('DB_PREFIX').'file_number')->where(['state'=>'Archiving'])->count();
+                $filesData = $model->table(C('DB_PREFIX').'file_number')
+                    ->where(['state'=>'Archiving'])  // 过滤掉已经添加过的filenumber
+                    ->order('createtime DESC')
+                    ->limit((($page-1)*$limit), $limit)
+                    ->select();
+            }
+            foreach( $filesData as $key=>&$value ){
+                $value['attachment'] = json_decode($value['attachment'], true);
+                $value['description'] = strip_tags($value['description']);
+            }
+            $data['limit'] = $limit;
+            $data['total'] = (int)$total;
+            $data['count'] = ceil($total / $limit);
+            $data['data'] = $filesData;
+            $this->ajaxReturn($data);
+        }
+    }
+
+    # 关联文件
+    public function assocFile(){
+        if( IS_POST ){
+            $postData = I('post.', '', false);
+            $postData['assoc_time'] = time();
+            $PDmodel = M('ProjectDocument');
+            $temporary = $PDmodel->where(['project_id'=>$postData['project_id'], 'gate_num'=>$postData['gate_num']])->select();
+            $alreadyExistingData = json_decode($temporary[0]['assoc_file'], true);
+            if( $temporary ){   // 如果已经存在关于当前项目id并且gate相等的数据则合并assoc_file
+                $currentAssoc = json_decode($postData['assoc_file']);
+                foreach($currentAssoc as $key=>&$value){
+                    array_push($alreadyExistingData, $value);
+                }
+                $postData['id'] = $temporary[0]['id'];
+                $postData['assoc_file'] = json_encode($alreadyExistingData);
+                $affect = $PDmodel->save($postData);
+                $affect !== false ? $this->ajaxReturn(['flag'=>1, 'msg'=>'成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'失败']);
+            }else{  // 如果不存在关于当前项目id并且gate不相等的数据则直接新增
+                $pdId = $PDmodel->add($postData);
+                $pdId ? $this->ajaxReturn(['flag'=>1, 'msg'=>'成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'失败']);
+            }
+        }
     }
 
     # 回复评论

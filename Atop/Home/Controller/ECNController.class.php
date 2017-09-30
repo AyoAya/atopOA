@@ -517,7 +517,7 @@ class ECNController extends AuthController {
                         $maxAlong = $EcnModel->table(C('DB_PREFIX').'ecn_review')->where(['ecn_id'=>$result['id']])->max('along');
                         $finalTime = $EcnModel->table(C('DB_PREFIX').'ecn_review')->where(['ecn_id'=>$result['id'], 'along'=>$maxAlong])->max('review_time');
                     }
-                    $value['time_consuming'] = $prefix.time2Units($tmpTime - $finalTime);
+                    if( $finalTime ) $value['time_consuming'] = $prefix.time2Units($tmpTime - $finalTime);
                 }
                 $this->assign('dccUsers', $dccUsers);
                 $this->assign('result', $result);

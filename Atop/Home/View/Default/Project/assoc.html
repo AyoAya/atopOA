@@ -1,0 +1,114 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" href="__CSS__/project/assoc.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/project/assoc.js"></script>
+</block>
+
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>关联文件</title>
+</block>
+
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Project">项目管理</a></li>
+        <li><a href="__ROOT__/Project/details/tab/document/id/{$Think.get.id}">项目详情</a></li>
+        <li class="active">关联文件</li>
+    </ol>
+</block>
+
+<!-- 【正文区域】 -->
+<block name="content">
+
+
+    <form action="" class="layui-form pull-left" style="margin-top: 10px;">
+        <div class="layui-inline" style="margin-right: 10px;">
+            <div class="layui-input-inline" style="width: 280px;">
+                <select name="gate" lay-filter="currentGate">
+                    <volist name="gates" id="value">
+                        <option value="{$value.gate}">Gate{$value.gate} - {$value.mile_stone}</option>
+                    </volist>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-inline">
+                <button type="button" class="layui-btn" id="save-assoc-file-btn">保存</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="pull-right" style="margin-top: 10px;position: relative;">
+        <input type="text" id="searchText" class="layui-input" name="search" style="width: 300px;" placeholder="搜索文件号">
+        <button type="button" id="search" style="position: absolute;right: 0;top: 0;height: 38px;width: 38px;border: none;background: none;line-height: 42px;"><i class="layui-icon">&#xe615;</i></button>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="section-grey-table" style="margin: 25px 0;">
+        <div class="section-title">选择关联文件</div>
+        <div class="section-body">
+            <table class="layui-table">
+                <thead>
+                    <tr>
+                        <th>文件号</th>
+                        <th>版本</th>
+                        <th>附件</th>
+                        <th>描述</th>
+                        <th width="66">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="assoc-data">
+                    <volist name="result.data" id="value">
+                        <tr>
+                            <td><a href="__ROOT__/File/detail/{$value.filenumber}">{$value.filenumber}</a></td>
+                            <td>{$value.version}</td>
+                            <td class="td-wrap" title="{$value.attachment.name}">
+                                <p class="p-wrap"><a href="__ROOT__/{$value.attachment.path}" target="_blank"><i class="file-icon file-icon-ext-{$value.attachment.ext}"></i> {$value.attachment.name}</a></p>
+                            </td>
+                            <td class="td-wrap" title="{:strip_tags($value['description'])}">
+                                <p class="p-wrap">{:strip_tags($value['description'])}</p>
+                            </td>
+                            <td>
+                                <input type="checkbox" name="chooice[{$value.id}]" title="" lay-skin="primary">
+                            </td>
+                        </tr>
+                    </volist>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>var pages = {$result.count},project_id = {$Think.get.id};</script>
+    <div id="filePage"></div>
+
+    <div class="section-grey-table" style="margin: 25px 0;">
+        <div class="section-title">已选中的文件</div>
+        <div class="section-body">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>文件号</th>
+                    <th>版本</th>
+                    <th>附件</th>
+                    <th>描述</th>
+                    <th width="66">操作</th>
+                </tr>
+                </thead>
+                <tbody id="selected-file">
+                <tr>
+                    <td colspan="5" style="text-align: center;padding: 20px 0;">您还未选择任何数据</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</block>
+
