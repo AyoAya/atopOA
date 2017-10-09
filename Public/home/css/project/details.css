@@ -172,6 +172,9 @@ h1 {
 .layui-table tbody td a {
     color: #428bca;
 }
+.layui-table tbody td {
+    padding: 15px;
+}
 .layui-table tbody td a:hover {
     color: #286090;
 }

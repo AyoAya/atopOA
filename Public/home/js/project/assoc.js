@@ -38,7 +38,7 @@ layui.use(['jquery', 'form', 'layer', 'laypage'], function(){
         var params = {
             id: project_id,
             page: page,
-            search: $('#searchText').val() ? $('#searchText').val() : null
+            search: $.trim($('#searchText').val()) ? $.trim($('#searchText').val()) : null
         }
         $.post(ThinkPHP['AJAX'] + '/Project/renderAssocFileData', params, function(response){
             if( response ){
@@ -71,10 +71,41 @@ layui.use(['jquery', 'form', 'layer', 'laypage'], function(){
         }, 'json');
     }
 
+    // 搜索
     $('#search').click(function(){
         renderAssocFileData();
     });
 
+    // 保存关联文件
+    $('#save-assoc-file-btn').click(function(){
+        let data = {
+            project_id: project_id,
+            gate: variables.currentGate,
+            selecteds: variables.selectedAssocFile
+        }
+        if( !variables.selectedAssocFile.length ){
+            layer.msg('请勾选需要关联的文件号');
+            return false;
+        }
+        let loading = layer.load(1, {
+            shade: [0.5,'#fff'] //0.5透明度的白色背景
+        });
+        $.post(ThinkPHP['AJAX'] + '/Project/saveAssocFile', data, function(response){
+            if( response.flag ){
+                layer.msg(response.msg, {icon: 1, time: 1500});
+                setTimeout(function(){
+                    location.href = 'http://'+ ThinkPHP['HTTP_HOST'] +'/Project/details/tab/document/id/'+ response.id;
+                }, 1500);
+            }else{
+                layer.msg(response.msg, {icon: 2, time: 1500});
+                setTimeout(function(){
+                    layer.closeAll();
+                }, 1500);
+            }
+        }, 'json');
+    });
+
+    // 当选中关联文件时将该文件添加到被选中
     $('#assoc-data').on('click', 'input[type=checkbox]', function(){
         console.log('check whether checkbox is selected.');
         let _id = $(this).val();

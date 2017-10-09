@@ -414,6 +414,8 @@ p {
 <p class="main">文件：$filename</p>
 <p>详情请查看：<a href="http://$httpHost/Project/details/tab/document/id/$iid">http://$httpHost/Project/details/tab/document/id/$iid</a></p>
 HTML;
+        }elseif( $category == 'assoc' ){
+
         }else{
             extract($emailData);
             $pj_create_time = date('Y年m月d日 H:i:s');
@@ -922,6 +924,58 @@ HTML;
             $plan = M('ProjectPlan');
             $gates = $plan->field('plan_project,gate,mile_stone')->where('plan_project='.$getID)->group('gate')->select();
             $this->ajaxReturn($gates);
+        }
+    }
+
+    # 保存文件关联
+    public function saveAssocFile(){
+        if( IS_POST ){
+            $postData = I('post.');
+            $model = new Model();
+            $temporary = $model->table(C('DB_PREFIX').'project_document')->where(['project_id'=>$postData['project_id'], 'gate_num'=>$postData['gate']])->select();
+            $assoc_file = [];
+            foreach($postData['selecteds'] as $key=>&$value){
+                array_push($assoc_file, $value['id']);
+            }
+            $data['project_id'] = $postData['project_id'];
+            $data['gate_num'] = $postData['gate'];
+            $data['assoc_file'] = json_encode($assoc_file);
+            $data['assoc_time'] = time();
+            $projectData = $model->table(C('DB_PREFIX').'project')->find($postData['project_id']);
+            $projectData['Plan'] = $model->table(C('DB_PREFIX').'project_plan')->where(['plan_project'=>$postData['project_id'], 'gate'=>$postData['gate']])->select();
+            $projectData['Assoc'] = $postData['selecteds'] ? $postData['selecteds'] : null;
+            $projectData['Recipient'] = $model->table(C('DB_PREFIX').'user')->field('nickname name, email')->where(['id'=>['in', $projectData['pj_participate']]])->select();
+            $projectData['CC'] = [['name'=>'丁征', 'email'=>'dingzheng@atoptechnology.com'], ['name'=>session('user')['nickname'], 'email'=>session('user')['email']]];
+            $this->newPushEmail('assoc', $projectData['Recipient'], $projectData['CC'], $projectData);  // 推送邮件
+            if( $temporary ){   // 在相同的id和相同的gate是否已经存在关联文件，如果存在则合并后复写，不存在则新增
+                $merge_arr = array_merge($assoc_file, json_decode($temporary[0]['assoc_file'], true));
+                $merge_arr = json_encode($merge_arr);
+                $affectRow = $model->table(C('DB_PREFIX').'project_document')->where(['project_id'=>$postData['project_id'], 'gate_num'=>$postData['gate']])->save(['assoc_file'=>$merge_arr]);
+                $affectRow !== false ? $this->ajaxReturn(['flag'=>1, 'msg'=>'保存成功', 'id'=>$postData['project_id']]) : $this->ajaxReturn(['flag'=>0, 'msg'=>'保存失败']);
+            }else{
+                $id = $model->table(C('DB_PREFIX').'project_document')->add($data);
+                $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'保存成功', 'id'=>$postData['project_id']]) : $this->ajaxReturn(['flag'=>0, 'msg'=>'保存失败']);
+            }
+        }
+    }
+
+    # 推送邮件
+    public function newPushEmail($type, $address, $cc, $data){
+        if( $type == 'assoc' ){     // 关联文件号
+            $subject = '[项目管理]归档文件更新，'.$data['pj_num'].'/'.$data['pj_name'];
+            $body = '<p>Dear All,<p>';
+            $body .= '<p>项目管理员['.session('user')['nickname'].']在['.$data['pj_num'].'/'.$data['pj_name'].'] 的 [Gate'.$data['Plan'][0]['gate'].'/'.$data['Plan'][0]['mile_stone'].']关联了新文件。<p>';
+            $body .= '<table width="100%" cellspacing="0" cellpadding="15" border="1">';
+            $body .= '<tr><th style="text-align: left;">文件号</th><th style="text-align: left;">版本</th><th style="text-align: left;">附件</th></tr>';
+            foreach($data['Assoc'] as $key=>&$value){
+                $body .= '<tr>';
+                $body .= '<td><a href="http://'.$_SERVER['HTTP_HOST'].'/File/detail/'.$value['filenumber'].'" target="_blank">'.$value['filenumber'].'</a></td>';
+                $body .= '<td>'.$value['version'].'</td>';
+                $body .= '<td><a href="http://'.$_SERVER['HTTP_HOST'].$value['attachment']['path'].'" target="_blank">'.$value['attachment']['name'].'</a></td>';
+                $body .= '</tr>';
+            }
+            $body .= '</table>';
+            send_Email([['name'=>'蒋明', 'email'=>'vinty_email@163.com']], '', $subject, $body, [['name'=>'蒋明', 'email'=>'jiangming@atoptechnology.com']]);
         }
     }
 
