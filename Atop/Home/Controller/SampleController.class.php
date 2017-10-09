@@ -79,7 +79,6 @@ class SampleController extends AuthController {
                 $sample_data['create_person_name'] = session('user')['nickname'];
                 $sample_data['order_state'] = 1;
 
-
                 # 订单号是否重复
                 $rel = $sample->where('order_num="'.I('post.order_num').'"')->select();
 
@@ -91,13 +90,24 @@ class SampleController extends AuthController {
                     $sample_id = $sample_model->table(C('DB_PREFIX').'sample')->add($sample_data);
                     $product_data = I('post.sample_details','',false);
 
-                    foreach ($product_data as $key=>&$value){
+                    $tmpSample = $model->table(C('DB_PREFIX').'sample')->where('id='.$sample_id)->find();
 
+                    foreach ($product_data as $key=>&$value){
                         # 将步骤和主表id注入产品详情表
                         $value['detail_assoc'] = $sample_id;
                         $value['now_step'] = 2;
                         $value['note'] = replaceEnterWithBr($value['note']);    #  保留复制换行符
                         $tmp_detail_id = $sample_model->table(C('DB_PREFIX').'sample_detail')->add($value);
+
+                        if( $tmp_detail_id ){
+                            $tmpUser = $model->table(C('DB_PREFIX').'sample_detail')->where('id ='.$tmp_detail_id)->find();
+                        }
+
+                        $todo['url'] = $_SERVER['HTTP_HOST']."/Sample/detail/id/".$tmp_detail_id;
+                        $todo['matter_name'] = '[样品管理] '.$tmpSample['order_num'].' 审核';
+                        $todo['who'] = $tmpUser['manager'];
+
+                        $this->insertNewMatter($todo);
 
                         if( $tmp_detail_id ){
 
@@ -115,7 +125,6 @@ class SampleController extends AuthController {
                             # 写入步骤数据
                             $tmp_op_id = $sample_model->table(C('DB_PREFIX').'sample_operating')->addAll($tmp_op_data);
 
-
                             if( !$tmp_op_id ){
                                 $sample_model->rollback();
                                 $this->ajaxReturn(['flag'=>0,'msg'=>'添加订单失败！']);
@@ -131,9 +140,9 @@ class SampleController extends AuthController {
                     $sample_model->commit();
 
                     $addData = $sample_model->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c,'.C('DB_PREFIX').'productrelationships d')
-                                                ->field('a.order_num, a.create_person_name, b.requirements_date, b.count, b.customer, b.model, b.brand, c.nickname, b.pn, d.type')
-                                                ->where('a.id ='.$sample_id.' AND b.detail_assoc = a.id AND b.manager = c.id AND b.product_id = d.id')
-                                                ->select();
+                                            ->field('a.order_num, a.create_person_name, b.requirements_date, b.count, b.customer, b.model, b.brand, c.nickname, b.pn, d.type')
+                                            ->where('a.id ='.$sample_id.' AND b.detail_assoc = a.id AND b.manager = c.id AND b.product_id = d.id')
+                                            ->select();
 
                     $emails = $sample_model->table(C('DB_PREFIX').'sample a,'.C('DB_PREFIX').'sample_detail b,'.C('DB_PREFIX').'user c')
                                            ->field('c.email,c.nickname')
@@ -377,20 +386,20 @@ class SampleController extends AuthController {
             $model = new model();
 
             $log_data = M()->field('a.context,a.asc_detail,a.log_time,b.id step_id,b.name,c.nickname,c.face')
-                ->table(C('DB_PREFIX').'sample_log a,'.C('DB_PREFIX').'sample_step b,'.C('DB_PREFIX').'user c')
-                ->where('a.log_step=b.id AND a.person=c.id AND a.asc_detail='.I('get.id'))
-                ->order('a.log_time DESC')
-                ->select();
+                           ->table(C('DB_PREFIX').'sample_log a,'.C('DB_PREFIX').'sample_step b,'.C('DB_PREFIX').'user c')
+                           ->where('a.log_step=b.id AND a.person=c.id AND a.asc_detail='.I('get.id'))
+                           ->order('a.log_time DESC')
+                           ->select();
 
             $this->assign('newlog',$log_data);
 
             # 获取日志数据
             foreach( $detailResult[0]['operating'] as $key=>&$value ){
                 $value['log'] = $model->table(C('DB_PREFIX').'user a,'.C('DB_PREFIX').'sample_log b')
-                    ->field('b.context,b.asc_detail,b.log_time,b.person,b.log_step,a.nickname')
-                    ->where('a.id = b.person AND b.asc_detail ='.$value['asc_detail'].' AND b.log_step ='.$value['id'])
-                    ->order('b.log_time ASC')
-                    ->select();
+                                      ->field('b.context,b.asc_detail,b.log_time,b.person,b.log_step,a.nickname')
+                                      ->where('a.id = b.person AND b.asc_detail ='.$value['asc_detail'].' AND b.log_step ='.$value['id'])
+                                      ->order('b.log_time ASC')
+                                      ->select();
             }
             # 检查附件和测试报告是否为空，如果不为空则将附件转换为数组
             if( !empty($detailResult[0]['attachment']) ){
@@ -480,9 +489,10 @@ class SampleController extends AuthController {
                     break;
             }
 
-
             $this->assign('detailResult',$detailResult[0]);
             $this->display();
+        }else{
+            $this->error('参数错误！');
         }
 
     }
@@ -505,7 +515,6 @@ class SampleController extends AuthController {
                 }
             }
 
-
             # 获取推送人员的邮件(不包含自己)
             $push_person_info = M()->field('b.nickname,b.email')
                                    ->table(C('DB_PREFIX').'sample_operating a,'.C('DB_PREFIX').'user b')
@@ -516,9 +525,6 @@ class SampleController extends AuthController {
             foreach( $push_person_info as $key=>&$value ){
                 $emails[] = $value['email'];
             }
-
-
-            //print_r($emails);
 
             # 获取产品基本信息
             $orderData = M()->field('a.id sample_id,a.order_num,a.create_person_name,b.id detail_id,b.pn,b.count,b.customer,b.manager,b.brand,b.model,b.note,b.expect_date,b.requirements_date,b.now_step,c.id step_id,c.name step_name,d.nickname')
@@ -604,6 +610,16 @@ class SampleController extends AuthController {
                     # 开启事务
                     $model->startTrans();
 
+                    $todoList['matter_name'] = "[样品管理] ".I('post.order_num').' '.$step_rel[1]['name'];
+                    $todoList['url'] = $_SERVER['HTTP_HOST']."/Sample/detail/id/".I('post.asc_detail');
+                    $todoList['who'] = $next_step_data['operator'];
+
+                    $this->insertNewMatter($todoList);
+                    $this->markMatterAsDoneSpecifyUserState($todoList['url']);
+
+                    # print_r(I('post.'));
+                    /*print_r($next_step_data);
+                    die();*/
                     # 检测是否存在物流数据
                     if( isset($post['logistics']) && isset($post['waybill']) ){
                         $logistics_save = $model->table(C('DB_PREFIX').'sample_detail')->save( ['id'=>$post['asc_detail'],'logistics'=>$post['logistics'],'waybill'=>$post['waybill']] );
@@ -671,6 +687,22 @@ class SampleController extends AuthController {
                         $cc = $emails;
                     }
 
+                    $now_step_id = $orderData[0]['now_step'];
+                    # 推送下一步的数据
+                    $next_step_data['operator'] = $post['operator'];
+                    $next_step_data['asc_detail'] = $post['asc_detail'];
+                    $next_step_data['asc_step'] = $now_step_id+1;
+
+                    $now_step_id = $orderData[0]['now_step'];
+                    $step_rel = M('SampleStep')->where( ['id'=>['in',[$now_step_id,$now_step_id+1]]] )->order('id ASC')->select();
+
+                    $todoList['matter_name'] = "[样品管理] ".I('post.order_num').' '.$step_rel[1]['name'];
+                    $todoList['url'] = $_SERVER['HTTP_HOST']."/Sample/detail/id/".I('post.asc_detail');
+                    $todoList['who'] = I('post.rollback');
+
+                    /*print_r(I('post.'));
+                    die();*/
+                    $this->markMatterAsDoneSpecifyUser($todoList['url']);
 
                     # 修改产品状态
                     $state_save_result = $model->table(C('DB_PREFIX').'sample_detail')->save( ['id'=>$post['asc_detail'],'state'=>'Y'] );
@@ -697,6 +729,26 @@ class SampleController extends AuthController {
                     }else{
                         $cc = $emails;
                     }
+
+                    $now_step_id = $orderData[0]['now_step'];
+                    # 推送下一步的数据
+                    $next_step_data['operator'] = $post['operator'];
+                    $next_step_data['asc_detail'] = $post['asc_detail'];
+                    $next_step_data['asc_step'] = $now_step_id+1;
+
+                    $now_step_id = $orderData[0]['now_step'];
+                    $step_rel = M('SampleStep')->where( ['id'=>['in',[$now_step_id,$now_step_id+1]]] )->order('id ASC')->select();
+
+                    # 拼装当前步骤信息和下一步步骤信息
+                    $now_stepStr ='Step'.$step_rel[0]['id'].'-'.$step_rel[0]['name'];
+                    $next_stepStr ='Step'.$step_rel[1]['id'].'-'.$step_rel[1]['name'];
+
+                    $todoList['matter_name'] = "[样品管理] ".I('post.order_num').' '.$step_rel[0]['name'];
+                    $todoList['url'] = $_SERVER['HTTP_HOST']."/Sample/detail/id/".I('post.asc_detail');
+                    $todoList['who'] = I('post.transfer');
+
+                    $this->insertNewMatter($todoList);
+                    $this->markMatterAsDoneSpecifyUserState( $todoList['url']);
 
                     # 记录转交时产生的日志
                     $add_transfer_log_id = $model->table(C('DB_PREFIX').'sample_log')->add($logData);
@@ -730,6 +782,29 @@ class SampleController extends AuthController {
                     }else{
                         $cc = $emails;
                     }
+
+                    $now_step_id = $orderData[0]['now_step'];
+                    # 推送下一步的数据
+                    $next_step_data['operator'] = $post['operator'];
+                    $next_step_data['asc_detail'] = $post['asc_detail'];
+                    $next_step_data['asc_step'] = $now_step_id-1;
+
+                    $now_step_id = $orderData[0]['now_step'];
+                    $step_rel = M('SampleStep')->where( ['id'=>['in',[$now_step_id,$now_step_id-1]]] )->order('id ASC')->select();
+
+                    /*print_r($now_step_id);
+                    print_r($step_rel);
+                    print_r($next_step_data);
+                    die();*/
+
+                    $todoList['matter_name'] = "[样品管理] ".I('post.order_num').' '.$step_rel[0]['name'];
+                    $todoList['url'] = $_SERVER['HTTP_HOST']."/Sample/detail/id/".I('post.asc_detail');
+                    $todoList['who'] = I('post.rollback');
+
+                    /*print_r(I('post.'));
+                    die();*/
+                    $this->insertNewMatter($todoList);
+                    $this->markMatterAsDoneSpecifyUserState( $todoList['url']);
 
                     # 产品表当前步骤-1
                     $detail_now_step_save = $model->table(C('DB_PREFIX').'sample_detail')->save( ['id'=>$post['asc_detail'],'now_step'=>($orderData[0]['now_step']-1)] );
@@ -779,6 +854,25 @@ class SampleController extends AuthController {
                     }else{
                         $cc = $userEmail;
                     }
+
+                    $now_step_id = $orderData[0]['now_step'];
+                    # 推送下一步的数据
+                    $next_step_data['operator'] = $post['operator'];
+                    $next_step_data['asc_detail'] = $post['asc_detail'];
+                    $next_step_data['asc_step'] = $now_step_id+1;
+
+                    $now_step_id = $orderData[0]['now_step'];
+                    $step_rel = M('SampleStep')->where( ['id'=>['in',[$now_step_id,$now_step_id+1]]] )->order('id ASC')->select();
+
+                    $todoList['matter_name'] = "[样品管理] ".I('post.order_num').' '.$step_rel[1]['name'];
+                    $todoList['url'] = $_SERVER['HTTP_HOST']."/Sample/detail/id/".I('post.asc_detail');
+                    $todoList['who'] = I('post.rollback');
+
+                    /*print_r(I('post.'));
+                    die();*/
+
+                    $this->markMatterAsDoneSpecifyUser( $todoList['url']);
+
 
                     $now_step_id = $orderData[0]['now_step'];
                     $model->startTrans();

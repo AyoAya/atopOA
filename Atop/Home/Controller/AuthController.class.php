@@ -63,6 +63,13 @@ class AuthController extends Controller {
         return $affectedRow !== false ? true : false;
     }
 
+    # 将指定用户的事项标记为完成
+    protected function markMatterAsDoneSpecifyUserState($url){
+        $model = M('Todolist');
+        $affectedRow = $model->where(['who'=>session('user')['id'], 'url'=>$url,'state'=>'todo'])->save(['state'=>'done', 'complete_time' => time()]);
+        return $affectedRow !== false ? true : false;
+    }
+
     # 将指定url的事项标记为完成
     protected function markMatterAsDoneSpecifyURL($url){
         $model = M('Todolist');
@@ -74,6 +81,13 @@ class AuthController extends Controller {
     protected function clearMatter($url){
         $model = M('Todolist');
         $affectedRow = $model->where(['url'=>$url])->delete();
+        return $affectedRow !== false ? true : false;
+    }
+
+    # 清除当前操作人事项
+    protected function clearNowMatter($url){
+        $model = M('Todolist');
+        $affectedRow = $model->where(['who'=>session('user')['id'],'url'=>$url])->delete();
         return $affectedRow !== false ? true : false;
     }
 
