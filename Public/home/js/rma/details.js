@@ -292,6 +292,7 @@ $(function(){
 
         //监听rma处理表单
         form.on('submit(rmaCustomer)', function( data ){
+
             var fields = data.field;
             if( attachmentList.length == 0 ){	//如果附件为空则提交空字符串，如果不为空则转换为json格式数据提交
                 fields.attachments = '';
@@ -300,7 +301,7 @@ $(function(){
             }
 
             //console.log(data.field);
-            if( data.field.step == 4 && data.field.operation_type == 6 || data.field.operation_type == 5 && window.loguploader.getFiles().length <= 0 ){
+            if( data.field.step == 4 && (data.field.operation_type == 6 || data.field.operation_type == 5) && window.loguploader.getFiles().length <= 0 ){
                 layer.msg('请先上传分析报告',{ icon:2, time:2000 });
                 return false;
             }
@@ -318,6 +319,15 @@ $(function(){
                 }
                 data.field.cc_email_list = emails;
             }
+
+            if( $('.tmp-rollback') ){
+                data.field.rollbackStep = $('.tmp-rollback').find('.tmp').text();
+                data.field.rollbackStepName = $('.tmp-rollback').find('.tmpName').text();
+                data.field.rollbackUserName = $('.tmp-rollback').find('.tmpUser').text();
+            }
+            //console.log(data);
+
+            //return false;
 
             $.ajax({
                 url : ThinkPHP['AJAX'] + '/RMA/addRMA_OperationLog',
