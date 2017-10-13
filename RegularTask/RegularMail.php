@@ -45,7 +45,7 @@ class RegularMail{
         # 获取到当天时间戳
         # $start_date = strtotime(date('Y-m-d',(time()+((date('w')==0?7:date('w'))-3)*24*3600)));
         # 获取所有数据
-        $sql = 'SELECT id,pj_num,pj_name,pj_describe,pj_create_time,pj_update_time,pj_create_person,pj_standard_name,pj_platform,pj_family,pj_belong,pj_participate FROM atop_project;';
+        $sql = 'SELECT id,pj_num,pj_name,pj_describe,pj_create_person_id,pj_create_time,pj_update_time,pj_create_person,pj_standard_name,pj_platform,pj_family,pj_belong,pj_participate FROM atop_project;';
 
         $project_data = self::select($sql);
 
@@ -106,18 +106,27 @@ class RegularMail{
             }
 
 
-            # print_r($vv['pj_participate']);
-
-             $spl = "SELECT email FROM atop_user WHERE id IN (".$vv['pj_participate'].")";
+            $spl = "SELECT email FROM atop_user WHERE id IN (".$vv['pj_participate'].")";
 
             $vv['email'] = self::select($spl);
 
+            $sql = "SELECT email FROM atop_user WHERE id = ".$vv['pj_create_person_id'];
+
+            $vv['create'] = self::select($sql);
             # 邮件通知人邮箱
             $vv['address'] = [];
             foreach ($vv['email'] as $k=>&$v){
                 $vv['address'][] = $v['email'];
             }
+
+            foreach ($vv['create'] as $kkk=>&$vvv){
+                $pjCreateEmail = $vvv['email'];
+            }
+
+            array_push( $vv['address'],$pjCreateEmail);
+
             $vv['ccEmail'] = $ccEmail;
+
 
         }
 
