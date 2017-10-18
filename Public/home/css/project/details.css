@@ -184,10 +184,10 @@ h1 {
 }
 @media ( min-width: 1440px ) {
     .layui-table tbody td.td-wrap {
-        width: 500px;
+        width: 600px;
     }
     .layui-table tbody td p.p-wrap {
-        width: 500px;
+        width: 600px;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
