@@ -233,6 +233,8 @@ class RMAController extends AuthController{
 
             $model->startTrans();   //开启事务
 
+            //print_r($post);
+            //die();
             $complaint_addID = $model->table('atop_oacustomercomplaint')->add($data);
 
             //将当前操作人姓名添加至邮件推送内容
@@ -272,6 +274,12 @@ class RMAController extends AuthController{
             if( $complaint_addID && $complaintlog_addID && $operation_id_1 && $operation_id_2 ){
                 $model->commit();
 
+                $todoList['matter_name'] = "[客诉处理] 新增客诉 ".I('post.sale_order');
+                $todoList['url'] = $_SERVER['HTTP_HOST']."/RMA/details/id/".$complaint_addID;
+                $todoList['who'] = $post['operation_person'];
+
+                # 给FAE工程师添加待办事项
+                $this->insertNewMatter($todoList);
                 # 给FAE工程师推送邮件
                 $this->pushEmail('ADD_CUSTOMER',$fae_user_info['email'],$post,$complaint_addID);
 
@@ -479,6 +487,7 @@ class RMAController extends AuthController{
                 $step_info['nickname'] = substr($names,0,-1);
             }else{
                 $step_info['nickname'] = M('user')->field('nickname')->find( $oacustomeroperation_result['operation_person'] )['nickname']; //获取上一个步骤人的姓名
+                $step_info['user_id'] = M('user')->field('id')->find( $oacustomeroperation_result['operation_person'] )['id']; //获取上一个步骤人的姓名
             }
             $tmp_step_data = $oacustomerstep_model->field('id,step_name')->find( $step_info_data[0]['step'] );
 
@@ -486,8 +495,6 @@ class RMAController extends AuthController{
 
             $step_info['step_id'] = $tmp_step_data['id'];
 
-
-            //print_r($step_info);
             $this->assign('fallback',$step_info);
             if( $resultData['now_step'] == 6 || $resultData['now_step'] == 2 ){
                 $FAE_list = M('User')->where( 'position=12 AND id<>'.session('user')['id'].' AND state=1' )->select(); //获取到同职位且不包含自己的人员列表
@@ -597,6 +604,7 @@ class RMAController extends AuthController{
         //print_r($this->getDepartmentsAndUsers());
         $this->assign('ccList',$this->getDepartmentsAndUsers());
 
+        # print_r($resultData);
         $QA_list = M('User')->where(['department'=>'3'])->select();  //获取QA（品质部）人员
         $this->assign('QAlist',$QA_list);
         $this->assign('details',$resultData);
@@ -847,7 +855,7 @@ class RMAController extends AuthController{
             $logData['step'] = $post['step'];
             $logData['version'] = $post['version'];
 
-            //print_r($post);
+            # print_r($post);
             if( $post['operation_type'] == 'X' ){ //如果操作类型为0则表示该操作为添加日志，如果不为0则表示推送到该步骤
 
                 $oacustomercomplaintlog_model = M('Oacustomercomplaintlog');
@@ -900,6 +908,10 @@ class RMAController extends AuthController{
                 if( $add_id_1 && $add_id_2 && $save_id ){
                     M()->commit();
 
+                    $todoList['url'] = $_SERVER['HTTP_HOST']."/RMA/details/id/".$post['cc_id'];
+                    # 清除所有待办
+                    $this->markMatterAsDoneSpecifyUser($todoList['url']);
+
                     $close_reason_text = M('Oacustomerclosereason')->find($post['assoc_close_reason']);
                     $logDataBak['close_reason_text'] = $close_reason_text['close_reason'];
 
@@ -923,6 +935,9 @@ class RMAController extends AuthController{
                 $model = new Model();
                 $model->startTrans();
 
+                /*print_r($post);
+                die();*/
+
                 $add_id_1 = $model->table(C('DB_PREFIX').'oacustomercomplaintlog')->add($logData);
 
                 # 获取转交人的数据
@@ -939,6 +954,20 @@ class RMAController extends AuthController{
                 $add_id_2 = $model->table(C('DB_PREFIX').'oacustomercomplaintlog')->add($logData);
 
                 if( $add_id_1 && $add_id_2 && $save_id ){
+
+                    # 待办事项提醒
+                    $tmpName = $model->table(C('DB_PREFIX').'oacustomercomplaint a,'.C('DB_PREFIX').'oacustomerstep b')
+                                     ->field('a.id,a.cc_time,a.salesperson,a.customer,a.sale_order,a.pn,a.vendor,a.model,a.error_message,a.reason,a.comments,a.status,a.uid,a.rma_state,a.version,a.show,b.step_name')
+                                     ->where('a.id ='.$post['cc_id'].' AND b.id ='.$post['step'].' AND a.now_step = b.id')
+                                     ->find();
+
+                    $todoList['matter_name'] = "[客诉处理] ".$tmpName['step_name'].' '.$tmpName['sale_order'];
+                    $todoList['url'] = $_SERVER['HTTP_HOST']."/RMA/details/id/".$post['cc_id'];
+                    $todoList['who'] = $post['operation_person'];
+
+                    $this->insertNewMatter($todoList);
+                    $this->markMatterAsDoneSpecifyUserState( $todoList['url']);
+
                     $model->commit();
 
                     $emails = $this->GetInvolvedIn($post['cc_id']);
@@ -946,6 +975,7 @@ class RMAController extends AuthController{
                     # 检查用户是否开启抄送功能，如果开启则将被选中的抄送人添加至发送列表
                     # 如果已经存在抄送人则将已存在的和用户选择的合并
                     if( isset($post['cc_on']) && $post['cc_on'] == 'Y' ) {
+
                         $this->pushEmail('TRANSFER', $QA_person_data['email'], $logDataBak, $post['cc_id'], array_merge( $emails, $post['cc_email_list'] ) );
                     }else{
                         $this->pushEmail('TRANSFER', $QA_person_data['email'], $logDataBak, $post['cc_id'], $emails);
@@ -966,13 +996,65 @@ class RMAController extends AuthController{
 
                 $add_id_1 = $model->table('atop_oacustomercomplaintlog')->add($logData);
 
-                $step_result = M()->field('b.id,b.step_name')
-                                  ->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'oacustomerstep b')
-                                  ->where( 'a.main_assoc='.$post['cc_id'].' AND a.step_assoc<'.$post['step'].' AND a.step_assoc=b.id' )
-                                  ->group('b.id')
-                                  ->order('a.step_assoc DESC')
-                                  ->limit(1)
-                                  ->select()[0];
+                # 待办事项提醒
+                # 主表数据
+                $tmpName = $model->table(C('DB_PREFIX').'oacustomercomplaint')->find($post['cc_id']);
+                # 步骤表数据
+                $tmpStep = $model->table(C('DB_PREFIX').'oacustomerstep')->where('id ='.$post['step'].' OR id ='.$post['rollbackStep'])->select();
+
+                # 下一步步骤数据
+                $nextData = $tmpStep[0];
+                # 当前步骤数据
+                $nextData = $tmpStep[1];
+
+                $result = M()->field('b.id,b.step_name,a.operation_person')
+                             ->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'oacustomerstep b')
+                             ->where( 'a.main_assoc='.$post['cc_id'].' AND a.step_assoc<='.$post['step'].' AND a.step_assoc=b.id' )
+                             ->group('b.id')
+                             ->order('a.step_assoc DESC')
+                             ->limit(2)
+                             ->select();
+                # 下一次操作数据
+                $step_result = $result[1];
+                # 当前数据
+                $curent_result = $result[0];
+
+                $todoList['matter_name'] = "[客诉处理] ".$post['rollbackStepName'].' '.$tmpName['sale_order'];
+                $todoList['url'] = $_SERVER['HTTP_HOST']."/RMA/details/id/".$post['cc_id'];
+
+                # 下一步操作多人,当前操作一个,
+                if( strpos($step_result['operation_person'],',') !== false && strpos($curent_result['operation_person'],',') === false ){   //检测产品集中是否包含,号，如果包含则说明该客诉存在多个产品
+                    $pns = explode(',',$step_result['operation_person']);
+                    foreach($pns as $key=>&$value){
+                        $value = trim($value);  //去掉前后空格
+                    }
+                    foreach ($pns as $k=>&$v){
+                        $todoList['who'] = $v;
+                        $this->insertNewMatter($todoList);
+                    }
+                    $this->markMatterAsDoneSpecifyUserState($todoList['url']);
+
+                # 下一步操作一个人,当前操作两个人,
+                }elseif(strpos($curent_result['operation_person'],',') !== false && strpos($step_result['operation_person'],',') === false){
+                    $pns = explode(',',$curent_result['operation_person']);
+                    foreach($pns as $key=>&$value){
+                        $value = trim($value);  //去掉前后空格
+                    }
+                    foreach ($pns as $k=>&$v){
+
+                        $this->markMatterAsDoneSpecifyUserStates($v,$todoList['url']);
+                    }
+                    $todoList['who'] = $step_result['operation_person'];
+                    $this->insertNewMatter($todoList);
+                # 上下一步都没有,
+                }elseif( strpos($curent_result['operation_person'],',') === false && strpos($step_result['operation_person'],',') === false ){
+
+                    $todoList['who'] = $step_result['operation_person'];
+
+                    $this->insertNewMatter($todoList);
+                    $this->markMatterAsDoneSpecifyUserState($todoList['url']);
+
+                }
 
                 $logDataBak = $logData;
 
@@ -980,10 +1062,11 @@ class RMAController extends AuthController{
                 $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤回退到：Step'.$step_result['id'].' - '.$step_result['step_name'].'。';
                 $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
+
                 $add_id_2 = $model->table('atop_oacustomercomplaintlog')->add($logData);
 
                 # 修改主表当前步骤
-                $save_id = $model->table('atop_oacustomercomplaint')->save( ['id'=>$post['cc_id'],'now_step'=>$step_result['id']] );
+                $save_id = $model->table('atop_oacustomercomplaint')->save( ['id'=>$post['cc_id'],'now_step'=>$post['rollbackStep']] );
 
                 if( $add_id_1 && $add_id_2 && $save_id !== false ){
 
@@ -1013,8 +1096,12 @@ class RMAController extends AuthController{
                 $oacustomercomplaint_model = M('Oacustomercomplaint');
                 $oacustomeroperaion_model = M('Oacustomeroperation');
 
+
                 # 开启事务
                 $model = new Model();
+
+
+                $operation_person_ids = [];
 
                 $add_id_1 = $model->table('atop_oacustomercomplaintlog')->add($logData);
 
@@ -1023,10 +1110,15 @@ class RMAController extends AuthController{
                 $logDataBak['push_step'] = $post['operation_type']; //将用户选择的推送步骤添加到邮件数据
 
                 if( $post['step'] == 2 ){
+
                     $operation_person_result = $oacustomeroperaion_model->field('operation_person')->where( ['main_assoc'=>$post['cc_id'],'step_assoc'=>1] )->select();
                     $operation_person_id = $operation_person_result[0]['operation_person'];     //获取到销售id作为下一步推送人
+                    $step_result['operation_person'] = $operation_person_id;
+
                 }elseif( $post['step'] == 3 ){
                     $operation_person_id = $post['operation_person'];     //获取到QA作为下一步推送人
+                    $step_result['operation_person'] = $operation_person_id;
+
                 }elseif( $post['operation_type'] == 5 ){  //如果用户将步骤推送到协助处理RMA，则获取该客诉产品的产品经理
 
                     $productrelationships_model = M('Productrelationships');
@@ -1039,24 +1131,86 @@ class RMAController extends AuthController{
                             }
                             $condition['pn'] = ['in',$pns]; //根据pn号查询数据
                             $productrelationships_result = $productrelationships_model->field('manager')->where($condition)->select();  //获取pn对应的产品经理
-                            $operation_person_ids = [];
+
                             foreach( $productrelationships_result as $key=>&$value ){   //拼装产品经理id
                                 $operation_person_ids[] = $value['manager'];
                             }
-                            $operation_person_ids = array_unique($operation_person_ids);  //未避免出现重复的产品经理，当id一致时保留唯一
+
+                            $tmpOperation_person_ids = $operation_person_ids = array_unique($operation_person_ids);  //未避免出现重复的产品经理，当id一致时保留唯一
                             $operation_person_ids = implode(',',$operation_person_ids); //如果存在多个产品经理则用逗号隔开拼接成字符串
+
+                            $step_result['operation_person'] = $operation_person_ids;
+
                             $operation_person_id = $operation_person_ids;
                         }else{
                             $productrelationships_result = $productrelationships_model->field('manager')->where( ['pn'=>trim($oacustomercomplaint_result['pn'])] )->select();
                             $operation_person_id = $productrelationships_result[0]['manager'];
+                            $step_result['operation_person'] = $operation_person_id;
                         }
                     }
                 }elseif( $post['operation_type'] == 6 ){
                     $operation_person_result = $oacustomeroperaion_model->field('operation_person')->where( ['main_assoc'=>$post['cc_id'],'step_assoc'=>2] )->select();
                     $operation_person_id = $operation_person_result[0]['operation_person'];     //获取到FAE工程师id作为下一步推送人
+                    $step_result['operation_person'] = $operation_person_id;
                 }
 
-                $step_result = M('Oacustomerstep')->find($post['operation_type']);  //获取到下一个步骤
+                $result = M()->field('id,step_name')
+                             ->table(C('DB_PREFIX').'oacustomerstep')
+                             ->where( 'id = '.$post['operation_type'] )
+                             ->find();
+
+                $results = M()->field('id,step_name')
+                              ->table(C('DB_PREFIX').'oacustomerstep')
+                              ->where( 'id = '.$post['step'] )
+                              ->find();
+
+                $nowDAta = $model->table(C('DB_PREFIX').'oacustomeroperation')
+                                 ->where('main_assoc = '.$post['cc_id'].' AND step_assoc ='.$post['step'] )
+                                 ->find();
+
+                $step_result['id'] = $post['operation_type'];
+                $step_result['step_name'] = $result['step_name'];
+
+                $curent_result['id'] = $post['step'];
+                $curent_result['step_name'] = $results['step_name'];
+                $curent_result['operation_person'] = $nowDAta['operation_person'];
+
+                # 待办事项提醒
+                $tmpName = $model->table(C('DB_PREFIX').'oacustomercomplaint')
+                                 ->field('sale_order')
+                                 ->where('id ='.$post['cc_id'])
+                                 ->find();
+
+                $todoList['matter_name'] = "[客诉处理] ".$step_result['step_name'].' '.$tmpName['sale_order'];
+                $todoList['url'] = $_SERVER['HTTP_HOST']."/RMA/details/id/".$post['cc_id'];
+
+                if(strpos($step_result['operation_person'],',') !== false && strpos($curent_result['operation_person'],',') === false){
+                    $tmpArr = explode(',',$step_result['operation_person']);
+                    foreach ($tmpArr as $k=>&$v){
+
+                        $todoList['who'] = $v;
+                        $this->insertNewMatter($todoList);
+                    }
+                    $this->markMatterAsDoneSpecifyUserState( $todoList['url']);
+
+                }elseif(strpos($step_result['operation_person'],',') === false && strpos($curent_result['operation_person'],',') !== false){
+                    $tmpArr = explode(',',$curent_result['operation_person']);
+                    foreach ($tmpArr as $k=>&$v){
+
+                        $this->markMatterAsDoneSpecifyUserStates($v,$todoList['url']);
+                    }
+
+                    $todoList['who'] = $step_result['operation_person'];
+                    $this->insertNewMatter($todoList);
+
+                }elseif(strpos($step_result['operation_person'],',') === false && strpos($curent_result['operation_person'],',') === false){
+
+
+
+                    $todoList['who'] = $step_result['operation_person'];
+                    $this->insertNewMatter($todoList);
+                    $this->markMatterAsDoneSpecifyUserState( $todoList['url']);
+                }
 
                 # 记录操作日志
                 $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤推送到：Step'.$step_result['id'].' - '.$step_result['step_name'].'。';
@@ -1066,6 +1220,7 @@ class RMAController extends AuthController{
 
                 # 修改主表当前步骤
                 $save_id = $model->table('atop_oacustomercomplaint')->save( ['id'=>$post['cc_id'],'now_step'=>$step_result['id']] );
+
 
                 $operationData['main_assoc'] = $post['cc_id'];
                 $operationData['step_assoc'] = $post['operation_type'];
@@ -1081,6 +1236,7 @@ class RMAController extends AuthController{
                 }
 
                 if( $add_id_1 && $add_id_2 && $add_id_3 !== false && $save_id !== false ){
+
                     $model->commit();
 
                     # 如果是添加日志，则获取到当前步骤前的所有步骤处理人员，分别推送邮件

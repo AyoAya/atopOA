@@ -4,8 +4,6 @@
 
 $(function(){
 
-
-
     // 初始化layui组件
     layui.use(['layer','form'], function(){
         var layer = layui.layer,

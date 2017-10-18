@@ -330,104 +330,85 @@
 
     <eq name="tab" value="document">
         <div class="document-container">
-            <input type="hidden" value="{$getID}" id="documentUploadProjectId">
-            <!--<input type="hidden" id="documentProjectGate">-->
             <eq name="Think.session.user.id" value="$auth">
-                <div id="file">
-                    <div class="btn-group pull-left" id="gateSelect">
-                        <button type="button" class="btn btn-default" id="gateNum">Gate{$gates.0.gate} - {$gates.0.mile_stone}</button>
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu" id="gateList">
-                            <volist name="gates" id="value">
-                                <li gate="{$value.gate}"><a href="#">Gate{$value.gate} - {$value.mile_stone}</a></li>
-                            </volist>
-                        </ul>
+                <script>var project_id = {$basicInfo.id};</script>
+                <form action="" class="layui-form" style="margin-top: 20px;">
+                    <!--<div class="layui-inline" style="margin-right: 10px;">
+                        <div class="layui-input-inline" style="width: 280px;">
+                            <select name="gate" lay-filter="currentGate">
+                                <volist name="gates" id="value">
+                                    <option value="{$value.gate}">Gate{$value.gate} - {$value.mile_stone}</option>
+                                </volist>
+                            </select>
+                        </div>
+                    </div>-->
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <a href="__ROOT__/Project/assoc/id/{$basicInfo.id}" class="layui-btn layui-btn-primary" id="chooice-file-btn">关联文件</a>
+                        </div>
                     </div>
-                    <div class="pull-left" id="fileUpload"></div>
-                    <div class="clearfix"></div>
+                </form>
+                <div class="choose-files-wrapper sr-only">
+                    <div class="files-box">
+                        <table class="layui-table" style="margin: 0;">
+                            <thead>
+                                <tr>
+                                    <th>文件号</th>
+                                    <th>版本</th>
+                                    <th>附件</th>
+                                    <th>描述</th>
+                                    <th>选择</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <form class="file-chooice-form"></form>
+                            </tbody>
+                        </table>
+                        <div>
+                            <ul class="pagination" id="filePage"></ul>
+                        </div>
+                    </div>
                 </div>
             </eq>
-            <!--<volist name="documents" id="value" empty="$empty">
-                <li class="document-file-list">
-                    <div class="document-file-icon">
-                        <span class="document-ext">{$value.document_ext}</span>
-                    </div>
-                    <p class="document-file-name">{$value.document_name}</p>
-                    <p class="document-upload-time">{$value.upload_time|date='Y-m-d H:i:s',###}</p>
-                    <div class="document-download-box">
-                        <p class="document-file-name-hidden">{$value.document_name}</p>
-                        <p class="download-node">
-                            <a href="{$value.document_path}" class="btn btn-success btn-sm document-download-btn">下载</a>
-                            <input type="hidden" name="document_path" value="{$value.document_path}">
-                            <eq name="Think.session.user.id" value="$auth">
-                                <button href="#" class="btn btn-danger btn-sm document-unlink-btn">删除</button>
-                            </eq>
-                            <input type="hidden" value="{$value.id}">
-                        </p>
-                    </div>
-                </li>
-            </volist>-->
-            <notempty name="gates">
-                <present name="empty">
-                    <span class="empty_data"><i class="icon-info-sign"></i> 该项目没有归档文件</span>
-                <else/>
-                    <volist name="gates" id="value">
-                    <notempty name="value.document">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Gate{$value.gate} - {$value.mile_stone}</h3>
-                            </div>
-                            <div class="panel-body">
-                                <ul class="documents">
-                                    <notempty name="value.document">
-                                        <volist name="value.document" id="val">
-                                            <li class="document-file-list-2">
-                                                <span class="file-name-box">
-                                                    <if condition="strtolower($val['document_ext']) eq 'xls' OR strtolower($val['document_ext']) eq 'xlsx'">
-                                                        <a href="{$val.document_path}" class="hover-remove" title="{$val.document_name}"><i class="file-icon" style="background: url('__IMG__/icon-xls.png') center center no-repeat;"></i>&nbsp;{$val.document_name}</a>
-                                                    <elseif condition="strtolower($val['document_ext']) eq 'doc' OR strtolower($val['document_ext']) eq 'docx'"/>
-                                                        <a href="{$val.document_path}" class="hover-remove" title="{$val.document_name}"><i class="file-icon" style="background: url('__IMG__/icon-doc.png') center center no-repeat;"></i>&nbsp;{$val.document_name}</a>
-                                                    <elseif condition="strtolower($val['document_ext']) eq 'pdf' OR strtolower($val['document_ext']) eq 'PDF'"/>
-                                                        <a href="{$val.document_path}" class="hover-remove" title="{$val.document_name}"><i class="file-icon" style="background: url('__IMG__/icon-pdf.png') center center no-repeat;"></i>&nbsp;{$val.document_name}</a>
-                                                    <elseif condition="strtolower($val['document_ext']) eq 'zip' OR strtolower($val['document_ext']) eq 'rar'"/>
-                                                        <a href="{$val.document_path}" class="hover-remove" title="{$val.document_name}"><i class="file-icon" style="background: url('__IMG__/icon-zip.png') center center no-repeat;"></i>&nbsp;{$val.document_name}</a>
-                                                    <else/>
-                                                       <a href="{$val.document_path}" class="hover-remove" title="{$val.document_name}"><i class="file-icon" style="background: url('__IMG__/icon-file.png') center center no-repeat;"></i>&nbsp;{$val.document_name}</a>
-                                                    </if>
-                                                </span>
-                                                <eq name="Think.session.user.id" value="$auth">
-                                                    <input type="hidden" name="document_path" value="{$val.document_path}">
-                                                    <button href="#" class="btn btn-danger btn-xs document-unlink-btn" title="删除该文件"><i class="icon-remove"></i></button>
-                                                    <input type="hidden" value="{$val.id}">
-                                                </eq>
-                                            </li>
-                                        </volist>
-                                        <else/>
-                                        <span class="empty_data"><i class="icon-info-sign"></i> 该节点没有归档文件</span>
-                                    </notempty>
-                                </ul>
-                            </div>
+            <notempty name="documents">
+                <volist name="documents" id="value">
+                    <div class="section-grey-table">
+                        <div class="section-title">
+                            Gate{$value.gate_num} - {$value.Plan.mile_stone}
                         </div>
-                    </notempty>
-                    </volist>
-                </present>
-            <else/>
-                <span class="empty_data"><i class="icon-info-sign"></i> 该项目没有归档文件</span>
+                        <div class="section-body">
+                            <table class="layui-table">
+                                <thead>
+                                    <tr>
+                                        <th>文件号</th>
+                                        <th>版本</th>
+                                        <th>附件</th>
+                                        <th>描述</th>
+                                        <th>关联时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <volist name="value.FileNumbers" id="vo">
+                                        <tr>
+                                            <td><a href="__ROOT__/File/detail/{$vo.filenumber}">{$vo.filenumber}</a></td>
+                                            <td>{$vo.version}</td>
+                                            <td class="td-wrap">
+                                                <p class="p-wrap"><a href="__ROOT__/{$vo.attachment.path}" target="_blank"><i class="file-icon file-icon-ext-{$vo.attachment.ext}"></i> {$vo.attachment.name}</a></p>
+                                            </td>
+                                            <td title="{:strip_tags($vo['description'])}">
+                                                <p class="p-wrap">{:strip_tags($vo['description'])}</p>
+                                            </td>
+                                            <td>{$value.assoc_time|date="Y-m-d H:i:s", ###}</td>
+                                        </tr>
+                                    </volist>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </volist>
             </notempty>
         </div>
     </eq>
-
-
-
-
-
-
-
-
-
 
 
     <eq name="tab" value="discuss">

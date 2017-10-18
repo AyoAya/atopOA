@@ -399,9 +399,10 @@
 									</present>
 
 									<present name="fallback">
-										<div class="layui-inline step-select sr-only">
+										<div class="layui-inline step-select sr-only tmp-rollback">
 											<div class="layui-input-inline">
-												<span>回退到：Step{$fallback.step_id}-{$fallback.step_name}</span><span>处理人：{$fallback.nickname}</span>
+												<span>回退到：Step<tmp class="tmp">{$fallback.step_id}</tmp>-<tmpName class="tmpName">{$fallback.step_name}</tmpName></span><span>处理人：{$fallback.nickname}</span>
+												<tmpUser class="tmpUser" style="display: none;">{$fallback.user_id}</tmpUser>
 											</div>
 										</div>
 									</present>

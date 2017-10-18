@@ -194,13 +194,13 @@
         <div class="section-grey">
             <div class="section-title">变更描述</div>
             <div class="section-body">
-                {$result.change_description}
+                {:strip_tags($result['change_description'],'<p><a><div><span><br>')}
             </div>
         </div>
         <div class="section-grey">
             <div class="section-title">变更原因</div>
             <div class="section-body">
-                {$result.change_reason}
+                {:strip_tags($result['change_reason'],'<p><a><div><span><br>')}
             </div>
         </div>
 
@@ -248,6 +248,7 @@
                             <th>评审人</th>
                             <th>评审状态</th>
                             <th>评审时间</th>
+                            <th>耗时</th>
                             <th>备注信息</th>
                         </tr>
                     </thead>
@@ -270,6 +271,7 @@
                                 <td>
                                     <notempty name="value.review_time">{$value.review_time|date="Y-m-d H:i:s", ###}</notempty>
                                 </td>
+                                <td>{$value.time_consuming}</td>
                                 <td>{$value.remark}</td>
                             </tr>
                         </volist>

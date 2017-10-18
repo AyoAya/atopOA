@@ -1,0 +1,30 @@
+.layui-table tbody td {
+    padding: 15px;
+}
+@media ( min-width: 1440px ) {
+    .layui-table tbody td.td-wrap {
+        width: 520px;
+    }
+    .layui-table tbody td p.p-wrap {
+        width: 520px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+@media ( max-width: 1440px ) {
+    .layui-table tbody td.td-wrap {
+        width: 320px;
+    }
+    .layui-table tbody td p.p-wrap {
+        width: 320px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+.layui-form .tswb {
+    color: #888;
+    margin-top: 12px;
+    font-size: 12px;
+}
