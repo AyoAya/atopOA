@@ -997,10 +997,6 @@ class RMAController extends AuthController{
                 $add_id_1 = $model->table('atop_oacustomercomplaintlog')->add($logData);
 
                 # 待办事项提醒
-                /*$tmpName = $model->table(C('DB_PREFIX').'oacustomercomplaint a,'.C('DB_PREFIX').'oacustomerstep b')
-                                 ->field('a.id,a.sale_order,a.pn,a.status,a.uid,a.rma_state,b.step_name')
-                                 ->where('(a.id ='.$post['cc_id'].' AND a.now_step = b.id AND (b.id ='.$post['rollbackStep'].' OR  b.id ='.$curent_result['id'].')')
-                                 ->find();*/
                 # 主表数据
                 $tmpName = $model->table(C('DB_PREFIX').'oacustomercomplaint')->find($post['cc_id']);
                 # 步骤表数据
@@ -1012,21 +1008,16 @@ class RMAController extends AuthController{
                 $nextData = $tmpStep[1];
 
                 $result = M()->field('b.id,b.step_name,a.operation_person')
-                    ->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'oacustomerstep b')
-                    ->where( 'a.main_assoc='.$post['cc_id'].' AND a.step_assoc<='.$post['step'].' AND a.step_assoc=b.id' )
-                    ->group('b.id')
-                    ->order('a.step_assoc DESC')
-                    ->limit(2)
-                    ->select();
+                             ->table(C('DB_PREFIX').'oacustomeroperation a,'.C('DB_PREFIX').'oacustomerstep b')
+                             ->where( 'a.main_assoc='.$post['cc_id'].' AND a.step_assoc<='.$post['step'].' AND a.step_assoc=b.id' )
+                             ->group('b.id')
+                             ->order('a.step_assoc DESC')
+                             ->limit(2)
+                             ->select();
                 # 下一次操作数据
                 $step_result = $result[1];
                 # 当前数据
                 $curent_result = $result[0];
-
-                /*print_r($post);
-                print_r($step_result);
-                print_r($curent_result);
-                print_r($tmpStep);*/
 
                 $todoList['matter_name'] = "[客诉处理] ".$post['rollbackStepName'].' '.$tmpName['sale_order'];
                 $todoList['url'] = $_SERVER['HTTP_HOST']."/RMA/details/id/".$post['cc_id'];
@@ -1174,8 +1165,8 @@ class RMAController extends AuthController{
                               ->find();
 
                 $nowDAta = $model->table(C('DB_PREFIX').'oacustomeroperation')
-                                ->where('main_assoc = '.$post['cc_id'].' AND step_assoc ='.$post['step'] )
-                                ->find();
+                                 ->where('main_assoc = '.$post['cc_id'].' AND step_assoc ='.$post['step'] )
+                                 ->find();
 
                 $step_result['id'] = $post['operation_type'];
                 $step_result['step_name'] = $result['step_name'];
@@ -1184,16 +1175,10 @@ class RMAController extends AuthController{
                 $curent_result['step_name'] = $results['step_name'];
                 $curent_result['operation_person'] = $nowDAta['operation_person'];
 
-                /*print_r($nowDAta);
-                print_r($post);
-                print_r($results);
-                die();
-                exit();*/
-                
                 # 待办事项提醒
-                $tmpName = $model->table(C('DB_PREFIX').'oacustomercomplaint a,'.C('DB_PREFIX').'oacustomerstep b')
-                                 ->field('a.id,a.cc_time,a.salesperson,a.customer,a.sale_order,a.pn,a.vendor,a.model,a.error_message,a.reason,a.comments,a.status,a.uid,a.rma_state,a.version,a.show,b.step_name')
-                                 ->where('a.id ='.$post['cc_id'].' AND b.id ='.$post['operation_type'].' AND a.now_step = b.id')
+                $tmpName = $model->table(C('DB_PREFIX').'oacustomercomplaint')
+                                 ->field('sale_order')
+                                 ->where('id ='.$post['cc_id'])
                                  ->find();
 
                 $todoList['matter_name'] = "[客诉处理] ".$step_result['step_name'].' '.$tmpName['sale_order'];
