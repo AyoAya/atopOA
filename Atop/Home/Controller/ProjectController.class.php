@@ -975,7 +975,7 @@ HTML;
                 $body .= '</tr>';
             }
             $body .= '</table>';
-            send_Email([['name'=>'蒋明', 'email'=>'vinty_email@163.com']], '', $subject, $body, [['name'=>'蒋明', 'email'=>'jiangming@atoptechnology.com']]);
+            send_Email($address, '', $subject, $body, $cc);
         }
     }
 
