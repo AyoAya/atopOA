@@ -505,20 +505,25 @@ class ECNController extends AuthController {
                 $MapNotIn = implode(',', $MapNotIn);
                 $allUsers = $EcnModel->table(C('DB_PREFIX').'user')->field('id,nickname')->where('id <> 1 AND state = 1 AND id NOT IN ('.$MapNotIn.')')->select();
                 $dccUsers = $this->getDccPostAllUsers();
-                // 计算耗时
-                foreach( $result['EcnReview'] as $key=>&$value ){
-                    $prefix = $value['already_review'] == 'Y' ? '用时' : '已等待';
-                    $tmpTime = $value['already_review'] == 'Y' ? $value['review_time'] : time();
-                    if( $value['along'] > 1 ){
-                        $finalTime = $EcnModel->table(C('DB_PREFIX').'ecn_review')->where(['ecn_id'=>$result['id'], 'along'=>($value['along']-1)])->max('review_time');
-                    }elseif( $value['along'] == 1 ){
-                        $finalTime = $result['createtime'];
-                    }else{
-                        $maxAlong = $EcnModel->table(C('DB_PREFIX').'ecn_review')->where(['ecn_id'=>$result['id']])->max('along');
-                        $finalTime = $EcnModel->table(C('DB_PREFIX').'ecn_review')->where(['ecn_id'=>$result['id'], 'along'=>$maxAlong])->max('review_time');
+                if( $result['state'] != 'NotReview' ){
+                    // 计算耗时
+                    foreach( $result['EcnReview'] as $key=>&$value ){
+                        if( $value['along'] <= $result['current_along'] && $result['along'] != 0 || $result['current_along'] == 0 ){
+                            $prefix = $value['already_review'] == 'Y' ? '用时' : '已等待';
+                            $tmpTime = $value['already_review'] == 'Y' ? $value['review_time'] : time();
+                            if( $value['along'] > 1 ){
+                                $finalTime = $EcnModel->table(C('DB_PREFIX').'ecn_review')->where(['ecn_id'=>$result['id'], 'along'=>($value['along']-1)])->max('review_time');
+                            }elseif( $value['along'] == 1 ){
+                                $finalTime = $result['createtime'];
+                            }else{
+                                $maxAlong = $EcnModel->table(C('DB_PREFIX').'ecn_review')->where(['ecn_id'=>$result['id']])->max('along');
+                                $finalTime = $EcnModel->table(C('DB_PREFIX').'ecn_review')->where(['ecn_id'=>$result['id'], 'along'=>$maxAlong])->max('review_time');
+                            }
+                            if( $finalTime ) $value['time_consuming'] = $prefix.time2Units($tmpTime - $finalTime);
+                        }
                     }
-                    if( $finalTime ) $value['time_consuming'] = $prefix.time2Units($tmpTime - $finalTime);
                 }
+                //print_r($result);
                 $this->assign('dccUsers', $dccUsers);
                 $this->assign('result', $result);
                 $this->assign('rules', $this->getAllEcnRules());

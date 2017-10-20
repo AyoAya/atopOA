@@ -198,6 +198,28 @@ class RMAController extends AuthController{
             }
         }
     }
+
+    // 获取可用的关联文件列表
+    public function getAvailableFileList(){
+        if( IS_POST ){
+            $FileNumberModel = M('FileNumber');
+            $complaintLogModel = M('Oacustomercomplaintlog');
+            $avaiableFileListResult = $FileNumberModel->where(['state'=>'Archiving', 'type'=>'EED'])->select();
+            $complaintLogResult = $complaintLogModel->where('file_id is not null')->select();   // 获取file_id不为空的数据，忽略掉已关联的文件id
+            // 如果存在file_id不为空的记录，则忽略掉这一部分数据
+            if( !empty($complaintLogResult) ){
+                foreach( $avaiableFileListResult as $key=>&$value ){
+                    $value['attachment'] = json_decode($value['attachment'], true);
+                    foreach( $complaintLogResult as $k=>&$v ){
+                        if( $value['id'] == $v['file_id'] ){
+                            unset($avaiableFileListResult[$key]);
+                        }
+                    }
+                }
+            }
+            empty($avaiableFileListResult) ? $this->ajaxReturn(['flag'=>0, 'data'=>[], 'msg'=>'没有数据']) : $this->ajaxReturn(['flag'=>1, 'data'=>$avaiableFileListResult]);
+        }
+    }
     
     //新增客诉
     public function add(){
@@ -510,8 +532,12 @@ class RMAController extends AuthController{
                     $valuee['class'] = 'timeline-hide';
                 }
             }*/
+            //print_r($valuee);
             $valuee['log'] = $complaintlog->where( ['step'=>$valuee['id'],'cc_id'=>I('get.id')] )->order('log_date,id ASC')->select();
             foreach($valuee['log'] as $key=>&$value){
+                if( $value['file_id'] ){
+                    $value['assoc'] = M('FileNumber')->find($value['file_id']);
+                }
                 //为保留原始数据attachment列存入数据为文件名和json数据，为保证数据不冲突判断列数据是否为json格式来区分新版还是老版
                 //判断附件是否为空并且是否为json格式，如果为json格式则用新版读取方式否则用老版数据
                 if(!empty($value['attachment']) && $value['attachment']!='NULL'){
@@ -604,12 +630,12 @@ class RMAController extends AuthController{
         //print_r($this->getDepartmentsAndUsers());
         $this->assign('ccList',$this->getDepartmentsAndUsers());
 
-        # print_r($resultData);
+        //print_r($resultData);
         $QA_list = M('User')->where(['department'=>'3'])->select();  //获取QA（品质部）人员
         $this->assign('QAlist',$QA_list);
         $this->assign('details',$resultData);
         $this->assign('nodeData',$oacustomerstep_model_result);
-        //print_r($resultData);
+        //print_r($oacustomerstep_model_result);
 
         $this->display();
     }
@@ -843,7 +869,6 @@ class RMAController extends AuthController{
         if( IS_POST ){
 
             $post = I('post.','',false);
-
             # 记录录入信息
             $logData['cc_id'] = $post['cc_id'];
             $logData['log_date'] = date('Y-m-d');
@@ -854,6 +879,7 @@ class RMAController extends AuthController{
             $logData['uid'] = session('user')['id'];
             $logData['step'] = $post['step'];
             $logData['version'] = $post['version'];
+            $logData['file_id'] = $post['assoc']['id'];
 
             # print_r($post);
             if( $post['operation_type'] == 'X' ){ //如果操作类型为0则表示该操作为添加日志，如果不为0则表示推送到该步骤
@@ -1096,10 +1122,8 @@ class RMAController extends AuthController{
                 $oacustomercomplaint_model = M('Oacustomercomplaint');
                 $oacustomeroperaion_model = M('Oacustomeroperation');
 
-
                 # 开启事务
                 $model = new Model();
-
 
                 $operation_person_ids = [];
 
@@ -1205,8 +1229,6 @@ class RMAController extends AuthController{
 
                 }elseif(strpos($step_result['operation_person'],',') === false && strpos($curent_result['operation_person'],',') === false){
 
-
-
                     $todoList['who'] = $step_result['operation_person'];
                     $this->insertNewMatter($todoList);
                     $this->markMatterAsDoneSpecifyUserState( $todoList['url']);
@@ -1216,11 +1238,11 @@ class RMAController extends AuthController{
                 $logData['log_content'] = '['.session('user')['nickname'].'] 将步骤推送到：Step'.$step_result['id'].' - '.$step_result['step_name'].'。';
                 $logData['recorder'] = 'OASystem';
                 $logData['attachment'] = '';
+                unset($logData['file_id']);     // 避免系统添加的日志产生文件关联信息
                 $add_id_2 = $model->table('atop_oacustomercomplaintlog')->add($logData);
 
                 # 修改主表当前步骤
                 $save_id = $model->table('atop_oacustomercomplaint')->save( ['id'=>$post['cc_id'],'now_step'=>$step_result['id']] );
-
 
                 $operationData['main_assoc'] = $post['cc_id'];
                 $operationData['step_assoc'] = $post['operation_type'];

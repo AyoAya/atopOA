@@ -185,6 +185,9 @@
 												</div>
 												<div class="timeline-content-right pull-right">
 													{$val.log_content}
+													<present name="val.assoc">
+														<p><a href="__ROOT__/File/detail/{$val.assoc.filenumber}">{$val.assoc.filenumber}</a></p>
+													</present>
 													<notempty name="val.picture">
 														<volist name="val.picture" id="v">
 															<notempty name="v">
@@ -452,8 +455,13 @@
 									</div>
 									<div class="fj-box">
 											<!--<input type="file" name="Filedata"  lay-ext="zip|rar|jpg|png|gif|xls|xlsx|doc|docx|pdf" class="layui-upload-file" multiple>-->
-										<div id="logPick"><i class="icon-arrow-up"></i> 上传文件</div>
-										<div class="uploader-attachment-queue"></div>
+										<eq name="details.now_step" value="4">
+											<button type="button" class="layui-btn layui-btn-normal" id="assoc-file-btn">关联文件</button>
+											<div class="assoc-file-box" style="margin-top: 15px;"></div>
+										<else/>
+											<div id="logPick"><i class="icon-arrow-up"></i> 上传文件</div>
+											<div class="uploader-attachment-queue"></div>
+										</eq>
 									</div>
 								</div>
 								<div class="modal-footer">
@@ -468,6 +476,11 @@
 						</div>
 					</form>
 				</div>
+				<eq name="details.now_step" value="4">
+					<div class="assoc-file-wrapper sr-only">
+
+					</div>
+				</eq>
 			</in>
 			<else/>
 			<div class="modal fade" id="customer-rma-modal">

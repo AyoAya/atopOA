@@ -203,32 +203,43 @@ class FileController extends AuthController {
         if( IS_POST ){
             $model = new Model();
             $result = $model->table(C('DB_PREFIX').'file_rule')->find(I('post.id'));
-            $quantity = $model->table(C('DB_PREFIX').'file_number')->where('createtime > '.( time() - 3600 ).' AND type = "'.$result['name'].'"')->count();
-            if( (int)$quantity >= 10 ) $this->ajaxReturn(['flag'=>0, 'msg'=>'同一个文件类型1小时内只能申请10次']);
-            // 检查是否存在已回收的记录
-            $recyleData = $model->table(C('DB_PREFIX').'file_number')->where('type = "'.$result['name'].'" AND state = "Recyle"')->order('id ASC')->limit(1)->select();
-            if( $recyleData ){  // 如果存在已回收的记录则优先使用
-                $reuseRow = $model->table(C('DB_PREFIX').'file_number')->save([
-                    'id'=>$recyleData[0]['id'],
-                    'state'=>'WaitingEdit',
-                    'createtime'=>time(),
-                    'createuser'=>session('user')['id']
-                ]);
-                $reuseRow !== false ? $this->ajaxReturn(['flag'=>1, 'msg'=>'申请成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'申请失败']);
-            }else{
-                $model->startTrans();
-                $current = $result['current'] + 1;
-                $row = $model->table(C('DB_PREFIX').'file_rule')->save(['id'=>$result['id'], 'current'=>$current]); // 当前规则current + 1
-                $increment = ( ( $result['length'] - strlen($result['name']) ) - strlen($current) );    // 计算出需要填充的长度
-                if( $increment <= 0 ) $this->ajaxReturn(['flag'=>0, 'msg'=>'无法申请文件号，请检查文件类型的长度是否合法']);
-                $filenumber = '';
-                $filenumber = $result['name'].str_pad($filenumber, $increment, '0', STR_PAD_RIGHT).$current;    // 生成文件编号
-                $filenumberData['type'] = $result['name'];
-                $filenumberData['filenumber'] = $filenumber;
+            if( I('post.apply') == 'system' ){  // 如果是系统生成
+                $quantity = $model->table(C('DB_PREFIX').'file_number')->where('createtime > '.( time() - 3600 ).' AND type = "'.$result['name'].'"')->count();
+                if( (int)$quantity >= 10 ) $this->ajaxReturn(['flag'=>0, 'msg'=>'同一个文件类型1小时内只能申请10次']);
+                // 检查是否存在已回收的记录
+                $recyleData = $model->table(C('DB_PREFIX').'file_number')->where('type = "'.$result['name'].'" AND state = "Recyle"')->order('id ASC')->limit(1)->select();
+                if( $recyleData ){  // 如果存在已回收的记录则优先使用
+                    $reuseRow = $model->table(C('DB_PREFIX').'file_number')->save([
+                        'id'=>$recyleData[0]['id'],
+                        'state'=>'WaitingEdit',
+                        'createtime'=>time(),
+                        'createuser'=>session('user')['id']
+                    ]);
+                    $reuseRow !== false ? $this->ajaxReturn(['flag'=>1, 'msg'=>'申请成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'申请失败']);
+                }else{
+                    $model->startTrans();
+                    $current = $result['current'] + 1;
+                    $row = $model->table(C('DB_PREFIX').'file_rule')->save(['id'=>$result['id'], 'current'=>$current]); // 当前规则current + 1
+                    $increment = ( ( $result['length'] - strlen($result['name']) ) - strlen($current) );    // 计算出需要填充的长度
+                    if( $increment <= 0 ) $this->ajaxReturn(['flag'=>0, 'msg'=>'无法申请文件号，请检查文件类型的长度是否合法']);
+                    $filenumber = '';
+                    $filenumber = $result['name'].str_pad($filenumber, $increment, '0', STR_PAD_RIGHT).$current;    // 生成文件编号
+                    $filenumberData['type'] = $result['name'];
+                    $filenumberData['filenumber'] = $filenumber;
+                    $filenumberData['createtime'] = time();
+                    $filenumberData['createuser'] = session('user')['id'];
+                    $id = $model->table(C('DB_PREFIX').'file_number')->add($filenumberData);    // 将申请的文件编号保存
+                    $row && $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'申请成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'申请失败']);
+                }
+            }else{  // 如果是手动录入
+                $tempRes = $model->table(C('DB_PREFIX').'file_number')->where('filenumber = "'.I('post.filenumber').'"')->select();
+                if( $tempRes ) $this->ajaxReturn(['flag'=>0, 'msg'=>'编号已存在']);
+                $filenumberData['type'] = 'ISO';
+                $filenumberData['filenumber'] = I('post.filenumber');
                 $filenumberData['createtime'] = time();
                 $filenumberData['createuser'] = session('user')['id'];
                 $id = $model->table(C('DB_PREFIX').'file_number')->add($filenumberData);    // 将申请的文件编号保存
-                $row && $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'申请成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'申请失败']);
+                $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'申请成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'申请失败']);
             }
         }else{
             $rules = $this->getAllFileRules();

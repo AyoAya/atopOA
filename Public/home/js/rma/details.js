@@ -7,6 +7,7 @@ $(function(){
     //定义存放附件的数组
     var attachmentData = new Array(),
         attachmentList = new Array();
+    var _response, _selected;
 
 
     //初始化layui组件
@@ -16,6 +17,77 @@ $(function(){
 
         var SUB_NAME,LOG_ID;
 
+        // 关联文件
+        $('#assoc-file-btn').click(function(){
+            $.post(ThinkPHP['AJAX'] + '/RMA/getAvailableFileList', {}, function(response){
+                _response = response.data;
+                renderAssocFileData(response);
+            });
+        });
+
+        function renderAssocFileData(data){
+            if( data.flag ){
+                layer.open({
+                    type: 1,
+                    title: '关联文件',
+                    area: ['100%', '100%'],
+                    id: 'ASSOC_FILE',
+                    btn: ['确定'],
+                    content: renderAssocFileDom(data.data),
+                    yes: function(index, layero){
+                        layer.closeAll();
+                    },
+                });
+            }
+        }
+
+        function renderAssocFileDom(data){
+            var _html = '';
+            _html += '<table class="layui-table" style="margin: 0;">';
+            _html += '<thead><tr><th>文件号</th><th>版本</th><th>附件</th><th>描述</th><th>操作</th><tr></thead>';
+            _html += '<tbody>';
+            for( let item in data ){
+                _html += '<tr>';
+                _html += '<td><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/File/detail/'+ data[item].filenumber +'" target="_blank">'+ data[item].filenumber +'</a></td>';
+                _html += '<td>'+ data[item].version +'</td>';
+                _html += '<td class="td-wrap" title="'+ data[item].attachment.name +'"><p class="p-wrap"><a href="http://'+ ThinkPHP['HTTP_HOST'] +'/'+ data[item].attachment.path +'" target="_blank"><i class="file-icon file-icon-ext-'+ data[item].attachment.ext +'"></i> '+ data[item].attachment.name +'</a></p></td>';
+                _html += '<td class="td-wrap" title="'+ data[item].description +'"><p class="p-wrap">'+ data[item].description +'</p></td>';
+                if( typeof _selected == 'object' && data[item].id == _selected.id ){
+                    _html += '<td width="100"><input type="radio" name="assoc" value="'+ data[item].id +'" checked></td>';
+                }else{
+                    _html += '<td width="100"><input type="radio" name="assoc" value="'+ data[item].id +'"></td>';
+                }
+                _html += '</tr>';
+            }
+            _html += '</tbody>';
+            _html += '</table>';
+            return _html;
+        }
+
+        $(document).on('click', '#ASSOC_FILE .layui-table input[name=assoc]', function(){
+            let _id = $(this).attr('value');
+            addFileToSelected(_id);
+        });
+
+        function addFileToSelected(id){
+            for(let item in _response){
+                if( _response[item].id == id ){
+                    _selected = _response[item];
+                    renderAssocFileBoxList();
+                }
+            }
+        }
+
+        function renderAssocFileBoxList(){
+            if( typeof _selected == 'object' ){
+                _dom = `
+                    <div>
+                    <span class="afi"><a href="http://`+ ThinkPHP['HTTP_HOST'] +`/File/detail/${_selected.filenumber}" target="_blank">${_selected.filenumber}</a></span>
+</div>
+`;
+                $('#customer-rma-modal .assoc-file-box').html(_dom);
+            }
+        }
 
         /**
          * 客诉详情页文件上传
@@ -294,15 +366,17 @@ $(function(){
         form.on('submit(rmaCustomer)', function( data ){
 
             var fields = data.field;
+            if( typeof _selected == 'object' ){
+                fields.assoc = _selected;
+            }
             if( attachmentList.length == 0 ){	//如果附件为空则提交空字符串，如果不为空则转换为json格式数据提交
                 fields.attachments = '';
             }else{
                 fields.attachments = JSON.stringify(attachmentList);
             }
 
-            //console.log(data.field);
-            if( data.field.step == 4 && (data.field.operation_type == 6 || data.field.operation_type == 5) && window.loguploader.getFiles().length <= 0 ){
-                layer.msg('请先上传分析报告',{ icon:2, time:2000 });
+            if( data.field.step == 4 && (data.field.operation_type == 6 || data.field.operation_type == 5) && typeof _selected != 'object' ){
+                layer.msg('请先关联文件',{ icon:2, time:2000 });
                 return false;
             }
 
