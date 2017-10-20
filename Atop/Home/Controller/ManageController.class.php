@@ -335,7 +335,7 @@ HTML;
                              ->select()[0];
         $level = M('Userlevel');
         $allLevel = $level->select();
-        $alluser = $person->field('id,nickname,department')->select();
+        $alluser = $person->field('id,nickname,department')->where('state = 1')->select();
         $person = D('Department');
         $departmentList = $person->field('id,name')->select();
         $department = M('Department');
