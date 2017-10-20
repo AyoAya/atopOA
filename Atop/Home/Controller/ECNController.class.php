@@ -508,7 +508,7 @@ class ECNController extends AuthController {
                 if( $result['state'] != 'NotReview' ){
                     // 计算耗时
                     foreach( $result['EcnReview'] as $key=>&$value ){
-                        if( $value['along'] <= $result['current_along'] && $result['along'] != 0 || $result['current_along'] == 0 ){
+                        if( $value['along'] <= $result['current_along'] && $result['current_along'] != 0 || $result['current_along'] == 0 ){
                             $prefix = $value['already_review'] == 'Y' ? '用时' : '已等待';
                             $tmpTime = $value['already_review'] == 'Y' ? $value['review_time'] : time();
                             if( $value['along'] > 1 ){
