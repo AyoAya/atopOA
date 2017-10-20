@@ -14,22 +14,6 @@ class SoftwareController extends AuthController {
 
         $model = new model();
 
-        $pizza = session('user')['post'];
-        $pieces = explode(",", $pizza);
-
-        $pos = $model->table(C('DB_PREFIX').'position')->where('id = 8 OR id = 10')->select();
-
-        $num = 0;
-
-        foreach ($pos as $key=>&$val){
-            foreach ($pieces as $k=>&$v){
-                if($v == $val['id']){
-                    $num +=1;
-                }
-            }
-        }
-
-        # print_r($num);
 
         if(I('get.search')){
 
@@ -138,7 +122,6 @@ class SoftwareController extends AuthController {
         # print_r($softData);
 
         $this->assign('softData', $softData);
-        $this->assign('num', $num);
         $this->assign('page', $pageShow);
         $this->display();
 
@@ -185,8 +168,32 @@ class SoftwareController extends AuthController {
                 }
 
             }
+        }else{
+
+            $model = new model();
+
+            $pizza = session('user')['post'];
+            $pieces = explode(",", $pizza);
+
+            $pos = $model->table(C('DB_PREFIX').'position')->where('id = 8 OR id = 10')->select();
+
+            $num = 0;
+
+            foreach ($pos as $key=>&$val){
+                foreach ($pieces as $k=>&$v){
+                    if($v == $val['id']){
+                        $num +=1;
+                    }
+                }
+            }
+
+            if($num > 0){
+                $this->display();
+            }else{
+                $this->error('没有权限');
+            }
+
         }
-        $this->display();
     }
 
     /**
