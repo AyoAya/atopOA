@@ -7,11 +7,30 @@
  */
 namespace Home\Controller;
 use Think\Page;
+use Think\Model;
 # 兼容表
 class CompatibilityController extends AuthController {
 
     //加载视图
     public function index(){
+
+        $model = new model();
+
+        $pizza = session('user')['post'];
+        $pieces = explode(",", $pizza);
+
+        $pos = $model->table(C('DB_PREFIX').'position')->where('id = 8 OR id = 10')->select();
+
+        $num = 0;
+
+        foreach ($pos as $key=>&$val){
+            foreach ($pieces as $k=>&$v){
+                if($v == $val['id']){
+                    $num +=1;
+                }
+            }
+        }
+
         $compatibleMatrix = D('Compatibility');
         $condition = array();
         if( I('get.state') && !empty(I('get.state')) ){
@@ -92,6 +111,7 @@ class CompatibilityController extends AuthController {
         $verdorResult = $vendorBrand->order('brand')->select();
         $this->assign('vendor',$verdorResult);
         $this->assign('filter',$filterArr);
+        $this->assign('num',$num);
         $this->assign('filterdata',$filterData);
         $this->assign('compatiblematrix',$result);
         $this->display();
