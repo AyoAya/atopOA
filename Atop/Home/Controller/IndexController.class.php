@@ -31,7 +31,7 @@ class IndexController extends AuthController {
 
     public function export(){
         // 指定根目录
-        $root_path = './Uploads/dcc/quality/';
+        $root_path = './Uploads/dcc/quality/ISO9001';
         $result = $this->getfiles($root_path);
         //print_r($result);
         $this->render($result);
