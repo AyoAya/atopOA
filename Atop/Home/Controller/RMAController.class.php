@@ -204,7 +204,7 @@ class RMAController extends AuthController{
         if( IS_POST ){
             $FileNumberModel = M('FileNumber');
             $complaintLogModel = M('Oacustomercomplaintlog');
-            $avaiableFileListResult = $FileNumberModel->where(['state'=>'Archiving', 'type'=>'EED'])->select();
+            $avaiableFileListResult = $FileNumberModel->where(['state'=>'Archiving', 'type'=>'FAR'])->select();
             $complaintLogResult = $complaintLogModel->where('file_id is not null')->select();   // 获取file_id不为空的数据，忽略掉已关联的文件id
             // 如果存在file_id不为空的记录，则忽略掉这一部分数据
             if( !empty($complaintLogResult) ){
