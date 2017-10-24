@@ -975,6 +975,7 @@ HTML;
                 $body .= '</tr>';
             }
             $body .= '</table>';
+            $body .= '<p>详情请查看链接：<a href="http://'.$_SERVER['HTTP_HOST'].'/Project/details/tab/document/id/'.$data['id'].'" target="_blank">http://'.$_SERVER['HTTP_HOST'].'/Project/details/tab/document/id/'.$data['id'].'</a></p>';
             send_Email($address, '', $subject, $body, $cc);
         }
     }
