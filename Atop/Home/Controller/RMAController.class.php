@@ -133,7 +133,7 @@ class RMAController extends AuthController{
             }
 
             //过滤html标签
-            $value['error_message'] = str_replace('<br />','',$value['error_message']);
+            $value['error_message'] = cut_str(html_entity_decode(str_replace('<br />','',$value['error_message'])), 255);
             $value['reason'] = str_replace('<br />','',$value['reason']);
             $value['now_step'] = M()->field('b.id,b.step_name')->table('atop_oacustomercomplaint a,atop_oacustomerstep b')->where('a.now_step=b.id AND a.id='.$value['id'])->select()[0];    //将最新步骤信息注入模板
 
@@ -151,7 +151,7 @@ class RMAController extends AuthController{
         $pageShow = $page->show();
         $this->assign('pageShow',$pageShow);
 
-        //print_r($result);
+        print_r($result);
         $this->assign('customer',$result);
 
         //当数据为空显示图片
