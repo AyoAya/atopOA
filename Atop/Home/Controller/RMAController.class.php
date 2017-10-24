@@ -151,7 +151,7 @@ class RMAController extends AuthController{
         $pageShow = $page->show();
         $this->assign('pageShow',$pageShow);
 
-        print_r($result);
+        //print_r($result);
         $this->assign('customer',$result);
 
         //当数据为空显示图片
