@@ -37,7 +37,6 @@ class PushEmail {
         'xiaxiaosen@atoptechnology.com',    //夏小森
         'liping@atoptechnology.com',    //李平
         'kent@atoptechnology.com',      //董总
-        'jackfan@atoptechnology.com'    //范总
 
 	];
 
@@ -383,40 +382,82 @@ STYLE;
 
         $http_host = '61.139.89.33:8088';
 
-        //设置签名信息
-        $sign = <<<SIGN
+        $currentYear = date('Y', time());
+
+        // 样式
+        $style = <<<STYLE
 <style>
-    .sign {
-        width: 98%;
-        padding: 15px;
-        margin-top: 50px;
-        background: #2a3542;
-        color: #fff;
+    a {
+        color: #428bca;
     }
-    .sign .logo {
-        height: 40px;
+    a:hover {
+        color: #2a6496;
     }
-    .sign .info {
-    
+    p {
+        line-height: 150%;
     }
-    .sign .info p {
-        margin: 0;
-        padding: 0;
-        line-height: 26px;
+    p.sm-dear {
+        margin-bottom: 24px;
     }
-    .clearfix {
-        clear: both;
+    p.ck-lj, p.remark, table {
+        margin-top: 24px;
+    }
+    table {
+        font-size: 14px;
+        color: #555;
+        border: solid 1px #e2e2e2;
+    }
+    table thead tr th {
+        font-size: 14px;
+        text-align: left;
+        color: #555;
+        border-right: solid 1px #e2e2e2;
+        border-bottom: solid 1px #e2e2e2;
+    }
+    table thead tr th:last-child {
+        border-right: none;
+    }
+    table tbody tr td {
+        font-size: 14px;
+        color: #555;
+        text-align: left;
+        border-right: solid 1px #e2e2e2;
+        border-bottom: solid 1px #e2e2e2;
+        line-height: 150%;
+    }
+    table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    table tbody tr td:last-child {
+        border-right: none;
     }
 </style>
-<div class="sign">
-    <div class="logo">
-        <img src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/>
+STYLE;
+
+
+
+        // 头部
+        $head = <<<HEAD
+<div style="color: #555;font-size: 14px;margin: 10px 0;">
+    <div style="padding-bottom: 30px;">
+HEAD;
+
+
+        //设置签名信息
+        $sign = <<<SIGN
     </div>
-    <div class="info">
-        <p>该邮件由程序自动发送，请勿回复</p>
-        <p>华拓光通信OA系统&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL：61.139.89.33:8088</p>
+    <div>
+        <div style="padding: 10px 20px;background: #2a3542;font-size: 12px;color: #fff;">
+            <div style="float: left; margin-right: 30px;margin-top: 18px;">
+                <a href="http://61.139.89.33:8088" target="_blank" title="华拓光通信股份有限公司"><img style="border:none;" height="30" src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/></a>
+            </div>
+            <div style="float: left;">
+                <p style="line-height: 100%;">该邮件由系统自动发送，请勿回复。</p>
+                <p style="line-height: 100%;">&copy; 2014-$currentYear ATOP版权所有</p>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
     </div>
-    <div class="clearfix"></div>
 </div>
 SIGN;
 
@@ -462,7 +503,7 @@ SIGN;
 
         $mail->IsHTML(true);
         $mail->Subject = $subject;// 邮件标题
-        $mail->Body = '<div style="color: #000;padding: 0 20px;">'.$body.$sign.'</div>';// 邮件正文加签名
+        $mail->Body = $style.$head.$body.$sign;// 邮件正文加签名
         //$mail->AltBody = "This is the plain text纯文本";// 这个是设置纯文本方式显示的正文内容，如果不支持Html方式，就会用到这个，基本无用
         if($mail->Send()){
             return 1;

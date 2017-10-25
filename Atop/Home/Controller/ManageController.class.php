@@ -28,11 +28,14 @@ class ManageController extends AuthController {
             $page->setConfig ( 'theme', '<li><a href="javascript:void(0);">当前%NOW_PAGE%/%TOTAL_PAGE%</a></li>  %FIRST% %UP_PAGE% %LINK_PAGE% %DOWN_PAGE% %END%' );
         }
         if(I('get.search')){
-            $result = $person->where('nickname LIKE "%'.I('get.search').'%" OR account LIKE "%'.I('get.search').'%" AND id<>1')->relation(true)->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
+            $result = $person->table(C('DB_PREFIX').'user')->relation(true)->where('nickname LIKE "%'.I('get.search').'%" OR account LIKE "%'.I('get.search').'%" AND id<>1')->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
         }else{
-            $result = $person->where('id<>1 AND state=1')->relation(true)->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
+            $result = $person->table(C('DB_PREFIX').'user')->relation(true)->where('id<>1 AND state = 1')->order('id DESC')
+                             ->limit($page->firstRow.','.$page->listRows)
+                             ->select();
+
         }
-        //echo $count.' | '.count($result);
+
         $pageShow = $page->show();
         $auth = new Auth();
         foreach($result as $key=>&$value){
@@ -42,6 +45,15 @@ class ManageController extends AuthController {
             $value['createtime'] = conversiontime($value['createtime']);
             if($value['report']){
                 $value['report_name'] = $person->field('nickname')->find($value['report'])['nickname'];
+            }
+            $value['post_arr'] = explode(',',$value['post']);
+            $value['count'] = count($value['post_arr']);
+            foreach ($value['post_arr'] as $k=>&$v){
+                if($value['count'] > 1){
+                    $value['post_name'][] = M('Position')->field('name')->where('id ='.$v)->find();
+                }else{
+                    $value['post_name'] = M('Position')->field('name')->where('id ='.$v)->find();
+                }
             }
             switch($value['state']){
                 case 1:
@@ -61,7 +73,6 @@ class ManageController extends AuthController {
                     $value['state_class'] = 'tag-danger';
             }
         }
-        # print_r($result);
         if(I('get.p')){
             $this->assign('pagenumber',I('get.p')-1);
         }
@@ -554,8 +565,8 @@ HTML;
     //组织架构图
     public function organization(){
         $generalManager = M()->table('__USER__ u,__POSITION__ p')->field('u.id,u.nickname name,p.name title')->where('level=7 AND u.position=p.id')->select();
+
         self::organizationalTraverse($generalManager);
-        //print_r(json_encode($generalManager));
         $orgchart = json_encode($generalManager);
         $orgchart = substr($orgchart,1);
         $orgchart = substr($orgchart,0,-1);
@@ -566,12 +577,20 @@ HTML;
     //递归
     static function organizationalTraverse(&$general){
         if( is_array($general) && !empty($general) ){
-            foreach($general as $key=>&$value){
-                $child = M()->table('__USER__ u,__POSITION__ p')->field('u.id,u.nickname name,p.name title')->where('u.report='.$value['id'].' AND u.position=p.id AND state=1')->select();
-                if( is_array($child) && !empty($child) ){
-                    $value['children'] = $child;
-                    self::organizationalTraverse($value['children']);
+            foreach($general as $key=>&$value) {
+                $child = M()->table('__USER__')->field('id,nickname name,post,report')->where('report=' . $value['id'] . ' AND state=1')->select();
+                if ($child) {
+                    foreach ($child as $k => &$v) {
+                        $tmp = M()->table('__POSITION__')->field('name title')->where('id in (' . $v['post'] . ')')->select();
+                        if (count($tmp) > 1) {
+                            $v['title'] = $tmp[0]['title'] . ' 等' . count($tmp) . '个职位';
+                        } else {
+                            $v['title'] = $tmp[0]['title'];
+                        }
+                        $value['children'] = $child;
+                    }
                 }
+                self::organizationalTraverse($child);
             }
         }
     }
