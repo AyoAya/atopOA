@@ -56,6 +56,12 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
 
     // 添加到队列时
     FileUploader.on('fileQueued', function( file ){
+        if( FileUploader.getFiles().length > 1 ){
+            FileUploader.removeFile( file.id, true );
+            console.log(FileUploader.getFiles().length);
+            layer.msg('只允许上传一个文件', {icon: 2, time: 2000});
+            return false;
+        }
         var fileItem = '<div class="file-item" id="'+ file.id +'">' +
             '<div class="pull-left"><i class="file-icon file-icon-ext-'+ file.ext +'"></i> '+ file.name +'</div>' +
             '<div class="pull-right"><i class="icon-remove" title="移除该文件"></i></div>' +
@@ -108,8 +114,10 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
     // 删除队列文件
     $('.uploader-attachment-queue').on('click', '.icon-remove', function(){
         var id = $(this).parent().parent().attr('id');
+        console.log(FileUploader.getFiles().length);
         // 删除队列中的文件
         FileUploader.removeFile( id, true );
+        console.log(FileUploader.getFiles().length);
         // 删除dom节点
         $(this).parent().parent().remove();
     });

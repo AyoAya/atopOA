@@ -251,7 +251,7 @@ class ECNController extends AuthController {
             $model = D('Ecn');
             if( I('post.currentType') == 'file' ){
                 $result = $model->table(C('DB_PREFIX').'file_number')
-                                ->where('createuser='.session('user')['id'].' AND state not in ( "InReview","WaitingEdit","Archiving","Recyle" )')
+                                ->where('createuser='.session('user')['id'].' AND state = "WaitingReview"')
                                 ->order('createtime DESC')
                                 ->select();
                 foreach( $result as $key=>&$value ){    // 如果文件已经生成了ecn则排除掉
