@@ -81,7 +81,11 @@
 					<td>{$value.sex}</td>
 					<td>{$value.department_name}</td>
 					<td>{$value.level_name}</td>
-					<td>{$value.position_name}</td>
+					<eq name="value.count" value="1">
+						<td>{$value.post_name.name}</td>
+					<else/>
+						<td>{$value.post_name.0.name} 等{$value.count}个职位</td>
+					</eq>
 					<td>{$value.report_name}</td>
 					<td><span class="tag {$value.state_class}">{$value.state_text}</span></td>
 					<td>

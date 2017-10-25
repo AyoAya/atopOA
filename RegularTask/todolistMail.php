@@ -134,45 +134,87 @@ class RegularMail{
 
         # $http_host = 'atop.local';
         $http_host = '61.139.89.33:8088';
+        $currentYear = date('Y', time());
+
+        // 样式
+        $style = <<<STYLE
+<style>
+    a {
+        color: #428bca;
+    }
+    a:hover {
+        color: #2a6496;
+    }
+    p {
+        line-height: 150%;
+    }
+    p.sm-dear {
+        margin-bottom: 24px;
+    }
+    p.ck-lj, p.remark, table {
+        margin-top: 24px;
+    }
+    table {
+        font-size: 14px;
+        color: #555;
+        border: solid 1px #e2e2e2;
+    }
+    table thead tr th {
+        font-size: 14px;
+        text-align: left;
+        color: #555;
+        border-right: solid 1px #e2e2e2;
+        border-bottom: solid 1px #e2e2e2;
+    }
+    table thead tr th:last-child {
+        border-right: none;
+    }
+    table tbody tr td {
+        font-size: 14px;
+        color: #555;
+        text-align: left;
+        border-right: solid 1px #e2e2e2;
+        border-bottom: solid 1px #e2e2e2;
+        line-height: 150%;
+    }
+    table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    table tbody tr td:last-child {
+        border-right: none;
+    }
+</style>
+STYLE;
+
+        /*<div style="padding: 20px 20px 10px 20px;background: #393d49;">
+            <a href="http://61.139.89.33:8088" target="_blank" title="华拓光通信股份有限公司"><img height="30" src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/></a>
+        </div>
+        <div style="padding: 15px 0;border-top: dashed 1px #e2e2e2;font-size: 14px;margin-top: 50px;">$email_from_name</div>
+        */
+
+        // 头部
+        $head = <<<HEAD
+<div style="color: #555;font-size: 14px;margin: 10px 0;">
+    <div style="padding-bottom: 30px;">
+HEAD;
 
         //设置签名信息
         $sign = <<<SIGN
-<style>
-    .sign {
-        width: 98%;
-        padding: 15px;
-        margin-top: 50px;
-        background: #2a3542;
-        color: #fff;
-    }
-    .sign .logo {
-        height: 40px;
-    }
-    .sign .info {
-    
-    }
-    .sign .info p {
-        margin: 0;
-        padding: 0;
-        line-height: 26px;
-    }
-    .clearfix {
-        clear: both;
-    }
-</style>
-<div class="sign">
-    <div class="logo">
-        <img src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/>
     </div>
-    <div class="info">
-        <p>该邮件由程序自动发送，请勿回复</p>
-        <p>华拓光通信OA系统&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL：61.139.89.33:8088</p>
+    <div>
+        <div style="padding: 10px 20px;background: #2a3542;font-size: 12px;color: #fff;">
+            <div style="float: left; margin-right: 30px;margin-top: 18px;">
+                <a href="http://61.139.89.33:8088" target="_blank" title="华拓光通信股份有限公司"><img style="border:none;" height="30" src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/></a>
+            </div>
+            <div style="float: left;">
+                <p style="line-height: 100%;">该邮件由系统自动发送，请勿回复。</p>
+                <p style="line-height: 100%;">&copy; 2014-$currentYear ATOP版权所有</p>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
     </div>
-    <div class="clearfix"></div>
 </div>
 SIGN;
-
-
 
 
         $mail = new \PHPMailer();
@@ -205,19 +247,12 @@ SIGN;
             }
         }
 
-        //$mail->addReplyTo("oa@atoptechnology.com","华拓光通信股份有限公司");// 设置回复人信息，指的是收件人收到邮件后，如果要回复，回复邮件将发送到的邮箱地址
-        //$mail->addCC("");// 设置邮件抄送人，可以只写地址，上述的设置也可以只写地址
-        //$mail->addBCC("");// 设置秘密抄送人
-        //$mail->addAttachment("test.jpg");// 添加附件
-
         $mail->IsHTML(true);
         $mail->Subject = $subject;// 邮件标题
-        $mail->Body = '<div style="color: #000;padding: 0 20px;">'.$body.$sign.'</div>';// 邮件正文加签名
+        $mail->Body = $style.$head.$body.$sign;// 邮件正文加签名
         //$mail->AltBody = "This is the plain text纯文本";// 这个是设置纯文本方式显示的正文内容，如果不支持Html方式，就会用到这个，基本无用
 
         $mail->Send();
-
-        # var_dump($abc);
 
 
     }
