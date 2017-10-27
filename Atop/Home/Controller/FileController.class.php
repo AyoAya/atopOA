@@ -233,12 +233,21 @@ class FileController extends AuthController {
                 }
             }else{  // 如果是手动录入
                 $tempRes = $model->table(C('DB_PREFIX').'file_number')->where('filenumber = "'.I('post.filenumber').'"')->select();
-                if( $tempRes ) $this->ajaxReturn(['flag'=>0, 'msg'=>'编号已存在']);
                 $filenumberData['type'] = 'ISO';
                 $filenumberData['filenumber'] = I('post.filenumber');
                 $filenumberData['createtime'] = time();
                 $filenumberData['createuser'] = session('user')['id'];
-                $id = $model->table(C('DB_PREFIX').'file_number')->add($filenumberData);    // 将申请的文件编号保存
+                if( $tempRes ){
+                    if( $tempRes[0]['state'] != 'Recyle' ){
+                        $this->ajaxReturn(['flag'=>0, 'msg'=>'编号已存在']);
+                    }else{
+                        $filenumberData['id'] = $tempRes[0]['id'];
+                        $filenumberData['state'] = 'WaitingEdit';
+                        $id = $model->table(C('DB_PREFIX').'file_number')->save($filenumberData);    // 将申请的文件编号保存
+                    }
+                }else{
+                    $id = $model->table(C('DB_PREFIX').'file_number')->add($filenumberData);    // 将申请的文件编号保存
+                }
                 $id ? $this->ajaxReturn(['flag'=>1, 'msg'=>'申请成功']) : $this->ajaxReturn(['flag'=>0, 'msg'=>'申请失败']);
             }
         }else{
