@@ -37,7 +37,12 @@ class ECNController extends AuthController {
         foreach( $result as $key=>&$value ){
             $value['className'] = $this->fetchClassStyle($value['state']);
             $value['stateName'] = $this->fetchStateName($value['state']);
+            // 如果该ECN已经发行了则获取发行时间
+            if( $value['state'] == 'Complete' ){
+                $value['issued'] = $model->table(C('DB_PREFIX').'ecn_review')->where('ecn_id = '.$value['id'].' AND along=0')->select()[0];
+            }
         }
+        print_r($result);
         $pageShow = $page->show();
         $this->assign('pageShow',$pageShow);
         $this->assign('result',$result);

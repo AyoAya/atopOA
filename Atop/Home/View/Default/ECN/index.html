@@ -31,6 +31,7 @@
                 <th>描述</th>
                 <th>创建人</th>
                 <th>创建时间</th>
+                <th>发行时间</th>
             </tr>
         </thead>
         <tbody>
@@ -45,6 +46,9 @@
                     </td>
                     <td>{$value.nickname}</td>
                     <td>{$value.createtime|date="Y-m-d H:i:s", ###}</td>
+                    <td>
+                        <present name="value.issued">{$value.issued.review_time|date="Y-m-d H:i:s", ###}</present>
+                    </td>
                 </tr>
             </volist>
         </tbody>
