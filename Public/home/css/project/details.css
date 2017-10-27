@@ -236,7 +236,7 @@ h1 {
     margin-bottom: 15px;
 }
 .nav {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 .nav a {
     outline: none;
@@ -397,6 +397,12 @@ h1 {
 
 
 /*讨论区*/
+.editor-wrapper {
+    background: #F9FAFC;
+    border: solid 1px #E5E9F2;
+    padding: 15px;
+    border-radius: 2px;
+}
 .message-container {
     padding-bottom: 80px;
 }
@@ -417,8 +423,16 @@ h1 {
     -moz-border-radius: 50%;
     border-radius: 50%;
 }
+.media {
+    border: none !important;
+}
 .media-body {
-    padding-left: 5px;
+    padding: 10px;
+    border: solid 1px #E5E9F2;
+    background: #F9FAFC;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
 }
 .other-info-box {
     margin-bottom: 10px;
@@ -440,12 +454,8 @@ h1 {
     margin: 0 5px;
 }
 .media {
-    border-bottom: solid 1px #eee;
-    padding-bottom: 15px;
+    margin: 20px 0;
     min-height: 100px !important;
-}
-.media-body {
-    padding-left: 10px;
 }
 .media:last-child {
     border: none;
