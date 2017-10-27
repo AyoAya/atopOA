@@ -361,6 +361,27 @@ $(function(){
             }
         });
 
+        $("#mask").click(function(){
+            $(this).hide();
+            $('#scrollBackTop').css("z-index",'100')
+        });
+
+        $('.timeline-content-right').on('click','.img-zzc',function(){
+
+            $("#mask").css("height",$(document).height());
+            $("#mask").css("width",$(document).width());
+            $("#mask").show();
+            $('#scrollBackTop').css("z-index",'-11');
+            var thml_ = $(this).html();
+            var h = $(this).find('img').height();
+            var w = $(this).find('img').width();
+            var _h = h*3;
+            var _w = w*3;
+            $('#zzc-img-bg').html(thml_);
+            $('#zzc-img-bg').find('img').css('height',_h);
+            $('#zzc-img-bg').find('img').css('max-height',1100);
+            $('#zzc-img-bg').find('img').css('width',_w);
+        });
 
         //监听rma处理表单
         form.on('submit(rmaCustomer)', function( data ){

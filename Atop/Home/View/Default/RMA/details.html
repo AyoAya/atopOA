@@ -34,7 +34,11 @@
 </block>
 
 <block name="content">
+	<div id="mask" class="mask">
+		<div id="zzc-img-bg">
 
+		</div>
+	</div>
 
 	<eq name="details.rma_state" value="N"> {//在当前客诉未关闭的情况下才加载}
 		<eq name="details.version" value="new">
@@ -192,7 +196,7 @@
 														<volist name="val.picture" id="v">
 															<notempty name="v">
 																<div class="pic-group pull-left">
-																	<a href="{$v.filepath}" target="_blank"><img class="customer-complaint-img-c" src="{$v.filepath}" alt="加载失败"></a>
+																	<div class="img-click img-zzc" target="_blank"><img class="customer-complaint-img-c" src="{$v.filepath}" alt="加载失败"></div>
 																	<span class="pic-info">{$v.filename}</span>
 																</div>
 															</notempty>
@@ -218,7 +222,7 @@
 															<else/>
 																<neq name="v" value="">
 																	<div class="pic-group pull-left">
-																		<a href="__ROOT__/{$v.filepath}" target="_blank"><img class="customer-complaint-img-c" src="__ROOT__/{$v.filepath}" height="200" alt="加载失败"></a>
+																		<div class="img-zzc img-click" href="__ROOT__/{$v.filepath}" target="_blank"><img class="customer-complaint-img-c" src="__ROOT__/{$v.filepath}" height="200" alt="加载失败"></div>
 																		<span class="pic-info">{$v.filename}</span>
 																	</div>
 																</neq>
