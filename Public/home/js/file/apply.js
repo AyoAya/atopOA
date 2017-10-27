@@ -52,7 +52,7 @@ layui.use(['form', 'jquery', 'layer'], function(){
                 return false;
             }
             if( data.field.filenumber.length > 13 ){
-                layer.msg('文件号过长，请控制在12位或以下');
+                layer.msg('文件号过长，请控制在13位或以下');
                 return false;
             }
         }
