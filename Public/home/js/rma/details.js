@@ -361,12 +361,18 @@ $(function(){
             }
         });
 
+        // 图片预览
+        // 点击关闭遮罩层
         $("#mask").click(function(){
             $(this).hide();
             $('#scrollBackTop').css("z-index",'100')
+            $('#header').css('z-index',2);
         });
-
+        // 点击图片放大 出现遮罩层
         $('.timeline-content-right').on('click','.img-zzc',function(){
+
+            var max_h = $(document).height();
+            var max_w = $(document).width();
 
             $("#mask").css("height",$(document).height());
             $("#mask").css("width",$(document).width());
@@ -377,10 +383,13 @@ $(function(){
             var w = $(this).find('img').width();
             var _h = h*3;
             var _w = w*3;
+            $('#header').css('z-index',1);
             $('#zzc-img-bg').html(thml_);
             $('#zzc-img-bg').find('img').css('height',_h);
             $('#zzc-img-bg').find('img').css('max-height',1100);
             $('#zzc-img-bg').find('img').css('width',_w);
+            $('#zzc-img-bg').find('img').css('margin-left',(max_w - _w)/2);
+            $('#zzc-img-bg').find('img').css('margin-top',(max_h - _h)/2);
         });
 
         //监听rma处理表单
