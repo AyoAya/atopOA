@@ -127,6 +127,7 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
         layer.confirm('点击确定后该编号将会被系统回收，继续吗？', {
             btn: ['确定','取消'] //按钮
         }, function(){
+            console.log(fileid);
             $.post(ThinkPHP['AJAX'] + '/File/recyleFileNumber', {
                 fileid: fileid
             }, function(response){

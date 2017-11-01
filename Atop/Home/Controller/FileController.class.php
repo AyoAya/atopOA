@@ -418,6 +418,7 @@ class FileController extends AuthController {
     public function recyleFileNumber(){
         if( IS_POST ){
             $id = I('post.fileid');
+
             $row = M('FileNumber')->save([
                 'id'=>$id,
                 'state'=>'Recyle',
