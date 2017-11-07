@@ -12,7 +12,7 @@ require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
 require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
 
 
-class RegularMail{
+class ProjectMail {
 
     # 定义数据库配置
     private $db_host = 'localhost:3306';
@@ -226,7 +226,7 @@ p{
     border-radius: .25em;
 }
 .table tbody tr td .status_noStart{
-    background: #777; 
+    background: #777;
     display: inline;
     padding: .2em .6em .3em;
     font-size: 75%;
@@ -477,16 +477,3 @@ SIGN;
 
 # 实例化资源句柄
 $push_email = new RegularMail();
-
-
-
-
-
-
-
-
-
-
-
-
-

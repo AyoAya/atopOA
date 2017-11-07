@@ -42,7 +42,6 @@ class ECNController extends AuthController {
                 $value['issued'] = $model->table(C('DB_PREFIX').'ecn_review')->where('ecn_id = '.$value['id'].' AND along=0')->select()[0];
             }
         }
-        print_r($result);
         $pageShow = $page->show();
         $this->assign('pageShow',$pageShow);
         $this->assign('result',$result);

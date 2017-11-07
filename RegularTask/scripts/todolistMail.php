@@ -15,7 +15,7 @@ require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
 
 
 
-class RegularMail{
+class todolistMail {
 
     # 定义数据库配置
     private $db_host = 'localhost:3306';
@@ -84,7 +84,7 @@ class RegularMail{
 
         foreach ($data as $key=>&$value){
 
-            $html = '<p>Dear '.$value['nickname'].'，</p> 
+            $html = '<p>Dear '.$value['nickname'].'，</p>
                      <p>以下待办事项请及时处理：</p>';
 
             foreach ($value['data'] as $k=>&$val){
@@ -264,16 +264,3 @@ SIGN;
 
 # 实例化资源句柄
 $push_email = new RegularMail();
-
-
-
-
-
-
-
-
-
-
-
-
-

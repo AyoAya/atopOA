@@ -1,0 +1,209 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <!-- 引入 element-ui 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <!-- 引入 Vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- 引入 Vue-resource -->
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+    <!-- 引入 element-ui 组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>新建定期任务</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/Task">定期任务</a></li>
+        <li class="active">新建定期任务</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div id="app">
+        <el-form ref="taskForm" :rules="rules" :model="task" label-width="200px" label-position="top" style="width: 50%;margin-left: 100px;">
+            <el-form-item label="任务执行脚本" prop="script">
+                <el-select v-model="task.script" placeholder="请选择任务执行的脚本" style="width: 100%;">
+                    <el-option :label="item.label" :value="item.value" v-for="(item, key) in scripts" :key="key">
+                        <span style="float: left;">{{ item.label }}</span>
+                        <span style="float: right;">{{ item.value }}</span>
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="任务描述">
+                <div class="task-description" style="color: #5a5e66;">
+                    {{ taskDescription }}
+                </div>
+            </el-form-item>
+            <el-form-item label="触发器" prop="trigger">
+                <el-select v-model="task.trigger" placeholder="你希望任务如何开始">
+                    <el-option label="每月" value="month"></el-option>
+                    <el-option label="每周" value="week"></el-option>
+                    <el-option label="每天" value="day"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="执行周期" v-if="task.trigger == 'month'" prop="days">
+                <el-checkbox-group v-if="task.trigger == 'month'" v-model="task.days">
+                    <el-checkbox v-for="item in month" v-if="item != '最后一天'" :label="item" :key="item" style="margin: 10px 15px;width: 40px;">{{item}}</el-checkbox>
+                    <el-checkbox v-else :label="item" :key="item" style="margin: 0 15px;width: 80px;">{{item}}</el-checkbox>
+                </el-checkbox-group>
+            </el-form-item>
+            <el-form-item label="执行周期" v-if="task.trigger == 'week'" prop="weeks">
+                <el-checkbox-group v-if="task.trigger == 'week'" v-model="task.weeks">
+                    <el-checkbox v-for="item in weeks" :label="item.name" :key="item.value" style="margin: 10px 15px;width: 60px;">{{ item.name }}</el-checkbox>
+                </el-checkbox-group>
+            </el-form-item>
+            <el-form-item label="执行状态">
+                <el-switch v-model="task.state" active-text="启用" inactive-text="暂停"></el-switch>
+            </el-form-item>
+            <el-form-item label="收件人" v-if="isRecipient" prop="recipients">
+                <el-select v-model="task.recipients" multiple placeholder="选择收件人列表" style="width: 100%;">
+                    <el-option-group v-for="(dpmt, key) in users" :key="key" :label="dpmt.name">
+                        <el-option v-for="(item, k) in dpmt.users" :key="k" :label="item.nickname" :value="item.id" :disabled="item.disabled"></el-option>
+                    </el-option-group>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="抄送人" v-if="isCc">
+                <el-select v-model="task.ccs" multiple placeholder="选择收件人列表" style="width: 100%;">
+                    <el-option-group v-for="(dpmt, key) in users" :key="key" :label="dpmt.name">
+                        <el-option v-for="(item, k) in dpmt.users" :key="k" :label="item.nickname" :value="item.id" :disabled="item.disabled"></el-option>
+                    </el-option-group>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onSubmit('taskForm')">立即创建</el-button>
+                <el-button @click="resetForm('taskForm')">重置</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            watch: {
+                // 监听脚本选择变动，展示对应脚本的描述信息
+                ['task.script'](value, oldValue){
+                    this.scripts.forEach((item, index)=>{
+                        if( item.value == value ){
+                            this.taskDescription = item.desc
+                            this.task.name = item.label
+                            this.isRecipient = item.is_recipient
+                            this.isCc = item.is_cc
+                        }
+                    });
+                }
+            },
+            created (){
+                this._getExecuteTaskList()
+                this._getDpmtGroupUsersList()
+            },
+            data (){
+                return {
+                    task: {
+                        name: '',
+                        script: '',
+                        trigger: '',
+                        days: [],
+                        weeks: [],
+                        state: true,
+                        recipients: [],
+                        ccs: []
+                    },
+                    taskDescription: '请先选择任务执行脚本',
+                    isRecipient: false,
+                    isCc: false,
+                    month: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,'最后一天'],
+                    users: [],
+                    weeks: [
+                        {
+                            name: '星期一',
+                            value: 1
+                        },{
+                            name: '星期二',
+                            value: 2
+                        },{
+                            name: '星期三',
+                            value: 3
+                        },{
+                            name: '星期四',
+                            value: 4
+                        },{
+                            name: '星期五',
+                            value: 5
+                        },{
+                            name: '星期六',
+                            value: 6
+                        },{
+                            name: '星期日',
+                            value: 7
+                        }
+                    ],
+                    scripts:　[],
+                    rules: {
+                        script: [
+                            {required: true, message: '请选择任务执行脚本', trigger: 'blur'}
+                        ],
+                        trigger: [
+                            {required: true, message: '请选择触发器', trigger: 'blur'}
+                        ],
+                        days: [
+                            {type: 'array', required: true, message: '请选择执行周期', trigger: 'blur'}
+                        ],
+                        weeks: [
+                            {type: 'array', required: true, message: '请选择执行周期', trigger: 'blur'}
+                        ],
+                        recipients: [
+                            {type: 'array', required: true, message: '请选择收件人', trigger: 'blur'}
+                        ],
+                    }
+                }
+            },
+            methods: {
+                onSubmit(formName) {
+                    this.$refs[formName].validate((valid)=>{
+                        if( valid ){
+                            // 利用moment转换elementUI TimePicker组件生成的时间格式
+                            // this.task.time = moment(this.task.time).format('HH:mm:ss');
+                            this.$http.post(ThinkPHP['AJAX'] + '/Task/saveTask', {data: JSON.stringify(this.task)}, {emulateJSON:true}).then(response => {
+                                if(response.data.flag){
+                                    this.$message.success(response.data.msg);
+                                    setTimeout(()=>{
+                                        location.href = '/Task'
+                                    }, 2000)
+                                }else{
+                                    this.$message.error(response.data.msg);
+                                }
+                            });
+                        }
+                    })
+                },
+                resetForm(formName) {
+                    this.$refs[formName].resetFields();
+                },
+                _getExecuteTaskList(){
+                    this.$http.post(ThinkPHP['AJAX'] + '/Task/getExecuteTaskList').then(response => {
+                        this.scripts = response.data;
+                    }).catch(error => {
+                        alert('Data request error : ' + error.status + ' '+ error.statusText);
+                    });
+                },
+                _getDpmtGroupUsersList(){
+                    this.$http.post(ThinkPHP['AJAX'] + '/Task/getDpmtGroupUsersList').then(response => {
+                        this.users = response.data;
+                    }).catch(error => {
+                        alert('Data request error : ' + error.status + ' '+ error.statusText);
+                    });
+                }
+            }
+        });
+    </script>
+
+</block>
