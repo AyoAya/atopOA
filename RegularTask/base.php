@@ -21,25 +21,25 @@ class base extends DB {
 
     protected static $address = [
 
-        // 'yangpeiyun@atoptechnology.com',    //杨培云
-        // 'huangzhengyin@atoptechnology.com',   //黄正银
-        // 'xiaoaiyou@atoptechnology.com',     //肖艾佑
-        // 'chenshi@atoptechnology.com',   //陈实
-        // 'haorui@atoptechnology.com',        //郝锐
-        // 'jonas@atoptechnology.com'         //张炜哲
-        'jiangming@atoptechnology.com'         // jiangming
+         'yangpeiyun@atoptechnology.com',    //杨培云
+         'huangzhengyin@atoptechnology.com',   //黄正银
+         'xiaoaiyou@atoptechnology.com',     //肖艾佑
+         'chenshi@atoptechnology.com',   //陈实
+         'haorui@atoptechnology.com',        //郝锐
+         'jonas@atoptechnology.com'         //张炜哲
+//        'jiangming@atoptechnology.com'         // jiangming
 
 	];
     protected static $cc = [
 
-        // 'liuyan@atoptechnology.com',      //刘燕
-        // 'yubo@atoptechnology.com',          //余波
-        // 'tangzhiqiang@atoptechnology.com',        //唐志强
-        // 'dingzheng@atoptechnology.com',     //丁征
-        // 'mikechen@atoptechnology.com',      //陈应时
-        // 'xiaxiaosen@atoptechnology.com',    //夏小森
-        // 'liping@atoptechnology.com',    //李平
-        // 'kent@atoptechnology.com',      //董总
+         'liuyan@atoptechnology.com',      //刘燕
+         'yubo@atoptechnology.com',          //余波
+         'tangzhiqiang@atoptechnology.com',        //唐志强
+         'dingzheng@atoptechnology.com',     //丁征
+         'mikechen@atoptechnology.com',      //陈应时
+         'xiaxiaosen@atoptechnology.com',    //夏小森
+         'liping@atoptechnology.com',    //李平
+         'kent@atoptechnology.com',      //董总
 
 	];
 
