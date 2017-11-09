@@ -83,6 +83,8 @@ layui.use(['jquery', 'form', 'layer', 'laypage'], function(){
             gate: variables.currentGate,
             selecteds: variables.selectedAssocFile
         }
+        /*console.log(data);
+        return false;*/
         if( !variables.selectedAssocFile.length ){
             layer.msg('请勾选需要关联的文件号');
             return false;

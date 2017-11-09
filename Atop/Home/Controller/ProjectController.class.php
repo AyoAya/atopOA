@@ -739,7 +739,7 @@ HTML;
                 $documentResult = $document->where(['project_id'=>$getID])->order('gate_num ASC')->select();
                 foreach( $documentResult as $key=>&$value ){
                     $value['assoc_file'] = json_decode($value['assoc_file'], true);
-                    $value['FileNumbers'] = $fileModel->where(['id'=>['in', $value['assoc_file']]])->select();
+                    $value['FileNumbers'] = $fileModel->where(['filenumber'=>['in', $value['assoc_file']]])->having('upgrade <> "Y"')->select();
                     foreach( $value['FileNumbers'] as $k=>&$v ){
                         $v['attachment'] = json_decode($v['attachment'], true);
                     }
@@ -935,7 +935,7 @@ HTML;
             $temporary = $model->table(C('DB_PREFIX').'project_document')->where(['project_id'=>$postData['project_id'], 'gate_num'=>$postData['gate']])->select();
             $assoc_file = [];
             foreach($postData['selecteds'] as $key=>&$value){
-                array_push($assoc_file, $value['id']);
+                array_push($assoc_file, $value['filenumber']);
             }
             $data['project_id'] = $postData['project_id'];
             $data['gate_num'] = $postData['gate'];
