@@ -32,7 +32,7 @@
         <el-form ref="taskForm" :rules="rules" :model="task" label-width="200px" label-position="top" style="width: 50%;margin-left: 100px;">
             <el-form-item label="任务执行脚本" prop="script">
                 <el-select v-model="task.script" placeholder="请选择任务执行的脚本" style="width: 100%;">
-                    <el-option :label="item.label" :value="item.value" v-for="(item, key) in scripts" :key="key">
+                    <el-option :label="item.label" :value="key" v-for="(item, key) in scripts" :key="key">
                         <span style="float: left;">{{ item.label }}</span>
                         <span style="float: right;">{{ item.value }}</span>
                     </el-option>
@@ -90,15 +90,15 @@
             el: '#app',
             watch: {
                 // 监听脚本选择变动，展示对应脚本的描述信息
-                ['task.script'](value, oldValue){
-                    this.scripts.forEach((item, index)=>{
-                        if( item.value == value ){
-                            this.taskDescription = item.desc
-                            this.task.name = item.label
-                            this.isRecipient = item.is_recipient
-                            this.isCc = item.is_cc
+                'task.script': function(newValue, oldValue){
+                    for( let key in this.scripts ){
+                        if( key == newValue ){
+                            this.taskDescription = this.scripts[key].desc
+                            this.task.name = this.scripts[key].label
+                            this.isRecipient = this.scripts[key].is_recipient
+                            this.isCc = this.scripts[key].is_cc
                         }
-                    });
+                    }
                 }
             },
             created (){

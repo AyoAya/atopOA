@@ -159,8 +159,8 @@ class TaskController extends AuthController {
         if( IS_POST ){
             $taskPath = getcwd().'/RegularTask/task.config.php';
             require $taskPath;
-            $taskConfig = $GLOBALS['taskConfig'];
-            echo $taskConfig;
+            $taskConfig = json_decode($GLOBALS['taskConfig'], true);
+            $this->ajaxReturn($taskConfig);
         }
     }
 
