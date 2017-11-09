@@ -34,7 +34,7 @@
                 <el-select v-model="task.script" placeholder="请选择任务执行的脚本" style="width: 100%;">
                     <el-option :label="item.label" :value="key" v-for="(item, key) in scripts" :key="key">
                         <span style="float: left;">{{ item.label }}</span>
-                        <span style="float: right;">{{ item.value }}</span>
+                        <span style="float: right;">{{ key }}</span>
                     </el-option>
                 </el-select>
             </el-form-item>
