@@ -7,6 +7,8 @@ layui.use(['form', 'jquery', 'layer'], function(){
         $ = layui.jquery,
         layer = layui.layer;
 
+    var manuals = ['PCB', 'PCBA', 'ES', 'ISO'];  // 需要手动录入编号的文件类型
+
     // 获取页面初始化时选中文件类型的描述信息
     var fileTypeId = $('#FileType dl dd.layui-this').attr('lay-value');
     $.post(ThinkPHP['AJAX'] + '/File/getFileTypeDescription', {
@@ -17,6 +19,24 @@ layui.use(['form', 'jquery', 'layer'], function(){
 
     // 监听文件类型改变
     form.on('select(fileType)', function(data){
+        var currentOptionText = $(data.elem).find('option[value="'+ data.value +'"]').text();
+        console.log(currentOptionText);
+        // 如果选择的文件类型在需要手动录入编号的条件下则显示文件号输入框，反之则隐藏
+        if( $.inArray(currentOptionText, manuals) >= 0 ){
+            $('#FileNumberWrapper').removeClass('sr-only');
+            if( currentOptionText == 'ES' ){
+                $('#FileNumberWrapper input[name="filenumber"]').attr('placeholder', '例：ES-EL10-D38-01').val('');
+            }else if( currentOptionText == 'ISO' ){
+                $('#FileNumberWrapper input[name="filenumber"]').attr('placeholder', '例：AP-QI-0610F02').val('');
+            }else if( currentOptionText == 'PCB' ){
+                $('#FileNumberWrapper input[name="filenumber"]').attr('placeholder', '例：1.12.EL10-D38').val('');
+            }else if( currentOptionText == 'PCBA' ){
+                $('#FileNumberWrapper input[name="filenumber"]').attr('placeholder', '例：1.13.EL10-D38-A01').val('');
+            }
+        }else{
+            $('#FileNumberWrapper').addClass('sr-only');
+            $('#FileNumberWrapper input[name="filenumber"]').attr('placeholder', '文件编号').val('');
+        }
         $.post(ThinkPHP['AJAX'] + '/File/getFileTypeDescription', {
             fileTypeId: data.value
         }, function(response){
@@ -24,7 +44,7 @@ layui.use(['form', 'jquery', 'layer'], function(){
         });
     });
 
-    form.on('select(HowToApply)', function(data){
+    /*form.on('select(HowToApply)', function(data){
         if( data.value == 'manual' ){
             $('#FileNumberWrapper').removeClass('sr-only');
             $('#FileTypeWrapper').addClass('sr-only');
@@ -36,25 +56,31 @@ layui.use(['form', 'jquery', 'layer'], function(){
             $('p.tswb').removeClass('sr-only');
             $('p.ts-wb').addClass('sr-only');
         }
-    });
+    });*/
 
     // 监听提交
     form.on('submit(applySubmit)', function(data){
-        console.log(data.field.filenumber.length);
-        if( data.field.apply == 'manual' ){
-            data.field.filenumber = $.trim(data.field.filenumber);
+        var dom = $('#FileType');
+        var fileTypeText = dom.find('option[value="'+ data.field.id +'"]').text();
+        if( $.inArray(fileTypeText, manuals) >= 0 ){
+            data.field.apply = 'manual';
+            data.field.type = fileTypeText;
             if( data.field.filenumber == '' ){
                 layer.msg('请输入文件编号');
                 return false;
             }
-            if( !/^AP-[A-Z\-?0-9]+$/.test(data.field.filenumber) ){
+            // 如果是ISO或ES类型文件则检查文件标号格式的合法性
+            if( fileTypeText == 'ISO' && !/^AP-[A-Z\-?0-9]+$/.test(data.field.filenumber) || fileTypeText == 'ES' && !/^ES-[A-Z\-?0-9]+$/.test(data.field.filenumber) ){
                 layer.msg('文件编号格式错误');
                 return false;
             }
-            if( data.field.filenumber.length > 13 ){
-                layer.msg('文件号过长，请控制在13位或以下');
+            // 如果是PCB或PCBA类型文件则检查文件标号格式的合法性
+            if( fileTypeText == 'PCB' && !/^1\.12[\.A-Z\-?0-9]+$/.test(data.field.filenumber) || fileTypeText == 'PCBA' && !/^1\.13[\.A-Z\-?0-9]+$/.test(data.field.filenumber) ){
+                layer.msg('文件编号格式错误');
                 return false;
             }
+        }else{
+            data.field.apply = 'system';
         }
         $.post(ThinkPHP['AJAX'] + '/File/apply', data.field, function(response){
             console.log(response);

@@ -24,14 +24,17 @@
 					<eq name="Think.config.LOGIN_VERIFY" value="1">
 						<p><input type="text" name="verify" placeholder="验证码" class="verify"/></p>
 					</eq>
-					<p class="remember"><i class="icon-check-empty"></i><span>一个月内免登录</span></p>
+					<p>
+						<span class="pull-left remember" style="cursor: pointer;"><i class="icon-check-empty"></i> <span>记住我</span></span>
+						<span class="pull-right"><a href="mailto:it@atoptechnology.com" style="color: #428bca;">忘记密码?</a></span>
+						<div class="clearfix"></div>
+					</p>
 					<p class="submit">
 						<input type="submit" value="登录"/>
 						<eq name="Think.config.LOGIN_VERIFY" value="1">
 							<img id="verify" src="__URL__/code" style="cursor:pointer;" onclick="this.src='__URL__/code'" alt=""/>
 						</eq>
 					</p>
-					<span class="copy">&copy; 2014-2016 ATOP.</span>
 					<input type="hidden" id="rememberValue" name="remember" value="0">
 				</form>
 			</div>

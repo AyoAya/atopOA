@@ -30,9 +30,9 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
     });
 
     // 回收
-    $('.recycle-btn').click(function(){
+    /*$('.recycle-btn').click(function(){
         layer.msg('暂未开放回收功能');
-    });
+    });*/
 
     // uploader参数配置
     var FileUploaderOptions = {
@@ -137,7 +137,7 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
                         location.href = 'http://'+ ThinkPHP['HTTP_HOST'] +'/File';
                     }, 1500);
                 }else{
-                    layer.msg(response.msg, {icon: 1, time: 2000});
+                    layer.msg(response.msg, {icon: 2, time: 2000});
                     setTimeout(function(){
                         layer.closeAll();
                     }, 2000);

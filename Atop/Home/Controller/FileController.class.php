@@ -233,8 +233,8 @@ class FileController extends AuthController {
                 }
             }else{  // 如果是手动录入
                 $tempRes = $model->table(C('DB_PREFIX').'file_number')->where('filenumber = "'.I('post.filenumber').'"')->select();
-                $filenumberData['type'] = 'ISO';
-                $filenumberData['filenumber'] = I('post.filenumber');
+                $filenumberData['type'] = I('post.type');
+                $filenumberData['filenumber'] = strtoupper(I('post.filenumber'));
                 $filenumberData['createtime'] = time();
                 $filenumberData['createuser'] = session('user')['id'];
                 if( $tempRes ){
@@ -418,7 +418,17 @@ class FileController extends AuthController {
     public function recyleFileNumber(){
         if( IS_POST ){
             $id = I('post.fileid');
-
+            $temp = M('EcnReviewItem')->where('assoc = '.$id)->select();
+            if( $temp ){
+                $EcnModel = M('Ecn');
+                foreach( $temp as &$value ){
+                    $tmpRes = $EcnModel->where(['id'=>$value['ecn_id'], 'ecn_type'=>'file'])->select();
+                    if( $tmpRes ){  // 如果该文件号已经存在ecn并且类型是file就退出并告知用户该文件号不可回收
+                        $this->ajaxReturn(['flag'=>0,'msg'=>'已经生成ecn的文件不能回收']);
+                        break;
+                    }
+                }
+            }
             $row = M('FileNumber')->save([
                 'id'=>$id,
                 'state'=>'Recyle',
