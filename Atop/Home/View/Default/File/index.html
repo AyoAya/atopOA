@@ -135,7 +135,7 @@
             <notempty name="result">
                 <volist name="result" id="value">
                     <tr>
-                        <td><a href="__ROOT__/File/detail/{$value.filenumber}">{$value.filenumber}</a></td>
+                        <td><a href="__ROOT__/File/detail?filenumber={$value.filenumber}">{$value.filenumber}</a></td>
                         <td>{$value.version}</td>
                         <td>
                             <span class="{$value.className}">{$value.stateName}</span>

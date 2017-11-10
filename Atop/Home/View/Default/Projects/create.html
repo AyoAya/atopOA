@@ -1,0 +1,166 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <!-- 引入 element-ui 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="__CSS__/projects/create.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <!-- 引入 Vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- 引入 Vue-resource -->
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+    <!-- 引入 element-ui 组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="__JS__/projects/index.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>创建项目</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="__ROOT__/projects">项目管理</a></li>
+        <li class="active">创建项目</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div id="app">
+        <el-form ref="form" :model="project" label-width="120px" label-position="top">
+            <el-row :gutter="20">
+                <el-col :span="10">
+                    <el-form-item label="项目编号">
+                        <el-input v-model="project.projectNo" placeholder="请输入项目编号，例：Plan-Test-001"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="项目名称">
+                        <el-input v-model="project.projectName" placeholder="请输入项目名称，例：CSFP+ 项目开发"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="10">
+                    <el-form-item label="立项时间">
+                        <el-date-picker type="date" placeholder="选择时间" v-model="project.establishTime" placeholder="请选择立项时间"></el-date-picker>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <el-form-item label="产品类型">
+                        <el-input v-model="project.productType" placeholder="例：CSFP+(SFP 、XFP、AOC、DAC， etc)"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="8">
+                    <el-form-item label="项目类型">
+                        <el-input v-model="project.projectType" placeholder="例：新设计(新设计？新功能？降低成本？etc)"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="标准品名">
+                        <el-input v-model="project.standardName" placeholder="输入标准品名，如有多个用/分割"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="10">
+                    <el-form-item label="平台">
+                        <el-input v-model="project.platform" placeholder="例：DS4834+Max24016"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="潜在市场需求">
+                        <el-input v-model="project.marketDemand" placeholder="请输入市场潜在需求(2年)，由市场部提供"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="目标客户">
+                        <el-input v-model="project.targerCustomer" placeholder="例：华为（市场部提供）"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="6">
+                    <el-form-item label="目标成本">
+                        <el-input v-model="project.targerCost" placeholder="输入目标成本"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="6">
+                    <el-form-item label="项目负责人">
+                        <el-select v-model="project.principal" placeholder="选择项目负责人">
+                            <el-option label="Vampire" value="Vampire"></el-option>
+                            <el-option label="Azir" value="Azir"></el-option>
+                            <el-option label="Riven" value="Riven"></el-option>
+                            <el-option label="Jinx" value="Jinx"></el-option>
+                            <el-option label="Ryze" value="Ryze"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-form-item>
+                <el-button type="primary" @click="onSubmit">立即创建</el-button>
+                <el-button>取消</el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            created (){
+
+            },
+            data (){
+                return {
+                    project: {
+                        projectNo: '',
+                        projectName: '',
+                        establishTime: '',
+                        productType: '',
+                        projectType: '',
+                        standardName: '',
+                        platform: '',
+                        marketDemand: '',
+                        targerCustomer: '',
+                        targerCost: '',
+                        principal: '',
+                        design: '',
+                        fwDevelopment: '',
+                        structureDesign: '',
+                        lightDesign: '',
+                        ateDesign: '',
+                        dvtTest: '',
+                        marketDpmt: '',
+                        description: '',
+                    }
+                }
+            },
+            methods: {
+                onSubmit() {
+                    console.log('submit!');
+                }
+            }
+        });
+    </script>
+
+</block>
+
+

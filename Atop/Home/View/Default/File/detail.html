@@ -242,7 +242,7 @@
                     <notempty name="beforeVersions">
                         <volist name="beforeVersions" id="value">
                             <tr>
-                                <td><a href="__ROOT__/File/detail/{$value.filenumber}/{$value.id}">{$value.version}</a></td>
+                                <td><a href="__ROOT__/File/detail?filenumber={$value.filenumber}&id={$value.id}">{$value.version}</a></td>
                                 <td>
                                     <notempty name="value.attachment">
                                         <a href="__ROOT__/{$value.attachment.path}" target="_blank"><i class="file-icon file-icon-ext-{$value.attachment.ext}"></i> {$value.attachment.name}</a>
