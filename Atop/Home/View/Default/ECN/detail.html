@@ -238,6 +238,34 @@
             </switch>
         </div>
 
+        <div class="section-grey-table">
+            <div class="section-title">引用规则</div>
+            <div class="section-body">
+                <table class="layui-table">
+                    <thead>
+                        <tr>
+                            <th width="15%">规则名</th>
+                            <th width="85%">文件归档后将抄送给以下职位的所有人员</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="__ROOT__/ECN/ruleDetail/id/{$result.ecn_rule.id}" target="_blank">{$result.ecn_rule.name}</a></td>
+                            <td>
+                                <present name="result.rule">
+                                    <volist name="result.rule" id="value">
+                                        <span style="margin-right: 20px;display: inline-block;">{$value.name}</span>
+                                    </volist>
+                                <else/>
+                                    该规则没有设定抄送职位
+                                </present>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="section-grey-table psjd-bg">
             <div class="section-title">评审进度</div>
             <div class="section-body">

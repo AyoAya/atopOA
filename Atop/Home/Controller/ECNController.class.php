@@ -428,6 +428,11 @@ class ECNController extends AuthController {
                     // 永远获取当前ecn号最新的记录
                     $result = $EcnModel->relation(true)->where('ecn_number = "'.I('get.num').'"')->order('seq DESC')->limit(1)->find();
                 }
+                $tempory = $EcnModel->table(C('DB_PREFIX').'ecn_rule')->find($result['quote_rule']);
+                $result['ecn_rule'] = $tempory;
+                if( $tempory['cc'] != '' ){
+                    $result['rule'] = $EcnModel->table(C('DB_PREFIX').'position')->where('id IN('.$tempory['cc'].')')->select();
+                }
                 // 如果存在历史的评审记录则注入模板
                 $ecnHistoryReview = $EcnModel->relation('User')->where('ecn_number = "'.I('get.num').'" AND id <> '.$result['id'])->order()->select();
                 if( $ecnHistoryReview ){
