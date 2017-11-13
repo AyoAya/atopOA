@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 # 屏蔽所有报错
 // error_reporting(0);
 
@@ -10,8 +10,8 @@ require __DIR__ . '/task.config.php';
 require __DIR__ . '/DB.php';
 
 # 导入PHPMail邮件类
-require getcwd().'\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
-require getcwd().'\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
+require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
+require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
 
 class base extends DB {
     # 定义服务器地址

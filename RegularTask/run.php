@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 # 导入DB类
 require __DIR__ .'/DB.php';
@@ -46,7 +46,7 @@ class run extends DB {
     private function executeScript($scriptName){
         $command = 'php '.getcwd().$this->scriptPath.$scriptName.'.php';
         $command = str_replace('\\', '/', $command);
-        echo $command;
+        echo $command."\r\n";
         exec($command);
     }
 

@@ -6,13 +6,13 @@ class SampleMail extends base {
 
     # 构造方法
     public function __construct(){
-        echo '获取DB实例<br>';
+        //echo '获取DB实例<br>';
         parent::__construct();
-        echo '检查数据库任务配置<br>';
+        //echo '检查数据库任务配置<br>';
         $this->getServerEmailPushData();
-        echo '发送邮件<br>';
+        //echo '发送邮件<br>';
         $this->GetOrderSummary();
-        echo 'end<br>';
+        //echo 'end<br>';
     }
 
     # 获取服务器上邮件推送数据
@@ -255,10 +255,10 @@ STYLE;
         }
         $subject = date('Y',time()).'年第'.date('W',time()).'周样品订单进度汇总';
         $html .= "\t</tbody>\r\n</table>";
-        echo $style.$html;
+        //echo $style.$html;
         //print_r(parent::$address);
         //print_r(parent::$cc);
-        parent::push_eml($style.$html,$subject, parent::$address, parent::$cc);
+        echo parent::push_eml($style.$html,$subject, parent::$address, parent::$cc);
     }
 }
 new SampleMail();

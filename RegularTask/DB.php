@@ -1,7 +1,7 @@
-<?php
+﻿<?php
 
 # 屏蔽所有报错
-error_reporting(0);
+// error_reporting(0);
 
 # 设置默认时间区
 date_default_timezone_set('PRC');

@@ -1,15 +1,15 @@
-<?php
+﻿<?php
 
 # 屏蔽所有报错
-error_reporting(0);
+# error_reporting(0);
 
 # 设置默认时间区
 date_default_timezone_set('PRC');
 
 
 //导入PHPMail邮件类
-require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
-require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
+require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
+require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
 
 
 class ProjectMail {
@@ -299,7 +299,7 @@ STYLE;
 
             $html .= "\t</tbody>\r\n</table>";
 
-            echo $style.$html;
+            // echo $style.$html;
 
             self::push_eml($style.$html,$subject,$value['address'],$value['ccEmail']);
 
@@ -463,7 +463,7 @@ SIGN;
         $mail->Body = $style.$head.$body.$sign;// 邮件正文加签名
         //$mail->AltBody = "This is the plain text纯文本";// 这个是设置纯文本方式显示的正文内容，如果不支持Html方式，就会用到这个，基本无用
 
-        $mail->Send();
+        echo $mail->Send()."\r\n";
 
         # var_dump($abc);
 
@@ -476,4 +476,4 @@ SIGN;
 }
 
 # 实例化资源句柄
-$push_email = new RegularMail();
+$push_email = new ProjectMail();
