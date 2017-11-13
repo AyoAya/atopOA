@@ -46,8 +46,9 @@ class run extends DB {
     private function executeScript($scriptName){
         $command = 'php '.getcwd().$this->scriptPath.$scriptName.'.php';
         $command = str_replace('\\', '/', $command);
-        echo $command;
-        exec($command);
+        echo $command."\r\n";
+        // exec($command);
+		sleep(2);
     }
 
     # 检查执行条件是否满足

@@ -258,7 +258,7 @@ STYLE;
         echo $style.$html;
         //print_r(parent::$address);
         //print_r(parent::$cc);
-        parent::push_eml($style.$html,$subject, parent::$address, parent::$cc);
+        echo parent::push_eml($style.$html,$subject, parent::$address, parent::$cc);
     }
 }
 new SampleMail();
