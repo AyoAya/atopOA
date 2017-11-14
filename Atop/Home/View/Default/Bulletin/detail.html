@@ -1,0 +1,196 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" type="text/css" href="__CSS__/Bulletin/detail.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/bulletin/detail.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>公告详情</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active"><a href="__ROOT__/Bulletin">公告栏</a></li>
+        <li class="active">公告详情</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+        <div class="info-tab">
+            <h3>{$bulletins.0.title}</h3>
+            <div class="time_person"><div class="left-div">发布范围：
+                <eq name="bulletins.0.department" value="all">
+                    <span style="padding: 5px;">全公司</span>
+                <else/>
+                    <volist name="bulletins.0.departmentName" id="v">
+                        <span style="padding: 5px;">{$v.name}</span>
+                    </volist>
+                </eq>
+            </div>
+                <div class="right-div">{$bulletins.0.nickname} &nbsp; &nbsp;
+                    <notempty name="bulletins.0.create_time">{$bulletins.0.create_time|date="Y-m-d H:i",###}</notempty>
+                </div>
+            </p>
+
+        </div>
+
+    <notempty name="bulletins">
+        <div class="pad-box" style="padding: 20px 20px;border-radius:2px;border: 1px solid #ccc;">
+            <span style="width: 100%;display: block;padding:10px 20px 10px 20px;">{$bulletins.0.content}</span>
+
+            <p style="font-weight: 600;text-indent: 20px; font-size: 15px; margin: 20px 0 0 0;">附件：</p>
+            <div class="att-z">
+                <notempty name="bulletins.0.atta">
+                    <volist name="bulletins.0.atta" id="val">
+                        <div class="atta-box"><a class="attachment" href="{$val.path}"><i style="margin-right: 5px;" class="file-icon file-icon-ext-{$val.ext}"></i>{$val.savename}</a></div>
+                    </volist>
+                <else/>
+                    无
+                </notempty>
+            </div>
+
+        </div>
+    </notempty>
+
+
+    <in name="Think.session.user.id" value="$all">
+        <div class="title-bar" style="margin: 20px 0 20px 0;">
+            <h4>审批记录</h4>
+        </div>
+        <div class="review-tab">
+            <table class="layui-table">
+
+                <thead>
+                <tr>
+                    <th>审批人</th>
+                    <th>审批状态</th>
+                    <th>审批时间</th>
+                    <th>备注信息</th>
+                </tr>
+                </thead>
+                <tbody>
+                <volist name="review" id="value" key="key">
+                    <tr>
+                        <td>{$value.nickname}</td>
+                        <td>
+                            <eq name="value.log.type" value="pass">
+                                <span class="tag tag-success">已通过</span>
+                            </eq>
+                            <eq name="value.log.type" value="refuse">
+                                <span class="tag tag-danger">已拒绝</span>
+                            </eq>
+                            <eq name="value.log.type" value="">
+                                <span class="tag tag-brown">未审批</span>
+                            </eq>
+
+                        </td>
+                        <notempty name="value.log.time">
+                            <td>{$value.log.time|date="Y-m-d H:i",###}</td>
+                        <else/>
+                            <td></td>
+                        </notempty>
+
+                        <td>{$value.log.log}</td>
+                    </tr>
+                </volist>
+                </tbody>
+            </table>
+        </div>
+    </in>
+
+</block>
+
+
+{//Modal集}
+
+<block name="modals">
+
+    <in name="Think.session.user.id" value="$person">
+        <div id="ReviewBtn" data-toggle="modal" data-target="#Modal-box">审批</div>
+        &lt;!&ndash; Modal &ndash;&gt;
+    </in>
+
+        <div class="modal fade" id="Modal-box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel" style="font-size: 18px;">公告审批</h4>
+                    </div>
+
+                    <form class="layui-form" action="" id="detail_form">
+
+                        <div class="modal-body">
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label" style="width: 60px;">操作</label>
+                                <div class="layui-input-block" style="margin-left: 60px;">
+                                    <select name="type" lay-verify="required">
+                                        <option value="pass">通过</option>
+                                        <option value="refuse">拒绝</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <input type="hidden" value="{$nowStepPerson.id}" name="rid">
+                            <input type="hidden" value="{$nowStepPerson.level}" name="level">
+                            <input type="hidden" value="{$Think.get.id}" name="bid">
+
+                            <div class="layui-form-item layui-form-text">
+                                <label class="layui-form-label" style="width: 60px;">日志</label>
+                                <div class="layui-input-block" style="margin-left: 60px;">
+                                    <textarea name="context" placeholder="请输入内容" lay-verify="required" class="layui-textarea"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="layui-btn layui-btn-primary" data-dismiss="modal">取消</button>
+                            <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

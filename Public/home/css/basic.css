@@ -17,6 +17,10 @@ ul,ol {
 a {
 	outline: none !important;
 	text-decoration: none !important;
+	color: #409EFF;
+}
+a:hover {
+	color: #3a8ee6;
 }
 a.download {
 	cursor: pointer;
@@ -35,7 +39,10 @@ p {
 	color: #000 !important;
 }
 .breadcrumb-edit a {
-	color: #428bca !important;
+	color: #409EFF !important;
+}
+.breadcrumb-edit a:hover {
+	color: #3a8ee6 !important;
 }
 /* h2 {
 	font-style: normal;

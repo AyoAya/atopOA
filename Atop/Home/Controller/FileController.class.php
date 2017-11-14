@@ -74,7 +74,7 @@ class FileController extends AuthController {
             $value['stateName'] = $this->fetchStateName($value['state']);
         }
         // 获取分组创建人数据作用筛选
-        $userGroup = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'user b')->field('b.id,b.nickname name')->where('a.createuser=b.id')->group('a.createuser')->select();
+        $userGroup = $model->table(C('DB_PREFIX').'file_number a,'.C('DB_PREFIX').'user b')->field('b.id,b.nickname name')->where('a.createuser=b.id')->order('convert(b.nickname using gbk) ASC')->group('a.createuser')->select();
         $this->assign('userGroup', $userGroup);
         $pageShow = $page->show();
         $this->assign('pageShow',$pageShow);
@@ -91,14 +91,16 @@ class FileController extends AuthController {
             if( $fileData['state'] == 'Archiving' ){    // 如果当前状态为归档，则说明该操作为升版
                 $model->startTrans();
                 try{
+                    $checkVersion = $model->table(C('DB_PREFIX').'file_number')->where(['filenumber'=>$fileData['filenumber'], 'version'=>strtoupper($postData['version'])])->select();
+                    if( $checkVersion ) throw new \Exception('版本号已存在，请重新输入');
+                    $OldVersion = (float)substr($fileData['version'], 1);  // 获取之前版本准备对比
+                    $NewVersion = (float)substr($postData['version'], 1);   // 最新版本
+                    if( $NewVersion < $OldVersion ) throw new \Exception('升版的版本号应当比之前高');
                     $changeOldUpgrade['id'] = $postData['id'];
                     $changeOldUpgrade['upgrade'] = 'Y';
                     //$changeOldUpgrade['state'] = 'Unavailable'; // 将状态改为不可用
                     $changeRow = $model->table(C('DB_PREFIX').'file_number')->save($changeOldUpgrade);  // 将以往版本的升版状态改为Y表示该文件已经升版过了
                     if( $changeRow === false ) throw new \Exception('升版失败');
-                    $OldVersion = (float)substr($fileData['version'], 1);  // 获取之前版本准备对比
-                    $NewVersion = (float)substr($postData['version'], 1);   // 最新版本
-                    if( $NewVersion < $OldVersion ) throw new \Exception('升版的版本号应当比之前高');
                     $upgradeData['type'] = $fileData['type'];
                     $upgradeData['filenumber'] = $fileData['filenumber'];
                     $upgradeData['attachment'] = $postData['attachment'];
@@ -167,10 +169,26 @@ class FileController extends AuthController {
                     if( !empty($value['attachment']) ){
                         $value['attachment'] = json_decode($value['attachment'], true);
                     }
+                    $value['stateText'] = $this->fetchStateName($value['state']);
+                    $value['stateClass'] = $this->fetchClassStyle($value['state']);
                 }
                 $this->assign('beforeVersions', $beforeVersions);
                 $this->display();
             }
+        }
+    }
+
+    // 验证文件版本
+    public function checkFileVersion(){
+        if( IS_POST ){
+            $model = new Model();
+            $postData = I('post.','',false);
+            $checkVersion = $model->table(C('DB_PREFIX').'file_number')->where(['filenumber'=>$postData['filenumber'], 'version'=>strtoupper($postData['version'])])->select();
+            if( $checkVersion ) $this->ajaxReturn(['flag'=>0, 'msg'=>'版本号已存在，请重新输入']);
+//            $OldVersion = (float)substr($postData['version'], 1);  // 获取之前版本准备对比
+//            $NewVersion = (float)substr($postData['version'], 1);   // 最新版本
+//            if( $NewVersion < $OldVersion ) $this->ajaxReturn(['flag'=>0, 'msg'=>'升版的版本号应当比之前高']);
+            $this->ajaxReturn(['flag'=>1, 'msg'=>'验证成功']);
         }
     }
 

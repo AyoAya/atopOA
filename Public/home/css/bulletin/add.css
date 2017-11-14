@@ -1,0 +1,138 @@
+.content{
+    width: 700px;
+    margin: 20px 0;
+}
+.content #form .layui-form-label{
+    padding:10px 5px;
+}
+.content #form .file-item{
+    clear: both;
+}
+.content #form .fz-rw{
+    border:1px solid #e2e2e2;
+}
+.content #form .fz-rw .rw-text:hover{
+    cursor: pointer;
+}
+.content #form .fz-rw .rw-text{
+    min-height: 36px;
+}
+.content #form .fz-rw .rb{
+    width:100%;
+    min-height: 100px;
+    padding: 5px 10px;
+    display: none;
+    margin: 10px 0 0 0;
+}
+.content #form .fz-rw .rb p{
+    border-left: 5px solid #999;
+    height: 30px;
+    background: #f2f2f2;
+    text-indent: 10px;
+    color: #444;
+    line-height: 30px;
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+.content #form .fz-rw .rb .person{
+    padding: 5px 10px;
+    display: inline-block;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+.content #form .fz-rw .rw-text .cc_person{
+    padding: 5px 10px;
+    color: #428bca;
+    display: inline-block;
+    background: #edf3f8;
+    border-radius: 1px;
+    margin: 5px 0 5px 5px;
+}
+.close-user{
+     color: #c6d5e3;
+ }
+.content #form .fz-rw .rw-text .cc_person:hover{
+    background: #428bca;
+    color: #fff;
+}
+.content #form .fz-rw .rw-text .cc_person:hover .close-user{
+    cursor: pointer;
+    background: #428bca;
+    color: #fff;
+}
+.content #form .fz-rw .rb .person:hover{
+    background: #428bca;
+    color: #fff;
+}
+
+
+.content #form .department-rw{
+    border:1px solid #e2e2e2;
+}
+.content #form .department-rw .department-text:hover{
+    cursor: pointer;
+}
+.content #form .department-rw .department-text{
+    min-height: 36px;
+}
+.content #form .department-rw .department-xz{
+    width:100%;
+    min-height: 100px;
+    padding: 5px 10px;
+    display: none;
+    margin: 10px 0 0 0;
+}
+.content #form .department-rw .department-xz p{
+    border-left: 5px solid #999;
+    height: 30px;
+    background: #f2f2f2;
+    text-indent: 10px;
+    color: #444;
+    line-height: 30px;
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+.content #form .department-rw .department-xz .depart_person{
+    padding: 5px 10px;
+    display: inline-block;
+    border-radius: 2px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.content #form .department-rw .department-text .department_person{
+    padding: 5px 10px;
+    color: #428bca;
+    display: inline-block;
+    background: #edf3f8;
+    margin: 5px 0 5px 5px;
+    border-radius: 1px;
+}
+.close-user{
+    color: #c6d5e3;
+}
+.content #form .department-rw .department-text .department_person:hover{
+    background: #428bca;
+    color: #fff;
+}
+.content #form .department-rw .department-text .department_person:hover  .close-user{
+    cursor: pointer;
+    background: #428bca;
+    color: #fff;
+}
+.content #form .department-rw .department-xz .depart_person:hover{
+    background: #428bca;
+    color: #fff;
+}
+
+.fz-ps{
+    display: none;
+}
+.department{
+
+}
+.remove-fz{
+    display: none;
+}

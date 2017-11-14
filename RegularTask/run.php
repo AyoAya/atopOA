@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 # 导入DB类
 require __DIR__ .'/DB.php';

@@ -170,13 +170,13 @@ h1 {
     padding: 15px;
 }
 .layui-table tbody td a {
-    color: #428bca;
+    color: #409EFF;
 }
 .layui-table tbody td {
     padding: 15px;
 }
 .layui-table tbody td a:hover {
-    color: #286090;
+    color: #3a8ee6;
 }
 
 .layui-table tbody tr:hover {

@@ -1,17 +1,16 @@
-<?php
+﻿<?php
 
 # 屏蔽所有报错
-// error_reporting(0);
+# error_reporting(0);
 
 # 设置默认时间区
 date_default_timezone_set('PRC');
 
 
+
 //导入PHPMail邮件类
-/*require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
-require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';*/
-require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
-require 'E:\www\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
+require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.phpmailer.php';
+require 'E:\work\atopOA\ThinkPHP\Library\Vendor\PHPMailer\class.smtp.php';
 
 
 
@@ -206,7 +205,7 @@ HEAD;
             <div style="float: left; margin-right: 30px;margin-top: 18px;">
                 <a href="http://61.139.89.33:8088" target="_blank" title="华拓光通信股份有限公司"><img style="border:none;" height="30" src="http://$http_host/Public/home/img/atop_logo_email.png" alt=""/></a>
             </div>
-            <div style="float: left;">
+            <div style="float: left;color: #fff;font-size: 12px;">
                 <p style="line-height: 100%;">该邮件由系统自动发送，请勿回复。</p>
                 <p style="line-height: 100%;">&copy; 2014-$currentYear ATOP版权所有</p>
             </div>

@@ -33,16 +33,23 @@
     <div id="app">
         <el-form ref="form" :model="project" label-width="120px" label-position="top">
             <el-row :gutter="20">
-                <el-col :span="10">
+                <el-col :span="8">
                     <el-form-item label="项目编号">
-                        <el-input v-model="project.projectNo" placeholder="请输入项目编号，例：Plan-Test-001"></el-input>
+                        <el-input v-model="project.projectNo" placeholder="输入项目编号，例：Plan-Test-001"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="20">
                 <el-col :span="12">
                     <el-form-item label="项目名称">
-                        <el-input v-model="project.projectName" placeholder="请输入项目名称，例：CSFP+ 项目开发"></el-input>
+                        <el-input v-model="project.projectName" placeholder="输入项目名称，例：CSFP+ 项目开发"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <el-form-item label="项目描述">
+                        <el-input type="textarea" class="project-desc" v-model="project.description" placeholder="输入项目描述"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -89,7 +96,7 @@
                 </el-col>
             </el-row>
             <el-row :gutter="20">
-                <el-col :span="12">
+                <el-col :span="8">
                     <el-form-item label="目标客户">
                         <el-input v-model="project.targerCustomer" placeholder="例：华为（市场部提供）"></el-input>
                     </el-form-item>
@@ -105,7 +112,85 @@
             <el-row :gutter="20">
                 <el-col :span="6">
                     <el-form-item label="项目负责人">
-                        <el-select v-model="project.principal" placeholder="选择项目负责人">
+                        <el-select v-model="project.principal" placeholder="选择项目负责人" style="width: 100%;">
+                            <el-option label="Vampire" value="Vampire"></el-option>
+                            <el-option label="Azir" value="Azir"></el-option>
+                            <el-option label="Riven" value="Riven"></el-option>
+                            <el-option label="Jinx" value="Jinx"></el-option>
+                            <el-option label="Ryze" value="Ryze"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="6">
+                    <el-form-item label="硬件设计">
+                        <el-select v-model="project.hardwareDesign" placeholder="选择硬件设计人员" style="width: 100%;">
+                            <el-option label="Vampire" value="Vampire"></el-option>
+                            <el-option label="Azir" value="Azir"></el-option>
+                            <el-option label="Riven" value="Riven"></el-option>
+                            <el-option label="Jinx" value="Jinx"></el-option>
+                            <el-option label="Ryze" value="Ryze"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="6">
+                    <el-form-item label="FW开发">
+                        <el-select v-model="project.fwDevelopment" placeholder="选择FW开发人员" style="width: 100%;">
+                            <el-option label="Vampire" value="Vampire"></el-option>
+                            <el-option label="Azir" value="Azir"></el-option>
+                            <el-option label="Riven" value="Riven"></el-option>
+                            <el-option label="Jinx" value="Jinx"></el-option>
+                            <el-option label="Ryze" value="Ryze"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="6">
+                    <el-form-item label="结构件设计">
+                        <el-select v-model="project.structureDesign" placeholder="选择结构件设计人员" style="width: 100%;">
+                            <el-option label="Vampire" value="Vampire"></el-option>
+                            <el-option label="Azir" value="Azir"></el-option>
+                            <el-option label="Riven" value="Riven"></el-option>
+                            <el-option label="Jinx" value="Jinx"></el-option>
+                            <el-option label="Ryze" value="Ryze"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="6">
+                    <el-form-item label="ATE设计">
+                        <el-select v-model="project.ateDesign" placeholder="选择ATE设计人员" style="width: 100%;">
+                            <el-option label="Vampire" value="Vampire"></el-option>
+                            <el-option label="Azir" value="Azir"></el-option>
+                            <el-option label="Riven" value="Riven"></el-option>
+                            <el-option label="Jinx" value="Jinx"></el-option>
+                            <el-option label="Ryze" value="Ryze"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="6">
+                    <el-form-item label="DVT测试">
+                        <el-select v-model="project.dvtTest" placeholder="选择DVT测试人员" style="width: 100%;">
+                            <el-option label="Vampire" value="Vampire"></el-option>
+                            <el-option label="Azir" value="Azir"></el-option>
+                            <el-option label="Riven" value="Riven"></el-option>
+                            <el-option label="Jinx" value="Jinx"></el-option>
+                            <el-option label="Ryze" value="Ryze"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="20">
+                <el-col :span="6">
+                    <el-form-item label="市场部">
+                        <el-select v-model="project.market" placeholder="选择市场部人员" style="width: 100%;">
                             <el-option label="Vampire" value="Vampire"></el-option>
                             <el-option label="Azir" value="Azir"></el-option>
                             <el-option label="Riven" value="Riven"></el-option>
@@ -133,6 +218,7 @@
                     project: {
                         projectNo: '',
                         projectName: '',
+                        description: '',
                         establishTime: '',
                         productType: '',
                         projectType: '',
@@ -142,14 +228,13 @@
                         targerCustomer: '',
                         targerCost: '',
                         principal: '',
-                        design: '',
+                        hardwareDesign: '',
                         fwDevelopment: '',
                         structureDesign: '',
                         lightDesign: '',
                         ateDesign: '',
                         dvtTest: '',
-                        marketDpmt: '',
-                        description: '',
+                        market: '',
                     }
                 }
             },

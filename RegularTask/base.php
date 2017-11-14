@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 # 屏蔽所有报错
 // error_reporting(0);
 

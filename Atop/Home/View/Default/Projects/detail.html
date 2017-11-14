@@ -1,0 +1,86 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <!-- 引入 element-ui 样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="__CSS__/projects/detail.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <!-- 引入 Vue -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- 引入 Vue-resource -->
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+    <!-- 引入 element-ui 组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="__JS__/projects/index.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>项目详情</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li><a href="/projects">项目管理</a></li>
+        <li class="active">项目详情</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div id="app">
+        <div class="project-info">
+            <div class="project-name">
+                <p>PLN-2017-A-022 <small>SFP+ZR DS4835 +Gn2044s方案</small></p>
+            </div>
+            <div class="project-ci">
+                <span><img class="user-avatar" src="__IMG__/face/face_01.png" height="25" alt=""> 超级管理员</span>
+                <span><i class="el-icon-time"></i> 2017-11-13 10:24:53</span>
+            </div>
+        </div>
+        <div class="project-wrapper">
+            <div class="pm project-menu">
+                <ul>
+                    <li><a href="/projects/detail?id=1&tab=gailan" class="<eq name='Think.get.tab' value='gailan'>active</eq>">项目概览</a></li>
+                    <li><a href="/projects/detail?id=1&tab=jihua" class="<eq name='Think.get.tab' value='jihua'>active</eq>">项目计划</a></li>
+                    <li><a href="/projects/detail?id=1&tab=zixiangmu" class="<eq name='Think.get.tab' value='zixiangmu'>active</eq>">子项目开发</a></li>
+                    <li><a href="/projects/detail?id=1&tab=yangpin" class="<eq name='Think.get.tab' value='yangpin'>active</eq>">样品状况</a></li>
+                    <li><a href="/projects/detail?id=1&tab=guidang" class="<eq name='Think.get.tab' value='guidang'>active</eq>">归档文件</a></li>
+                    <li><a href="/projects/detail?id=1&tab=taolun" class="<eq name='Think.get.tab' value='taolun'>active</eq>">讨论区</a></li>
+                </ul>
+            </div>
+            <div class="pm project-main">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            created (){
+
+            },
+            data (){
+                return {
+
+                }
+            },
+            methods: {
+                getUrlParam(name) {
+                    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+                    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+                    if (r != null) return unescape(r[2]);
+                    return null; //返回参数值
+                },
+                handle() {
+                    console.log(1);
+                }
+            }
+        });
+    </script>
+
+</block>
+
+

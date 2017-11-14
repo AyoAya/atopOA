@@ -32,10 +32,10 @@
             <el-button @click="handleCreateTask" plain>创建任务</el-button>
         </div>
         <el-table :data="taskData" style="width: 100%" v-loading="tableLoading">
-            <el-table-column type="index" label="#" property="name"></el-table-column>
             <el-table-column label="任务名称" property="name"></el-table-column>
-            <el-table-column label="创建人" property="user.nickname" width="120"></el-table-column>
-            <el-table-column label="创建时间" property="createtime" width="180"></el-table-column>
+            <el-table-column label="创建时间" property="createtime" width="160"></el-table-column>
+            <el-table-column label="上次执行时间" property="prevexectime" width="130"></el-table-column>
+            <el-table-column label="下次执行时间" property="nextexectime" width="130"></el-table-column>
             <el-table-column label="周期" width="100">
                 <template slot-scope="scope">
                     <el-popover trigger="hover" placement="top" v-if="scope.row.trigger == '每周' || scope.row.trigger == '每月'">
@@ -50,7 +50,7 @@
                     <el-tag v-else size="medium">{{ scope.row.trigger }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="状态" width="120">
+            <el-table-column label="状态" width="100">
                 <template slot-scope="scope">
                     <el-tag v-if="scope.row.state" type="success">启用中</el-tag>
                     <el-tag v-else type="info">暂停中</el-tag>

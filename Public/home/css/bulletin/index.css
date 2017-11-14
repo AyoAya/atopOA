@@ -1,0 +1,43 @@
+.top{
+
+}
+.content{
+    margin: 20px 0 0 0;
+    border-top:1px #ccc ;
+}
+.content .bulletin{
+    width:80%;
+    background: #fff;
+    margin: 20px auto;
+}
+.content .bulletin ul{
+    padding: 20px;
+}
+.content .bulletin ul li{
+    color: #555;
+    border-bottom: 1px #ccc dashed;
+    padding: 12px;
+}
+.content .bulletin ul li:last-child{
+    border-bottom:0;
+}
+.content .bulletin ul li:hover{
+    background: #f2f2f2;
+    cursor: pointer;
+}
+.content .bulletin ul li span{
+    display: inline-block;
+}
+.content .bulletin ul li .time{
+    display: inline-block;
+    float: right;
+}
+.content .bulletin ul li .person{
+    display: inline-block;
+    float: right;
+    margin-right: 30px;
+}
+.content .layui-table tr td .attachment{
+    margin-right:10px;
+    display: block;
+}
