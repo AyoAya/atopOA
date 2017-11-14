@@ -29,15 +29,21 @@ class run extends DB {
                 }
                 $execTimes = $this->calcExecuteTime($value['trigger'], $cycle);    // 计算执行时间
                 $execTimes['id'] = $value['id'];
-                $affectRow = $this->saveExecTimeData($execTimes);
-                if( $affectRow !== false ) $this->executeScript($value['script']);
+                if( isset($execTimes['prevExecTime']) ){    // prevExecTime即为上次执行时间同时也决定着当时是否执行，如果执行则复写该字段，否则重写下次执行时间
+                    $affectRow = $this->saveExecTimeData($execTimes);
+                    if( $affectRow !== false ) $this->executeScript($value['script']);
+                }
             }
         }
     }
 
     # 更新执行时间
     private function saveExecTimeData($data){
-        $sql = 'update atop_tasks set prevExecTime="'.$data['prevExecTime'].'",nextExecTime="'.$data['nextExecTime'].'" where id='.$data['id'];
+        if( isset($data['prevExecTime']) ){
+            $sql = 'update atop_tasks set prevExecTime="'.$data['prevExecTime'].'",nextExecTime="'.$data['nextExecTime'].'" where id='.$data['id'];
+        }else{
+            $sql = 'update atop_tasks set nextExecTime="'.$data['nextExecTime'].'" where id='.$data['id'];
+        }
         $row = self::$mysqli->query($sql);
         return $row;
     }
@@ -46,12 +52,13 @@ class run extends DB {
     private function executeScript($scriptName){
         $command = 'php '.getcwd().$this->scriptPath.$scriptName.'.php';
         $command = str_replace('\\', '/', $command);
-        echo $command."\r\n";
-        // exec($command);
-		sleep(2);
+        echo 'ready execute script: '.$command."\r\n";
+        exec($command);
+        echo "script execute complete!\r\n";
+        sleep(1);
     }
 
-    # 检查执行条件是否满足
+    # 计算执行时间
     private function calcExecuteTime($trigger = '', $data = []){
         $data = $data ? explode(',', $data) : [];
         if( $trigger == 'week' ){
@@ -62,9 +69,16 @@ class run extends DB {
                 }
                 sort($data);
                 $nextExecTime = null;
+                $currentExecTime = null;
                 for( $i = 0; $i < count($data); $i++ ){
                     if( $data[$i] > $currentWeek ){
                         $nextExecTime = $data[$i];
+                        break;
+                    }
+                }
+                for( $i = 0; $i < count($data); $i++ ){
+                    if( $data[$i] == $currentWeek ){
+                        $currentExecTime = $data[$i];
                         break;
                     }
                 }
@@ -75,7 +89,11 @@ class run extends DB {
                     $diff = 7 - $currentWeek + $data[0];
                     $finalNextExecTime = date('Y-m-d', strtotime('+'.$diff.' day'));
                 }
-                return ['prevExecTime'=>date('Y-m-d', time()), 'nextExecTime'=>$finalNextExecTime];
+                if( $currentExecTime !== null ){
+                    return ['prevExecTime'=>date('Y-m-d', time()), 'nextExecTime'=>$finalNextExecTime];
+                }else{
+                    return ['nextExecTime'=>$finalNextExecTime];
+                }
             }
         }elseif( $trigger == 'month' ){
             $currentMonthDay = date('d', time());    // 当天几号
@@ -88,9 +106,16 @@ class run extends DB {
                 $monthRange = range(1, $currentMonthEndDay);
                 $finalMonth = array_intersect($monthRange, $data);
                 $nextExecTime = null;
+                $currentExecTime = null;
                 for( $i = 0; $i < count($finalMonth); $i++ ){
                     if( $finalMonth[$i] > $currentMonthDay ){
                         $nextExecTime = $finalMonth[$i];
+                        break;
+                    }
+                }
+                for( $i = 0; $i < count($finalMonth); $i++ ){
+                    if( $finalMonth[$i] == $currentMonthDay ){
+                        $currentExecTime = $finalMonth[$i];
                         break;
                     }
                 }
@@ -101,7 +126,11 @@ class run extends DB {
                     $diff = $currentMonthEndDay - $currentMonthDay + $data[0];
                     $finalNextExecTime = date('Y-m-d', strtotime('+'.$diff.' day'));
                 }
-                return ['prevExecTime'=>date('Y-m-d', time()), 'nextExecTime'=>$finalNextExecTime];
+                if( $currentExecTime !== null ){
+                    return ['prevExecTime'=>date('Y-m-d', time()), 'nextExecTime'=>$finalNextExecTime];
+                }else{
+                    return ['nextExecTime'=>$finalNextExecTime];
+                }
             }
         }else{
             return ['prevExecTime'=>date('Y-m-d', time()), 'nextExecTime'=>date('Y-m-d', strtotime('+1 day'))];
