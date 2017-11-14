@@ -1,0 +1,107 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" type="text/css" href="__CSS__/Bulletin/index.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/bulletin/index.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>公告栏</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active">公告栏</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+    <div class="top">
+        <a href="__ROOT__/Bulletin/add" class="layui-btn layui-btn-primary"><i class="icon-plus"></i> 发布公告</a>
+    </div>
+
+
+    <div class="content">
+
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th width="6%">编号</th>
+                <th width="57%">标题</th>
+               <!-- <th width="33%">附件</th>-->
+                <th width="13%">状态</th>
+                <th width="10%">创建人</th>
+                <th width="14%">创建时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <volist name="bulletin" id="value" key="key">
+                <tr>
+                    <td>
+                        <if condition="$Think.get.p AND $Think.get.p neq 1">
+                            {$pageNumber*10+$key}
+                            <else/>
+                            {$key}
+                        </if>
+                    </td>
+                    <td><a href="__ROOT__/Bulletin/detail/id/{$value.id}">{$value.title}</a></td>
+                   <!-- <td>
+                        <volist name="value.atta" id="val">
+                            <a class="attachment" href="{$val.path}"><i style="margin-right: 5px;" class="file-icon file-icon-ext-{$val.ext}"></i>{$val.savename}</a>
+                        </volist>
+                    </td>-->
+                    <td>
+                        <eq name="value.status" value="1"><span class="tag tag-primary">审批中</span></eq>
+                        <eq name="value.status" value="0"><span class="tag tag-danger">已拒绝</span></eq>
+                        <eq name="value.status" value="2"><span class="tag tag-success">已发布</span></eq>
+                    </td>
+                    <td>{$value.nickname}</td>
+
+                    <td>{$value.create_time| date = "Y-m-d H:i",###}</td>
+                </tr>
+            </volist>
+            </tbody>
+        </table>
+
+        <div class="clearfix"></div>
+        <!-- 分页 -->
+        <ul class="pagination pagination-edit">{$page}</ul>
+
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
