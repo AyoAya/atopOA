@@ -245,7 +245,7 @@ class ECNController extends AuthController {
      */
     private function getAllEcnRules(){
         $model = new Model();
-        $result = $model->table(C('DB_PREFIX').'ecn_rule')->field('id,name')->select();
+        $result = $model->table(C('DB_PREFIX').'ecn_rule')->field('id,name')->order('name ASC')->select();
         return $result;
     }
 
@@ -434,11 +434,17 @@ class ECNController extends AuthController {
                     $result['rule'] = $EcnModel->table(C('DB_PREFIX').'position')->where('id IN('.$tempory['cc'].')')->select();
                 }
                 // 如果存在历史的评审记录则注入模板
-                $ecnHistoryReview = $EcnModel->relation('User')->where('ecn_number = "'.I('get.num').'" AND id <> '.$result['id'])->order()->select();
+                $ecnHistoryReview = $EcnModel->relation(true)->where('ecn_number = "'.I('get.num').'" AND id <> '.$result['id'])->order()->select();
                 if( $ecnHistoryReview ){
                     foreach( $ecnHistoryReview as $key=>&$value ){
                         $value['className'] = $this->fetchClassStyle($value['state']);
                         $value['stateName'] = $this->fetchStateName($value['state']);
+                        foreach( $value['EcnReview'] as $k=>&$v ){
+                            if( $v['review_state'] == 'REFUSE' ){
+                                $value['reject_remark'] = $v['remark'];
+                                break;
+                            }
+                        }
                     }
                     $this->assign('HistoryReview', $ecnHistoryReview);
                 }
@@ -793,7 +799,7 @@ class ECNController extends AuthController {
         $table .= '<tbody>';
         foreach( $data['EcnReviewItem'] as $key=>&$value ){
             $filePath = 'http://'.$httphost.'/'.$value['item']['attachment']['path'];
-            $link = 'http://'.$httphost.'/File/detail/'.$value['item']['filenumber'];
+            $link = 'http://'.$httphost.'/File/detail?id='.$value['item']['filenumber'];
             $table .= '<tr>';
             $table .= '<td><a href="'.$link.'" target="_blank">'.$value['item']['filenumber'].'</a></td>';
             $table .= '<td>'.$value['item']['version'].'</td>';

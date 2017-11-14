@@ -6,7 +6,8 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
         layedit = layui.layedit;
 
     var _fileID = $('#fileID').val(),
-        attachmentsObject;
+        attachmentsObject,
+        __version = $('#version').val();
 
     // 定义layedit编辑器配置
     var layeditOptions = {
@@ -16,14 +17,17 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
     // 实例化layedit编辑器
     var layeditDescription = layedit.build('layedit-description', layeditOptions);
 
-    // 编辑
+    // 编辑/升版
     $('.xq-edit-btn').click(function(){
+        let _btnText = $(this).text();
+        if( _btnText == '升版' ) $('#version').val('');
         $('.preview-condition').addClass('sr-only');
         $('.edit-condition').removeClass('sr-only');
     });
 
-    // 取消编辑
+    // 取消编辑/升版
     $('.xq-cancel-btn').click(function(){
+        $('#version').val(__version);
         $('.preview-condition').removeClass('sr-only');
         $('.edit-condition').addClass('sr-only');
         $('#content').scrollTop(0);
@@ -95,6 +99,10 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
     // 上传之前
     FileUploader.on('uploadBeforeSend', function( block, data, headers ){
         data.PATH = '/File/' + _fileID + '/';
+        //loading层
+        var loading = layer.load(1, {
+            shade: [0.5,'#fff'] //0.5透明度的白色背景
+        });
     });
 
     // 上传成功时
@@ -148,15 +156,34 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
         });
     });
 
+    function checkFileVersion(version){
+        return new Promise((resolve, reject)=>{
+            $.post(ThinkPHP['AJAX'] + '/File/checkFileVersion', {
+                id: _fileID_,
+                filenumber: _fileNumber_,
+                version: version
+            }, function(response){
+                resolve(response);
+            });
+        });
+    }
+
     // 编辑提交
     $('#saveFileData').click(function(){
         var data = {};
         if( !checkEditData() ) return false;
-        if( FileUploader.getFiles().length ) {  // 如果存在附件
-            FileUploader.upload();
-        }else{
-            submitEditData(null);
-        }
+        checkFileVersion($('#version').val()).then(response=>{
+            if( response.flag === 0 ){
+                layer.msg(response.msg, {icon: 2, time: 2000});
+                return false;
+            }else{
+                if( FileUploader.getFiles().length ) {  // 如果存在附件
+                    FileUploader.upload();
+                }else{
+                    submitEditData(null);
+                }
+            }
+        });
     });
 
     // 验证编辑
@@ -211,10 +238,10 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
                     location.replace(location.href);
                 }, 1000);
             }else{
-                layer.msg(response.msg, {icon : 2,time : 3000});
-                setTimeout(function(){
-                    location.replace(location.href);
-                }, 3000);
+                layer.msg(response.msg, {icon : 2,time : 2000});
+                setTimeout(()=>{
+                    layer.closeAll();
+                }, 2000)
             }
         })
     }

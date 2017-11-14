@@ -318,7 +318,7 @@
                         <tr>
                             <th>评审次数</th>
                             <th>状态</th>
-                            <th>创建人</th>
+                            <th>备注</th>
                             <th>创建时间</th>
                             <th>最后编辑时间</th>
                         </tr>
@@ -330,7 +330,7 @@
                                     <td>
                                         <span class="{$value.className}">{$value.stateName}</span>
                                     </td>
-                                    <td>{$value.User.nickname}</td>
+                                    <td width="45%">{$value.reject_remark}</td>
                                     <td>{$value.createtime|date="Y-m-d H:i:s", ###}</td>
                                     <td>
                                         <notempty name="value.lastedit_time">

@@ -102,7 +102,7 @@
 	background: rgba(0,0,0,.2);
 }
 #nav li a.active {
-	border-left: solid 5px #428bca;
+	border-left: solid 5px #409EFF;
 	background: rgba(0,0,0,.2);
 }
 #nav li a b {

@@ -227,13 +227,14 @@
     </div>
 
     <div class="section-grey-table">
-        <div class="section-title">版本记录</div>
+        <div class="section-title">其它记录</div>
         <div class="section-body">
             <table class="layui-table">
                 <thead>
                     <tr>
                         <th>版本号</th>
-                        <th>附件</th>
+                        <th>状态</th>
+                        <th>描述</th>
                         <th>创建人</th>
                         <th>创建时间</th>
                     </tr>
@@ -243,11 +244,8 @@
                         <volist name="beforeVersions" id="value">
                             <tr>
                                 <td><a href="__ROOT__/File/detail?filenumber={$value.filenumber}&id={$value.id}">{$value.version}</a></td>
-                                <td>
-                                    <notempty name="value.attachment">
-                                        <a href="__ROOT__/{$value.attachment.path}" target="_blank"><i class="file-icon file-icon-ext-{$value.attachment.ext}"></i> {$value.attachment.name}</a>
-                                    </notempty>
-                                </td>
+                                <td><span class="{$value.stateClass}">{$value.stateText}</span></td>
+                                <td>{$value.description}</td>
                                 <td>{$value.nickname}</td>
                                 <td>{$value.createtime|date="Y-m-d H:i:s", ###}</td>
                             </tr>
@@ -259,6 +257,12 @@
             </table>
         </div>
     </div>
+
+    <script>
+        var _fileID_ = {$result.id},
+            _fileVersion_ = '{$result.version}',
+            _fileNumber_ = '{$result.filenumber}';
+    </script>
 
 </block>
 

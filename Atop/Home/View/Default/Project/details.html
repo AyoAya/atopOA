@@ -390,7 +390,7 @@
                                 <tbody>
                                     <volist name="value.FileNumbers" id="vo">
                                         <tr>
-                                            <td><a href="__ROOT__/File/detail/{$vo.filenumber}">{$vo.filenumber}</a></td>
+                                            <td><a href="__ROOT__/File/detail?filenumber={$vo.filenumber}">{$vo.filenumber}</a></td>
                                             <td>{$vo.version}</td>
                                             <td class="td-wrap">
                                                 <p class="p-wrap"><a href="__ROOT__/{$vo.attachment.path}" target="_blank"><i class="file-icon file-icon-ext-{$vo.attachment.ext}"></i> {$vo.attachment.name}</a></p>
