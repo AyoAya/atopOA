@@ -1,6 +1,14 @@
 .layui-table tbody td {
     padding: 15px;
 }
+
+.layui-table tbody td a {
+    color: #409EFF;
+}
+.layui-table tbody td a:hover {
+    color: #3a8ee6;
+}
+
 input[disabled] {
     cursor: pointer !important;
     background: #fff !important;

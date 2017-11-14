@@ -56,10 +56,6 @@
     top:-38px;
 }
 
-a {
-	color: #428bca;
-}
-
 
 .procedure .procedure-table .procedure-wrap td .procedure-title .myTooltip {
 	color: #f0ad4e;
@@ -115,7 +111,7 @@ a {
 	border-bottom: none;
 }
 
-.layui-collapse .due-time,.layui-collapse .logistics-item {
+.logistics-item {
 	margin-right: 50px;
 }
 .layui-collapse .due-time:last-child {
