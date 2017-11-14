@@ -1,0 +1,136 @@
+<!-- 【模板继承】 -->
+<extend name="layout/default"/>
+<!-- 【引入css样式表文件】 -->
+<block name="linkcss">
+    <link rel="stylesheet" type="text/css" href="__CSS__/Bulletin/add.css">
+    <link rel="stylesheet" href="__PUBLIC__/webuploader/css/webuploader.css">
+</block>
+<!-- 【引入javascript文件】 -->
+<block name="linkjs">
+    <script src="__JS__/bulletin/add.js"></script>
+    <script src="__PUBLIC__/webuploader/js/webuploader.js"></script>
+</block>
+<!-- 【页面标题】 -->
+<block name="webtitle">
+    <title>发布公告</title>
+</block>
+<!-- 【路径导航】 -->
+<block name="breadcrumb">
+    <ol class="breadcrumb breadcrumb-edit">
+        <li class="active"><a href="__ROOT__/Bulletin">公告栏</a></li>
+        <li class="active">发布公告</li>
+    </ol>
+</block>
+<!-- 【正文区域】 -->
+<block name="content">
+
+    <div class="content">
+        <form class="layui-form" id="form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">公告标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="introduction" required  lay-verify="required" placeholder="请输入公告标题" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">公告正文</label>
+                <div class="layui-input-block">
+                    <textarea name="context" style="min-height: 400px;" placeholder="请输入公告正文" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">附件</label>
+                <div class="layui-input-block">
+                    <div id="picker" class="pull-left">上传附件</div>
+                    <div class="uploader-file-queue"></div>
+                </div>
+            </div>
+
+            <div class="layui-form-item department">
+                <label class="layui-form-label">选择部门</label>
+                <div class="layui-input-block department-rw">
+                    <div class="department-text"></div>
+                    <div class="department-xz">
+                        <p>选择部门</p>
+                        <div class="department-box">
+                            <volist name="department" id="val">
+                                <span class="depart_person" pid="{$val.id}">{$val.name}</span>
+                            </volist>
+                        </div>
+                        <p>全部List</p>
+                        <span class="depart_person" pid="all">全部list</span>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item fz-ps">
+                <label class="layui-form-label">副总审批</label>
+                <div class="layui-input-block fz-rw">
+                    <div class="rw-text"></div>
+                    <div class="rb">
+                        <p>副总</p>
+                        <div class="person-box">
+                            <volist name="vice" id="val">
+                                <span class="person" email="{$val.email}" uid="{$val.id}">{$val.nickname}</span>
+                            </volist>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">总经理审批</label>
+                <div class="layui-input-block">
+                    <select name="manager" lay-verify="required">
+                        <volist name="manager" id="val">
+                            <option value="{$val.id}" email="{$val.email}">{$val.nickname}</option>
+                        </volist>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="submit">立即提交</button>
+                    <button class="layui-btn layui-btn-primary add-user" type="button"><i class="icon-plus"></i> 添加副总审批</button>
+                    <button class="layui-btn layui-btn-danger remove-fz" type="button"><i class="icon-remove"></i> 移除副总审批</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</block>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
