@@ -124,7 +124,7 @@ span.danger {
     border: solid 1px #ccc;
 }
 .table th,.table td {
-    padding: 9px 15px;
+    padding: 9px 5px;
 }
 .table th,.table td a{
     text-decoration: none;
@@ -258,7 +258,7 @@ STYLE;
         //echo $style.$html;
         //print_r(parent::$address);
         //print_r(parent::$cc);
-        echo parent::push_eml($style.$html,$subject, parent::$address, parent::$cc);
+        echo parent::push_eml($style.$html,$subject, parent::$address, parent::$cc)."\r\n";
     }
 }
 new SampleMail();
