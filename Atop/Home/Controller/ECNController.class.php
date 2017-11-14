@@ -439,11 +439,11 @@ class ECNController extends AuthController {
                     foreach( $ecnHistoryReview as $key=>&$value ){
                         $value['className'] = $this->fetchClassStyle($value['state']);
                         $value['stateName'] = $this->fetchStateName($value['state']);
-                        foreach( $value['EcnReview'] as $k=>&$v ){
-                            if( $v['review_state'] == 'REFUSE' ){
-                                $value['reject_remark'] = $v['remark'];
-                                break;
-                            }
+                        $tempArr = $EcnModel->table(C('DB_PREFIX').'ecn_review a,'.C('DB_PREFIX').'user b')->field('a.review_state,a.remark,a.review_time,b.nickname')->where('a.review_user=b.id AND a.ecn_id='.$value['id'].' AND a.already_review="Y"')->order('a.review_time DESC')->limit(1)->select();
+                        if( $tempArr ){
+                            $value['rv_user'] = $tempArr[0]['nickname'];
+                            $value['rv_remark'] = $tempArr[0]['remark'];
+                            $value['rv_time'] = date('Y-m-d H:i:s', $tempArr[0]['review_time']);
                         }
                     }
                     $this->assign('HistoryReview', $ecnHistoryReview);
