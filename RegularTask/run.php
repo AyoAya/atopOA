@@ -53,7 +53,7 @@ class run extends DB {
         $command = 'php '.getcwd().$this->scriptPath.$scriptName.'.php';
         $command = str_replace('\\', '/', $command);
         echo 'ready execute script: '.$command."\r\n";
-        exec($command);
+        // exec($command);
         echo "script execute complete!\r\n";
         sleep(1);
     }
