@@ -434,7 +434,7 @@ class ECNController extends AuthController {
                     $result['rule'] = $EcnModel->table(C('DB_PREFIX').'position')->where('id IN('.$tempory['cc'].')')->select();
                 }
                 // 如果存在历史的评审记录则注入模板
-                $ecnHistoryReview = $EcnModel->relation(true)->where('ecn_number = "'.I('get.num').'" AND id <> '.$result['id'])->order()->select();
+                $ecnHistoryReview = $EcnModel->relation(true)->where('ecn_number = "'.I('get.num').'" AND id <> '.$result['id'])->order('seq ASC')->select();
                 if( $ecnHistoryReview ){
                     foreach( $ecnHistoryReview as $key=>&$value ){
                         $value['className'] = $this->fetchClassStyle($value['state']);
