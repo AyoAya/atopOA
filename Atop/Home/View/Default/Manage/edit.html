@@ -104,13 +104,13 @@
 			</div>
 
 
-			<div class="layui-form-item">
+			<div class="layui-form-item" style="width: 750px !important;">
 				<label>职位&nbsp;</label>
 				<div class="layui-input-block" style="margin: 5px 0 0 0;">
 					<volist name="position" id="val">
 						<div class="check-box" style="width: 130px; padding: 0 0 10px 0;margin: 0;float: left;">
 								<in name="val.id" value="$tmpArr">
-									<input type="checkbox" checked name="pos[{$val.id}]" title="{$val.name}">
+									<input style="padding: 20px !important;" type="checkbox" checked name="pos[{$val.id}]" title="{$val.name}">
 								<else/>
 									<input type="checkbox" name="pos[{$val.id}]" title="{$val.name}">
 								</in>
@@ -176,11 +176,15 @@
 			<div class="checkbox-lay-box">
 				<div class="layui-form-item">
 					<volist name="authrule" id="value">
-						<in name="value.id" value="$tmpRule">
-							<input type="checkbox" name="permissions[{$value.id}]" checked title="{$value.title}">
-						<else/>
-							<input type="checkbox" name="permissions[{$value.id}]" title="{$value.title}">
-						</in>
+						<notin name="value.id" value="3,20">
+							<in name="value.id" value="$tmpRule">
+
+								<input type="checkbox" name="permissions[{$value.id}]" checked title="{$value.title}">
+							<else/>
+								<input type="checkbox" name="permissions[{$value.id}]" title="{$value.title}">
+
+							</in>
+						</notin>
 					</volist>
 				</div>
 			</div>

@@ -10,7 +10,8 @@ class SampleController extends AuthController {
         $person = M('Sample');
         # 是否有查询
         if(I('get.search')){
-            $count = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%" OR order_charge LIKE "%'.I('get.search').'%" AND show=1')->count();
+            $count = $person->where('(order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%" OR order_charge LIKE "%'.I('get.search').'%")')->count();
+            echo $person->getLastSql();
             $this->assign( 'search' , I('get.search') );
         }else{
             $count = $person->where(['show'=>1])->count();
@@ -26,7 +27,7 @@ class SampleController extends AuthController {
         }
         # 根据条件筛选数据
         if(I('get.search')){
-            $sampleResult = $person->where('order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%" OR order_charge LIKE "%'.I('get.search').'%" AND show=1')->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
+            $sampleResult = $person->where('(order_num LIKE "%'.I('get.search').'%" OR create_person_name LIKE "%'.I('get.search').'%" OR order_charge LIKE "%'.I('get.search').'%")')->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
         }else{
             $sampleResult = $person->where(['show'=>1])->order('id DESC')->limit($page->firstRow.','.$page->listRows)->select();
         }

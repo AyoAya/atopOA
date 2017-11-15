@@ -598,7 +598,7 @@ $body .= '，请及时处理。</p>
 
             $call = 'All';
 
-            $body = '<div class="box" style="padding: 0 50px;"><p>Dear '.$call.',</p>
+            $body = '<div><p>Dear '.$call.',</p>
 <p>['.$data['manager'].'] 发布了新公告<b>《'.$data['title'].'》</b></p>
 <p style="margin-top: 20px;">详情请点击链接：<a href="http://'.$http_host.'/Bulletin/detail/id/'.$data['id'].'" target="_blank">http://'.$http_host.'/Bulletin/detail/id/'.$data['id'].'</a></p>
 </div>
