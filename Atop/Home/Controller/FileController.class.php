@@ -117,11 +117,11 @@ class FileController extends AuthController {
                 }
                 $this->ajaxReturn(['flag'=>1, 'msg'=>'升版成功']);
             }else{
-                $checkVersion = $model->table(C('DB_PREFIX').'file_number')->where(['filenumber'=>$fileData['filenumber'], 'version'=>strtoupper($postData['version'])])->select();
+                /*$checkVersion = $model->table(C('DB_PREFIX').'file_number')->where(['filenumber'=>$fileData['filenumber'], 'version'=>strtoupper($postData['version'])])->select();
                 if( $checkVersion ) {
                     $this->ajaxReturn(['flag'=>0, 'msg'=>'版本号已存在，请重新输入']);
                     exit;
-                }
+                }*/
                 /*$OldVersion = (float)substr($fileData['version'], 1);  // 获取之前版本准备对比
                 $NewVersion = (float)substr($postData['version'], 1);   // 最新版本
                 if( $NewVersion < $OldVersion ) {
