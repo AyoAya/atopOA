@@ -193,7 +193,9 @@ class BulletinController extends AuthController
                             $todoList['who'] = $post['manager'];
                             $this->insertNewMatter($todoList);
 
-                            $this->pushEmail('ADD',$emailData['email'],$data,session('user')['email']);
+                            $email[] = session('user')['email'];
+
+                            $this->pushEmail('ADD',$emailData['email'],$data,$email);
                             $model->commit();
                             $this->ajaxReturn(['flag' => $bull_id, 'msg' => '提交数据成功！']);
                         }
