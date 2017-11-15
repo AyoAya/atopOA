@@ -165,10 +165,6 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
             layer.msg('请输入版本号', {icon : 2,time : 1000});
             return false;
         }
-        if( !/^[v|V][0-9]+(\.[0-9]+)+$/.test(version) ){
-            layer.msg('版本格式错误', {icon : 2,time : 1000});
-            return false;
-        }
         if( $('#file-attachment-a').length < 1 ){
             if( FileUploader.getFiles().length <= 0 ){
                 layer.msg('请上传附件', {icon : 2,time : 1000});

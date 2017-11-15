@@ -51,7 +51,7 @@ layui.use(['form', 'jquery', 'layer'], function(){
                 layer.msg('文件编号格式错误');
                 return false;
             }
-            if( data.field.filenumber.length > 12 ){
+            if( data.field.filenumber.length > 13 ){
                 layer.msg('文件号过长，请控制在12位或以下');
                 return false;
             }

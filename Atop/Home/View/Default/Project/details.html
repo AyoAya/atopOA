@@ -423,13 +423,13 @@
                 </div>-->
                 <notempty name="discuss">
                     <volist name="discuss" id="value" key="key">
-                        <div class="media" name="floor{$i}">
+                        <div class="media" name="floor{$key}">
                             <div class="media-left">
                                 <img class="media-object" src="{$value.face}" width="50" alt="...">
                                 <p style="margin-top: 5px;"><center><small style="color: #888;">{$value.nickname}</small></center></p>
                             </div>
                             <div class="media-body">
-                                <div class="well well-sm other-info-box">
+                                <div class="other-info-box">
 
                                     <span class=" pull-right reply">回复</span>
 
@@ -475,9 +475,9 @@
                 </notempty>
             </div>
             <div class="form-group">
-                <div class="well">
+                <div class="editor-wrapper">
                     <p class="prompt-info">内容发表后将会以邮件通知到以下人员：</p>
-                    <div class="recipient-list well well-sm">
+                    <div class="recipient-list">
                         <span>收件人：</span>
                         <ul>
                             <volist name="recipientUserinfo" id="value">
@@ -485,7 +485,7 @@
                             </volist>
                         </ul>
                     </div>
-                    <div class="cc-people well well-sm">
+                    <div class="cc-people">
                         <span>抄送人：</span>
                         <ul id="ccPersonList">
                             <volist name="defaultCClist" id="value">
@@ -519,6 +519,16 @@
                 <button type="button" id="submit-discuss-content" class="btn btn-primary" discuss_id="{$getID}">发表</button>
             </div>
         </div>
+        {//如果地址栏存在楼层参数则跳转到该楼层}
+        <present name="Think.get.floor">
+            <script>
+                var _floor = {$Think.get.floor};
+                if( $('.message-board div[name=floor'+ _floor +']').length ){
+                    let _top = $('.message-board div[name=floor'+ _floor +']').offset().top;
+                    $('#content').scrollTop(_top-50);
+                }
+            </script>
+        </present>
     </eq>
 
     <div class="loading-modal sr-only" id="loading">
