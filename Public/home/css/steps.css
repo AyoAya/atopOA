@@ -1,0 +1,65 @@
+
+.steps {
+
+}
+.steps br {
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+}
+.steps li {
+    position: relative;
+    min-height: 60px;
+    line-height: 60px;
+    border-left: solid 1px #409eff;
+    margin-left: 40px;
+    text-indent: 30px;
+    font-size: 15px;
+    font-weight: 600;
+}
+.steps li::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    left: -9px;
+    top: 21px;
+    background: #409eff;
+    border-radius: 50%;
+}
+.steps li ul li {
+    margin-left: 0;
+    border-left: none;
+    font-weight: normal;
+    min-height: 60px;
+    line-height: 60px !important;
+    font-size: 13px !important
+}
+.steps li ul li::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: solid 2px #409eff;
+    background: #fff;
+    position: absolute;
+    left: -6px;
+    top: 24px;
+}
+.steps li ul li article {
+    margin-left: 30px;
+    padding: 20px;
+    background: #EDF2FC;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+.steps li ul li article:last-child {
+    margin-bottom: 0;
+}
+.steps li ul li article p {
+    text-indent: 0;
+}
+.steps li ul li div small .el-input__prefix {
+    top: 16px;
+    left: -50px;
+}

@@ -93,9 +93,9 @@ class FileController extends AuthController {
                 try{
                     $checkVersion = $model->table(C('DB_PREFIX').'file_number')->where(['filenumber'=>$fileData['filenumber'], 'version'=>strtoupper($postData['version'])])->select();
                     if( $checkVersion ) throw new \Exception('版本号已存在，请重新输入');
-                    $OldVersion = (float)substr($fileData['version'], 1);  // 获取之前版本准备对比
+                    /*$OldVersion = (float)substr($fileData['version'], 1);  // 获取之前版本准备对比
                     $NewVersion = (float)substr($postData['version'], 1);   // 最新版本
-                    if( $NewVersion < $OldVersion ) throw new \Exception('升版的版本号应当比之前高');
+                    if( $NewVersion < $OldVersion ) throw new \Exception('升版的版本号应当比之前高');*/
                     $changeOldUpgrade['id'] = $postData['id'];
                     $changeOldUpgrade['upgrade'] = 'Y';
                     //$changeOldUpgrade['state'] = 'Unavailable'; // 将状态改为不可用
@@ -117,6 +117,17 @@ class FileController extends AuthController {
                 }
                 $this->ajaxReturn(['flag'=>1, 'msg'=>'升版成功']);
             }else{
+                $checkVersion = $model->table(C('DB_PREFIX').'file_number')->where(['filenumber'=>$fileData['filenumber'], 'version'=>strtoupper($postData['version'])])->select();
+                if( $checkVersion ) {
+                    $this->ajaxReturn(['flag'=>0, 'msg'=>'版本号已存在，请重新输入']);
+                    exit;
+                }
+                /*$OldVersion = (float)substr($fileData['version'], 1);  // 获取之前版本准备对比
+                $NewVersion = (float)substr($postData['version'], 1);   // 最新版本
+                if( $NewVersion < $OldVersion ) {
+                    $this->ajaxReturn(['flag'=>0, 'msg'=>'升版的版本号应当比之前高']);
+                    exit;
+                }*/
                 if( isset($postData['attachment']) ){   // 如果上传了新文件则删除以前的附件
                     if( $fileData['attachment'] != '' && $fileData['state'] != 'Archiving' ){    // 如果附件不为空并且状态不为已归档，则删除以前的附件
                         $fileInfo = json_decode($fileData['attachment'], true);

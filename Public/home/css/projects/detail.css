@@ -24,7 +24,7 @@
     
 }
 #app .project-wrapper .project-menu {
-
+    margin-bottom: 30px;
 }
 #app .project-wrapper .project-menu ul {
     width: 100%;
@@ -52,5 +52,14 @@
 }
 #app .project-wrapper .project-main {
     clear: both;
-    padding: 20px;
+}
+
+
+/*** 项目概览 ***/
+#app .el-steps * {
+    color: #333;
+}
+#app .box-card .el-card__header {
+    font-size: 16px;
+    font-weight: 600;
 }

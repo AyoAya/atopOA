@@ -1,6 +1,6 @@
 @CHARSET "UTF-8";
 /* 初始化样式 */
-body,h1,h2,h3,h4,h5,h6,p,form,span,ol,ul,dl,i {
+body,h1,h2,h3,h4,h5,h6,p,form,span,ol,ul,dl,i,hr {
 	margin: 0;
 	padding: 0;
 }

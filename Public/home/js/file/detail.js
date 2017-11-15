@@ -7,7 +7,8 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
 
     var _fileID = $('#fileID').val(),
         attachmentsObject,
-        __version = $('#version').val();
+        __version = $('#version').val(),
+        __editOrUpgrade;
 
     // 定义layedit编辑器配置
     var layeditOptions = {
@@ -20,6 +21,7 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
     // 编辑/升版
     $('.xq-edit-btn').click(function(){
         let _btnText = $(this).text();
+        __editOrUpgrade = _btnText;
         if( _btnText == '升版' ) $('#version').val('');
         $('.preview-condition').addClass('sr-only');
         $('.edit-condition').removeClass('sr-only');
@@ -172,18 +174,26 @@ layui.use(['form', 'jquery', 'layer', 'layedit'], function(){
     $('#saveFileData').click(function(){
         var data = {};
         if( !checkEditData() ) return false;
-        checkFileVersion($('#version').val()).then(response=>{
-            if( response.flag === 0 ){
-                layer.msg(response.msg, {icon: 2, time: 2000});
-                return false;
-            }else{
-                if( FileUploader.getFiles().length ) {  // 如果存在附件
-                    FileUploader.upload();
+        if( __editOrUpgrade == '升版' ){
+            checkFileVersion($('#version').val()).then(response=>{
+                if( response.flag === 0 ){
+                    layer.msg(response.msg, {icon: 2, time: 2000});
+                    return false;
                 }else{
-                    submitEditData(null);
+                    if( FileUploader.getFiles().length ) {  // 如果存在附件
+                        FileUploader.upload();
+                    }else{
+                        submitEditData(null);
+                    }
                 }
+            });
+        }else{
+            if( FileUploader.getFiles().length ) {  // 如果存在附件
+                FileUploader.upload();
+            }else{
+                submitEditData(null);
             }
-        });
+        }
     });
 
     // 验证编辑

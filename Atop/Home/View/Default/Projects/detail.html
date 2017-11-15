@@ -4,6 +4,7 @@
 <block name="linkcss">
     <!-- 引入 element-ui 样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="__CSS__/steps.css">
     <link rel="stylesheet" href="__CSS__/projects/detail.css">
 </block>
 <!-- 【引入javascript文件】 -->
@@ -52,6 +53,209 @@
                 </ul>
             </div>
             <div class="pm project-main">
+
+                <eq name="Think.get.tab" value="gailan">
+                    <el-row :gutter="60" style="margin-top: 20px;">
+                        <el-col :span="8">
+                            <div style="height: 600px;">
+                                <el-steps direction="vertical">
+                                    <el-step icon="el-icon-location" title="产品状态" description="Gate3 - 产品详细设计及工程验证阶段"></el-step>
+                                    <el-step icon="el-icon-location" title="产品类型" description="SFP+"></el-step>
+                                    <el-step icon="el-icon-location" title="项目类型" description="新设计"></el-step>
+                                    <el-step icon="el-icon-location" title="潜在市场需求" description="1.2M"></el-step>
+                                    <el-step icon="el-icon-location" title="标准品名" description="APSP55HM3CDL80"></el-step>
+                                    <el-step icon="el-icon-location" title="目标客户" description="NOKIA"></el-step>
+                                    <el-step icon="el-icon-location" title="平台" description="DS4835 +Gn2044"></el-step>
+                                    <el-step icon="el-icon-location" title="目标成本" description="220"></el-step>
+                                    <el-step icon="el-icon-location" title="立项时间" description="2017-10-09"></el-step>
+                                </el-steps>
+                            </div>
+                        </el-col>
+                        <el-col :span="6">
+                            <div style="height: 600px;">
+                                <el-steps direction="vertical">
+                                    <el-step icon="el-icon-location" title="项目负责人" description="肖艾佑"></el-step>
+                                    <el-step icon="el-icon-location" title="项目管理员" description="肖晓"></el-step>
+                                    <el-step icon="el-icon-location" title="硬件设计" description="肖艾佑"></el-step>
+                                    <el-step icon="el-icon-location" title="FW开发" description="何松文"></el-step>
+                                    <el-step icon="el-icon-location" title="结构件设计" description="陈卫"></el-step>
+                                    <el-step icon="el-icon-location" title="光器件设计" description="陈卫"></el-step>
+                                    <el-step icon="el-icon-location" title="ATE设计" description="李平"></el-step>
+                                    <el-step icon="el-icon-location" title="DVT测试" description="刘燕"></el-step>
+                                    <el-step icon="el-icon-location" title="市场部" description="唐治强"></el-step>
+                                </el-steps>
+                            </div>
+                        </el-col>
+                        <el-col :span="10">
+                            <div style="height: 600px;">
+                                <el-steps direction="vertical">
+                                    <el-step icon="el-icon-location" title="项目描述" description="随着客户对低功耗的要求越来越敏感，传统模块的功耗2.0W已经不能再满足客户日益增长的对低功耗的迫切需求。开发全温段<1.6W功耗的模块已经是趋势；且低功耗在打开未来市场具有更加广泛的竞争力。 本项目采用Sumitomo的EML激光器和SiFotonics的APD，自主设计PCB和固件开发，并且在原有的方案上对BiaS电流进行实时监控，完成客户样品认证，并发完成小批量试产，并转入量产 。"></el-step>
+                                </el-steps>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </eq>
+
+                <eq name="Think.get.tab" value="jihua">
+
+                    <ul class="steps">
+                        <li>
+                            Gate1 - 产品策划
+                            <ul>
+                                <li>
+                                    <div>
+                                        <div class="pull-left">
+                                            <span>市场信息调研
+                                                <el-tooltip class="item" effect="dark" content="添加备注" placement="top">
+                                                    <el-button type="text" icon="el-icon-edit-outline" style="margin-left: 10px;"></el-button>
+                                                </el-tooltip>
+                                                <el-tooltip class="item" effect="dark" content="删除节点" placement="top">
+                                                    <el-button type="text" icon="el-icon-delete"></el-button>
+                                                </el-tooltip>
+                                            </span>
+                                        </div>
+                                        <div class="pull-right">
+                                            <small style="margin-right: 20px;">开始时间：<el-date-picker style="width: 120px;" class="clearfix" :editable="false" size="mini" type="date" placeholder="选择日期"></el-date-picker></small>
+                                            <small>结束时间：<el-date-picker style="width: 120px;" class="clearfix" :editable="false" size="mini" type="date" placeholder="选择日期"></el-date-picker></small>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <article>
+                                        <p>
+                                            前两天约朋友吃饭，虽然宋仲基宋慧乔的婚礼已经过去有几天了，但是热度不减，大家依然聊得乐此不疲。
+                                            甜甜看着手机上的婚礼现场照片时，突然指着乔妹手里的捧花说：“我今天才发现宋慧乔的捧花是满天星！”
+                                            坐在旁边的沐子微笑道：“亲爱的，那不是满天星，是铃兰花，只是长得像罢了。”
+                                            甜甜不服气地说：“怎么会是铃兰花，就是满天星啊！”
+                                            沐子不再搭理甜甜，转身和旁边的人聊起了别的话题。
+                                            沐子高中毕业后去澳洲读了四年商科，毕业后回国创业，开了一家小儿温馨的花艺店，对于是满天星还是铃兰花这样的问题，见多识广的沐子一眼便认出了这是一种稀有的铃兰花，和两百块的普通满天星相比，宋慧乔手里的那束铃兰捧花售价高达万元左右。
+                                            因为没有眼界，即使一万元一束的进口铃兰花在甜甜的眼里也只不过是两百块的满天星。
+                                        </p>
+                                        <p>
+                                            作者：潘城王小古<br>
+                                            链接：http://www.jianshu.com/p/ef911390c6b9br <br>
+                                            來源：简书<br>
+                                            著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+                                        </p>
+                                    </article>
+                                    <article>
+                                        <p>
+                                            我的一个朋友刘先生，之前经常通宵玩游戏、无节制地泡吧蹦迪打麻将，几年里他晚上睡觉的时间越来越少。有时候凌晨玩饿了，吃点夜宵继续作。
+                                            他说：“生前何必久睡，死后必定长眠！年轻就是资本，熬点夜没啥事。”
+                                            后来，在体测800米跑步时，他跑着跑着一头躺倒在了操场上。
+                                            医生说他有遗传心脏病的病史，加上时间紊乱、睡眠严重不足，血管一直都处于紧张状态，内耳供血不充分，他的听力也受到很大的杀伤力。由于长时间熬夜的原因，黑白颠倒，导致病发的几率增加了许多。
+                                            曾经健康活泼的小伙子，就这么被熬倒了，我还记得他的音容笑貌，但他，却再也没有站起来。
+                                            原来不熬夜，才是最大的自律。
+                                            原来，只有病痛和死亡，才是最好的鸡汤。
+                                        </p>
+                                        <p>
+                                            作者：怀左同学 <br>
+                                            链接：http://www.jianshu.com/p/79df4bc92800 <br>
+                                            來源：简书 <br>
+                                            著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+                                        </p>
+                                    </article>
+                                </li>
+                                <li>
+                                    kick-off meeting
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            Gate2 - 产品技术需求和项目规划阶段
+                            <ul>
+                                <li>
+                                    <div>完成PRD</div>
+                                </li>
+                                <li>
+                                    <div>关键物料准备</div>
+                                </li>
+                                <li>
+                                    <div>Gate Review</div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            Gate3 - 产品详细设计及工程验证阶段
+                            <ul>
+                                <li>
+                                    <div>结构件完成</div>
+                                </li>
+                                <li>
+                                    <div>首版PCBA完成</div>
+                                </li>
+                                <li>
+                                    <div>首版固件完成</div>
+                                </li>
+                                <li>
+                                    <div>光器件完成</div>
+                                </li>
+                                <li>
+                                    <div>包装、标签设计</div>
+                                </li>
+                                <li>
+                                    <div>EVT完成</div>
+                                </li>
+                                <li>
+                                    <div>FVT完成</div>
+                                </li>
+                                <li>
+                                    <div>ATE完成</div>
+                                </li>
+                                <li>
+                                    <div>试产物料及工装准备</div>
+                                </li>
+                                <li>
+                                    <div>Gate Review</div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            Gate4 - 产品试生产
+                            <ul>
+                                <li>
+                                    <div>产品试生产</div>
+                                </li>
+                                <li>
+                                    <div>PMR完成</div>
+                                </li>
+                                <li>
+                                    <div>DVT完成</div>
+                                </li>
+                                <li>
+                                    <div>Gate Review</div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            Gate5 - RT验证
+                            <ul>
+                                <li>
+                                    <div>RT完成</div>
+                                </li>
+                                <li>
+                                    <div>Gate Review</div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </eq>
+
+                <eq name="Think.get.tab" value="zixiangmu">
+
+                </eq>
+
+                <eq name="Think.get.tab" value="yangpin">
+
+                </eq>
+
+                <eq name="Think.get.tab" value="guidang">
+
+                </eq>
+
+                <eq name="Think.get.tab" value="taolun">
+
+                </eq>
+
             </div>
         </div>
     </div>
